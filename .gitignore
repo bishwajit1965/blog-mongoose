@@ -1,0 +1,30 @@
+# Ignore node_modules in client
+client/node_modules/
+
+
+# Ignore build files in client
+client/.vscode/
+
+
+# Ignore public folder in client
+client/public/
+
+# Ignore assets folder in client
+client/assets/
+
+# Ignore firebase folder in client
+client/src/firebase/
+
+# Ignore TODO.js file in client
+client/TODO.js/
+
+# Ignore .env files in client and server
+client/.env.local
+server/.env
+
+# Ignore folders in server
+server/config/
+server/uploads/
+server/mongoose/
+server/.vscode/
+server/node_modules/

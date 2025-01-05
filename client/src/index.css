@@ -1,3 +1,72 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* Light Theme */
+body.light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* Dark Theme */
+body.dark {
+  background-color: #121212;
+  color: #ffffffa1;
+}
+
+/* Responsive breakpoints and devices to be targeted */
+
+/* Extra small devices (phones, 320px and up) */
+@media only screen and (max-width: 320px) {
+  /* Styles for very small phones */
+}
+
+/* Small devices (phones, 375px and up) */
+@media only screen and (max-width: 375px) {
+  /* Styles for regular mobile phones */
+}
+
+/* Medium devices (phones, 425px and up) */
+@media only screen and (max-width: 425px) {
+  /* Styles for larger phones */
+}
+
+/* Tablets (768px and up) */
+@media only screen and (max-width: 768px) {
+  /* Styles for tablets */
+}
+
+/* Small laptops (1024px and up) */
+@media only screen and (max-width: 1024px) {
+  /* Styles for small laptops */
+}
+
+/* Large laptops (1366px and up) */
+@media only screen and (max-width: 1366px) {
+  /* Styles for large laptops */
+}
+
+@media only screen and (max-width: 375px) {
+  body {
+    font-size: 16px;
+  }
+}
+
+body,
+p {
+  font-family: "Roboto", Arial, sans-serif;
+  font-size: 16px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppins", "Helvetica", sans-serif;
+}

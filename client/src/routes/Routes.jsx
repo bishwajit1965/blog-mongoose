@@ -1,6 +1,9 @@
+import AboutMe from "../pages/aboutMe/AboutMe";
 import AdminDashboard from "../admin/adminDashboard/adminDashboard";
 import AdminLayout from "../layouts/adminLayout/AdminLayout";
 import AdminLogin from "../admin/adminPages/AdminLogin";
+import BlogPosts from "../pages/blogPosts/BlogPosts";
+import ContactMe from "../pages/contactMe/ContactMe";
 import ErrorPage from "../pages/errorPage/ErrorPage";
 import Home from "../pages/home/Home";
 import Login from "../pages/login/Login";
@@ -19,6 +22,18 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/about-me",
+        element: <AboutMe />,
+      },
+      {
+        path: "/contact-me",
+        element: <ContactMe />,
+      },
+      {
+        path: "/blog-posts",
+        element: <BlogPosts />,
       },
       {
         path: "*",

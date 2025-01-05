@@ -1,0 +1,12 @@
+a.active {
+  border-bottom: 0.2rem solid #34d399;
+  color: #34d399;
+  font-weight: 600;
+}
+a {
+  margin: 0rem 0.6rem;
+}
+
+.navbar {
+  transition: background-color 0.3s ease;
+}
