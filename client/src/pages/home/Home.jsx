@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <div
       className="flex justify-center items-center 
-      space-y-2"
+      space-y-2 lg:px-"
     >
       {user ? (
         <div className="text-center space-y-2">
@@ -31,8 +31,50 @@ const Home = () => {
           </div>
 
           <div className="">
-            <p>Token: {user?.refreshToken}</p>
+            {/* <p className="max-w-96 mx-auto">Token: {user?.refreshToken}</p> */}
           </div>
+          <p className="">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed omnis
+            dignissimos nihil tempore ratione velit blanditiis optio culpa nisi
+            cupiditate excepturi corrupti, labore a, ad cum dolor vel quasi
+            provident.
+          </p>
+          <p className="">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed omnis
+            dignissimos nihil tempore ratione velit blanditiis optio culpa nisi
+            cupiditate excepturi corrupti, labore a, ad cum dolor vel quasi
+            provident.
+          </p>
+          <p className="">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed omnis
+            dignissimos nihil tempore ratione velit blanditiis optio culpa nisi
+            cupiditate excepturi corrupti, labore a, ad cum dolor vel quasi
+            provident.
+          </p>
+          <p className="">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed omnis
+            dignissimos nihil tempore ratione velit blanditiis optio culpa nisi
+            cupiditate excepturi corrupti, labore a, ad cum dolor vel quasi
+            provident.
+          </p>
+          <p className="">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed omnis
+            dignissimos nihil tempore ratione velit blanditiis optio culpa nisi
+            cupiditate excepturi corrupti, labore a, ad cum dolor vel quasi
+            provident.
+          </p>
+          <p className="">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed omnis
+            dignissimos nihil tempore ratione velit blanditiis optio culpa nisi
+            cupiditate excepturi corrupti, labore a, ad cum dolor vel quasi
+            provident.
+          </p>
+          <p className="">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed omnis
+            dignissimos nihil tempore ratione velit blanditiis optio culpa nisi
+            cupiditate excepturi corrupti, labore a, ad cum dolor vel quasi
+            provident.
+          </p>
         </div>
       ) : (
         <h1 className="text-3xl font-bold justify-center">Blog Home Page</h1>

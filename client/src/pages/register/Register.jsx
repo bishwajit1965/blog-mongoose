@@ -1,4 +1,5 @@
-import { FaEye, FaEyeSlash, FaUserAlt, FaUserCircle } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaUserAlt } from "react-icons/fa";
+import { hideErrorElements, hideSuccessElements } from "../../hooks/useHelpers";
 import { sendEmailVerification, updateProfile } from "firebase/auth";
 import { useContext, useState } from "react";
 
@@ -58,20 +59,25 @@ const Register = () => {
           })
             .then(() => {
               setSuccess("Profile updated successfully!");
+              hideSuccessElements();
             })
-            .catch((error) => setError(error));
+            .catch((error) => setError(error.message));
+          hideErrorElements();
 
           // Email verification
           sendEmailVerification(user)
-            .then((userCredential) => {
-              console.log(userCredential.user);
+            .then(() => {
+              setSuccess("Verification email sent!");
+              hideSuccessElements();
             })
             .catch((error) => {
-              setError(error);
+              setError(error.message);
+              hideErrorElements();
             });
         })
         .catch((error) => {
-          setError(error);
+          setError(error.message);
+          hideErrorElements();
         });
     }
   };
@@ -130,7 +136,7 @@ const Register = () => {
                     Accept terms & conditions
                     <Link
                       to="/terms-conditions"
-                      className="text-indigo-600 hover:underline link-primary ml-text-xm "
+                      className="text-indigo-600 hover:link link-primary ml-text-xm "
                     >
                       {" "}
                       View Terms
