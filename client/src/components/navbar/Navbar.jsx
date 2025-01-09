@@ -25,6 +25,7 @@ const Navbar = () => {
   const handleOpen = () => {
     setOpen(!open);
   };
+
   const routes = [
     { id: 1, route: "/", name: "Home" },
     { id: 2, route: "/about-me", name: "About Me" },
@@ -62,9 +63,9 @@ const Navbar = () => {
     <div
       className={`navbar ${
         theme === "dark" ? "bg-gray-900" : "bg-base-200"
-      } lg:px-0 lg:bg-base-200 md:py-0 shadow-lg fixed top-0 mb- lg:max-w-7xl mx-auto z-50 lg:top-0 pt-0 mt-0`}
+      } lg:px-0 lg:bg-base-200 md:py-0 shadow-lg fixed top-0 lg:max-w-7xl mx-auto z-50 lg:top-0 pt-0 mt-0`}
     >
-      <div className="navbar dark:border-b dark:bg-slate-900 dark:border-slate-700">
+      <div className="navbar dark:bg-slate-900">
         <div className="navbar-start">
           <div className="dropdown">
             <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -107,6 +108,7 @@ const Navbar = () => {
           </div>
 
           <img src={Logo} alt="Logo" className="lg:w-14 lg:h-14 h-8 w-8" />
+
           <Link to="/" className="ml-0">
             <span className="xl:text-xl xl:w-48 md:w-32 lg:block xl:block lg:text-xs md:hidden md:ml-0 hidden lg:font-bold text-emerald-500">
               Blog

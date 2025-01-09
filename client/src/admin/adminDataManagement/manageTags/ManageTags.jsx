@@ -1,14 +1,14 @@
 import { Helmet } from "react-helmet-async";
 
-const BlogPosts = () => {
+const ManageTags = () => {
   return (
     <div>
       <Helmet>
-        <title>Blog || Blog Posts</title>
+        <title>Blog || Manage Tags</title>
       </Helmet>
-      BlogPosts
+      ManageTags
     </div>
   );
 };
 
-export default BlogPosts;
+export default ManageTags;

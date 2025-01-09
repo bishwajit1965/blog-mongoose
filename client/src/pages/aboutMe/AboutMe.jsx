@@ -1,5 +1,14 @@
+import { Helmet } from "react-helmet-async";
+
 const AboutMe = () => {
-  return <div>AboutMe</div>;
+  return (
+    <div>
+      <Helmet>
+        <title>Blog || About Me</title>
+      </Helmet>
+      AboutMe
+    </div>
+  );
 };
 
 export default AboutMe;

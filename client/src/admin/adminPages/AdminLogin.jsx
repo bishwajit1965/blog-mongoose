@@ -40,6 +40,7 @@ const AdminLogin = () => {
             />
             <div className="">
               {/* <button
+                onClick={handleLogin}
                 type="submit"
                 className="btn btn-sm btn-active btn-primary"
               >

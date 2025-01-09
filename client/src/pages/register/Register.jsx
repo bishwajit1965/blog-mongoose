@@ -86,7 +86,7 @@ const Register = () => {
     <>
       <Helmet title="Blog || Register" />
       <div className="h-screen flex items-center">
-        <div className="w-full lg:max-w-xs mx-auto lg:px-4 px-1">
+        <div className="w-full lg:max-w-xs mx-auto">
           {loading && <Loader />}
           <div className="flex flex-col justify-center border lg:p-6 p-4 bg-base-200 rounded-xs shadow-xl">
             <div className="lg:space-y-4 space-y-2 w-full">
@@ -153,9 +153,7 @@ const Register = () => {
                 </div>
 
                 <div className="">
-                  {error && (
-                    <p className="text-xs text-red-500">{error.message}</p>
-                  )}
+                  {error && <p className="text-xs text-red-500">{error}</p>}
                   {success && (
                     <p className="text-sm text-green-500">{success}</p>
                   )}
