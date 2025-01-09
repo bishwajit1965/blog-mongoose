@@ -1,14 +1,14 @@
 import { Helmet } from "react-helmet-async";
 
-const BlogPosts = () => {
+const ManageUsers = () => {
   return (
     <div>
       <Helmet>
-        <title>Blog || Blog Posts</title>
+        <title>Blog || Manage Users</title>
       </Helmet>
-      BlogPosts
+      ManageUsers
     </div>
   );
 };
 
-export default BlogPosts;
+export default ManageUsers;

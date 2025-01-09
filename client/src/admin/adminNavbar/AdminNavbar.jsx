@@ -1,77 +1,112 @@
+import "./AdminNavbar.css";
+
+import { FaBars, FaMoon, FaSun, FaTimes } from "react-icons/fa";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+
+import Logo from "/assets/favicon/webDevProF.png";
+import ThemeContext from "../../themeContext/ThemeContext";
+
 const AdminNavbar = () => {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleOpen = () => {
+    setOpen(!open);
+  };
+  const routes = [
+    { id: 1, route: "admin-home-dashboard", name: " Dashboard Home" },
+    { id: 2, route: "manage-blogs", name: "Manage Blog Posts" },
+    { id: 3, route: "manage-categories", name: "Manage Categories" },
+    { id: 4, route: "manage-tags", name: "Manage Tags" },
+    {
+      id: 5,
+      isThemeToggle: true, // Differentiator key
+    },
+    { id: 6, route: "manage-users", name: "Manage Users" },
+  ];
+
   return (
     <div>
-      <div className="navbar bg-base-200">
+      <div className="navbar bg-base-200 dark:bg-gray-800 border-b dark:border-b-gray-700">
         <div className="navbar-start">
           <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+            <label tabIndex={0} className="btn btn-ghost lg:hidden">
+              <div
+                className="md:hidden text-2xl dropdown"
+                onClick={() => handleOpen(setOpen(!open))}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
-                />
-              </svg>
-            </div>
+                {open === true ? (
+                  <FaTimes className="m- w-7 h-7 border-2 border-slate-300 p-1 rounded-sm" />
+                ) : (
+                  <FaBars className="m- w-7 h-7  border-2 border-slate-300 p-1 rounded-sm" />
+                )}
+              </div>
+            </label>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+              className={`bg-base-200 border lg:hidden md:hidden lg:ml-2 -ml-4 space-y-1 z-[1] shadow-lg w-96 absolute duration-1000 md:static rounded-b-md ${
+                open ? "top-[65px]" : "-top-72"
+              } dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 dark:shadow-lg`}
             >
-              <li>
-                <a>Item 1</a>
-              </li>
-              <li>
-                <a>Parent</a>
-                <ul className="p-2">
-                  <li>
-                    <a>Submenu 1</a>
-                  </li>
-                  <li>
-                    <a>Submenu 2</a>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a>Item 3</a>
-              </li>
+              {routes.map((item) =>
+                item ? (
+                  item.isThemeToggle ? ( // Check for the theme toggle button
+                    <li key={item.id}>
+                      <button
+                        className={`theme-toggle-btn items-center ml-3 ${theme}`}
+                        onClick={toggleTheme}
+                      >
+                        {theme === "light" ? <FaMoon /> : <FaSun />}
+                      </button>
+                    </li>
+                  ) : (
+                    <li key={item.id}>
+                      <a href={item.route}>{item.name}</a>
+                    </li>
+                  )
+                ) : null
+              )}
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl">daisyUI</a>
+
+          <img src={Logo} alt="Logo" className="lg:w-14 lg:h-14 h-8 w-8" />
+
+          <Link to="/" className="ml-0">
+            <span className="xl:text-xl xl:w-48 md:w-32 lg:block xl:block lg:text-xs md:hidden md:ml-0 hidden lg:font-bold text-emerald-500">
+              Blog
+            </span>
+          </Link>
         </div>
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
-            <li>
-              <a>Item 1</a>
-            </li>
-            <li>
-              <details>
-                <summary>Parent</summary>
-                <ul className="p-2">
-                  <li>
-                    <a>Submenu 1</a>
-                  </li>
-                  <li>
-                    <a>Submenu 2</a>
-                  </li>
-                </ul>
-              </details>
-            </li>
-            <li>
-              <a>Item 3</a>
+        <div className="navbar-center hidden md:block lg:flex">
+          <ul className="menu-horizontal">
+            {routes.map((route) => (
+              <li key={route.id} className="">
+                <NavLink
+                  className={({ isActive, isPending }) =>
+                    isPending ? "pending" : isActive ? "active" : ""
+                  }
+                  to={route.route}
+                >
+                  {route.name}
+                </NavLink>
+              </li>
+            ))}
+            <li className="flex items-center lg:ml-8">
+              <button
+                className={`theme-toggle-btn ${theme}`}
+                onClick={toggleTheme}
+              >
+                {theme === "light" ? <FaMoon /> : <FaSun />}
+              </button>
             </li>
           </ul>
         </div>
 
         <div className="navbar-end">
           {/* <a className="btn">Button</a> */}
-          <div className="dropdown dropdown-end">
+          <div className="dropdown dropdown-end dark:bg-gray-800">
             <div
               tabIndex={0}
               role="button"
@@ -86,7 +121,7 @@ const AdminNavbar = () => {
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow dark:bg-gray-700"
             >
               <li>
                 <a className="justify-between">
@@ -95,7 +130,7 @@ const AdminNavbar = () => {
                 </a>
               </li>
               <li>
-                <a>Settings</a>
+                <Link to="/admin/login">Login</Link>
               </li>
               <li>
                 <a>Logout</a>

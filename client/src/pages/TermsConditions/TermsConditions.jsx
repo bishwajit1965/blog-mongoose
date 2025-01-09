@@ -1,7 +1,7 @@
 import Footer from "../../components/footer/Footer";
 import { Link } from "react-router-dom";
 import PageTitle from "../../components/pageTitle/PageTitle";
-import SectionTitle from "../../components/SectionTitle/SectionTitle";
+import SectionTitle from "../../components/sectionTitle/SectionTitle";
 
 const TermsConditions = () => {
   return (

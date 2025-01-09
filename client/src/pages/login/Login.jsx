@@ -141,7 +141,7 @@ const Login = () => {
     <>
       <Helmet title="Blog || Login" />
       <div className="h-screen flex items-center">
-        <div className="lg:max-w-xs w-full mx-auto lg:px-4 px-1">
+        <div className="lg:max-w-xs w-full mx-auto">
           {loading && <Loader />}
           <div className="flex flex-col justify-center border lg:p-6 p-4 bg-base-200 rounded-xs shadow-xl">
             <h1 className="text-2xl lg:text-3xl font-bold text-indigo-800 text-center mb-4">
@@ -198,7 +198,7 @@ const Login = () => {
                   className="hover:link-primary"
                 >
                   Forgot password ? {""}
-                  <span className="text-sm link-primary">
+                  <span className="text-xs link-primary">
                     Reset password here
                   </span>
                 </Link>
@@ -206,7 +206,7 @@ const Login = () => {
               <p className="text-xs">
                 <Link to="/register" className="hover:link">
                   New to this site ? {""}
-                  <span className="text-sm link-primary">Register here</span>
+                  <span className="text-xs link-primary">Register here</span>
                 </Link>
               </p>
             </div>

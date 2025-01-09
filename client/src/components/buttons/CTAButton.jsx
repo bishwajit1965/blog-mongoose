@@ -58,7 +58,7 @@ const CTAButton = ({
       ) : (
         icon && <span>{icon}</span>
       )}
-      <span>{loading ? loadingLabel : label}</span>
+      <span className="text-base-200">{loading ? loadingLabel : label}</span>
     </span>
   );
 
