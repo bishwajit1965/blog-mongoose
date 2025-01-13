@@ -1,33 +1,31 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
-    uid: { type: String, required: true, unique: true },
-    name: { type: String, required: [true, "Name is required."] },
+    firebaseUid: { type: String, required: true, unique: false },
+    name: { type: String, required: false },
     email: {
       type: String,
-      required: [true, "Email is required."],
+      required: true,
       unique: true,
     },
-    photoUrl: { type: String },
     password: { type: String, required: true },
-    firebaseUID: { type: String, required: true, unique: true },
-    roles: { type: [String], default: ["user"] },
+    avatar: {
+      type: String,
+    },
+    roles: {
+      type: [String],
+      default: ["user"],
+    },
   },
-  { timeStamp: true }
+  { timestamps: true }
 );
 
-// Hash password before saving
-// userSchema.pre("save", async function (next) {
-//   if (!this.isModified("password")) return next();
-//   this.password = await bcrypt.hash(this.password, 10);
-//   next();
-// });
+// Add a method to check if the user gas a specific role
+userSchema.methods.hasRole = function (role) {
+  return this.roles.includes(role);
+};
 
-// Compare passwords for login
-// userSchema.methods.comparePassword = async function (candidatePassword) {
-//   return bcrypt.compare(candidatePassword, this.password);
-// };
+const User = mongoose.model("User", userSchema);
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = User;

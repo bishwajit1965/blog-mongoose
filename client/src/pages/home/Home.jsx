@@ -52,42 +52,7 @@ const Home = () => {
               <div className="">
                 {/* <p className="max-w-96 mx-auto">Token: {user?.refreshToken}</p> */}
               </div>
-              <p className="">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed
-                omnis dignissimos nihil tempore ratione velit blanditiis optio
-                culpa nisi cupiditate excepturi corrupti, labore a, ad cum dolor
-                vel quasi provident.
-              </p>
-              <p className="">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed
-                omnis dignissimos nihil tempore ratione velit blanditiis optio
-                culpa nisi cupiditate excepturi corrupti, labore a, ad cum dolor
-                vel quasi provident.
-              </p>
-              <p className="">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed
-                omnis dignissimos nihil tempore ratione velit blanditiis optio
-                culpa nisi cupiditate excepturi corrupti, labore a, ad cum dolor
-                vel quasi provident.
-              </p>
-              <p className="">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed
-                omnis dignissimos nihil tempore ratione velit blanditiis optio
-                culpa nisi cupiditate excepturi corrupti, labore a, ad cum dolor
-                vel quasi provident.
-              </p>
-              <p className="">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed
-                omnis dignissimos nihil tempore ratione velit blanditiis optio
-                culpa nisi cupiditate excepturi corrupti, labore a, ad cum dolor
-                vel quasi provident.
-              </p>
-              <p className="">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed
-                omnis dignissimos nihil tempore ratione velit blanditiis optio
-                culpa nisi cupiditate excepturi corrupti, labore a, ad cum dolor
-                vel quasi provident.
-              </p>
+
               <p className="">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed
                 omnis dignissimos nihil tempore ratione velit blanditiis optio

@@ -35,12 +35,12 @@ const Navbar = () => {
     user ? { id: 6, route: "/bookmarked-posts", name: "Blogs Bookmarked" } : "",
     { id: 7, route: "/rss", name: "Rss" },
     {
-      id: 9,
+      id: 8,
       route: "/pdf",
       name: "Notice",
     },
     {
-      id: 8,
+      id: 9,
       isThemeToggle: true, // Differentiator key
     },
   ];
@@ -201,7 +201,7 @@ const Navbar = () => {
                   <FaSignInAlt className="mr-1" />
                   <span className="hidden md:block">Login</span>
                 </NavLink>
-                <NavLink to="/sign-up" className="flex items-center">
+                <NavLink to="/register" className="flex items-center">
                   <FaUserFriends className="mr-1" />
                   <span className="hidden md:block">Signup</span>
                 </NavLink>
