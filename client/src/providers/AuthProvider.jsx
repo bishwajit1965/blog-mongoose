@@ -7,10 +7,12 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updateProfile,
 } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import AuthContext from "../authContext/AuthContext";
+import api from "../services/api";
 import app from "../firebase/firebase.config";
 
 const auth = getAuth(app);
@@ -21,13 +23,85 @@ const gitHubProvider = new GithubAuthProvider();
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
-  console.log("USER", user);
+  console.log("USER DATA:", user);
+  const baseUrl =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+
+  // Send token to backend
+  const sendUserToBackend = async (token) => {
+    try {
+      const response = await api.post(
+        "/auth/register",
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` }, //Send token as a bearer token
+          withCredentials: true, // Allow cookie
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error in sending token to backend.",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  // Handle user authentication
+  const handleUserAuthentication = useCallback(async (firebaseUser) => {
+    try {
+      const token = await firebaseUser.getIdToken();
+      const userData = await sendUserToBackend(token);
+      setUser({ ...firebaseUser, ...userData });
+      setUser(firebaseUser);
+    } catch (error) {
+      console.error("Error during authentication", error);
+      throw error;
+    }
+  }, []); // Add dependencies if the function depends on external variables
 
   // Create a new user with email and password
-  const registerUserWithEmailAndPassword = async (email, password) => {
+  const registerUserWithEmailAndPassword = async (
+    email,
+    password,
+    name,
+    photoUrl
+  ) => {
     setLoading(true);
     try {
-      return await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      await handleUserAuthentication(userCredential.user);
+
+      const firebaseUid = userCredential.user.uid;
+      // Prepare data to send to backend
+      const userData = {
+        firebaseUid,
+        email,
+        name,
+        password,
+        photoUrl,
+        roles: ["user"], // assign default role
+      };
+
+      // Save user data to MongoDB
+      const response = await fetch(`${baseUrl}/auth/register`, {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify(userData),
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(
+          result.message || "Failed to save user data to MongoDB."
+        );
+      }
+      console.log("User saved to MongoDB.", result.user);
+      return userCredential;
     } catch (error) {
       console.error("Error during email/password Sign-Up:", error);
     } finally {
@@ -36,10 +110,16 @@ const AuthProvider = ({ children }) => {
   };
 
   // Sign in with email and password
-  const signInWithEmailPassword = async (auth, email, password) => {
+  const signInWithEmailPassword = async (email, password) => {
     setLoading(true);
     try {
-      return await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      await handleUserAuthentication(userCredential.user);
+      return userCredential;
     } catch (error) {
       console.error("Error during email/password Sign-In:", error);
     } finally {
@@ -51,7 +131,8 @@ const AuthProvider = ({ children }) => {
   const signInWithGoogle = async () => {
     setLoading(true);
     try {
-      return await signInWithPopup(auth, googleProvider);
+      const userCredential = await signInWithPopup(auth, googleProvider);
+      await handleUserAuthentication(userCredential.user);
     } catch (error) {
       console.error("Error during Google Sign-In:", error);
     } finally {
@@ -63,11 +144,24 @@ const AuthProvider = ({ children }) => {
   const signInWithGitHub = async () => {
     setLoading(true);
     try {
-      return await signInWithPopup(auth, gitHubProvider);
+      const userCredential = await signInWithPopup(auth, gitHubProvider);
+      await handleUserAuthentication(userCredential.user);
     } catch (error) {
       console.error("Error during GitHub Sign-In:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Update user profile
+  const updateUserProfile = async (name, photo) => {
+    try {
+      await updateProfile(auth.currentUser, {
+        displayName: name,
+        photoURL: photo,
+      });
+    } catch (error) {
+      console.error("Error in updating user profile.", error);
     }
   };
 
@@ -83,19 +177,20 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  // Keeps track of the user state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setLoading(true);
       if (currentUser) {
         setUser(currentUser);
-        console.log("Logged in user data:", currentUser);
-        const token = await currentUser.getIdToken();
-        console.log("object", token);
+        await handleUserAuthentication(currentUser);
+      } else {
+        setUser(null);
       }
       setLoading(false);
     });
     return () => unsubscribe();
-  }, []);
+  }, [handleUserAuthentication]);
 
   const authInfo = {
     user,
@@ -106,6 +201,7 @@ const AuthProvider = ({ children }) => {
     signInWithEmailPassword,
     signInWithGoogle,
     signInWithGitHub,
+    updateUserProfile,
     handleSignOut,
   };
 
