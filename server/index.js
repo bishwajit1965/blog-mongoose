@@ -13,24 +13,25 @@ connectDB();
 
 const port = process.env.PORT || 3000;
 
-// Cors options
-const corsOptions = {
-  origin: process.env.CLIENT_URL || "http://localhost:3000",
-  credentials: true,
-};
-
 // Middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Frontend URL
+    credentials: true, // Allow cookies to be sent
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 
 // Routes configured
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 // Instantiate routes for execution
 app.use("/api/auth", authRoutes);
 app.use("/api", userRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to blog-mongoose server,");

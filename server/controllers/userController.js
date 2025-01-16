@@ -1,9 +1,11 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const { validateUserInput } = require("../utils/validators");
 
 const createUser = async (req, res) => {
   try {
-    const { firebaseUid, name, email, password, avatar, roles } = req.body; // Default role as "user"
+    const { firebaseUid, name, email, password, avatar, roles, permissions } =
+      req.body; // Default role as "user"
     console.log("Request body:", req.body);
 
     if (!firebaseUid || !email) {
@@ -16,25 +18,27 @@ const createUser = async (req, res) => {
       return res.status(409).json({ message: "User already exists." });
     }
 
-    // Validate roles
-    const validRoles = ["user", "admin", "editor", "super-admin"];
-
-    if (!roles.every((role) => validRoles.includes(role))) {
-      return res.status(400).json({ message: "Invalid roles provided." });
-    }
     const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Validate user input
+    validateUserInput({
+      roles: roles || ["viewer"],
+      permissions: permissions || ["read"],
+    });
+
     // Create a new user
     const newUser = new User({
       firebaseUid,
-      name: name,
+      name,
       email,
       password: hashedPassword,
-      avatar: avatar || null,
-      roles: roles || ["user"],
+      avatar,
+      roles: roles || ["viewer"],
+      permissions: permissions || ["read"],
     });
 
-    await newUser.save();
-    console.log("User saved successfully", newUser);
+    const savedUser = await newUser.save();
+    console.log("User saved successfully", savedUser);
 
     return res
       .status(201)
