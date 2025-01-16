@@ -1,7 +1,10 @@
 import { FaArrowAltCircleRight } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
+import useAdminAuth from "../adminHooks/useAdminAuth";
 
 const AdminSideNav = () => {
+  const { isAuthenticated, adminData } = useAdminAuth();
+
   const routes = [
     { id: 1, route: "admin-home-dashboard", name: " Dashboard Home" },
     { id: 2, route: "manage-blogs", name: "Manage Blog Posts" },
@@ -16,16 +19,18 @@ const AdminSideNav = () => {
         <h1 className="text-xl font-bold text-center">Admin Navigation</h1>
       </div>
       <div className="lg:space-y-2 p-2">
-        {routes.map((path) => (
-          <NavLink
-            key={path.id}
-            to={path.route}
-            className="m-0 flex items-center hover:link-neutral hover:font-bold dark:hover:link-success hover:animate-pulse"
-          >
-            <FaArrowAltCircleRight className="mr-2 hover:animate-spin" />{" "}
-            {path.name}
-          </NavLink>
-        ))}
+        {isAuthenticated && adminData.roles.includes("admin")
+          ? routes.map((path) => (
+              <NavLink
+                key={path.id}
+                to={path.route}
+                className="m-0 flex items-center hover:link-neutral hover:font-bold dark:hover:link-success hover:animate-pulse"
+              >
+                <FaArrowAltCircleRight className="mr-2 hover:animate-spin" />{" "}
+                {path.name}
+              </NavLink>
+            ))
+          : "Unauthorized access!"}
       </div>
     </div>
   );

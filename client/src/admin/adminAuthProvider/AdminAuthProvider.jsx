@@ -1,60 +1,112 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 
-import AdminAuthContext from "../adminProvider/AdminProvider";
-import api from "../../services/api";
-import { jwtDecode } from "jwt-decode";
+import AdminAuthContext from "../adminAuthContext/AdminAuthContext";
+import axios from "axios";
+
+const initialState = {
+  isAuthenticated: false,
+  adminData: null,
+};
+
+const authReducer = (state, action) => {
+  switch (action.type) {
+    case "LOGIN_SUCCESS":
+      return {
+        ...state,
+        isAuthenticated: true,
+        adminData: action.payload,
+      };
+
+    case "LOGOUT":
+      return {
+        ...state,
+        isAuthenticated: false,
+        adminData: null,
+      };
+    default:
+      return state;
+  }
+};
 
 const AdminAuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem("token") || null);
-
-  const [error, setError] = useState(null);
-  const [user, setUser] = useState(null);
+  const [state, dispatch] = useReducer(authReducer, initialState);
   const [loading, setLoading] = useState(false);
+  const baseUrl =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
 
-  // Decode JWT token using jw-decode
-  useEffect(() => {
-    if (token) {
-      const decoded = jwtDecode(token);
-      setUser(decoded);
-    }
-  }, [token]);
-
-  const loginAdmin = async (email, password) => {
-    setLoading(true);
-    try {
-      const response = await api.post("admin/auth/login", { email, password });
-      const { token } = response.data;
-      if (token) {
-        localStorage.setItem("token", token);
-        console.log("Token saved", token);
-        return token;
-      }
-    } catch (error) {
-      setError("Login failed. Please check your credentials.", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const logoutAdmin = () => {
+  const loginAdmin = async (credentials) => {
     try {
       setLoading(true);
-      localStorage.removeItem("token");
-      setToken(null);
+      const response = await axios.post(
+        `${baseUrl}/admin/login`,
+        credentials,
+        { withCredentials: true } // Ensures cookies are sent/received
+      );
+
+      const { user } = response.data;
+
+      // Store user data in context
+      dispatch({ type: "LOGIN_SUCCESS", payload: user });
+
+      return user; // Return user object instead of token
     } catch (error) {
-      setError("Logout error", error);
+      console.error("Login failed:", error);
+      throw new Error(
+        error.response?.data?.message || "Login failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
+
+  const logoutAdmin = async () => {
+    try {
+      setLoading(true);
+      await axios.post(
+        `${baseUrl}/admin/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch({ type: "LOGOUT" });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        setLoading(true);
+        // Call the backend to verify the token and fetch user data
+        const response = await axios.get(`${baseUrl}/admin/me`, {
+          withCredentials: true, // Ensures HTTP-only cookies are sent with the request
+        });
+
+        // Update state with the authenticated user's data
+        dispatch({ type: "LOGIN_SUCCESS", payload: response.data });
+      } catch (error) {
+        console.error("Error verifying token:", error);
+        // Reset state if token verification fails
+        dispatch({ type: "LOGOUT" });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [baseUrl]);
 
   const adminAuthInfo = {
     loading,
-    token,
-    user,
+    ...state,
+    isAuthenticated: state.isAuthenticated,
+    adminData: state.adminData,
     loginAdmin,
     logoutAdmin,
-    error,
   };
 
   return (

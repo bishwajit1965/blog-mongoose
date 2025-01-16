@@ -1,16 +1,36 @@
 import "./AdminNavbar.css";
 
 import { FaBars, FaMoon, FaSun, FaTimes } from "react-icons/fa";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 
 import Logo from "/assets/favicon/webDevProF.png";
 import ThemeContext from "../../themeContext/ThemeContext";
+import adminImage from "/assets/bishwajit-1.jpg";
+import useAdminAuth from "../adminHooks/useAdminAuth";
 
 const AdminNavbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [open, setOpen] = useState(false);
+  const { logoutAdmin, adminData } = useAdminAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/admin/login";
+
+  // Logout admin
+  const handleLogOut = async () => {
+    try {
+      await logoutAdmin()
+        .then(() => {
+          navigate(from, { replace: true });
+        })
+        .catch((error) => {
+          console.error("Error during Sign-Out:", error.message);
+        });
+    } catch (error) {
+      console.error("Error during Sign-Out:", error.message);
+    }
+  };
 
   const handleOpen = () => {
     setOpen(!open);
@@ -106,6 +126,7 @@ const AdminNavbar = () => {
 
         <div className="navbar-end">
           {/* <a className="btn">Button</a> */}
+          <span className="mr-2 capitalize">{adminData?.roles}</span>
           <div className="dropdown dropdown-end dark:bg-gray-800">
             <div
               tabIndex={0}
@@ -113,10 +134,7 @@ const AdminNavbar = () => {
               className="btn btn-ghost btn-circle avatar"
             >
               <div className="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS Navbar component"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                />
+                <img alt="Tailwind CSS Navbar component" src={adminImage} />
               </div>
             </div>
             <ul
@@ -129,12 +147,20 @@ const AdminNavbar = () => {
                   <span className="badge">New</span>
                 </a>
               </li>
-              <li>
-                <Link to="/admin/login">Login</Link>
-              </li>
-              <li>
-                <a>Logout</a>
-              </li>
+
+              {adminData ? (
+                <>
+                  <li>
+                    <button onClick={handleLogOut}>Log Out</button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link to="/admin/login">Login</Link>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>
