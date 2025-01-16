@@ -13,9 +13,12 @@ import ManageBlogPosts from "../admin/adminDataManagement/manageBlogPosts/Manage
 import ManageCategories from "../admin/adminDataManagement/manageCategories/ManageCategories";
 import ManageTags from "../admin/adminDataManagement/manageTags/ManageTags";
 import ManageUsers from "../admin/adminDataManagement/manageUsers/ManageUsers";
+import PrivateRoute from "../privateRoute/PrivateRoute";
 import Register from "../pages/register/Register";
+import RequireAdmin from "../admin/requireAdmin/RequireAdmin";
 import RootLayout from "../layouts/rootLayout/RootLayout";
 import TermsConditions from "../pages/TermsConditions/TermsConditions";
+import Unauthorized from "../admin/unauthorized/Unauthorized";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -34,7 +37,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/contact-me",
-        element: <ContactMe />,
+        element: (
+          <PrivateRoute>
+            <ContactMe />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/blog-posts",
@@ -70,10 +77,18 @@ const router = createBrowserRouter([
     path: "/admin/login",
     element: <AdminLogin />,
   },
+  {
+    path: "unauthorized",
+    element: <Unauthorized />,
+  },
   // Admin protected routes
   {
     path: "/admin",
-    element: <AdminLayout />,
+    element: (
+      <RequireAdmin>
+        <AdminLayout />
+      </RequireAdmin>
+    ),
 
     children: [
       {
@@ -100,6 +115,7 @@ const router = createBrowserRouter([
         path: "manage-users",
         element: <ManageUsers />,
       },
+
       {
         path: "*",
         element: <ErrorPage />,

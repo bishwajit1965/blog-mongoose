@@ -1,4 +1,4 @@
-import AdminAuthContext from "../adminAuthProvider/AdminAuthProvider";
+import AdminAuthContext from "../adminAuthContext/AdminAuthContext";
 import { useContext } from "react";
 
 const useAdminAuth = () => {

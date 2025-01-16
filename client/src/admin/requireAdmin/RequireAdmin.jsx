@@ -1,14 +1,22 @@
+import { Navigate, useLocation } from "react-router-dom";
+
 import Loader from "../../components/loader/Loader";
-import { Navigate } from "react-router-dom";
 import useAdminAuth from "../adminHooks/useAdminAuth";
 
 const RequireAdmin = ({ children }) => {
-  const { user, loading } = useAdminAuth();
+  const location = useLocation();
+  const { loading, isAuthenticated, adminData } = useAdminAuth();
 
   if (loading) return <Loader />;
 
-  if (!user || user.role !== "admin") {
-    return <Navigate to="/admin/login" />;
+  if (!isAuthenticated) {
+    // Redirect to login if not authenticated
+    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+  }
+
+  if (!adminData?.roles.includes("admin")) {
+    // Redirect to a generic unauthorized page if user is not an admin
+    return <Navigate to="/unauthorized" replace />;
   }
   return children;
 };
