@@ -1,12 +1,14 @@
-const { verifyJWT } = require("../helpers/jwtHelpers");
+const { verifyJWT } = require("../utils/jwt");
 
-const verifyRoles = (roles) => (req, res, next) => {
-  const token = req.cookies.token;
+const verifyAdminRoles = (roles) => (req, res, next) => {
+  const token = req.cookies.authToken;
   if (!token) {
     return res.status(401).json({ message: "Unauthorized: Token not found." });
   }
   try {
     const user = verifyJWT(token);
+    console.log("Decoded JWT:", user); // Check the decoded token and roles
+
     if (!roles.some((role) => user.roles.includes(role))) {
       return res
         .status(403)
@@ -19,4 +21,4 @@ const verifyRoles = (roles) => (req, res, next) => {
   }
 };
 
-module.exports = { verifyRoles };
+module.exports = { verifyAdminRoles };

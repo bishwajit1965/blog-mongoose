@@ -1,5 +1,5 @@
 const User = require("../models/userModel");
-const { generateJWT } = require("../helpers/jwtHelpers");
+const { generateJWT } = require("../utils/jwt");
 const bcrypt = require("bcrypt");
 
 // Register or login user
