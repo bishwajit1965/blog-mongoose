@@ -1,14 +1,14 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseUrl: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
+  baseURL: "http://localhost:5000/api",
 });
 
 // Add a request interceptor to set Content-type dynamically
 api.interceptors.request.use(
   (config) => {
-    if (!config.headers["Content-type"]) {
-      //Set Content-type to JSON if not already specified
+    if (!config.headers["Content-Type"]) {
+      // set Content-type to JSON if not already specified
       if (config.data instanceof FormData) {
         delete config.headers["Content-type"];
       } else {
@@ -17,6 +17,7 @@ api.interceptors.request.use(
     }
     return config;
   },
+
   (error) => {
     return Promise.reject(error);
   }

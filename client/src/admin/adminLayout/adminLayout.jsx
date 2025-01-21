@@ -23,7 +23,7 @@ const AdminLayout = () => {
             />
           </div>
 
-          <div className="lg:min-h-[calc(100vh-188px)] p-2">
+          <div className="lg:min-h-[calc(100vh-188px)]">
             <Outlet />
           </div>
 

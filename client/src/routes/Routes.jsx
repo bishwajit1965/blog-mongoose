@@ -11,11 +11,14 @@ import Login from "../pages/login/Login";
 import LoginLayout from "../layouts/loginLayout/LoginLayout";
 import ManageBlogPosts from "../admin/adminDataManagement/manageBlogPosts/ManageBlogPosts";
 import ManageCategories from "../admin/adminDataManagement/manageCategories/ManageCategories";
+import ManagePermissions from "../admin/adminDataManagement/managePermissions/ManagePermissions";
+import ManageRoles from "../admin/adminDataManagement/manageRoles/ManageRoles";
 import ManageTags from "../admin/adminDataManagement/manageTags/ManageTags";
 import ManageUsers from "../admin/adminDataManagement/manageUsers/ManageUsers";
 import PrivateRoute from "../privateRoute/PrivateRoute";
 import Register from "../pages/register/Register";
 import RequireAdmin from "../admin/requireAdmin/RequireAdmin";
+import RoleForm from "../admin/adminDataManagement/manageRoles/RoleForm";
 import RootLayout from "../layouts/rootLayout/RootLayout";
 import TermsConditions from "../pages/TermsConditions/TermsConditions";
 import Unauthorized from "../admin/unauthorized/Unauthorized";
@@ -115,7 +118,18 @@ const router = createBrowserRouter([
         path: "manage-users",
         element: <ManageUsers />,
       },
-
+      {
+        path: "manage-roles",
+        element: <ManageRoles />,
+      },
+      {
+        path: "role-form",
+        element: <RoleForm />,
+      },
+      {
+        path: "manage-permission",
+        element: <ManagePermissions />,
+      },
       {
         path: "*",
         element: <ErrorPage />,
