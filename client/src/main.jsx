@@ -1,6 +1,8 @@
 import "./index.css";
 
 import AdminAuthProvider from "./admin/adminAuthProvider/AdminAuthProvider.jsx";
+import AdminPermissionProvider from "./admin/adminProviders/AdminPermissionProvider.jsx";
+import AdminRoleProvider from "./admin/adminProviders/AdminRoleProvider.jsx";
 import AuthProvider from "./providers/AuthProvider.jsx";
 import { HelmetProvider } from "react-helmet-async";
 import { RouterProvider } from "react-router-dom";
@@ -13,11 +15,15 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AdminAuthProvider>
       <AuthProvider>
-        <HelmetProvider>
-          <ThemeProvider>
-            <RouterProvider router={router} />
-          </ThemeProvider>
-        </HelmetProvider>
+        <AdminRoleProvider>
+          <AdminPermissionProvider>
+            <HelmetProvider>
+              <ThemeProvider>
+                <RouterProvider router={router} />
+              </ThemeProvider>
+            </HelmetProvider>
+          </AdminPermissionProvider>
+        </AdminRoleProvider>
       </AuthProvider>
     </AdminAuthProvider>
   </StrictMode>

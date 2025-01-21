@@ -19,7 +19,7 @@ const Register = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
-  const baseUrl =
+  const baseURL =
     import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
   const {
     register,
@@ -48,7 +48,7 @@ const Register = () => {
             roles: ["user"],
           };
 
-          fetch(`${baseUrl}/users`, {
+          fetch(`${baseURL}/users`, {
             method: "POST",
             headers: { "Content-type": "application/json" },
             body: JSON.stringify(saveUser),
