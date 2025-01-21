@@ -8,20 +8,37 @@ const router = express.Router();
 router.post("/login", loginAdmin); // Admin login
 router.post("/logout", logoutAdmin); // Admin logout
 
-// Middleware to verify token for all routes
-router.use((req, res, next) => {
+// Middleware to verify token
+const verifyTokenMiddleware = (req, res, next) => {
   const token = req.cookies.authToken;
   if (!token) {
-    res.status(401).json({ message: "Unauthorized!" });
+    return res.status(401).json({ message: "Unauthorized: No token found." });
   }
   try {
-    const user = verifyJWT(token);
-    req.user = user;
+    req.user = verifyJWT(token); //Decode and attach user info to the req object
     next();
   } catch (error) {
     return res.status(403).json({ message: "Invalid or expired token." });
   }
-});
+};
+
+// Apply token verification middleware to all subsequent request
+router.use(verifyTokenMiddleware);
+
+// Middleware to verify token for all routes
+// router.use((req, res, next) => {
+//   const token = req.cookies.authToken;
+//   if (!token) {
+//     return res.status(401).json({ message: "Unauthorized!" });
+//   }
+//   try {
+//     const user = verifyJWT(token);
+//     req.user = user;
+//     next();
+//   } catch (error) {
+//     return res.status(403).json({ message: "Invalid or expired token." });
+//   }
+// });
 
 // Admin-only routes
 router.use("/admin", verifyAdminRoles(["admin"]));

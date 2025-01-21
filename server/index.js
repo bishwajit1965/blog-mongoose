@@ -23,15 +23,19 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-// Routes configured
+// Routes configured and called
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const roleRoutes = require("./routes/roleRoutes");
+const permissionRoutes = require("./routes/permissionRoutes");
 
 // Instantiate routes for execution
 app.use("/api/auth", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/roles", roleRoutes);
+app.use("/api/permissions", permissionRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to blog-mongoose server,");

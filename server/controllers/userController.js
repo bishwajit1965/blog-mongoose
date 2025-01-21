@@ -1,11 +1,18 @@
-const User = require("../models/userModel");
+const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { validateUserInput } = require("../utils/validators");
 
 const createUser = async (req, res) => {
   try {
-    const { firebaseUid, name, email, password, avatar, roles, permissions } =
-      req.body; // Default role as "user"
+    const {
+      firebaseUid,
+      name,
+      email,
+      password,
+      avatar,
+      roles = ["viewer"],
+      permissions = ["read"],
+    } = req.body; // Default role as "user"
     console.log("Request body:", req.body);
 
     if (!firebaseUid || !email) {
@@ -15,15 +22,17 @@ const createUser = async (req, res) => {
     // Check if the email already exists
     const emailExists = await User.findOne({ email });
     if (emailExists) {
-      return res.status(409).json({ message: "User already exists." });
+      return res
+        .status(409)
+        .json({ status: "error", message: "User already exists." });
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
     // Validate user input
     validateUserInput({
-      roles: roles || ["viewer"],
-      permissions: permissions || ["read"],
+      roles,
+      permissions,
     });
 
     // Create a new user
@@ -40,9 +49,11 @@ const createUser = async (req, res) => {
     const savedUser = await newUser.save();
     console.log("User saved successfully", savedUser);
 
-    return res
-      .status(201)
-      .json({ message: "User created successfully", user: newUser });
+    return res.status(201).json({
+      status: "success",
+      message: "User created successfully",
+      user: newUser,
+    });
   } catch (error) {
     console.error("Error in creating user:", error.message);
     return res.status(500).json({ message: "Internal server error." });
