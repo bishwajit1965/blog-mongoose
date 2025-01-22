@@ -2,6 +2,7 @@ import AdminLoader from "../../adminComponent/adminLoader/AdminLoader";
 import AdminSubTitle from "../../adminComponent/adminSubTitle/AdminSubTitle";
 import CTAButton from "../../../components/buttons/CTAButton";
 import { FaTimesCircle } from "react-icons/fa";
+import { Helmet } from "react-helmet-async";
 import PermissionForm from "./PermissionForm";
 import PermissionsTable from "./PermissionsTable";
 import useAdminPermission from "../../adminHooks/useAdminPermission";
@@ -20,7 +21,10 @@ const ManagePermissions = () => {
   };
 
   return (
-    <div className="">
+    <>
+      <Helmet>
+        <title>Blog || Manage Permissions</title>
+      </Helmet>
       <AdminSubTitle
         dataLength={permissions.length}
         subTitle="Manage"
@@ -29,7 +33,7 @@ const ManagePermissions = () => {
       <div className="p-2">
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-12 grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="lg:col-span-6 col-span-12 lg:border-r dark:border-gray-700 lg:pr-6">
+            <div className="lg:col-span-6 col-span-12 lg:border-r dark:border-gray-700 lg:pr-3">
               <h2 className="text-xl font-semibold mb-2">
                 {editingPermission ? "Update Permission" : "Add Permission"}
               </h2>
@@ -70,7 +74,7 @@ const ManagePermissions = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -14,7 +14,7 @@ const AdminLayout = () => {
           <AdminSideNav />
         </div>
 
-        <div className="lg:col-span-10 col-span-12 border border-b-rounded-md dark:border-none">
+        <div className="lg:col-span-10 col-span-12 border border-b-rounded-md dark:border-gray-700">
           <div className="bg-base-">
             <AdminPageTitle
               title="Admin"

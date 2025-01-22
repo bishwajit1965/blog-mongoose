@@ -29,7 +29,7 @@ const CTAButton = ({
 }) => {
   // Define base styles
   const baseStyle =
-    "px-4 py-2 font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-lg transform transition-transform duration-300 inline-block lg:block";
+    "px-3 py- font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-lg transform transition-transform duration-300 inline-block lg:block";
 
   // Define variant-specific styles
   const variantStyles = {

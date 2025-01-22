@@ -2,6 +2,7 @@ import AdminLoader from "../../adminComponent/adminLoader/AdminLoader";
 import AdminSubTitle from "../../adminComponent/adminSubTitle/AdminSubTitle";
 import CTAButton from "../../../components/buttons/CTAButton";
 import { FaTimesCircle } from "react-icons/fa";
+import { Helmet } from "react-helmet-async";
 import RoleForm from "./RoleForm";
 import RolesTable from "./RolesTable";
 import useAdminRole from "../../adminHooks/useAdminRole";
@@ -20,16 +21,19 @@ const ManageRoles = () => {
   };
 
   return (
-    <div className="">
+    <>
+      <Helmet>
+        <title>Blog || Manage Roles</title>
+      </Helmet>
       <AdminSubTitle
         dataLength={roles.length}
         subTitle="Manage"
         decoratedText="Roles"
       />
-      <div className="p-2">
+      <div className="lg:p-2">
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-12 grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="lg:col-span-6 col-span-12 lg:border-r dark:border-gray-700 lg:pr-6">
+            <div className="lg:col-span-6 col-span-12 lg:border-r dark:border-gray-700 lg:pr-3">
               <h2 className="text-xl font-semibold mb-2">
                 {editingRole ? "Update Role" : "Add Role"}
               </h2>
@@ -68,7 +72,7 @@ const ManageRoles = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -20,7 +20,7 @@ const AdminSubTitle = ({
         <h2 className="text-xl font-bold space-x-2">
           {subTitle && <span className="text-xl font-bold">{subTitle}</span>}
           {decoratedText && (
-            <span className="text-xl font-bold text-amber-700">
+            <span className="text-xl font-bold text-amber-700 dark:text-amber-400">
               {decoratedText}
             </span>
           )}
@@ -32,7 +32,9 @@ const AdminSubTitle = ({
             <h2 className="text-xl font-bold">
               Total Data:{" "}
               {dataLength && (
-                <span className="text-amber-700">{dataLength}</span>
+                <span className="text-amber-700 dark:text-amber-400">
+                  {dataLength}
+                </span>
               )}
             </h2>
           </>
