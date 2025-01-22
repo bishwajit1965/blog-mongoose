@@ -3,6 +3,8 @@ import { createRole, updateRole } from "../../adminServices/roleService";
 import { useEffect, useState } from "react";
 
 import CTAButton from "../../../components/buttons/CTAButton";
+import Select from "react-select";
+import useAdminPermission from "../../adminHooks/useAdminPermission";
 import useAdminRole from "../../adminHooks/useAdminRole";
 
 const RoleForm = ({ onSuccess, existingRole = null }) => {
@@ -12,19 +14,49 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
   );
   const [loading, setLoading] = useState(false);
   const { addRoleToState, updateRoleInState } = useAdminRole();
+  const [selectedPermissions, setSelectedPermissions] = useState([]);
+  const { permissions } = useAdminPermission();
+
+  const options = permissions.map((permission) => ({
+    value: permission._id,
+    label: permission.name,
+  }));
+
+  console.log("Options:", options);
 
   useEffect(() => {
     if (existingRole) {
       setRoleName(existingRole.name);
       setRoleDescription(existingRole.description);
+
+      const existingPermissions = existingRole.permissions
+        .map((permId) => {
+          const matchingPermission = permissions.find(
+            (perm) => perm._id === permId
+          );
+          return matchingPermission
+            ? {
+                value: matchingPermission._id,
+                label: matchingPermission.name,
+              }
+            : null;
+        })
+        .filter(Boolean);
+
+      setSelectedPermissions(existingPermissions);
     } else {
       setRoleName("");
       setRoleDescription("");
+      setSelectedPermissions([]);
     }
-  }, [existingRole]);
+  }, [existingRole, permissions]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const permissionIds = selectedPermissions.map(
+      (permission) => permission.value
+    );
 
     if (!roleName.trim()) {
       alert("Role name is required.");
@@ -33,7 +65,12 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
 
     try {
       setLoading(true);
-      const roleData = { name: roleName, description: roleDescription };
+      const roleData = {
+        name: roleName,
+        description: roleDescription,
+        permissions: permissionIds,
+      };
+
       if (existingRole) {
         const updatedRole = await updateRole(existingRole._id, roleData);
         updateRoleInState(updatedRole);
@@ -46,6 +83,7 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
       onSuccess();
       setRoleName("");
       setRoleDescription("");
+      setSelectedPermissions([]);
     } catch (error) {
       console.error("Error submitting role:", error);
       alert("Failed to submit role.");
@@ -58,21 +96,35 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
     <div>
       <form onSubmit={handleSubmit}>
         <div>
-          <label className="block mb-2">Role Name:</label>
+          <label className="block mb-1">Role Name:</label>
           <input
             type="text"
             value={roleName}
             onChange={(e) => setRoleName(e.target.value)}
-            className="input input-bordered input-sm w-full dark:bg-gray-700"
+            placeholder="Enter Role Name"
+            className="input input-bordered input-sm w-full dark:bg-gray-700 mb-2"
             required
           />
-          <label className="block mb-2">Role Description:</label>
+          <label className="block mb-1">Role Description:</label>
           <input
             type="text"
             value={roleDescription}
             onChange={(e) => setRoleDescription(e.target.value)}
-            className="input input-bordered input-sm w-full dark:bg-gray-700"
+            placeholder="Enter Role Description"
+            className="input input-bordered input-sm w-full dark:bg-gray-700 mb-2"
             required
+          />
+
+          <label className="block mb-1">Permissions:</label>
+          <Select
+            isMulti
+            options={options}
+            value={selectedPermissions}
+            onChange={(selectedOptions) =>
+              setSelectedPermissions(selectedOptions)
+            }
+            placeholder="Select permissions..."
+            className="dark:bg-gray-700 mb-2"
           />
         </div>
 

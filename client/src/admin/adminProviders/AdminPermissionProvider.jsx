@@ -32,6 +32,7 @@ const AdminPermissionProvider = ({ children }) => {
       )
     );
   };
+
   useEffect(() => {
     fetchPermissions();
   }, []);
