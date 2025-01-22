@@ -1,8 +1,11 @@
+const mongoose = require("mongoose");
 const Role = require("../models/Role");
+const Permission = require("../models/Permission");
 
 const createRole = async (req, res) => {
   try {
-    const { name, description, permissions = ["read"] } = req.body;
+    const { name, description, permissions } = req.body;
+    console.log("Request Body:", req.body);
     const role = new Role({ name, description, permissions });
     await role.save();
     res.status(201).json({ message: "Role created successfully", role });
@@ -16,7 +19,7 @@ const createRole = async (req, res) => {
 const getRoleById = async (req, res) => {
   try {
     const { id } = req.params;
-    const role = await Role.findById(id);
+    const role = await Role.findById(id).populate("permissions", "name _id");
 
     if (!role) {
       return res.status(404).json({ message: "Role not found." });
@@ -44,29 +47,51 @@ const getAllRoles = async (req, res) => {
 const updateRole = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description } = req.body;
+    const { name, description, permissions } = req.body;
 
     if (!name)
       return res
         .status(400)
         .json({ status: "error", message: "Role name is required." });
+
     if (!description)
       return res
         .status(400)
         .json({ status: "error", message: "Description is required." });
 
+    // Validate and convert permissions to ObjectIds
+    const permissionIds = permissions
+      ? permissions.map((perm) => new mongoose.Types.ObjectId(perm))
+      : [];
+
+    // Check if all provided permissions exist
+    const existingPermissions = await Permission.find({
+      _id: { $in: permissionIds },
+    });
+    if (existingPermissions.length !== permissions.length) {
+      return res
+        .status(400)
+        .json({ status: "error", message: "Invalid permissions provided." });
+    }
+
     const updatedRole = await Role.findByIdAndUpdate(
       id,
-      { name, description },
+      { name, description, permissions: permissionIds },
       { new: true }
-    );
+    ).populate("permissions", "name");
+
     if (!updatedRole) {
       return res
         .status(404)
         .json({ status: "error", message: "Role not found." });
     }
-    res.status(200).json(updatedRole);
+    res.status(200).json({
+      status: "success",
+      message: "Role updated successfully.",
+      data: updatedRole,
+    });
   } catch (error) {
+    console.error("Error updating role:", error.message);
     res
       .status(400)
       .json({ message: "Error in updating role.", error: error.message });

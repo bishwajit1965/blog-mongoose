@@ -13,16 +13,7 @@ const roleSchema = new mongoose.Schema(
       default: "",
       trim: true,
     },
-    permissions: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Permission", // this will reference Permission model
-      },
-    ],
-    // permissions: {
-    //   type: [String], //Array of permissions (e.g.,["read", "write", "delete"])
-    //   default: ["read"],
-    // },
+    permissions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Permission" }],
   },
   { timestamps: true }
 );
