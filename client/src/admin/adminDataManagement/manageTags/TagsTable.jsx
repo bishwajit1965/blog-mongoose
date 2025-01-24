@@ -2,39 +2,37 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 
 import AdminPagination from "../../adminComponent/adminPagination/AdminPagination";
 import CTAButton from "../../../components/buttons/CTAButton";
-import { deleteRole } from "../../adminServices/roleService";
+import { deleteTag } from "../../adminServices/tagService";
 import useAdminAuth from "../../adminHooks/useAdminAuth";
-import useAdminPermission from "../../adminHooks/useAdminPermission";
-import useAdminRole from "../../adminHooks/useAdminRole";
+import useAdminTag from "../../adminHooks/useAdminTag";
 import { useState } from "react";
 
-const RolesTable = ({ onDelete, onEdit }) => {
-  const { permissions } = useAdminPermission();
-  const { roles } = useAdminRole();
+const TagsTable = ({ onEdit, onDelete }) => {
+  const { tags } = useAdminTag();
   const { adminData } = useAdminAuth();
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const rolesPerPage = 10; // Number of roles per page
+  const tagsPerPage = 10; // Number of roles per page
 
   // Calculate pagination values
-  const totalPages = Math.ceil(roles?.length / rolesPerPage);
-  const startIndex = (currentPage - 1) * rolesPerPage;
-  const currentRoles = roles?.slice(startIndex, startIndex + rolesPerPage);
+  const totalPages = Math.ceil(tags?.length / tagsPerPage);
+  const startIndex = (currentPage - 1) * tagsPerPage;
+  const currentTags = tags?.slice(startIndex, startIndex + tagsPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this role?")) {
+    if (window.confirm("Are you sure you want to delete this tag?")) {
       try {
-        await deleteRole(id);
-        alert("Role deleted successfully!");
+        await deleteTag(id);
+        alert("Tag deleted successfully!");
         onDelete();
       } catch (error) {
-        console.error("Error deleting role:", error);
-        alert("Failed to delete role.");
+        console.error("Error deleting tag:", error);
+        alert("Failed to delete tag.");
       }
     }
   };
@@ -45,47 +43,33 @@ const RolesTable = ({ onDelete, onEdit }) => {
         <thead>
           <tr className="dark:border-gray-700 dark:text-gray-400 font-bold">
             <th>#</th>
-            <th>Role Name</th>
-            <th>Permissions</th>
-            <th>Role Description</th>
-            <th className="lg:flex lg:justify-end lg:pr-14">Actions</th>
+            <th>Tag Name</th>
+            <th>Tag Slug</th>
+            <th className="lg:flex lg:justify-end lg:mr-12">Actions</th>
           </tr>
         </thead>
+
         <tbody className="dark:hover:bg-gray-700 dark:hover:rounded-md">
-          {currentRoles?.map((role, index) => (
+          {currentTags?.map((tag, index) => (
             <tr
-              key={role._id}
+              key={tag._id}
               className="dark:hover:bg-gray-600 hover:bg-gray-100 dark:border-gray-700"
             >
               <td>{index + 1}</td>
-              <td className="capitalize">{role.name}</td>
-              <td>
-                {role.permissions.map((perId, index) => {
-                  const matchingPermission = permissions.find(
-                    (perm) => perm._id === perId
-                  );
-                  if (matchingPermission) {
-                    // Check if it's the last item
-                    return index === role.permissions.length - 1
-                      ? matchingPermission.name
-                      : matchingPermission.name.concat(", ");
-                  }
-                  return null;
-                })}
-              </td>
-              <td>{role.description}</td>
-              <td className="flex p-0 space-x-1 justify-end">
+              <td>{tag.name}</td>
+              <td>{tag.slug}</td>
+              <td className="flex space-x-1 justify-end p-0">
                 {adminData?.roles == "admin" ? (
                   <>
                     <CTAButton
-                      onClick={() => onEdit(role)}
+                      onClick={() => onEdit(tag)}
                       label="Edit"
                       icon={<FaEdit />}
                       className="btn btn-xs text-xs"
                       variant="primary"
                     />
                     <CTAButton
-                      onClick={() => handleDelete(role._id)}
+                      onClick={() => handleDelete(tag._id)}
                       label="Delete"
                       icon={<FaTrashAlt />}
                       className="btn btn-xs text-xs"
@@ -100,7 +84,6 @@ const RolesTable = ({ onDelete, onEdit }) => {
           ))}
         </tbody>
       </table>
-
       {/* Pagination */}
       <AdminPagination
         currentPage={currentPage}
@@ -111,4 +94,4 @@ const RolesTable = ({ onDelete, onEdit }) => {
   );
 };
 
-export default RolesTable;
+export default TagsTable;

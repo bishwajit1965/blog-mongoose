@@ -1,7 +1,8 @@
+import { FaHome, FaTimesCircle } from "react-icons/fa";
+
 import AdminLoader from "../../adminComponent/adminLoader/AdminLoader";
 import AdminSubTitle from "../../adminComponent/adminSubTitle/AdminSubTitle";
 import CTAButton from "../../../components/buttons/CTAButton";
-import { FaTimesCircle } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 import PermissionForm from "./PermissionForm";
 import PermissionsTable from "./PermissionsTable";
@@ -26,6 +27,14 @@ const ManagePermissions = () => {
         <title>Blog || Manage Permissions</title>
       </Helmet>
       <AdminSubTitle
+        link="/admin/admin-home-dashboard"
+        navigationButton={
+          <CTAButton
+            label="Admin Dashboard"
+            icon={<FaHome />}
+            variant="primary"
+          />
+        }
         dataLength={permissions.length}
         subTitle="Manage"
         decoratedText="Permissions"

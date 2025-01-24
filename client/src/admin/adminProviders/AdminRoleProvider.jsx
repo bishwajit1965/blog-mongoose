@@ -19,6 +19,10 @@ const AdminRoleProvider = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    fetchRoles();
+  }, []);
+
   const addRoleToState = (role) => {
     setRoles((prev) => [...prev, role]);
   };
@@ -28,10 +32,6 @@ const AdminRoleProvider = ({ children }) => {
       prev.map((role) => (role._id === updatedRole._id ? updatedRole : role))
     );
   };
-
-  useEffect(() => {
-    fetchRoles();
-  }, []);
 
   const adminRoleInfo = {
     roles,

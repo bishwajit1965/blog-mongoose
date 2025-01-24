@@ -3,6 +3,10 @@ import {
   createPermission,
   updatePermission,
 } from "../../adminServices/permissionService";
+import {
+  notifyError,
+  notifySuccess,
+} from "../../adminComponent/adminToastNotification/AdminToastNotification";
 import { useEffect, useState } from "react";
 
 import CTAButton from "../../../components/buttons/CTAButton";
@@ -34,7 +38,11 @@ const PermissionForm = ({ onSuccess, existingPermission = null }) => {
     e.preventDefault();
 
     if (!permissionName.trim()) {
-      alert("Permission name is required.");
+      notifyError("Permission name is required.");
+      return;
+    }
+    if (!permissionDescription.trim()) {
+      notifyError("Permission description is required.");
       return;
     }
 
@@ -51,25 +59,25 @@ const PermissionForm = ({ onSuccess, existingPermission = null }) => {
           permissionData
         );
         updatePermissionInState(updatedPermission);
-        alert("Permission updated successfully!");
+        notifySuccess("Permission updated successfully!");
       } else {
         const newPermission = await createPermission(permissionData);
         addPermissionToState(newPermission);
-        alert("Permission created successfully!");
+        notifySuccess("Permission created successfully!");
       }
       onSuccess();
       setPermissionName("");
       setPermissionDescription("");
     } catch (error) {
       console.error("Error submitting permission:", error);
-      alert("Failed to submit permission.");
+      notifyError("Error submitting permission.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
+    <>
       <form onSubmit={handleSubmit}>
         <div>
           <label className="block mb-2">Permission Name:</label>
@@ -78,7 +86,7 @@ const PermissionForm = ({ onSuccess, existingPermission = null }) => {
             value={permissionName}
             onChange={(e) => setPermissionName(e.target.value)}
             className="input input-bordered input-sm w-full dark:bg-gray-700"
-            required
+            // required
           />
           <label className="block mb-2">Permission Description:</label>
           <input
@@ -86,7 +94,7 @@ const PermissionForm = ({ onSuccess, existingPermission = null }) => {
             value={permissionDescription}
             onChange={(e) => setPermissionDescription(e.target.value)}
             className="input input-bordered input-sm w-full dark:bg-gray-700"
-            required
+            // required
           />
         </div>
 
@@ -104,7 +112,7 @@ const PermissionForm = ({ onSuccess, existingPermission = null }) => {
           variant={existingPermission ? "success" : "primary"}
         />
       </form>
-    </div>
+    </>
   );
 };
 

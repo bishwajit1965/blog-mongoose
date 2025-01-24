@@ -47,7 +47,7 @@ const PermissionsTable = ({ onDelete, onEdit }) => {
             <th>#</th>
             <th>Permission Name</th>
             <th>Permission Description</th>
-            <th className="lg:flex lg:justify-end lg:mr-20">Actions</th>
+            <th className="lg:flex lg:justify-end lg:mr-12">Actions</th>
           </tr>
         </thead>
 

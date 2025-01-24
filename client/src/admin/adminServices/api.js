@@ -1,4 +1,5 @@
 import axios from "axios";
+import { notifyError } from "../adminComponent/adminToastNotification/AdminToastNotification";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
@@ -27,6 +28,11 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (error.response && error.response.data.message) {
+      notifyError(error.response.data.message);
+    } else {
+      notifyError("An error occurred. Please try again later.");
+    }
     console.error("API error:", error.response?.data || error.message);
     return Promise.reject(error); // Optionally rethrow for caller to handle
   }

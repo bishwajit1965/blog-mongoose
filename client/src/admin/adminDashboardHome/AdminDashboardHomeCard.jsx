@@ -7,7 +7,7 @@ const AdminDashboardHomeCard = ({ loading, isAuthenticated, adminData }) => {
       <div className="bg-base-300 text-center p-2 dark:bg-gray-700">
         <h1 className="text-xl font-bold">Blog Posts Details</h1>
       </div>
-      <div className="">
+      <div className="p-2">
         {isAuthenticated && adminData ? (
           <>
             <p>Email: {adminData?.email}</p>
@@ -22,9 +22,7 @@ const AdminDashboardHomeCard = ({ loading, isAuthenticated, adminData }) => {
       <div className="p-2">
         <p>
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio
-          explicabo nostrum iusto quod ipsum adipisci voluptates, nobis itaque
-          perspiciatis tenetur fugit corrupti placeat iste enim. Veritatis
-          impedit saepe repudiandae deleniti!
+          explicabo nostrum iusto quod ipsum adipisci voluptates.
         </p>
       </div>
     </div>

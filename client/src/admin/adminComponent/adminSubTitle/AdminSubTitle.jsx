@@ -26,7 +26,7 @@ const AdminSubTitle = ({
           )}
         </h2>
       </div>
-      <div className="lg:col-span-4 col-span-12 flex justify-center">
+      <div className="lg:col-span-4 col-span-12 flex justify-end pr-2">
         {dataLength ? (
           <>
             <h2 className="text-xl font-bold">
