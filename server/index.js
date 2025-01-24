@@ -29,6 +29,8 @@ const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const roleRoutes = require("./routes/roleRoutes");
 const permissionRoutes = require("./routes/permissionRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
+const tagRoutes = require("./routes/tagRoutes");
 
 // Instantiate routes for execution
 app.use("/api/auth", authRoutes);
@@ -36,6 +38,8 @@ app.use("/api", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/permissions", permissionRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/tags", tagRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to blog-mongoose server,");

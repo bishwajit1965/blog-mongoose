@@ -1,37 +1,38 @@
 const express = require("express");
-
 const {
-  createPermission,
-  getPermissionById,
-  getAllPermissions,
-  updatePermission,
-  deletePermission,
-} = require("../controllers/permissionController");
+  createCategory,
+  getCategoryById,
+  getAllCategories,
+  updateCategory,
+  deleteCategory,
+} = require("../controllers/categoryController");
 
-// To verify if authenticated and if isSuperAdmin
 const { verifyToken, isSuperAdmin } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
-router.post("/", verifyToken, isSuperAdmin(["admin"]), createPermission);
+router.post("/", verifyToken, isSuperAdmin(["admin"]), createCategory);
+
 router.get(
   "/:id",
   verifyToken,
   isSuperAdmin(["admin", "editor"]),
-  getPermissionById
+  getCategoryById
 );
+
 router.get(
   "/",
   verifyToken,
   isSuperAdmin(["admin", "editor"]),
-  getAllPermissions
+  getAllCategories
 );
-router.patch("/:id", verifyToken, isSuperAdmin(["admin"]), updatePermission);
+router.patch("/:id", verifyToken, isSuperAdmin(["admin"]), updateCategory);
+
 router.delete(
   "/:id",
   verifyToken,
   isSuperAdmin(["admin", "super-admin"]),
-  deletePermission
+  deleteCategory
 );
 
 module.exports = router;

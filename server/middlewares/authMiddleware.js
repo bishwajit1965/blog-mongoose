@@ -22,31 +22,66 @@ const verifyToken = (req, res, next) => {
 };
 
 // Middleware to check if the user is a super admin
-const isSuperAdmin = async (req, res, next) => {
-  try {
-    if (!req.user || !req.user.id) {
-      return res
-        .status(403)
-        .json({ message: "Forbidden: User ID not found in token." });
+// const isSuperAdmin = async (req, res, next) => {
+//   try {
+//     if (!req.user || !req.user.id) {
+//       return res
+//         .status(403)
+//         .json({ message: "Forbidden: User ID not found in token." });
+//     }
+
+//     const user = await User.findById(req.user.id); // Fetch user from database
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found." });
+//     }
+
+//     if (!user.roles.includes("admin")) {
+//       return res.status(403).json({
+//         message: "Forbidden: You do not have super-admin privileges.",
+//       });
+//     }
+
+//     next();
+//   } catch (error) {
+//     console.error("Error checking super-admin role:", error);
+//     res.status(500).json({ message: "Internal server error." });
+//   }
+// };
+
+const isSuperAdmin =
+  (roles = []) =>
+  async (req, res, next) => {
+    try {
+      if (!req.user || !req.user.id) {
+        return res
+          .status(403)
+          .json({ message: "Forbidden: User ID not found in token." });
+      }
+
+      // Fetch user data (including roles) from the database
+      const user = await User.findById(req.user.id);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found." });
+      }
+
+      // Check if the user has at least one of the required roles
+      if (
+        roles.length > 0 &&
+        !roles.some((role) => user.roles.includes(role))
+      ) {
+        return res
+          .status(403)
+          .json({ message: "Forbidden: Insufficient permissions." });
+      }
+
+      req.user.roles = user.roles; // Attach user roles to the request for further use
+      next();
+    } catch (error) {
+      console.error("Error verifying roles:", error);
+      res.status(500).json({ message: "Internal server error." });
     }
-
-    const user = await User.findById(req.user.id); // Fetch user from database
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
-    }
-
-    if (!user.roles.includes("admin")) {
-      return res.status(403).json({
-        message: "Forbidden: You do not have super-admin privileges.",
-      });
-    }
-
-    next();
-  } catch (error) {
-    console.error("Error checking super-admin role:", error);
-    res.status(500).json({ message: "Internal server error." });
-  }
-};
+  };
 
 module.exports = { verifyToken, isSuperAdmin };

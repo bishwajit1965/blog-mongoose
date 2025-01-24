@@ -8,19 +8,19 @@ const {
   deleteRole,
 } = require("../controllers/roleController");
 
-// To verify if authenticated and if isSuperAdmin
 const { verifyToken, isSuperAdmin } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
-// Apply middleware to all routes
-router.use(verifyToken, isSuperAdmin);
-
-// Routes
-router.post("/", createRole);
-router.get("/:id", getRoleById); // Get role by ID
-router.get("/", getAllRoles);
-router.patch("/:id", updateRole);
-router.delete("/:id", deleteRole);
+router.post("/", verifyToken, isSuperAdmin(["admin"]), createRole);
+router.get("/:id", verifyToken, isSuperAdmin(["admin", "editor"]), getRoleById);
+router.get("/", verifyToken, isSuperAdmin(["admin", "editor"]), getAllRoles);
+router.patch("/:id", verifyToken, isSuperAdmin(["admin"]), updateRole);
+router.delete(
+  "/:id",
+  verifyToken,
+  isSuperAdmin(["admin", "super-admin"]),
+  deleteRole
+);
 
 module.exports = router;
