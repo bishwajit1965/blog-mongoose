@@ -2,90 +2,76 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 
 import AdminPagination from "../../adminComponent/adminPagination/AdminPagination";
 import CTAButton from "../../../components/buttons/CTAButton";
-import { deleteRole } from "../../adminServices/roleService";
+import { deleteCategory } from "../../adminServices/categoryService";
 import useAdminAuth from "../../adminHooks/useAdminAuth";
-import useAdminPermission from "../../adminHooks/useAdminPermission";
-import useAdminRole from "../../adminHooks/useAdminRole";
+import useAdminCategory from "../../adminHooks/useAdminCategory";
 import { useState } from "react";
 
-const RolesTable = ({ onDelete, onEdit }) => {
-  const { permissions } = useAdminPermission();
-  const { roles } = useAdminRole();
+const CategoriesTable = ({ onEdit, onDelete }) => {
+  const { categories } = useAdminCategory();
   const { adminData } = useAdminAuth();
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const rolesPerPage = 10; // Number of roles per page
+  const categoriesPerPage = 10; // Number of roles per page
 
   // Calculate pagination values
-  const totalPages = Math.ceil(roles?.length / rolesPerPage);
-  const startIndex = (currentPage - 1) * rolesPerPage;
-  const currentRoles = roles?.slice(startIndex, startIndex + rolesPerPage);
+  const totalPages = Math.ceil(categories?.length / categoriesPerPage);
+  const startIndex = (currentPage - 1) * categoriesPerPage;
+  const currentCategories = categories?.slice(
+    startIndex,
+    startIndex + categoriesPerPage
+  );
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this role?")) {
+    if (window.confirm("Are you sure you want to delete this category?")) {
       try {
-        await deleteRole(id);
-        alert("Role deleted successfully!");
+        await deleteCategory(id);
+        alert("Category deleted successfully!");
         onDelete();
       } catch (error) {
-        console.error("Error deleting role:", error);
-        alert("Failed to delete role.");
+        console.error("Error deleting category:", error);
+        alert("Failed to delete category.");
       }
     }
   };
-
   return (
     <>
       <table className="table table-xs w-full">
         <thead>
           <tr className="dark:border-gray-700 dark:text-gray-400 font-bold">
             <th>#</th>
-            <th>Role Name</th>
-            <th>Permissions</th>
-            <th>Role Description</th>
-            <th className="lg:flex lg:justify-end lg:pr-14">Actions</th>
+            <th>Category Name</th>
+            <th>Category Description</th>
+            <th className="lg:flex lg:justify-end lg:mr-12">Actions</th>
           </tr>
         </thead>
+
         <tbody className="dark:hover:bg-gray-700 dark:hover:rounded-md">
-          {currentRoles?.map((role, index) => (
+          {currentCategories?.map((category, index) => (
             <tr
-              key={role._id}
+              key={category._id}
               className="dark:hover:bg-gray-600 hover:bg-gray-100 dark:border-gray-700"
             >
               <td>{index + 1}</td>
-              <td className="capitalize">{role.name}</td>
-              <td>
-                {role.permissions.map((perId, index) => {
-                  const matchingPermission = permissions.find(
-                    (perm) => perm._id === perId
-                  );
-                  if (matchingPermission) {
-                    // Check if it's the last item
-                    return index === role.permissions.length - 1
-                      ? matchingPermission.name
-                      : matchingPermission.name.concat(", ");
-                  }
-                  return null;
-                })}
-              </td>
-              <td>{role.description}</td>
-              <td className="flex p-0 space-x-1 justify-end">
+              <td>{category.name}</td>
+              <td>{category.description}</td>
+              <td className="flex space-x-1 justify-end p-0">
                 {adminData?.roles == "admin" ? (
                   <>
                     <CTAButton
-                      onClick={() => onEdit(role)}
+                      onClick={() => onEdit(category)}
                       label="Edit"
                       icon={<FaEdit />}
                       className="btn btn-xs text-xs"
                       variant="primary"
                     />
                     <CTAButton
-                      onClick={() => handleDelete(role._id)}
+                      onClick={() => handleDelete(category._id)}
                       label="Delete"
                       icon={<FaTrashAlt />}
                       className="btn btn-xs text-xs"
@@ -111,4 +97,4 @@ const RolesTable = ({ onDelete, onEdit }) => {
   );
 };
 
-export default RolesTable;
+export default CategoriesTable;

@@ -1,53 +1,19 @@
+import API_PATHS from "./apiPaths";
 import api from "./api";
+import handleApiCall from "./handleApiCall";
 
-const createRole = async (role) => {
-  try {
-    const response = await api.post("/roles", role);
-    return response.data;
-  } catch (error) {
-    console.error("Failed to create role:", error);
-    throw error;
-  }
-};
+const createRole = (role) =>
+  handleApiCall(() => api.post(API_PATHS.ROLES, role));
 
-const getRoleById = async (id) => {
-  try {
-    const response = await api.get(`/roles/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error("Failed to find permission by id:", error);
-    throw error;
-  }
-};
+const getRoleById = (id) =>
+  handleApiCall(() => api.get(`${API_PATHS.ROLES}/${id}`));
 
-const getAllRoles = async () => {
-  try {
-    const response = await api.get("/roles");
-    return response.data;
-  } catch (error) {
-    console.error("Failed to retrieve all roles:", error);
-    throw error;
-  }
-};
+const getAllRoles = () => handleApiCall(() => api.get(API_PATHS.ROLES));
 
-const updateRole = async (id, role) => {
-  try {
-    const response = await api.patch(`/roles/${id}`, role);
-    return response.data;
-  } catch (error) {
-    console.error("Failed to update role:", error);
-    throw error;
-  }
-};
+const updateRole = (id, role) =>
+  handleApiCall(() => api.patch(`${API_PATHS.ROLES}/${id}`, role));
 
-const deleteRole = async (id) => {
-  try {
-    const response = await api.delete(`/roles/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error("Failed to delete role:", error);
-    throw error;
-  }
-};
+const deleteRole = (id) =>
+  handleApiCall(() => api.delete(`${API_PATHS.ROLES}/${id}`));
 
 export { createRole, getRoleById, getAllRoles, updateRole, deleteRole };

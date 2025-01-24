@@ -6,8 +6,8 @@ const AdminDashboardHome = () => {
   const { loading, isAuthenticated, adminData } = useAdminAuth();
   return (
     <>
-      <Helmet title="Blog || Admin Dashboard" />
-      <div className="grid lg:grid-cols-12 grid-cols-1 justify-between gap-4">
+      <Helmet title="Blog || Admin Home Dashboard" />
+      <div className="grid lg:grid-cols-12 grid-cols-1 justify-between gap-4 p-2">
         <AdminDashboardHomeCard
           isAuthenticated={isAuthenticated}
           adminData={adminData}

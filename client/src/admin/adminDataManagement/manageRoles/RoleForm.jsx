@@ -1,5 +1,9 @@
 import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import { createRole, updateRole } from "../../adminServices/roleService";
+import {
+  notifyError,
+  notifySuccess,
+} from "../../adminComponent/adminToastNotification/AdminToastNotification";
 import { useEffect, useState } from "react";
 
 import CTAButton from "../../../components/buttons/CTAButton";
@@ -21,8 +25,6 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
     value: permission._id,
     label: permission.name,
   }));
-
-  console.log("Options:", options);
 
   useEffect(() => {
     if (existingRole) {
@@ -59,7 +61,11 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
     );
 
     if (!roleName.trim()) {
-      alert("Role name is required.");
+      notifyError("Role name is required.");
+      return;
+    }
+    if (!roleDescription.trim()) {
+      notifyError("Role description is required.");
       return;
     }
 
@@ -74,11 +80,11 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
       if (existingRole) {
         const updatedRole = await updateRole(existingRole._id, roleData);
         updateRoleInState(updatedRole);
-        alert("Role updated successfully!");
+        notifySuccess("Role updated successfully!");
       } else {
         const newRole = await createRole(roleData);
         addRoleToState(newRole);
-        alert("Role created successfully!");
+        notifyError("Failed to assign role. Please try again.");
       }
       onSuccess();
       setRoleName("");
@@ -86,7 +92,7 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
       setSelectedPermissions([]);
     } catch (error) {
       console.error("Error submitting role:", error);
-      alert("Failed to submit role.");
+      notifyError("Failed to assign role. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -103,7 +109,7 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
             onChange={(e) => setRoleName(e.target.value)}
             placeholder="Enter Role Name"
             className="input input-bordered input-sm w-full dark:bg-gray-700 mb-2"
-            required
+            // required
           />
           <label className="block mb-1">Role Description:</label>
           <input
@@ -112,7 +118,7 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
             onChange={(e) => setRoleDescription(e.target.value)}
             placeholder="Enter Role Description"
             className="input input-bordered input-sm w-full dark:bg-gray-700 mb-2"
-            required
+            // required
           />
 
           <label className="block mb-1">Permissions:</label>

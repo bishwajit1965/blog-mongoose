@@ -19,6 +19,10 @@ const AdminPermissionProvider = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    fetchPermissions();
+  }, []);
+
   const addPermissionToState = (permission) => {
     setPermissions((prev) => [...prev, permission]);
   };
@@ -32,10 +36,6 @@ const AdminPermissionProvider = ({ children }) => {
       )
     );
   };
-
-  useEffect(() => {
-    fetchPermissions();
-  }, []);
 
   const adminPermissionInfo = {
     permissions,
