@@ -35,6 +35,8 @@ const CTAButton = ({
   const variantStyles = {
     primary:
       "bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 focus:ring-blue-400",
+    light:
+      "bg-gradient-to-r from-gray-400 to-gray-600 text-white hover:from-gray-600 hover:to-gray-800 focus:ring-gray-400",
     secondary:
       "bg-gradient-to-r from-gray-500 to-gray-700 text-white hover:from-gray-600 hover:to-gray-800 focus:ring-gray-400",
     danger:
@@ -43,7 +45,7 @@ const CTAButton = ({
       "bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 focus:ring-green-400",
     info: "bg-gradient-to-r from-teal-500 to-cyan-600 text-white hover:from-teal-600 hover:to-cyan-700 focus:ring-cyan-400",
     warning:
-      "bg-gradient-to-r from-yellow-400 to-yellow-500 text-black hover:from-yellow-500 hover:to-yellow-600 focus:ring-yellow-400",
+      "bg-gradient-to-r from-yellow-400 to-yellow-400 text-black hover:from-yellow-500 hover:to-yellow-600 focus:ring-yellow-400",
   };
 
   // Combine all styles

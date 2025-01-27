@@ -7,9 +7,13 @@ const AdminSideNav = () => {
     { id: 2, route: "manage-blogs", name: "Manage Blog Posts" },
     { id: 3, route: "manage-categories", name: "Manage Categories" },
     { id: 4, route: "manage-tags", name: "Manage Tags" },
-    { id: 5, route: "manage-users", name: "Manage Users" },
-    { id: 6, route: "manage-roles", name: "Manage Roles" },
-    { id: 7, route: "manage-permission", name: "Manage Permission" },
+    { id: 5, route: "manage-roles", name: "Manage Roles" },
+    { id: 6, route: "manage-permission", name: "Manage Permission" },
+    {
+      id: 7,
+      route: "assign-roles-permissions",
+      name: "Manage User Roles",
+    },
   ];
 
   return (

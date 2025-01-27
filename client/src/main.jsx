@@ -7,6 +7,7 @@ import AdminCategoryProvider from "./admin/adminProviders/AdminCategoryProvider.
 import AdminPermissionProvider from "./admin/adminProviders/AdminPermissionProvider.jsx";
 import AdminRoleProvider from "./admin/adminProviders/AdminRoleProvider.jsx";
 import AdminTagProvider from "./admin/adminProviders/AdminTagProvider.jsx";
+import AdminUserProvider from "./admin/adminProviders/AdminUserProvider.jsx";
 import AuthProvider from "./providers/AuthProvider.jsx";
 import { HelmetProvider } from "react-helmet-async";
 import { RouterProvider } from "react-router-dom";
@@ -22,27 +23,29 @@ createRoot(document.getElementById("root")).render(
         <AdminRoleProvider>
           <AdminPermissionProvider>
             <AdminCategoryProvider>
-              <AdminTagProvider>
-                <HelmetProvider>
-                  <ThemeProvider>
-                    {/* Add ToastContainer at the top level */}
-                    <ToastContainer
-                      position="top-right"
-                      autoClose={5000}
-                      hideProgressBar={false}
-                      newestOnTop={true}
-                      closeOnClick={false}
-                      rtl={false}
-                      pauseOnFocusLoss
-                      draggable
-                      pauseOnHover
-                      theme="colored"
-                      transition={Bounce}
-                    />
-                    <RouterProvider router={router} />
-                  </ThemeProvider>
-                </HelmetProvider>
-              </AdminTagProvider>
+              <AdminUserProvider>
+                <AdminTagProvider>
+                  <HelmetProvider>
+                    <ThemeProvider>
+                      {/* Add ToastContainer at the top level */}
+                      <ToastContainer
+                        position="top-right"
+                        autoClose={5000}
+                        hideProgressBar={false}
+                        newestOnTop={true}
+                        closeOnClick={false}
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="colored"
+                        transition={Bounce}
+                      />
+                      <RouterProvider router={router} />
+                    </ThemeProvider>
+                  </HelmetProvider>
+                </AdminTagProvider>
+              </AdminUserProvider>
             </AdminCategoryProvider>
           </AdminPermissionProvider>
         </AdminRoleProvider>
