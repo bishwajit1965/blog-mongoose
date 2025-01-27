@@ -37,7 +37,7 @@ const getAllCategories = async (req, res) => {
     const categories = await Category.find();
     res.status(200).json(categories);
   } catch (error) {
-    res.status.json({
+    res.status(500).json({
       message: "Error in fetching categories",
       error: error.message,
     });
