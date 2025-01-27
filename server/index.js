@@ -8,7 +8,7 @@ require("dotenv").config();
 const app = express();
 const connectDB = require("./utils/db");
 
-// Initialize Mongoose connection
+// Initializes Mongoose connection
 connectDB();
 
 const port = process.env.PORT || 3000;
@@ -31,6 +31,7 @@ const roleRoutes = require("./routes/roleRoutes");
 const permissionRoutes = require("./routes/permissionRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const tagRoutes = require("./routes/tagRoutes");
+const userManagementRoutes = require("./routes/userManagementRoutes");
 
 // Instantiate routes for execution
 app.use("/api/auth", authRoutes);
@@ -40,6 +41,7 @@ app.use("/api/roles", roleRoutes);
 app.use("/api/permissions", permissionRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/tags", tagRoutes);
+app.use("/api", userManagementRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to blog-mongoose server,");
