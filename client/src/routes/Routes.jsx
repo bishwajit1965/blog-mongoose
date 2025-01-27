@@ -15,6 +15,7 @@ import ManagePermissions from "../admin/adminDataManagement/managePermissions/Ma
 import ManageRoles from "../admin/adminDataManagement/manageRoles/ManageRoles";
 import ManageTags from "../admin/adminDataManagement/manageTags/ManageTags";
 import ManageUsers from "../admin/adminDataManagement/manageUsers/ManageUsers";
+import ManageUsersRolesAndPermissions from "../admin/adminDataManagement/manageUsersRolesAndPermissions/ManageUsersRolesAndPermissions";
 import PrivateRoute from "../privateRoute/PrivateRoute";
 import Register from "../pages/register/Register";
 import RequireAdmin from "../admin/requireAdmin/RequireAdmin";
@@ -129,6 +130,10 @@ const router = createBrowserRouter([
       {
         path: "manage-permission",
         element: <ManagePermissions />,
+      },
+      {
+        path: "assign-roles-permissions",
+        element: <ManageUsersRolesAndPermissions />,
       },
       {
         path: "*",

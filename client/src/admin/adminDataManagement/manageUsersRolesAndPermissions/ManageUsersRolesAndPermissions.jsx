@@ -1,17 +1,47 @@
-import { FaHome, FaTimesCircle } from "react-icons/fa";
+import { useEffect, useState } from "react";
 
 import AdminLoader from "../../adminComponent/adminLoader/AdminLoader";
 import AdminSubTitle from "../../adminComponent/adminSubTitle/AdminSubTitle";
 import CTAButton from "../../../components/buttons/CTAButton";
+import { FaTimesCircle } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
-import PermissionForm from "./PermissionForm";
-import PermissionsTable from "./PermissionsTable";
+import RolesAndPermissionsForm from "./RolesAndPermissionsForm";
+import UsersTable from "./UsersTable";
 import useAdminPermission from "../../adminHooks/useAdminPermission";
-import { useState } from "react";
+import useAdminRole from "../../adminHooks/useAdminRole";
+import useAdminUser from "../../adminHooks/useAdminUser";
 
-const ManagePermissions = () => {
-  const { permissions, fetchPermissions, loading } = useAdminPermission();
+const ManageUsersRolesAndPermissions = () => {
+  const [loading, setLoading] = useState(false);
+  const { permissions, fetchPermissions } = useAdminPermission();
+  const { roles } = useAdminRole();
+  const { users } = useAdminUser();
   const [editingPermission, setEditingPermission] = useState(null);
+
+  const [permissionData, setPermissionData] = useState([]);
+  const [roleData, setRoleData] = useState([]);
+  const [userData, setUserData] = useState([]);
+
+  console.log("Permissions", permissionData);
+  console.log("Roles", roleData);
+  console.log("Users", userData);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setPermissionData(permissions);
+        setRoleData(roles);
+        setUserData(users);
+      } catch (error) {
+        console.error("Error in fetching data", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [permissions, roles, users]);
 
   const handleEdit = (permission) => {
     setEditingPermission(permission);
@@ -22,22 +52,14 @@ const ManagePermissions = () => {
   };
 
   return (
-    <>
+    <div>
       <Helmet>
-        <title>Blog || Manage Permissions</title>
+        <title>Blog || Manage Users Roles</title>
       </Helmet>
       <AdminSubTitle
-        link="/admin/admin-home-dashboard"
-        navigationButton={
-          <CTAButton
-            label="Admin Dashboard"
-            icon={<FaHome />}
-            variant="light"
-          />
-        }
-        dataLength={permissions.length}
+        dataLength={users?.length ? users.length : 0}
         subTitle="Manage"
-        decoratedText="Permissions"
+        decoratedText="Roles & Permissions"
       />
       <div className="p-2">
         <div className="container mx-auto">
@@ -46,7 +68,7 @@ const ManagePermissions = () => {
               <h2 className="text-xl font-semibold mb-2">
                 {editingPermission ? "Update Permission" : "Add Permission"}
               </h2>
-              <PermissionForm
+              <RolesAndPermissionsForm
                 onSuccess={() => {
                   fetchPermissions(); //Not needed as dynamic update works
                   handleCancelEdit();
@@ -73,7 +95,7 @@ const ManagePermissions = () => {
               {loading ? (
                 <AdminLoader />
               ) : (
-                <PermissionsTable
+                <UsersTable
                   permissions={permissions}
                   onEdit={handleEdit}
                   onDelete={fetchPermissions} // Handles deletion and reload
@@ -83,8 +105,8 @@ const ManagePermissions = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default ManagePermissions;
+export default ManageUsersRolesAndPermissions;

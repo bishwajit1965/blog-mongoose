@@ -11,7 +11,9 @@ const RequireAdmin = ({ children }) => {
 
   if (!isAuthenticated) {
     // Redirect to login if not authenticated
-    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+    return (
+      <Navigate to="/admin/login" state={{ from: location }} replace={true} />
+    );
   }
 
   if (!adminData?.roles.includes("admin")) {
