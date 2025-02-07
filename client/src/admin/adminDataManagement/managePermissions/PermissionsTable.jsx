@@ -10,20 +10,15 @@ import { useState } from "react";
 const PermissionsTable = ({ onDelete, onEdit }) => {
   const { permissions } = useAdminPermission();
   const { adminData } = useAdminAuth();
+  console.log("admin data:", adminData);
+
   // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
-  const permissionsPerPage = 10; // Number of roles per page
+  const [paginatedData, setPaginatedData] = useState([]);
+  const totalItems = permissions.length;
 
   // Calculate pagination values
-  const totalPages = Math.ceil(permissions?.length / permissionsPerPage);
-  const startIndex = (currentPage - 1) * permissionsPerPage;
-  const currentPermissions = permissions?.slice(
-    startIndex,
-    startIndex + permissionsPerPage
-  );
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const handleRangeChange = ({ startIndex, endIndex }) => {
+    setPaginatedData(permissions.slice(startIndex, endIndex));
   };
 
   const handleDelete = async (id) => {
@@ -52,16 +47,17 @@ const PermissionsTable = ({ onDelete, onEdit }) => {
         </thead>
 
         <tbody className="dark:hover:bg-gray-700 dark:hover:rounded-md">
-          {currentPermissions?.map((permission, index) => (
+          {paginatedData?.map((permission, index) => (
             <tr
               key={permission._id}
               className="dark:hover:bg-gray-600 hover:bg-gray-100 dark:border-gray-700"
             >
               <td>{index + 1}</td>
-              <td>{permission.name}</td>
+              <td className="capitalize">{permission.name}</td>
               <td>{permission.description}</td>
               <td className="flex space-x-1 justify-end p-0">
-                {adminData?.roles == "admin" ? (
+                {Array.isArray(adminData?.user?.roles) &&
+                adminData.user.roles.some((role) => role.name === "admin") ? (
                   <>
                     <CTAButton
                       onClick={() => onEdit(permission)}
@@ -88,9 +84,8 @@ const PermissionsTable = ({ onDelete, onEdit }) => {
       </table>
       {/* Pagination */}
       <AdminPagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
+        totalItems={totalItems}
+        onRangeChange={handleRangeChange}
       />
     </>
   );

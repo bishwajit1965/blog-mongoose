@@ -1,73 +1,39 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
-    firebaseUid: { type: String, required: true, unique: false },
-    name: { type: String, required: false },
+    firebaseUid: { type: String, required: true, unique: true },
+    name: { type: String, default: "Anonymous" },
     email: {
       type: String,
       required: true,
       unique: true,
+      validate: {
+        validator: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+        message: (props) => `${props.value} is not a valid email!`,
+      },
     },
     password: { type: String, required: true },
     avatar: {
       type: String,
+      default: "https://i.ibb.co/MgsDqCZ/FB-IMG-1678691214526.jpg",
     },
-    roles: {
-      type: [String],
-      enum: ["admin", "editor", "viewer", "writer", "user"],
-      default: ["viewer"],
-    },
-    permissions: {
-      type: [String],
-      enum: ["create", "read", "update", "delete", "super_admin", "member"],
-      default: ["read"],
-    },
+    roles: [{ type: mongoose.Schema.Types.ObjectId, ref: "Role" }],
+    permissions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Permission" }],
   },
   { timestamps: true }
 );
 
-// Add a method to check if the user gas a specific role
+// Helper methods for roles and permissions
 userSchema.methods.hasRole = function (role) {
   return this.roles.includes(role);
+};
+
+userSchema.methods.hasPermission = function (permission) {
+  return this.permissions.includes(permission);
 };
 
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
-
-// const userSchema = new mongoose.Schema(
-//   {
-//     firebaseUid: { type: String, required: true, unique: false },
-//     name: { type: String, required: false },
-//     email: {
-//       type: String,
-//       required: true,
-//       unique: true,
-//     },
-//     password: { type: String, required: true },
-//     avatar: {
-//       type: String,
-//     },
-//     roles: {
-//       type: [String],
-//       enum: ["admin", "editor", "viewer", "writer", "user"],
-//       default: ["viewer"],
-//     },
-//     permissions: {
-//       type: [String],
-//       enum: ["create", "read", "update", "delete", "super_admin", "member"],
-//       default: ["read"],
-//     },
-//   },
-//   { timestamps: true }
-// );
-
-// // Add a method to check if the user gas a specific role
-// userSchema.methods.hasRole = function (role) {
-//   return this.roles.includes(role);
-// };
-
-// const User = mongoose.model("User", userSchema);
-
-// module.exports = User;

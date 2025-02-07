@@ -84,7 +84,7 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
       } else {
         const newRole = await createRole(roleData);
         addRoleToState(newRole);
-        notifyError("Failed to assign role. Please try again.");
+        notifySuccess("Role created successfully!");
       }
       onSuccess();
       setRoleName("");

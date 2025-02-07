@@ -1,4 +1,4 @@
-// utils/validators.js
+const mongoose = require("mongoose");
 
 const validRoles = ["admin", "editor", "viewer", "writer", "user"];
 const validPermissions = [
@@ -11,22 +11,49 @@ const validPermissions = [
 ];
 
 /**
+ * Validates user roles.
+ * @param {Array} roles - Array of roles to validate.
+ * @throws Will throw an error if any role is invalid.
+ */
+const validateRoles = (roles) => {
+  if (!Array.isArray(roles)) {
+    throw new Error("Roles must be an array.");
+  }
+
+  const invalidRoles = roles.filter((role) => !validRoles.includes(role));
+  if (invalidRoles.length > 0) {
+    throw new Error(`Invalid roles provided: ${invalidRoles.join(", ")}`);
+  }
+};
+
+/**
+ * Validates user permissions.
+ * @param {Array} permissions - Array of permissions to validate.
+ * @throws Will throw an error if any permission is invalid.
+ */
+const validatePermissions = (permissions) => {
+  if (!Array.isArray(permissions)) {
+    throw new Error("Permissions must be an array.");
+  }
+
+  const invalidPermissions = permissions.filter(
+    (permission) => !validPermissions.includes(permission)
+  );
+  if (invalidPermissions.length > 0) {
+    throw new Error(
+      `Invalid permissions provided: ${invalidPermissions.join(", ")}`
+    );
+  }
+};
+
+/**
  * Validates user roles and permissions.
  * @param {Object} user - User object containing roles and permissions.
  * @throws Will throw an error if roles or permissions are invalid.
  */
 const validateUserInput = (user) => {
-  if (user.roles && user.roles.some((role) => !validRoles.includes(role))) {
-    throw new Error(`Invalid role provided: ${user.roles}`);
-  }
-  if (
-    user.permissions &&
-    user.permissions.some(
-      (permission) => !validPermissions.includes(permission)
-    )
-  ) {
-    throw new Error(`Invalid permission provided: ${user.permissions}`);
-  }
+  if (user.roles) validateRoles(user.roles);
+  if (user.permissions) validatePermissions(user.permissions);
 };
 
-module.exports = { validateUserInput };
+module.exports = { validateUserInput, validateRoles, validatePermissions };

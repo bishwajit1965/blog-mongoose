@@ -4,41 +4,35 @@ import CTAButton from "../../../components/buttons/CTAButton";
 import { FaCompass } from "react-icons/fa";
 import api from "../../adminServices/api";
 
-const RolesAndPermissionsForm = ({ userId, authToken }) => {
-  const [roles, setRoles] = useState([]);
-  const [permissions, setPermissions] = useState([]);
+const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
   const [selectedRoles, setSelectedRoles] = useState([]);
   const [selectedPermissions, setSelectedPermissions] = useState([]);
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  console.log("Roles", roles);
+
+  console.log("Selected user:", user);
+  console.log("Selected roles:", selectedRoles);
+  console.log("Selected permissions:", selectedPermissions);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const rolesRes = await api.get("/roles");
-        const permissionsRes = await api.get("/permissions");
-
-        setRoles(rolesRes.data);
-        setPermissions(permissionsRes.data);
-      } catch (error) {
-        console.error("Error fetching roles and permissions:", error.message);
-      }
-    };
-
-    fetchData();
-  }, [authToken]);
+    if (user) {
+      setSelectedRoles(user.roles || []);
+      setSelectedPermissions(user.permissions || []);
+      setEmail(user.email || ""); // Set the email field when a user is selected
+    } else {
+      setEmail("");
+    }
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.patch(
-        `/users/${userId}/assign`,
-        { roles: selectedRoles, permissions: selectedPermissions },
-        {
-          headers: { Authorization: `Bearer ${authToken}` },
-        }
-      );
+      const res = await api.patch(`/users/${user._id}/assign`, {
+        roles: selectedRoles,
+        permissions: selectedPermissions,
+      });
       setMessage(res.data.message);
+      onSuccess();
     } catch (error) {
       console.error("Error assigning roles and permissions:", error.message);
       setMessage("Error assigning roles and permissions.");
@@ -52,64 +46,80 @@ const RolesAndPermissionsForm = ({ userId, authToken }) => {
       setList([...list, item]);
     }
   };
+
   return (
-    <>
-      <div className=" max-w-lg mx-auto">
-        <h1 className="text-xl font-semibold mb-4">
-          Assign Roles & Permissions
-        </h1>
-        {message && <p className="text-green-600">{message}</p>}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <h2 className="font-bold">Roles</h2>
-            <div className="grid grid-cols-2 gap-2">
-              {roles.map((role) => (
-                <label key={role._id} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    value={role._id}
-                    onChange={() =>
-                      toggleSelection(role._id, selectedRoles, setSelectedRoles)
-                    }
-                    checked={selectedRoles.includes(role._id)}
-                    className="mr-2 input-xs"
-                  />
-                  {role.name}
+    <div className="max-w-lg mx-auto">
+      {message && <p className="text-green-600">{message}</p>}
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          {email && (
+            <>
+              <div className="mb-4">
+                <label htmlFor="email" className="block font-bold">
+                  Email
                 </label>
-              ))}
-            </div>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full input-xs input-bordered text-gray-950 dark:text-base-200 dark:bg-gray-700"
+                  disabled
+                />
+              </div>
+            </>
+          )}
+
+          <h2 className="font-bold">Roles</h2>
+          <div className="grid grid-cols-2 gap-2">
+            {roles.map((role) => (
+              <label key={role._id} className="flex items-center">
+                <input
+                  type="checkbox"
+                  value={role._id}
+                  onChange={() =>
+                    toggleSelection(role._id, selectedRoles, setSelectedRoles)
+                  }
+                  checked={selectedRoles.includes(role._id)}
+                  className="mr-2 input-xs"
+                />
+                {role.name}
+              </label>
+            ))}
           </div>
-          <div className="mb-4">
-            <h2 className=" font-bold">Permissions</h2>
-            <div className="grid grid-cols-2 gap-2">
-              {permissions.map((perm) => (
-                <label key={perm._id} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    value={perm._id}
-                    onChange={() =>
-                      toggleSelection(
-                        perm._id,
-                        selectedPermissions,
-                        setSelectedPermissions
-                      )
-                    }
-                    checked={selectedPermissions.includes(perm._id)}
-                    className="mr-2 input-xs"
-                  />
-                  {perm.name}
-                </label>
-              ))}
-            </div>
+        </div>
+
+        <div className="mb-4">
+          <h2 className="font-bold">Permissions</h2>
+          <div className="grid grid-cols-2 gap-2">
+            {permissions.map((perm) => (
+              <label key={perm._id} className="flex items-center">
+                <input
+                  type="checkbox"
+                  value={perm._id}
+                  onChange={() =>
+                    toggleSelection(
+                      perm._id,
+                      selectedPermissions,
+                      setSelectedPermissions
+                    )
+                  }
+                  checked={selectedPermissions.includes(perm._id)}
+                  className="mr-2 input-xs"
+                />
+                {perm.name}
+              </label>
+            ))}
           </div>
-          <CTAButton
-            label="Assign Role & Permission"
-            className="btn btn-sm"
-            icon={<FaCompass />}
-          />
-        </form>
-      </div>
-    </>
+        </div>
+
+        <CTAButton
+          label="Assign Role & Permission"
+          className="btn btn-sm"
+          icon={<FaCompass />}
+        />
+      </form>
+    </div>
   );
 };
 

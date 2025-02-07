@@ -1,4 +1,5 @@
 const Permission = require("../models/Permission");
+const User = require("../models/User");
 
 const createPermission = async (req, res) => {
   try {
@@ -24,6 +25,24 @@ const createPermission = async (req, res) => {
       message: "Failed to create permission.",
       error: error.message,
     });
+  }
+};
+
+const assignPermission = async (req, res) => {
+  try {
+    const { userId, permissionId } = req.body;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+    // Add permission if not already present
+    if (!user.permissions.includes(permissionId)) {
+      user.permissions.push(permissionId);
+    }
+    await user.save();
+    res.status(200).json({ message: "Permission assigned successfully", user });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to assign permission" });
   }
 };
 
@@ -120,6 +139,7 @@ const deletePermission = async (req, res) => {
 
 module.exports = {
   createPermission,
+  assignPermission,
   getPermissionById,
   getAllPermissions,
   updatePermission,

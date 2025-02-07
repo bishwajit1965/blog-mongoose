@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-
-import AdminLoader from "../../adminComponent/adminLoader/AdminLoader";
 import AdminSubTitle from "../../adminComponent/adminSubTitle/AdminSubTitle";
 import CTAButton from "../../../components/buttons/CTAButton";
 import { FaTimesCircle } from "react-icons/fa";
@@ -10,45 +7,20 @@ import UsersTable from "./UsersTable";
 import useAdminPermission from "../../adminHooks/useAdminPermission";
 import useAdminRole from "../../adminHooks/useAdminRole";
 import useAdminUser from "../../adminHooks/useAdminUser";
+import { useState } from "react";
 
 const ManageUsersRolesAndPermissions = () => {
-  const [loading, setLoading] = useState(false);
   const { permissions, fetchPermissions } = useAdminPermission();
   const { roles } = useAdminRole();
   const { users } = useAdminUser();
-  const [editingPermission, setEditingPermission] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
 
-  const [permissionData, setPermissionData] = useState([]);
-  const [roleData, setRoleData] = useState([]);
-  const [userData, setUserData] = useState([]);
-
-  console.log("Permissions", permissionData);
-  console.log("Roles", roleData);
-  console.log("Users", userData);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setPermissionData(permissions);
-        setRoleData(roles);
-        setUserData(users);
-      } catch (error) {
-        console.error("Error in fetching data", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [permissions, roles, users]);
-
-  const handleEdit = (permission) => {
-    setEditingPermission(permission);
+  const handleEdit = (user) => {
+    setSelectedUser(user);
   };
 
   const handleCancelEdit = () => {
-    setEditingPermission(null);
+    setSelectedUser(null);
   };
 
   return (
@@ -66,17 +38,21 @@ const ManageUsersRolesAndPermissions = () => {
           <div className="grid lg:grid-cols-12 grid-cols-1 md:grid-cols-2 gap-4">
             <div className="lg:col-span-6 col-span-12 lg:border-r dark:border-gray-700 lg:pr-3">
               <h2 className="text-xl font-semibold mb-2">
-                {editingPermission ? "Update Permission" : "Add Permission"}
+                {selectedUser
+                  ? "Update Roles Permission"
+                  : "Add Roles Permissions"}
               </h2>
               <RolesAndPermissionsForm
+                permissions={permissions}
+                roles={roles}
+                user={selectedUser}
                 onSuccess={() => {
                   fetchPermissions(); //Not needed as dynamic update works
                   handleCancelEdit();
                 }}
-                existingPermission={editingPermission}
               />
 
-              {editingPermission && (
+              {selectedUser && (
                 <>
                   <CTAButton
                     onClick={handleCancelEdit}
@@ -89,18 +65,8 @@ const ManageUsersRolesAndPermissions = () => {
               )}
             </div>
             <div className="lg:col-span-6 col-span-12">
-              <h2 className="text-xl font-semibold mb-2">
-                Existing Permissions
-              </h2>
-              {loading ? (
-                <AdminLoader />
-              ) : (
-                <UsersTable
-                  permissions={permissions}
-                  onEdit={handleEdit}
-                  onDelete={fetchPermissions} // Handles deletion and reload
-                />
-              )}
+              <h2 className="text-xl font-semibold mb-2">Existing Users</h2>
+              <UsersTable users={users} onEdit={handleEdit} />
             </div>
           </div>
         </div>

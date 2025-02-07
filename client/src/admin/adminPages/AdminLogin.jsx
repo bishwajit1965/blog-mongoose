@@ -9,48 +9,59 @@ import Swal from "sweetalert2";
 import useAdminAuth from "../adminHooks/useAdminAuth";
 
 const AdminLogin = () => {
+  const { loginAdmin, isAuthenticated, adminData } = useAdminAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const { loginAdmin, adminData, isAuthenticated } = useAdminAuth();
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  const from = location.state?.from?.pathname || "/admin/admin-home-dashboard";
+  const from = location.state?.from?.pathname || "/admin/admin-dashboard";
 
-  // Redirect if logged in
   useEffect(() => {
-    if (isAuthenticated && adminData) {
-      if (adminData.roles.includes("admin")) {
-        navigate(from, { replace: true });
-      } else if (adminData.roles.includes("editor")) {
-        navigate("/editor/editor-dashboard", { replace: true });
-      } else if (adminData.roles.includes("writer")) {
-        navigate("/writer/writer-dashboard", { replace: true });
-      } else {
-        navigate("/unauthorized", { replace: true });
-      }
+    if (!isAuthenticated || !adminData) return; // Do nothing until authenticated and data is loaded
+    const roleNames =
+      adminData?.roles.map((role) => role?.name?.toLowerCase()) || [];
+
+    const checkRole = (roleName) => roleNames.includes(roleName);
+
+    // Navigate based on roles
+    if (checkRole("admin")) {
+      navigate(from, { replace: true });
+    } else if (checkRole("editor")) {
+      navigate("/editor/editor-dashboard", { replace: true });
+    } else if (checkRole("writer")) {
+      navigate("/writer/writer-dashboard", { replace: true });
+    } else {
+      navigate("/unauthorized", { replace: true });
     }
   }, [isAuthenticated, adminData, navigate, from]);
 
-  const validateForm = () => {
-    if (!email.includes("@")) {
-      alert("Please enter a valid email.");
-      return false;
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    if (!e.target.value.includes("@")) {
+      setEmailError("Please enter a valid email address.");
+    } else {
+      setEmailError("");
     }
-    if (password.length < 6) {
-      alert("Password should be at least 6 characters long.");
-      return false;
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    if (e.target.value.length < 6) {
+      setPasswordError("Password must be at least 6 characters long.");
+    } else {
+      setPasswordError("");
     }
-    return true;
   };
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    if (!validateForm()) return;
     setLoading(true);
-    setErrorMessage("");
+    setEmailError("");
+    setPasswordError("");
     try {
       await loginAdmin({ email, password });
       Swal.fire({
@@ -60,67 +71,65 @@ const AdminLogin = () => {
         showConfirmButton: false,
         timer: 1500,
       });
+      setEmailError(""); // Reset form
+      setPasswordError("");
     } catch (error) {
       console.error("Login failed:", error);
-      setErrorMessage("Login failed. Please check your login credentials.");
+      setEmailError("Login failed. Please check your credentials.");
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 
   return (
     <>
-      <Helmet title="Blog || Admin Login"></Helmet>
+      <Helmet>
+        <title>Blog || Admin Login</title>
+      </Helmet>
+
       <div className="h-screen flex items-center">
         <div className="lg:max-w-xs w-full mx-auto">
           {loading && <Loader />}
-          <div className="border border-slate-300 shadow-md bg-base-300 p-6 rounded-md">
-            <div className="">
-              <h1 className="text-xl font-bold pb-2">Admin Login</h1>
-            </div>
-            <div className="">
-              {errorMessage && (
-                <p className="text-red-500 text-xs mb-2">{errorMessage}</p>
-              )}
-              {adminData && <p>{adminData.role}</p>}
-            </div>
-            <form className="" onSubmit={handleLogin}>
-              <div className="">
-                <input
-                  type="email"
-                  placeholder="Enter admin email..."
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="input input-bordered input-sm w-full mb-2 max-w-full"
-                  required
-                />
-              </div>
-
+          <div className="border border-slate-300 shadow-md bg-base-300 p-6 rounded-md dark:bg-gray-900 dark:border-gray-700">
+            <h1 className="text-xl font-bold pb-2">Admin Login</h1>
+            {emailError && (
+              <p className="text-red-500 text-xs mb-2">{emailError}</p>
+            )}
+            {passwordError && (
+              <p className="text-red-500 text-xs mb-2">{passwordError}</p>
+            )}
+            <form onSubmit={handleLogin}>
+              <input
+                type="email"
+                placeholder="Enter admin email..."
+                value={email}
+                onChange={handleEmailChange}
+                className="input input-bordered input-sm w-full mb-2 dark:bg-gray-700"
+              />
               <div className="relative w-full">
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter Password..."
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="input input-bordered input-sm w-full mb-2 max-w-full"
-                  required
+                  value={password}
+                  onChange={handlePasswordChange}
+                  className="input input-bordered input-sm w-full mb-2 dark:bg-gray-700"
                 />
                 <span
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   className="absolute right-2 top-2 cursor-pointer"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
               </div>
-
-              <div className="">
-                <CTAButton
-                  label="Login"
-                  loadingLabel="Logging in..."
-                  loading={loading}
-                  icon={<FaSignInAlt />}
-                  variant="primary"
-                  className="btn btn-sm"
-                />
-              </div>
+              <CTAButton
+                label="Login"
+                loadingLabel="Logging in..."
+                loading={loading}
+                icon={<FaSignInAlt />}
+                variant="primary"
+                className="btn btn-sm"
+              />
             </form>
           </div>
         </div>

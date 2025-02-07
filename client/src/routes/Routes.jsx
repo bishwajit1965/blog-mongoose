@@ -1,6 +1,5 @@
 import AboutMe from "../pages/aboutMe/AboutMe";
 import AdminDashboard from "../admin/adminDashboard/AdminDashboard";
-import AdminDashboardHome from "../admin/adminDashboardHome/AdminDashboardHome";
 import AdminLayout from "../admin/adminLayout/adminLayout";
 import AdminLogin from "../admin/adminPages/AdminLogin";
 import BlogPosts from "../pages/blogPosts/BlogPosts";
@@ -82,7 +81,7 @@ const router = createBrowserRouter([
     element: <AdminLogin />,
   },
   {
-    path: "unauthorized",
+    path: "/unauthorized",
     element: <Unauthorized />,
   },
   // Admin protected routes
@@ -96,11 +95,7 @@ const router = createBrowserRouter([
 
     children: [
       {
-        path: "admin-home-dashboard",
-        element: <AdminDashboardHome />,
-      },
-      {
-        path: "dashboard",
+        path: "admin-dashboard",
         element: <AdminDashboard />,
       },
       {

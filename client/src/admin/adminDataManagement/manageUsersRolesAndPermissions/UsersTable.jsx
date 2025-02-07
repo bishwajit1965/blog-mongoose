@@ -1,13 +1,28 @@
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 
+import AdminPagination from "../../adminComponent/adminPagination/AdminPagination";
 import CTAButton from "../../../components/buttons/CTAButton";
 import { deleteUser } from "../../adminServices/userService";
 import useAdminAuth from "../../adminHooks/useAdminAuth";
+import useAdminPermission from "../../adminHooks/useAdminPermission";
+import useAdminRole from "../../adminHooks/useAdminRole";
 import useAdminUser from "../../adminHooks/useAdminUser";
+import { useState } from "react";
 
-const UsersTable = (onDelete, onEdit) => {
+const UsersTable = ({ onDelete, onEdit }) => {
   const { users } = useAdminUser();
   const { adminData } = useAdminAuth();
+  const { permissions } = useAdminPermission();
+  const { roles } = useAdminRole();
+
+  // Pagination state
+  const [paginatedData, setPaginatedData] = useState([]);
+  const totalItems = users.length;
+
+  // Calculate pagination values
+  const handleRangeChange = ({ startIndex, endIndex }) => {
+    setPaginatedData(users.slice(startIndex, endIndex));
+  };
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this permission?")) {
@@ -36,17 +51,40 @@ const UsersTable = (onDelete, onEdit) => {
         </thead>
 
         <tbody className="dark:hover:bg-gray-700 dark:hover:rounded-md">
-          {users?.map((user, index) => (
+          {paginatedData?.map((user, index) => (
             <tr
               key={user._id}
               className="dark:hover:bg-gray-600 hover:bg-gray-100 dark:border-gray-700"
             >
               <td>{index + 1}</td>
               <td>{user.email}</td>
-              <td>{user.roles}</td>
-              <td>{user.permissions}</td>
+              <td>
+                {user.roles.map((roleId, index) => {
+                  const matchingRole = roles.find((r) => r._id === roleId._id);
+                  if (matchingRole) {
+                    return index === user.roles.length - 1
+                      ? matchingRole.name
+                      : matchingRole.name.concat(", ");
+                  }
+                  return null;
+                })}
+              </td>
+              <td>
+                {user.permissions.map((permissionId, index) => {
+                  const matchingPermissions = permissions.find(
+                    (p) => p._id === permissionId._id
+                  );
+                  if (matchingPermissions) {
+                    return index === user.permissions.length - 1
+                      ? matchingPermissions.name
+                      : matchingPermissions.name.concat(", ");
+                  }
+                  return null;
+                })}
+              </td>
               <td className="flex space-x-1 justify-end p-0">
-                {adminData?.roles == "admin" ? (
+                {Array.isArray(adminData?.user?.roles) &&
+                adminData.user.roles.some((role) => role.name === "admin") ? (
                   <>
                     <CTAButton
                       onClick={() => onEdit(user)}
@@ -71,6 +109,11 @@ const UsersTable = (onDelete, onEdit) => {
           ))}
         </tbody>
       </table>
+      {/* Pagination */}
+      <AdminPagination
+        totalItems={totalItems}
+        onRangeChange={handleRangeChange}
+      />
     </div>
   );
 };
