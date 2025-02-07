@@ -1,59 +1,75 @@
-const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { generateJWT } = require("../utils/jwt");
+const User = require("../models/User");
 
 const loginAdmin = async (req, res) => {
   const { email, password } = req.body;
+  console.log("Request body:", req.body);
 
   try {
-    // Find user by email if exists
-    const user = await User.findOne({ email });
+    // Input validation
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required." });
+    }
+    const user = await User.findOne({ email })
+      .populate({ path: "roles", select: "name" })
+      .populate({ path: "permissions", select: "name" });
+    console.log("User data", user);
     if (!user) {
-      return res.status(401).json({ message: "Invalid email or password." });
+      return res.status(404).json({ message: "User not found." });
     }
-
-    // Check if user has the role of admin
-    if (!user.roles.includes("admin")) {
-      return res.status(401).json({ message: "Access denied. Admins only." });
-    }
-
-    // Compare password
-
+    // Verify the password
     if (password && user.password) {
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
+      console.log("Entered password:", password);
+      console.log("Stored hashed password:", user.password);
+      const isMatched = await bcrypt.compare(password, user.password);
+      console.log("Password match result:", isMatched);
+      if (!isMatched) {
         return res.status(401).json({ message: "Invalid email or password." });
       }
     }
 
-    // Generate JWT
-    const token = generateJWT({
+    const payload = {
       id: user._id,
       email: user.email,
-      roles: user.roles,
-    });
-    console.log("Generated JWT", token);
+      roles: user.roles.map((role) => role.name),
+      permissions: user.permissions.map((permission) => permission.name),
+    };
+    console.log("Payload for JWT:", payload);
+    // Generate JWT
+    const token = generateJWT(payload);
+    console.log("Generated JWT:", token);
     // Set HTTP-only cookie
-    res.cookie("authToken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-      sameSite: "Strict",
-      maxAge: 3600000, // 1 hour
-    });
-
-    res.status(200).json({
-      message: "Login is successful.",
-      user: { email: user.email, roles: user.roles },
-    });
+    res
+      .cookie("authToken", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+        sameSite: "Strict",
+        maxAge: 3600000, // 1 hour
+      })
+      .status(200)
+      .json({
+        message: "Login is successful!",
+        token,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar,
+          roles: user.roles,
+          permissions: user.permissions,
+        },
+      });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Server error.", error: error.message });
+    console.error("Error during admin login:", error);
+    res.status(500).json({ message: "Internal server error." });
   }
 };
 
 const logoutAdmin = (req, res) => {
-  // Clear the cookie
+  // Clear the authentication cookie
   res.clearCookie("authToken");
   res.status(200).json({ message: "Logout successful." });
 };

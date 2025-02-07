@@ -1,18 +1,12 @@
 const User = require("../models/User");
+const Permission = require("../models/Permission");
+const Role = require("../models/Role");
 const bcrypt = require("bcrypt");
 const { validateUserInput } = require("../utils/validators");
 
 const createUser = async (req, res) => {
   try {
-    const {
-      firebaseUid,
-      name,
-      email,
-      password,
-      avatar,
-      roles = ["viewer"],
-      permissions = ["read"],
-    } = req.body; // Default role as "user"
+    const { firebaseUid, name, email, password, avatar } = req.body; // Default role as "user"
     console.log("Request body:", req.body);
 
     if (!firebaseUid || !email) {
@@ -26,24 +20,37 @@ const createUser = async (req, res) => {
         .status(409)
         .json({ status: "error", message: "User already exists." });
     }
+    const saltRounds = 12;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    // Fetch default (e.g. ,"user") role from Role collection
+    const defaultRole = await Role.findOne({ name: "user" });
+    if (!defaultRole) {
+      return res.status(500).json({ message: "Default user role not found" });
+    }
+    const defaultPermission = await Permission.findOne({ name: "read" });
+
+    if (!defaultPermission) {
+      return res.status(500).json({
+        message: "Default permission not found in the database.",
+      });
+    }
 
     // Validate user input
     validateUserInput({
-      roles,
-      permissions,
+      defaultRole,
+      defaultPermission,
     });
 
     // Create a new user
     const newUser = new User({
       firebaseUid,
-      name,
+      name: name || "Anonymous",
       email,
       password: hashedPassword,
-      avatar,
-      roles: roles || ["viewer"],
-      permissions: permissions || ["read"],
+      avatar: avatar || "https://i.ibb.co/MgsDqCZ/FB-IMG-1678691214526.jpg",
+      roles: [defaultRole._id],
+      permissions: [defaultPermission._id],
     });
 
     const savedUser = await newUser.save();
@@ -52,7 +59,7 @@ const createUser = async (req, res) => {
     return res.status(201).json({
       status: "success",
       message: "User created successfully",
-      user: newUser,
+      user: savedUser,
     });
   } catch (error) {
     console.error("Error in creating user:", error.message);
@@ -60,4 +67,76 @@ const createUser = async (req, res) => {
   }
 };
 
-module.exports = { createUser };
+// Get user details with roles and permissions populated
+const getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id)
+      .populate("roles", "name")
+      .populate("permissions", "name");
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json(user);
+  } catch (error) {
+    res
+      .status(400)
+      .json({ message: "Error fetching user", error: error.message });
+  }
+};
+
+// Update user roles and permissions
+const updateUserRolesAndPermissions = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { roles, permissions } = req.body;
+
+    // Validate roles and permissions
+    const validRoles = roles ? await Role.find({ _id: { $in: roles } }) : [];
+    const validPermissions = permissions
+      ? await Permission.find({ _id: { $in: permissions } })
+      : [];
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        roles: validRoles.map((role) => role._id),
+        permissions: validPermissions.map((permission) => permission._id),
+      },
+      { new: true } // Return updated document
+    )
+      .populate("roles", "name")
+      .populate("permissions", "name");
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json({ message: "User updated successfully", user });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ message: "Error updating user", error: error.message });
+  }
+};
+
+// Delete a user
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findByIdAndDelete(id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ message: "Error deleting user", error: error.message });
+  }
+};
+
+module.exports = {
+  createUser,
+  getUserById,
+  updateUserRolesAndPermissions,
+  deleteUser,
+};

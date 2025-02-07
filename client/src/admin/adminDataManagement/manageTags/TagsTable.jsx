@@ -12,16 +12,12 @@ const TagsTable = ({ onEdit, onDelete }) => {
   const { adminData } = useAdminAuth();
 
   // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
-  const tagsPerPage = 10; // Number of roles per page
+  const [paginatedData, setPaginatedData] = useState([]);
+  const totalItems = tags.length;
 
   // Calculate pagination values
-  const totalPages = Math.ceil(tags?.length / tagsPerPage);
-  const startIndex = (currentPage - 1) * tagsPerPage;
-  const currentTags = tags?.slice(startIndex, startIndex + tagsPerPage);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const handleRangeChange = ({ startIndex, endIndex }) => {
+    setPaginatedData(tags.slice(startIndex, endIndex));
   };
 
   const handleDelete = async (id) => {
@@ -50,16 +46,17 @@ const TagsTable = ({ onEdit, onDelete }) => {
         </thead>
 
         <tbody className="dark:hover:bg-gray-700 dark:hover:rounded-md">
-          {currentTags?.map((tag, index) => (
+          {paginatedData?.map((tag, index) => (
             <tr
               key={tag._id}
               className="dark:hover:bg-gray-600 hover:bg-gray-100 dark:border-gray-700"
             >
               <td>{index + 1}</td>
-              <td>{tag.name}</td>
+              <td className="capitalize">{tag.name}</td>
               <td>{tag.slug}</td>
               <td className="flex space-x-1 justify-end p-0">
-                {adminData?.roles == "admin" ? (
+                {Array.isArray(adminData?.user?.roles) &&
+                adminData.user.roles.some((role) => role.name === "admin") ? (
                   <>
                     <CTAButton
                       onClick={() => onEdit(tag)}
@@ -86,9 +83,8 @@ const TagsTable = ({ onEdit, onDelete }) => {
       </table>
       {/* Pagination */}
       <AdminPagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
+        totalItems={totalItems}
+        onRangeChange={handleRangeChange}
       />
     </>
   );

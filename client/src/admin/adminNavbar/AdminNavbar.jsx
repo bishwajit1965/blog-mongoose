@@ -36,7 +36,7 @@ const AdminNavbar = () => {
     setOpen(!open);
   };
   const routes = [
-    { id: 1, route: "admin-home-dashboard", name: " Dashboard Home" },
+    { id: 1, route: "admin-dashboard", name: " Dashboard Home" },
     { id: 2, route: "manage-blogs", name: "Manage Blog Posts" },
     { id: 3, route: "manage-categories", name: "Manage Categories" },
     { id: 4, route: "manage-tags", name: "Manage Tags" },

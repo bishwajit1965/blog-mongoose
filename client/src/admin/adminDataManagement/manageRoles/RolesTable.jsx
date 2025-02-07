@@ -14,16 +14,12 @@ const RolesTable = ({ onDelete, onEdit }) => {
   const { adminData } = useAdminAuth();
 
   // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
-  const rolesPerPage = 10; // Number of roles per page
+  const [paginatedData, setPaginatedData] = useState([]);
+  const totalItems = roles.length;
 
   // Calculate pagination values
-  const totalPages = Math.ceil(roles?.length / rolesPerPage);
-  const startIndex = (currentPage - 1) * rolesPerPage;
-  const currentRoles = roles?.slice(startIndex, startIndex + rolesPerPage);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const handleRangeChange = ({ startIndex, endIndex }) => {
+    setPaginatedData(roles.slice(startIndex, endIndex));
   };
 
   const handleDelete = async (id) => {
@@ -52,7 +48,7 @@ const RolesTable = ({ onDelete, onEdit }) => {
           </tr>
         </thead>
         <tbody className="dark:hover:bg-gray-700 dark:hover:rounded-md">
-          {currentRoles?.map((role, index) => (
+          {paginatedData?.map((role, index) => (
             <tr
               key={role._id}
               className="dark:hover:bg-gray-600 hover:bg-gray-100 dark:border-gray-700"
@@ -75,7 +71,8 @@ const RolesTable = ({ onDelete, onEdit }) => {
               </td>
               <td>{role.description}</td>
               <td className="flex p-0 space-x-1 justify-end">
-                {adminData?.roles == "admin" ? (
+                {Array.isArray(adminData?.user?.roles) &&
+                adminData.user.roles.some((role) => role.name === "admin") ? (
                   <>
                     <CTAButton
                       onClick={() => onEdit(role)}
@@ -103,9 +100,8 @@ const RolesTable = ({ onDelete, onEdit }) => {
 
       {/* Pagination */}
       <AdminPagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
+        totalItems={totalItems}
+        onRangeChange={handleRangeChange}
       />
     </>
   );

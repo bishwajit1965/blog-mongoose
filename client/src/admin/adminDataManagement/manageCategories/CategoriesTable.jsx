@@ -12,19 +12,12 @@ const CategoriesTable = ({ onEdit, onDelete }) => {
   const { adminData } = useAdminAuth();
 
   // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
-  const categoriesPerPage = 10; // Number of roles per page
+  const [paginatedData, setPaginatedData] = useState([]);
+  const totalItems = categories.length;
 
   // Calculate pagination values
-  const totalPages = Math.ceil(categories?.length / categoriesPerPage);
-  const startIndex = (currentPage - 1) * categoriesPerPage;
-  const currentCategories = categories?.slice(
-    startIndex,
-    startIndex + categoriesPerPage
-  );
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const handleRangeChange = ({ startIndex, endIndex }) => {
+    setPaginatedData(categories.slice(startIndex, endIndex));
   };
 
   const handleDelete = async (id) => {
@@ -52,16 +45,17 @@ const CategoriesTable = ({ onEdit, onDelete }) => {
         </thead>
 
         <tbody className="dark:hover:bg-gray-700 dark:hover:rounded-md">
-          {currentCategories?.map((category, index) => (
+          {paginatedData?.map((category, index) => (
             <tr
               key={category._id}
               className="dark:hover:bg-gray-600 hover:bg-gray-100 dark:border-gray-700"
             >
               <td>{index + 1}</td>
-              <td>{category.name}</td>
+              <td className="capitalize">{category.name}</td>
               <td>{category.description}</td>
               <td className="flex space-x-1 justify-end p-0">
-                {adminData?.roles == "admin" ? (
+                {Array.isArray(adminData?.user?.roles) &&
+                adminData.user.roles.some((role) => role.name === "admin") ? (
                   <>
                     <CTAButton
                       onClick={() => onEdit(category)}
@@ -89,9 +83,8 @@ const CategoriesTable = ({ onEdit, onDelete }) => {
 
       {/* Pagination */}
       <AdminPagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
+        totalItems={totalItems}
+        onRangeChange={handleRangeChange}
       />
     </>
   );
