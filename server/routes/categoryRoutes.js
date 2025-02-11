@@ -11,27 +11,37 @@ const { verifyToken, isSuperAdmin } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
-router.post("/", verifyToken, isSuperAdmin(["admin"]), createCategory);
+router.post(
+  "/",
+  verifyToken,
+  isSuperAdmin(["super-admin", "admin"]),
+  createCategory
+);
 
 router.get(
   "/:id",
   verifyToken,
-  isSuperAdmin(["admin", "editor"]),
+  isSuperAdmin(["super-admin", "admin", "editor"]),
   getCategoryById
 );
 
 router.get(
   "/",
   verifyToken,
-  isSuperAdmin(["admin", "editor"]),
+  isSuperAdmin(["super-admin", "admin", "editor"]),
   getAllCategories
 );
-router.patch("/:id", verifyToken, isSuperAdmin(["admin"]), updateCategory);
+router.patch(
+  "/:id",
+  verifyToken,
+  isSuperAdmin(["super-admin", "admin"]),
+  updateCategory
+);
 
 router.delete(
   "/:id",
   verifyToken,
-  isSuperAdmin(["admin", "super-admin"]),
+  isSuperAdmin(["super-admin", "admin"]),
   deleteCategory
 );
 

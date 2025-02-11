@@ -7,7 +7,7 @@ const { validateUserInput } = require("../utils/validators");
 const createUser = async (req, res) => {
   try {
     const { firebaseUid, name, email, password, avatar } = req.body; // Default role as "user"
-    console.log("Request body:", req.body);
+    console.log("Request body data:", req.body);
 
     if (!firebaseUid || !email) {
       return res.status(400).json({ message: "All fields are required." });
@@ -23,8 +23,9 @@ const createUser = async (req, res) => {
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Fetch default (e.g. ,"user") role from Role collection
+    // Fetch default (e.g. ,"user") role from 'roles' collection
     const defaultRole = await Role.findOne({ name: "user" });
+
     if (!defaultRole) {
       return res.status(500).json({ message: "Default user role not found" });
     }

@@ -46,7 +46,7 @@ const ManageRoles = () => {
               />
 
               {editingRole && (
-                <>
+                <div className="lg:mt-[-40px] lg:pl-[140px]">
                   <CTAButton
                     onClick={handleCancelEdit}
                     label="Cancel Edit"
@@ -54,7 +54,7 @@ const ManageRoles = () => {
                     variant="warning"
                     icon={<FaTimesCircle />}
                   />
-                </>
+                </div>
               )}
             </div>
             <div className="lg:col-span-6 col-span-12">

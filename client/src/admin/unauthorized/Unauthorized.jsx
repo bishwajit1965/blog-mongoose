@@ -10,7 +10,7 @@ const Unauthorized = () => {
         You do not have the required permissions to access this page.
       </p>
       <Link to="/" className="btn btn-primary">
-        Go Back to Home
+        Go Back Home
       </Link>
     </div>
   );

@@ -45,7 +45,7 @@ const CTAButton = ({
       "bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 focus:ring-green-400",
     info: "bg-gradient-to-r from-teal-500 to-cyan-600 text-white hover:from-teal-600 hover:to-cyan-700 focus:ring-cyan-400",
     warning:
-      "bg-gradient-to-r from-yellow-400 to-yellow-400 text-black hover:from-yellow-500 hover:to-yellow-600 focus:ring-yellow-400",
+      "bg-gradient-to-r from-yellow-500 to-yellow-600 text-black hover:from-yellow-500 hover:to-yellow-600 focus:ring-yellow-400",
   };
 
   // Combine all styles

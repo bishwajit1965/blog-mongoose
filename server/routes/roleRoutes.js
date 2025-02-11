@@ -12,10 +12,30 @@ const { verifyToken, isSuperAdmin } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
-router.post("/", verifyToken, isSuperAdmin(["admin"]), createRole);
-router.get("/:id", verifyToken, isSuperAdmin(["admin", "editor"]), getRoleById);
-router.get("/", verifyToken, isSuperAdmin(["admin", "editor"]), getAllRoles);
-router.patch("/:id", verifyToken, isSuperAdmin(["admin"]), updateRole);
+router.post(
+  "/",
+  verifyToken,
+  isSuperAdmin(["super-admin", "admin"]),
+  createRole
+);
+router.get(
+  "/:id",
+  verifyToken,
+  isSuperAdmin(["super-admin", "admin", "editor"]),
+  getRoleById
+);
+router.get(
+  "/",
+  verifyToken,
+  isSuperAdmin(["super-admin", "admin", "editor"]),
+  getAllRoles
+);
+router.patch(
+  "/:id",
+  verifyToken,
+  isSuperAdmin(["super-admin", "admin"]),
+  updateRole
+);
 router.delete(
   "/:id",
   verifyToken,

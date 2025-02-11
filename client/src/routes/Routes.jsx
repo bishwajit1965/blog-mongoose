@@ -1,9 +1,11 @@
 import AboutMe from "../pages/aboutMe/AboutMe";
-import AdminDashboard from "../admin/adminDashboard/AdminDashboard";
+import AdminDashboard from "../admin/adminComponent/adminDashboard/AdminDashboard";
 import AdminLayout from "../admin/adminLayout/adminLayout";
 import AdminLogin from "../admin/adminPages/AdminLogin";
 import BlogPosts from "../pages/blogPosts/BlogPosts";
 import ContactMe from "../pages/contactMe/ContactMe";
+import EditorDashboard from "../admin/adminComponent/editorDashboard/EditorDashboard";
+import EditorLayout from "../admin/adminLayout/EditorLayout";
 import ErrorPage from "../pages/errorPage/ErrorPage";
 import Home from "../pages/home/Home";
 import Login from "../pages/login/Login";
@@ -20,11 +22,16 @@ import Register from "../pages/register/Register";
 import RequireAdmin from "../admin/requireAdmin/RequireAdmin";
 import RoleForm from "../admin/adminDataManagement/manageRoles/RoleForm";
 import RootLayout from "../layouts/rootLayout/RootLayout";
+import SuperAdminDashboard from "../admin/adminComponent/superAdminDashboard/SuperAdminDashboard";
+import SuperAdminLayout from "../admin/adminLayout/SuperAdminLayout";
 import TermsConditions from "../pages/TermsConditions/TermsConditions";
 import Unauthorized from "../admin/unauthorized/Unauthorized";
+import WriterDashboard from "../admin/adminComponent/writerDashboard/WriterDashboard";
+import WriterLayout from "../admin/adminLayout/WriterLayout";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
+  // Public routes
   {
     path: "/",
     element: <RootLayout />,
@@ -84,11 +91,69 @@ const router = createBrowserRouter([
     path: "/unauthorized",
     element: <Unauthorized />,
   },
+  // Super-admin protected routes
+  {
+    path: "/super-admin",
+    errorElement: <ErrorPage />,
+    element: (
+      <RequireAdmin allowedRoles={["super-admin", "admin"]}>
+        <SuperAdminLayout />,
+      </RequireAdmin>
+    ),
+    children: [
+      {
+        path: "super-admin-dashboard",
+        element: <SuperAdminDashboard />,
+      },
+      {
+        path: "manage-blogs",
+        element: <ManageBlogPosts />,
+      },
+      {
+        path: "manage-categories",
+        element: <ManageCategories />,
+      },
+      {
+        path: "manage-tags",
+        element: <ManageTags />,
+      },
+      {
+        path: "manage-users",
+        element: <ManageUsers />,
+      },
+      {
+        path: "manage-roles",
+        element: <ManageRoles />,
+      },
+      {
+        path: "role-form",
+        element: <RoleForm />,
+      },
+      {
+        path: "manage-permission",
+        element: <ManagePermissions />,
+      },
+      {
+        path: "assign-roles-permissions",
+        element: <ManageUsersRolesAndPermissions />,
+      },
+      {
+        path: "*",
+        element: <ErrorPage />,
+      },
+      {
+        path: "*",
+        element: <ErrorPage />,
+      },
+    ],
+  },
+
   // Admin protected routes
   {
     path: "/admin",
+    errorElement: <ErrorPage />,
     element: (
-      <RequireAdmin>
+      <RequireAdmin allowedRoles={["super-admin", "admin"]}>
         <AdminLayout />
       </RequireAdmin>
     ),
@@ -129,6 +194,52 @@ const router = createBrowserRouter([
       {
         path: "assign-roles-permissions",
         element: <ManageUsersRolesAndPermissions />,
+      },
+      {
+        path: "*",
+        element: <ErrorPage />,
+      },
+    ],
+  },
+
+  // Editor protected routes
+  {
+    path: "/editor",
+    errorElement: <ErrorPage />,
+    element: (
+      <RequireAdmin allowedRoles={["editor"]}>
+        <EditorLayout />
+      </RequireAdmin>
+    ),
+    children: [
+      {
+        path: "editor-dashboard",
+        element: <EditorDashboard />,
+      },
+      {
+        path: "manage-blogs",
+        element: <ManageBlogPosts />,
+      },
+      {
+        path: "*",
+        element: <ErrorPage />,
+      },
+    ],
+  },
+
+  // Writer protected routes
+  {
+    path: "/writer",
+    errorElement: <ErrorPage />,
+    element: (
+      <RequireAdmin allowedRoles={["writer"]}>
+        <WriterLayout />
+      </RequireAdmin>
+    ),
+    children: [
+      {
+        path: "writer-dashboard",
+        element: <WriterDashboard />,
       },
       {
         path: "*",

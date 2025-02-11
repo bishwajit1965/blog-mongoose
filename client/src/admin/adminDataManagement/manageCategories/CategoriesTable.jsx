@@ -8,23 +8,19 @@ import useAdminCategory from "../../adminHooks/useAdminCategory";
 import { useState } from "react";
 
 const CategoriesTable = ({ onEdit, onDelete }) => {
-  const { categories } = useAdminCategory();
+  const { categories, fetchCategories } = useAdminCategory();
   const { adminData } = useAdminAuth();
+  console.log("Categories fetched:", categories);
 
   // Pagination state
   const [paginatedData, setPaginatedData] = useState([]);
-  const totalItems = categories.length;
-
-  // Calculate pagination values
-  const handleRangeChange = ({ startIndex, endIndex }) => {
-    setPaginatedData(categories.slice(startIndex, endIndex));
-  };
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       try {
         await deleteCategory(id);
         alert("Category deleted successfully!");
+        fetchCategories();
         onDelete();
       } catch (error) {
         console.error("Error deleting category:", error);
@@ -55,7 +51,9 @@ const CategoriesTable = ({ onEdit, onDelete }) => {
               <td>{category.description}</td>
               <td className="flex space-x-1 justify-end p-0">
                 {Array.isArray(adminData?.user?.roles) &&
-                adminData.user.roles.some((role) => role.name === "admin") ? (
+                adminData.user.roles.some(
+                  (role) => role.name === "super-admin" || role.name === "admin"
+                ) ? (
                   <>
                     <CTAButton
                       onClick={() => onEdit(category)}
@@ -83,8 +81,8 @@ const CategoriesTable = ({ onEdit, onDelete }) => {
 
       {/* Pagination */}
       <AdminPagination
-        totalItems={totalItems}
-        onRangeChange={handleRangeChange}
+        items={categories}
+        onPaginatedDataChange={setPaginatedData} // Directly update paginated data
       />
     </>
   );

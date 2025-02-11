@@ -5,9 +5,9 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 
 import Logo from "/assets/favicon/webDevProF.png";
-import ThemeContext from "../../themeContext/ThemeContext";
+import ThemeContext from "../../../themeContext/ThemeContext";
 import adminImage from "/assets/bishwajit-1.jpg";
-import useAdminAuth from "../adminHooks/useAdminAuth";
+import useAdminAuth from "../../adminHooks/useAdminAuth";
 
 const AdminNavbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
@@ -38,13 +38,10 @@ const AdminNavbar = () => {
   const routes = [
     { id: 1, route: "admin-dashboard", name: " Dashboard Home" },
     { id: 2, route: "manage-blogs", name: "Manage Blog Posts" },
-    { id: 3, route: "manage-categories", name: "Manage Categories" },
-    { id: 4, route: "manage-tags", name: "Manage Tags" },
     {
-      id: 5,
+      id: 3,
       isThemeToggle: true, // Differentiator key
     },
-    { id: 6, route: "manage-users", name: "Manage Users" },
   ];
 
   return (

@@ -10,15 +10,10 @@ import { useState } from "react";
 const TagsTable = ({ onEdit, onDelete }) => {
   const { tags } = useAdminTag();
   const { adminData } = useAdminAuth();
+  console.log("tags fetched:", tags);
 
   // Pagination state
   const [paginatedData, setPaginatedData] = useState([]);
-  const totalItems = tags.length;
-
-  // Calculate pagination values
-  const handleRangeChange = ({ startIndex, endIndex }) => {
-    setPaginatedData(tags.slice(startIndex, endIndex));
-  };
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this tag?")) {
@@ -56,7 +51,9 @@ const TagsTable = ({ onEdit, onDelete }) => {
               <td>{tag.slug}</td>
               <td className="flex space-x-1 justify-end p-0">
                 {Array.isArray(adminData?.user?.roles) &&
-                adminData.user.roles.some((role) => role.name === "admin") ? (
+                adminData.user.roles.some(
+                  (role) => role.name === "super-admin" || role.name === "admin"
+                ) ? (
                   <>
                     <CTAButton
                       onClick={() => onEdit(tag)}
@@ -83,8 +80,8 @@ const TagsTable = ({ onEdit, onDelete }) => {
       </table>
       {/* Pagination */}
       <AdminPagination
-        totalItems={totalItems}
-        onRangeChange={handleRangeChange}
+        items={tags}
+        onPaginatedDataChange={setPaginatedData} // Directly update paginated data
       />
     </>
   );

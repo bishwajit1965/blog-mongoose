@@ -17,6 +17,7 @@ const loginAdmin = async (req, res) => {
       .populate({ path: "roles", select: "name" })
       .populate({ path: "permissions", select: "name" });
     console.log("User data", user);
+
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }

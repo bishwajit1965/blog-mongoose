@@ -1,4 +1,4 @@
-import AdminLoader from "../adminComponent/adminLoader/AdminLoader";
+import AdminLoader from "../adminLoader/AdminLoader";
 
 const AdminDashboardCard = ({ loading, isAuthenticated, adminData }) => {
   if (loading) return <AdminLoader />;
