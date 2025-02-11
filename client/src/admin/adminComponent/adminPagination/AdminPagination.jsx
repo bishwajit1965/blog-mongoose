@@ -2,30 +2,29 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { useEffect, useState } from "react";
 
 const AdminPagination = ({
-  totalItems,
+  items, // Pass the full list of items here
   itemsPerPageOptions = [5, 10, 15, 20, 25, 30, 50],
-  onRangeChange, // Sends range (startIndex, endIndex) to the parent
+  onPaginatedDataChange, // Callback to send the paginated data to the parent
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageOptions[0]);
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(items.length / itemsPerPage);
 
-  // Generate page numbers with ellipses
   const generatePageNumbers = () => {
     const delta = 2;
-    const pages = [];
+    const range = [];
     for (let i = 1; i <= totalPages; i++) {
       if (
-        i === 1 || // Always show the first page
-        i === totalPages || // Always show the last page
-        (i >= currentPage - delta && i <= currentPage + delta) // Show pages near current
+        i === 1 ||
+        i === totalPages ||
+        (i >= currentPage - delta && i <= currentPage + delta)
       ) {
-        pages.push(i);
-      } else if (pages[pages.length - 1] !== "...") {
-        pages.push("...");
+        range.push(i);
+      } else if (range[range.length - 1] !== "...") {
+        range.push("...");
       }
     }
-    return pages;
+    return range;
   };
 
   const handlePageChange = (page) => {
@@ -37,59 +36,57 @@ const AdminPagination = ({
   const handleItemsPerPageChange = (e) => {
     const newItemsPerPage = parseInt(e.target.value, 10);
     setItemsPerPage(newItemsPerPage);
-    setCurrentPage(1); // Reset to first page when items per page changes
+    setCurrentPage(1);
   };
 
   useEffect(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    onRangeChange({ startIndex, endIndex }); // Send range to parent
-  }, [currentPage, itemsPerPage, onRangeChange]);
+    const endIndex = Math.min(startIndex + itemsPerPage, items.length);
+    const paginatedData = items.slice(startIndex, endIndex);
+
+    onPaginatedDataChange(paginatedData); // Send paginated data to parent
+  }, [currentPage, itemsPerPage, items, onPaginatedDataChange]);
 
   const pages = generatePageNumbers();
 
   return (
-    <div className="flex flex-col items-center space-y-3">
-      {/* Items Per Page Selector */}
-      <div className="mt-3 dark:bg-gray-900 border dark:border-gray-700 rounded">
-        <label htmlFor="itemsPerPage" className="mr-2 ml-2">
+    <div className="flex flex-col items-center space-y-2 mt-3">
+      <div className="flex items-center space-x-2 dark:bg-gray-900 border dark:border-gray-700 rounded shadow-sm">
+        <label htmlFor="itemsPerPage" className="text-sm pl-2">
           Items per page:
         </label>
         <select
           id="itemsPerPage"
           value={itemsPerPage}
           onChange={handleItemsPerPageChange}
-          className="py-[2px] border rounded dark:bg-gray-700 dark:border-gray-700"
+          className="py-[2px] justify-end px-2 border rounded dark:bg-gray-700 dark:border-gray-600"
         >
           {itemsPerPageOptions.map((option) => (
-            <option key={option} value={option} className="flex justify-end">
+            <option key={option} value={option}>
               {option}
             </option>
           ))}
         </select>
       </div>
 
-      {/* Pagination Controls */}
-      <div className="flex space-x-2">
+      <div className="flex items-center space-x-2">
         <button
           disabled={currentPage === 1}
           onClick={() => handlePageChange(currentPage - 1)}
-          className={`px-1 rounded ${
+          className={`px-2 py-[2px] rounded ${
             currentPage === 1
               ? "bg-gray-300 cursor-not-allowed dark:bg-gray-600"
               : "bg-gray-200 hover:bg-blue-500 hover:text-white dark:bg-gray-700"
           }`}
         >
-          <span className="flex items-center">
-            <FaAngleLeft className="flex justify-start" /> Prev
-          </span>
+          <FaAngleLeft className="inline" /> Prev
         </button>
 
         {pages.map((page, index) => (
           <button
             key={index}
             onClick={() => handlePageChange(page)}
-            className={`px-[10px] py-[2px] rounded ${
+            className={`px-3 py-[2px] rounded ${
               page === currentPage
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 hover:bg-blue-500 hover:text-white dark:bg-gray-700"
@@ -103,16 +100,19 @@ const AdminPagination = ({
         <button
           disabled={currentPage === totalPages}
           onClick={() => handlePageChange(currentPage + 1)}
-          className={`px-1 rounded ${
+          className={`px-2 py-[2px] rounded ${
             currentPage === totalPages
               ? "bg-gray-300 cursor-not-allowed dark:bg-gray-600"
               : "bg-gray-200 hover:bg-blue-500 hover:text-white dark:bg-gray-700"
           }`}
         >
-          <span className="flex items-center">
-            Next <FaAngleRight />
-          </span>
+          Next <FaAngleRight className="inline" />
         </button>
+      </div>
+
+      <div className="text-xs dark:text-gray-300">
+        Showing page {currentPage} of {totalPages} ({itemsPerPage} items per
+        page)
       </div>
     </div>
   );

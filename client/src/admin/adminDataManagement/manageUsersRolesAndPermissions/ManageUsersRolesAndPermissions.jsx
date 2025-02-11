@@ -53,7 +53,7 @@ const ManageUsersRolesAndPermissions = () => {
               />
 
               {selectedUser && (
-                <>
+                <div className="lg:mt-[-40px] lg:pl-[220px]">
                   <CTAButton
                     onClick={handleCancelEdit}
                     label="Cancel Edit"
@@ -61,7 +61,7 @@ const ManageUsersRolesAndPermissions = () => {
                     variant="warning"
                     icon={<FaTimesCircle />}
                   />
-                </>
+                </div>
               )}
             </div>
             <div className="lg:col-span-6 col-span-12">

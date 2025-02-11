@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import AdminCategoryContext from "../adminContexts/AdminCategoryContext";
 import { getAllCategories } from "../adminServices/categoryService";
@@ -7,7 +7,7 @@ const AdminCategoryProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       setLoading(true);
       const categoryData = await getAllCategories();
@@ -17,11 +17,11 @@ const AdminCategoryProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [fetchCategories]);
 
   const addCategoryToState = (category) => {
     setCategories((prev) => [...prev, category]);

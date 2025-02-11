@@ -2,9 +2,9 @@ import { FaEye, FaEyeSlash, FaSignInAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import AdminLoader from "../adminComponent/adminLoader/AdminLoader";
 import CTAButton from "../../components/buttons/CTAButton";
 import { Helmet } from "react-helmet-async";
-import Loader from "../../components/loader/Loader";
 import Swal from "sweetalert2";
 import useAdminAuth from "../adminHooks/useAdminAuth";
 
@@ -18,21 +18,22 @@ const AdminLogin = () => {
   const [passwordError, setPasswordError] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  const from = location.state?.from?.pathname || "/admin/admin-dashboard";
+  const from =
+    location.state?.from?.pathname || "/super-admin/super-admin-dashboard";
+  console.log("Super Admin data fetched:", adminData);
 
   useEffect(() => {
-    if (!isAuthenticated || !adminData) return; // Do nothing until authenticated and data is loaded
-    const roleNames =
-      adminData?.roles.map((role) => role?.name?.toLowerCase()) || [];
+    if (!isAuthenticated || !adminData) return;
+    const userRoles =
+      adminData?.roles?.map((role) => role.name.toLowerCase()) || [];
 
-    const checkRole = (roleName) => roleNames.includes(roleName);
-
-    // Navigate based on roles
-    if (checkRole("admin")) {
+    if (userRoles.includes("super-admin")) {
       navigate(from, { replace: true });
-    } else if (checkRole("editor")) {
+    } else if (userRoles.includes("admin")) {
+      navigate("/admin/admin-dashboard", { replace: true });
+    } else if (userRoles.includes("editor")) {
       navigate("/editor/editor-dashboard", { replace: true });
-    } else if (checkRole("writer")) {
+    } else if (userRoles.includes("writer")) {
       navigate("/writer/writer-dashboard", { replace: true });
     } else {
       navigate("/unauthorized", { replace: true });
@@ -89,7 +90,7 @@ const AdminLogin = () => {
 
       <div className="h-screen flex items-center">
         <div className="lg:max-w-xs w-full mx-auto">
-          {loading && <Loader />}
+          {loading && <AdminLoader />}
           <div className="border border-slate-300 shadow-md bg-base-300 p-6 rounded-md dark:bg-gray-900 dark:border-gray-700">
             <h1 className="text-xl font-bold pb-2">Admin Login</h1>
             {emailError && (

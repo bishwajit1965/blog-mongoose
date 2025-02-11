@@ -10,7 +10,6 @@ import { useState } from "react";
 
 const ManageCategories = () => {
   const { categories, fetchCategories, loading } = useAdminCategory();
-
   const [editingCategory, setEditingCategory] = useState(null);
 
   const handleEdit = (category) => {
@@ -27,7 +26,7 @@ const ManageCategories = () => {
       </Helmet>
 
       <AdminSubTitle
-        dataLength={categories.length}
+        dataLength={categories?.length}
         subTitle="Manage"
         decoratedText="Categories"
       />
@@ -48,7 +47,7 @@ const ManageCategories = () => {
               />
 
               {editingCategory && (
-                <>
+                <div className="lg:mt-[-40px] lg:pl-[170px]">
                   <CTAButton
                     onClick={handleCancelEdit}
                     label="Cancel Edit"
@@ -56,7 +55,7 @@ const ManageCategories = () => {
                     variant="warning"
                     icon={<FaTimesCircle />}
                   />
-                </>
+                </div>
               )}
             </div>
             <div className="lg:col-span-6 col-span-12">

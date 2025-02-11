@@ -12,7 +12,7 @@ router.post("/logout", logoutAdmin);
 router.use(authenticateToken);
 
 // Admin details route for auth state persistence(is a must)
-router.get("/me", async (req, res) => {
+router.get("/me", authenticateToken, async (req, res) => {
   try {
     // Fetch the user and populate roles with their names
     const user = await User.findById(req.user.id)
@@ -20,7 +20,7 @@ router.get("/me", async (req, res) => {
       .populate("permissions", "name"); // Populate permissions with their names
 
     if (!user) {
-      return res.status(404).json({ message: "User not found." });
+      return res.status(401).json({ message: "User not found." });
     }
     // const roles = user.roles;
     res.status(200).json({ user }); // Send user details back

@@ -27,7 +27,7 @@ const ManagePermissions = () => {
         <title>Blog || Manage Permissions</title>
       </Helmet>
       <AdminSubTitle
-        link="/admin/admin-home-dashboard"
+        link="/admin/admin-dashboard"
         navigationButton={
           <CTAButton
             label="Admin Dashboard"
@@ -55,7 +55,7 @@ const ManagePermissions = () => {
               />
 
               {editingPermission && (
-                <>
+                <div className="lg:mt-[-40px] lg:pl-[180px]">
                   <CTAButton
                     onClick={handleCancelEdit}
                     label="Cancel Edit"
@@ -63,7 +63,7 @@ const ManagePermissions = () => {
                     variant="warning"
                     icon={<FaTimesCircle />}
                   />
-                </>
+                </div>
               )}
             </div>
             <div className="lg:col-span-6 col-span-12">

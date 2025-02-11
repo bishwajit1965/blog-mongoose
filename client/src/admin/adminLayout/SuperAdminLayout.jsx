@@ -4,7 +4,7 @@ import AdminPageTitle from "../adminComponent/adminPageTitle/AdminPageTitle";
 import AdminSideNav from "../adminComponent/adminSideNav/AdminSideNav";
 import { Outlet } from "react-router-dom";
 
-const AdminLayout = () => {
+const SuperAdminLayout = () => {
   return (
     <div className="lg:max-w-7xl mx-auto">
       <AdminNavbar />
@@ -17,9 +17,9 @@ const AdminLayout = () => {
         <div className="lg:col-span-10 col-span-12 border border-b-rounded-md dark:border-gray-700">
           <div className="">
             <AdminPageTitle
-              title="Admin"
+              title="Super Admin"
               decoratedText="Panel"
-              subtitle="Admin only page."
+              subtitle="Super Admin only page!"
             />
           </div>
 
@@ -36,4 +36,4 @@ const AdminLayout = () => {
   );
 };
 
-export default AdminLayout;
+export default SuperAdminLayout;

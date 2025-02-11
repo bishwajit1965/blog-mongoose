@@ -14,12 +14,18 @@ const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
   console.log("Selected roles:", selectedRoles);
   console.log("Selected permissions:", selectedPermissions);
 
+  // Object Array mismatch solution for checkboxes to be selected with default values
+  const normalizeIds = (arr) =>
+    arr.map((item) => (typeof item === "object" ? item._id : item));
+
   useEffect(() => {
     if (user) {
-      setSelectedRoles(user.roles || []);
-      setSelectedPermissions(user.permissions || []);
+      setSelectedRoles(normalizeIds(user.roles) || []);
+      setSelectedPermissions(normalizeIds(user.permissions) || []);
       setEmail(user.email || ""); // Set the email field when a user is selected
     } else {
+      setSelectedRoles([]); // Reset when no user is selected
+      setSelectedPermissions([]);
       setEmail("");
     }
   }, [user]);
@@ -72,7 +78,7 @@ const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
 
           <h2 className="font-bold">Roles</h2>
           <div className="grid grid-cols-2 gap-2">
-            {roles.map((role) => (
+            {roles?.map((role) => (
               <label key={role._id} className="flex items-center">
                 <input
                   type="checkbox"
@@ -92,7 +98,7 @@ const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
         <div className="mb-4">
           <h2 className="font-bold">Permissions</h2>
           <div className="grid grid-cols-2 gap-2">
-            {permissions.map((perm) => (
+            {permissions?.map((perm) => (
               <label key={perm._id} className="flex items-center">
                 <input
                   type="checkbox"

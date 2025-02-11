@@ -11,6 +11,7 @@ const AdminPermissionProvider = ({ children }) => {
     try {
       setLoading(true);
       const permissionData = await getAllPermissions();
+
       setPermissions(permissionData);
     } catch (error) {
       console.error("Error in fetching roles.", error);

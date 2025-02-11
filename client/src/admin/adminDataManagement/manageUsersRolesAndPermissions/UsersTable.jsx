@@ -14,15 +14,10 @@ const UsersTable = ({ onDelete, onEdit }) => {
   const { adminData } = useAdminAuth();
   const { permissions } = useAdminPermission();
   const { roles } = useAdminRole();
+  console.log("Users fetched:", users);
 
   // Pagination state
   const [paginatedData, setPaginatedData] = useState([]);
-  const totalItems = users.length;
-
-  // Calculate pagination values
-  const handleRangeChange = ({ startIndex, endIndex }) => {
-    setPaginatedData(users.slice(startIndex, endIndex));
-  };
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this permission?")) {
@@ -57,9 +52,9 @@ const UsersTable = ({ onDelete, onEdit }) => {
               className="dark:hover:bg-gray-600 hover:bg-gray-100 dark:border-gray-700"
             >
               <td>{index + 1}</td>
-              <td>{user.email}</td>
+              <td>{user?.email}</td>
               <td>
-                {user.roles.map((roleId, index) => {
+                {user?.roles?.map((roleId, index) => {
                   const matchingRole = roles.find((r) => r._id === roleId._id);
                   if (matchingRole) {
                     return index === user.roles.length - 1
@@ -70,7 +65,7 @@ const UsersTable = ({ onDelete, onEdit }) => {
                 })}
               </td>
               <td>
-                {user.permissions.map((permissionId, index) => {
+                {user?.permissions?.map((permissionId, index) => {
                   const matchingPermissions = permissions.find(
                     (p) => p._id === permissionId._id
                   );
@@ -84,7 +79,9 @@ const UsersTable = ({ onDelete, onEdit }) => {
               </td>
               <td className="flex space-x-1 justify-end p-0">
                 {Array.isArray(adminData?.user?.roles) &&
-                adminData.user.roles.some((role) => role.name === "admin") ? (
+                adminData?.user?.roles?.some(
+                  (role) => role.name === "super-admin" || role.name === "admin"
+                ) ? (
                   <>
                     <CTAButton
                       onClick={() => onEdit(user)}
@@ -111,8 +108,8 @@ const UsersTable = ({ onDelete, onEdit }) => {
       </table>
       {/* Pagination */}
       <AdminPagination
-        totalItems={totalItems}
-        onRangeChange={handleRangeChange}
+        items={users}
+        onPaginatedDataChange={setPaginatedData} // Directly update paginated data
       />
     </div>
   );

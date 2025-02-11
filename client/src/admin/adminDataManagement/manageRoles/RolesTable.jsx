@@ -12,15 +12,11 @@ const RolesTable = ({ onDelete, onEdit }) => {
   const { permissions } = useAdminPermission();
   const { roles } = useAdminRole();
   const { adminData } = useAdminAuth();
+  console.log("Roles fetched:", roles);
+  console.log("Permissions fetched:", permissions);
 
   // Pagination state
   const [paginatedData, setPaginatedData] = useState([]);
-  const totalItems = roles.length;
-
-  // Calculate pagination values
-  const handleRangeChange = ({ startIndex, endIndex }) => {
-    setPaginatedData(roles.slice(startIndex, endIndex));
-  };
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this role?")) {
@@ -72,7 +68,9 @@ const RolesTable = ({ onDelete, onEdit }) => {
               <td>{role.description}</td>
               <td className="flex p-0 space-x-1 justify-end">
                 {Array.isArray(adminData?.user?.roles) &&
-                adminData.user.roles.some((role) => role.name === "admin") ? (
+                adminData.user.roles.some(
+                  (role) => role.name === "super-admin" || role.name === "admin"
+                ) ? (
                   <>
                     <CTAButton
                       onClick={() => onEdit(role)}
@@ -100,8 +98,8 @@ const RolesTable = ({ onDelete, onEdit }) => {
 
       {/* Pagination */}
       <AdminPagination
-        totalItems={totalItems}
-        onRangeChange={handleRangeChange}
+        items={roles}
+        onPaginatedDataChange={setPaginatedData} // Directly update paginated data
       />
     </>
   );
