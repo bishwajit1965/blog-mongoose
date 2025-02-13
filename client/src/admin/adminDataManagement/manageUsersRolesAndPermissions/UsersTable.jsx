@@ -14,7 +14,6 @@ const UsersTable = ({ onDelete, onEdit }) => {
   const { adminData } = useAdminAuth();
   const { permissions } = useAdminPermission();
   const { roles } = useAdminRole();
-  console.log("Users fetched:", users);
 
   // Pagination state
   const [paginatedData, setPaginatedData] = useState([]);

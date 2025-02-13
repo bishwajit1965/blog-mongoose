@@ -12,8 +12,6 @@ const RolesTable = ({ onDelete, onEdit }) => {
   const { permissions } = useAdminPermission();
   const { roles } = useAdminRole();
   const { adminData } = useAdminAuth();
-  console.log("Roles fetched:", roles);
-  console.log("Permissions fetched:", permissions);
 
   // Pagination state
   const [paginatedData, setPaginatedData] = useState([]);

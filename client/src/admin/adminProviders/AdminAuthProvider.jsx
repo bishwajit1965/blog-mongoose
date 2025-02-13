@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 
 import AdminAuthContext from "../adminContexts/AdminAuthContext";
 import axios from "axios";
@@ -75,25 +75,26 @@ const AdminAuthProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await axios.get(`${baseURL}/admin/me`, {
-          withCredentials: true,
-        });
-        dispatch({ type: "LOGIN_SUCCESS", payload: response.data });
-      } catch (error) {
-        console.error("Error verifying token:", error);
-        dispatch({ type: "LOGOUT" });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkAuth();
+  const checkAuth = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await axios.get(`${baseURL}/admin/me`, {
+        withCredentials: true,
+      });
+      dispatch({ type: "LOGIN_SUCCESS", payload: response.data });
+    } catch (error) {
+      console.error("Error verifying token:", error);
+      dispatch({ type: "LOGOUT" });
+    } finally {
+      setLoading(false);
+    }
   }, [baseURL]);
+
+  // Run once on mount
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   const adminAuthInfo = {
     loading,
@@ -103,6 +104,7 @@ const AdminAuthProvider = ({ children }) => {
     adminData: state.adminData,
     loginAdmin,
     logoutAdmin,
+    checkAuth,
   };
 
   return (

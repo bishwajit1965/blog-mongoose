@@ -10,7 +10,6 @@ import { useState } from "react";
 const TagsTable = ({ onEdit, onDelete }) => {
   const { tags } = useAdminTag();
   const { adminData } = useAdminAuth();
-  console.log("tags fetched:", tags);
 
   // Pagination state
   const [paginatedData, setPaginatedData] = useState([]);

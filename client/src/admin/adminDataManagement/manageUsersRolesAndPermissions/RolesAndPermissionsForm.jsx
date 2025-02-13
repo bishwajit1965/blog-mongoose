@@ -10,10 +10,6 @@ const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  console.log("Selected user:", user);
-  console.log("Selected roles:", selectedRoles);
-  console.log("Selected permissions:", selectedPermissions);
-
   // Object Array mismatch solution for checkboxes to be selected with default values
   const normalizeIds = (arr) =>
     arr.map((item) => (typeof item === "object" ? item._id : item));
