@@ -10,7 +10,6 @@ import { useState } from "react";
 const CategoriesTable = ({ onEdit, onDelete }) => {
   const { categories, fetchCategories } = useAdminCategory();
   const { adminData } = useAdminAuth();
-  console.log("Categories fetched:", categories);
 
   // Pagination state
   const [paginatedData, setPaginatedData] = useState([]);

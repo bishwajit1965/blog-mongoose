@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const ErrorPage = () => {
   return (
     <>
-      <div className="lg:min-h-[calc(100vh-160px)] flex items-center justify-center dark:bg-gray-800 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 text-gray-700 rounded-md">
+      <div className="h-screen flex items-center justify-center dark:bg-gray-800 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 text-gray-700 rounded-md">
         <div className="text-center max-w-md px-4">
           <div className="mb-6">
             <img src={ErrorImage} alt="Error 404" className="w-full" />

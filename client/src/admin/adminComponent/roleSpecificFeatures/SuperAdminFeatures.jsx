@@ -8,7 +8,7 @@ const SuperAdminFeatures = () => {
     { id: 3, route: "manage-categories", name: "Manage Categories" },
     { id: 4, route: "manage-tags", name: "Manage Tags" },
     { id: 5, route: "manage-roles", name: "Manage Roles" },
-    { id: 6, route: "manage-permission", name: "Manage Permission" },
+    { id: 6, route: "manage-permissions", name: "Manage Permission" },
     {
       id: 7,
       route: "assign-roles-permissions",

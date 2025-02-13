@@ -9,53 +9,46 @@ import Swal from "sweetalert2";
 import useAdminAuth from "../adminHooks/useAdminAuth";
 
 const AdminLogin = () => {
-  const { loginAdmin, isAuthenticated, adminData } = useAdminAuth();
+  const { loginAdmin, isAuthenticated, adminData, checkAuth } = useAdminAuth();
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   const from =
     location.state?.from?.pathname || "/super-admin/super-admin-dashboard";
-  console.log("Super Admin data fetched:", adminData);
 
   useEffect(() => {
-    if (!isAuthenticated || !adminData) return;
-    const userRoles =
-      adminData?.roles?.map((role) => role.name.toLowerCase()) || [];
+    if (!isAuthenticated || !adminData?.user?.roles?.length) return;
 
-    if (userRoles.includes("super-admin")) {
-      navigate(from, { replace: true });
-    } else if (userRoles.includes("admin")) {
-      navigate("/admin/admin-dashboard", { replace: true });
-    } else if (userRoles.includes("editor")) {
-      navigate("/editor/editor-dashboard", { replace: true });
-    } else if (userRoles.includes("writer")) {
-      navigate("/writer/writer-dashboard", { replace: true });
+    const userRoles =
+      adminData?.user?.roles?.map((role) => role.name.toLowerCase()) || [];
+
+    console.log("✅ User Roles:", userRoles);
+
+    const roleRedirects = {
+      "super-admin": from || "/super-admin/super-admin-dashboard",
+      admin: "/admin/admin-dashboard",
+      editor: "/editor/editor-dashboard",
+      writer: "/writer/writer-dashboard",
+    };
+
+    const destinationRole = userRoles.find((role) => roleRedirects[role]);
+
+    if (destinationRole) {
+      console.log(`✅ Redirecting to: ${roleRedirects[destinationRole]}`);
+      navigate(roleRedirects[destinationRole], { replace: true });
     } else {
+      console.warn("🚨 No matching role found. Redirecting to Unauthorized.");
       navigate("/unauthorized", { replace: true });
     }
   }, [isAuthenticated, adminData, navigate, from]);
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    if (!e.target.value.includes("@")) {
-      setEmailError("Please enter a valid email address.");
-    } else {
-      setEmailError("");
-    }
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-    if (e.target.value.length < 6) {
-      setPasswordError("Password must be at least 6 characters long.");
-    } else {
-      setPasswordError("");
-    }
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleLogin = async (event) => {
@@ -64,7 +57,8 @@ const AdminLogin = () => {
     setEmailError("");
     setPasswordError("");
     try {
-      await loginAdmin({ email, password });
+      await loginAdmin(formData);
+      await checkAuth();
       Swal.fire({
         position: "top-end",
         icon: "success",
@@ -72,8 +66,7 @@ const AdminLogin = () => {
         showConfirmButton: false,
         timer: 1500,
       });
-      setEmailError(""); // Reset form
-      setPasswordError("");
+      setFormData({ email: "", password: "" }); // Reset form
     } catch (error) {
       console.error("Login failed:", error);
       setEmailError("Login failed. Please check your credentials.");
@@ -102,20 +95,23 @@ const AdminLogin = () => {
             <form onSubmit={handleLogin}>
               <input
                 type="email"
+                name="email"
                 placeholder="Enter admin email..."
-                value={email}
-                onChange={handleEmailChange}
+                value={formData.email}
+                onChange={handleInputChange}
                 className="input input-bordered input-sm w-full mb-2 dark:bg-gray-700"
               />
               <div className="relative w-full">
                 <input
                   type={showPassword ? "text" : "password"}
+                  name="password"
                   placeholder="Enter Password..."
-                  value={password}
-                  onChange={handlePasswordChange}
+                  value={formData.password}
+                  onChange={handleInputChange}
                   className="input input-bordered input-sm w-full mb-2 dark:bg-gray-700"
                 />
                 <span
+                  role="button"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   className="absolute right-2 top-2 cursor-pointer"
                   onClick={() => setShowPassword(!showPassword)}

@@ -11,7 +11,6 @@ import { useState } from "react";
 const PermissionsTable = ({ onDelete, onEdit }) => {
   const { permissions, fetchPermissions, loading } = useAdminPermission();
   const { adminData } = useAdminAuth();
-  console.log("Permissions data:", permissions);
 
   // Pagination state
   const [paginatedData, setPaginatedData] = useState([]);

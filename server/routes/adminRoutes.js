@@ -32,8 +32,18 @@ router.get("/me", authenticateToken, async (req, res) => {
   }
 });
 
+// Super-Admin Only Routes
+router.use("/super-admin", verifyAdminRoles(["super-admin"]));
+
+router.get("/super-admin/super-admin-dashboard", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Welcome to the super-admin dashboard!",
+  });
+});
+
 // Admin-only routes
-router.use("/admin", verifyAdminRoles(["admin"]));
+router.use("/admin", verifyAdminRoles(["admin", "super-admin"]));
 
 router.get("/admin/admin-home-dashboard", (req, res) => {
   res
@@ -50,7 +60,7 @@ router.get("/editor/dashboard", (req, res) => {
 });
 
 // Writer-only routes
-router.use("/writer", verifyAdminRoles(["writer", "admin"]));
+router.use("/writer", verifyAdminRoles(["writer", "admin", "super-admin"]));
 router.get("/writer/dashboard", (req, res) => {
   res
     .status(200)
@@ -58,10 +68,14 @@ router.get("/writer/dashboard", (req, res) => {
 });
 
 // Example of a protected admin-only route(Is a must)
-router.get("/protected", verifyAdminRoles(["admin"]), (req, res) => {
-  res
-    .status(200)
-    .json({ status: "success", message: "You have access to this route." });
-});
+router.get(
+  "/protected",
+  verifyAdminRoles(["admin", "super-admin"]),
+  (req, res) => {
+    res
+      .status(200)
+      .json({ status: "success", message: "You have access to this route." });
+  }
+);
 
 module.exports = router;
