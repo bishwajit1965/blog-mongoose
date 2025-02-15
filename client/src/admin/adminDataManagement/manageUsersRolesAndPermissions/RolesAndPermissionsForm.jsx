@@ -6,7 +6,9 @@ import api from "../../adminServices/api";
 
 const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
   const [selectedRoles, setSelectedRoles] = useState([]);
+  const [userPermissions, setUserPermissions] = useState([]); // Editable
   const [selectedPermissions, setSelectedPermissions] = useState([]);
+  const [computedPermissions, setComputedPermissions] = useState([]);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
@@ -16,12 +18,30 @@ const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
 
   useEffect(() => {
     if (user) {
-      setSelectedRoles(normalizeIds(user.roles) || []);
-      setSelectedPermissions(normalizeIds(user.permissions) || []);
+      // Normalize direct assignments
+      const directRoles = normalizeIds(user.roles) || [];
+      const directPermissions = normalizeIds(user.permissions) || [];
+      // If the role objects include a permissions array, compute inherited permissions:
+      const inheritedPermissions =
+        user.roles?.flatMap((role) => normalizeIds(role.permissions)) || [];
+      // Merge both arrays and remove duplicates
+      const allPermissions = [
+        ...new Set([...directPermissions, ...inheritedPermissions]),
+      ];
+      setSelectedRoles(directRoles || []);
+      setUserPermissions(directPermissions || []); // Editable user-specific permissions
+      setSelectedPermissions(allPermissions || []);
+      setComputedPermissions(inheritedPermissions || []);
       setEmail(user.email || ""); // Set the email field when a user is selected
+
+      // setSelectedRoles(normalizeIds(user.roles) || []);
+      // setSelectedPermissions(normalizeIds(user.permissions) || []);
+      // setEmail(user.email || ""); // Set the email field when a user is selected
     } else {
       setSelectedRoles([]); // Reset when no user is selected
       setSelectedPermissions([]);
+      setComputedPermissions([]);
+      setUserPermissions([]);
       setEmail("");
     }
   }, [user]);
@@ -90,11 +110,11 @@ const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
             ))}
           </div>
         </div>
-
-        <div className="mb-4">
+        {/* Read-Only Computed Permissions */}
+        {/* <div className="mb-4">
           <h2 className="font-bold">Permissions</h2>
           <div className="grid grid-cols-2 gap-2">
-            {permissions?.map((perm) => (
+            {computedPermissions?.map((perm) => (
               <label key={perm._id} className="flex items-center">
                 <input
                   type="checkbox"
@@ -107,6 +127,42 @@ const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
                     )
                   }
                   checked={selectedPermissions.includes(perm._id)}
+                  className="mr-2 input-xs"
+                />
+                {perm.name}
+              </label>
+            ))}
+          </div>
+        </div> */}
+        <div className="mb-4">
+          <h2 className="font-bold">Computed Permissions (Read-Only)</h2>
+          <div className="grid grid-cols-2 gap-2">
+            {computedPermissions?.map((perm) => (
+              <label key={perm} className="flex items-center opacity-50">
+                <input type="checkbox" checked readOnly className="mr-2" />
+                {permissions.find((p) => p._id === perm)?.name || "Unknown"}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Editable User-Specific Permissions */}
+        <div className="mb-4">
+          <h2 className="font-bold">User-Specific Permissions</h2>
+          <div className="grid grid-cols-2 gap-2">
+            {permissions?.map((perm) => (
+              <label key={perm._id} className="flex items-center">
+                <input
+                  type="checkbox"
+                  value={perm._id}
+                  onChange={() =>
+                    toggleSelection(
+                      perm._id,
+                      userPermissions,
+                      setUserPermissions
+                    )
+                  }
+                  checked={userPermissions.includes(perm._id)}
                   className="mr-2 input-xs"
                 />
                 {perm.name}

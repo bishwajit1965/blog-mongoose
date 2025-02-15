@@ -3,9 +3,13 @@ import { useCallback, useEffect, useReducer, useState } from "react";
 import AdminAuthContext from "../adminContexts/AdminAuthContext";
 import axios from "axios";
 
+// import { set } from "mongoose";
+
 const initialState = {
   isAuthenticated: false,
   adminData: null,
+  roles: [],
+  permissions: [],
 };
 
 const authReducer = (state, action) => {
@@ -15,6 +19,8 @@ const authReducer = (state, action) => {
         ...state,
         isAuthenticated: true,
         adminData: action.payload,
+        roles: action.payload.roles || [],
+        permissions: action.payload.permissions || [],
       };
 
     case "LOGOUT":
@@ -22,6 +28,8 @@ const authReducer = (state, action) => {
         ...state,
         isAuthenticated: false,
         adminData: null,
+        roles: [],
+        permissions: [],
       };
 
     default:
@@ -33,8 +41,40 @@ const AdminAuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [permissionsMap, setPermissionsMap] = useState({});
+  const [rolesMap, setRolesMap] = useState({});
   const baseURL =
     import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+
+  const fetchPermissionsAndRoles = useCallback(async () => {
+    try {
+      const [permissionsResponse, rolesResponse] = await Promise.all([
+        axios.get(`${baseURL}/permissions`, {
+          withCredentials: true,
+        }),
+        axios.get(`${baseURL}/roles`, {
+          withCredentials: true,
+        }),
+      ]);
+
+      const permissionsMap = {};
+      permissionsResponse.data.forEach(
+        (perm) => (permissionsMap[perm.name] = perm._id)
+      );
+      setPermissionsMap(permissionsMap);
+
+      const rolesMap = {};
+      rolesResponse.data.forEach((role) => (rolesMap[role.name] = role._id));
+      setRolesMap(rolesMap);
+    } catch (error) {
+      console.error("Error fetching roles and permissions:", error);
+    }
+  }, [baseURL]);
+
+  console.log("Permissions Map:", permissionsMap);
+  console.log("Roles Map:", rolesMap);
+  console.log("User Permissions:", state.permissions);
+  console.log("User Roles:", state.roles);
 
   const loginAdmin = async (credentials) => {
     try {
@@ -82,7 +122,15 @@ const AdminAuthProvider = ({ children }) => {
       const response = await axios.get(`${baseURL}/admin/me`, {
         withCredentials: true,
       });
-      dispatch({ type: "LOGIN_SUCCESS", payload: response.data });
+
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: {
+          user: response.data.user,
+          permissions: response.data.allPermissionIds, // Map this correctly
+          roles: response.data.roles, // Map this correctly
+        },
+      });
     } catch (error) {
       console.error("Error verifying token:", error);
       dispatch({ type: "LOGOUT" });
@@ -91,10 +139,61 @@ const AdminAuthProvider = ({ children }) => {
     }
   }, [baseURL]);
 
+  // Improved permission check
+  // const hasPermission = (per) => {
+  //   return state.permissions?.includes(per);
+  // };
+
+  // const hasPermission = (permissionName) => {
+  //   const permissionId = permissionsMap[permissionName];
+  //   return permissionId ? state.permissions.includes(permissionId) : false;
+  // };
+
+  const hasPermission = (permissionName) => {
+    const permissionId = permissionsMap[permissionName];
+    return permissionId ? state.permissions.includes(permissionId) : false;
+  };
+
+  const hasAnyPermission = (permissionNames) =>
+    permissionNames.some(hasPermission);
+  const hasAllPermissions = (permissionNames) =>
+    permissionNames.every(hasPermission);
+
+  const hasRole = (roleName) =>
+    rolesMap[roleName] ? state.roles.includes(rolesMap[roleName]) : false;
+  const hasAnyRole = (roleNames) => roleNames.some(hasRole);
+  const hasAllRoles = (roleNames) => roleNames.every(hasRole);
+
+  // Has any permission checks like ["red", "write", "edit"] etc
+  // const hasAnyPermission = (permissions) => {
+  //   return permissions.some((per) => state.permissions.includes(per));
+  // };
+
+  // Has all permissions check
+  // const hasAllPermissions = (permissions) => {
+  //   return permissions.every((per) => state.permissions.includes(per));
+  // };
+
+  // Single role check
+  // const hasRole = (role) => {
+  //   return state.roles?.includes(role);
+  // };
+
+  // Checks if user has any of the given roles
+  // const hasAnyRole = (roles) => {
+  //   return roles.some((role) => state.roles.includes(role));
+  // };
+
+  // Checks if user has all the given roles
+  // const hasAllRoles = (roles) => {
+  //   return roles.every((role) => state.roles.includes(role));
+  // };
+
   // Run once on mount
   useEffect(() => {
     checkAuth();
-  }, [checkAuth]);
+    fetchPermissionsAndRoles();
+  }, [checkAuth, fetchPermissionsAndRoles]);
 
   const adminAuthInfo = {
     loading,
@@ -105,6 +204,12 @@ const AdminAuthProvider = ({ children }) => {
     loginAdmin,
     logoutAdmin,
     checkAuth,
+    hasPermission,
+    hasAnyPermission,
+    hasAllPermissions,
+    hasRole,
+    hasAnyRole,
+    hasAllRoles,
   };
 
   return (

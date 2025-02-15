@@ -17,6 +17,8 @@ const AdminNavbar = () => {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/admin/login";
 
+  const roleName = adminData?.user?.roles?.[0]?.name || "No Role";
+
   // Logout admin
   const handleLogOut = async () => {
     try {
@@ -123,7 +125,7 @@ const AdminNavbar = () => {
 
         <div className="navbar-end">
           {/* <a className="btn">Button</a> */}
-          <span className="mr-2 capitalize">{adminData?.roles}</span>
+          <span className="mr-2 capitalize">Welcome ! {roleName}</span>
           <div className="dropdown dropdown-end dark:bg-gray-800">
             <div
               tabIndex={0}

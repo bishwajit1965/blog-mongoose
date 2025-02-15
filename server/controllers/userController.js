@@ -98,7 +98,7 @@ const updateUserRolesAndPermissions = async (req, res) => {
       ? await Permission.find({ _id: { $in: permissions } })
       : [];
 
-    const user = await User.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       id,
       {
         roles: validRoles.map((role) => role._id),
@@ -109,9 +109,10 @@ const updateUserRolesAndPermissions = async (req, res) => {
       .populate("roles", "name")
       .populate("permissions", "name");
 
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!updatedUser)
+      return res.status(404).json({ message: "User not found" });
 
-    res.status(200).json({ message: "User updated successfully", user });
+    res.status(200).json({ message: "User updated successfully", updatedUser });
   } catch (error) {
     res
       .status(400)
@@ -124,8 +125,9 @@ const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await User.findByIdAndDelete(id);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser)
+      return res.status(404).json({ message: "User not found" });
 
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
