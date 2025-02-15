@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/auth/register", registerOrLoginUser);
 
-router.get("/admin-only", verifyAdminRoles(["user"]), (req, res) => {
+router.get("/admin-only", verifyAdminRoles(["admin"]), (req, res) => {
   res.status(200).json({ message: "Welcome! admin" });
 });
 
