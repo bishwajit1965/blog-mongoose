@@ -20,9 +20,6 @@ const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // const normalizeIds = (arr) =>
-  //   arr.map((item) => (typeof item === "object" ? item._id : item));
-
   useEffect(() => {
     if (user) {
       const directRoles = normalizeIds(user.roles || []) || [];
