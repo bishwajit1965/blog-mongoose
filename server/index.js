@@ -34,13 +34,13 @@ const userManagementRoutes = require("./routes/userManagementRoutes");
 
 // Instantiate routes for execution
 app.use("/api/auth", authRoutes);
-app.use("/api", userRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/permissions", permissionRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/tags", tagRoutes);
-app.use("/api", userManagementRoutes);
+app.use("/api/admin/users", userManagementRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to blog-mongoose server,");

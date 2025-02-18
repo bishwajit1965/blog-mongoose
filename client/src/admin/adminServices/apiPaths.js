@@ -3,6 +3,6 @@ const API_PATHS = {
   PERMISSIONS: "/permissions",
   CATEGORIES: "/categories",
   TAGS: "/tags",
-  USERS: "/users",
+  USERS: "/admin/users",
 };
 export default API_PATHS;

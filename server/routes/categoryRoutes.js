@@ -7,42 +7,32 @@ const {
   deleteCategory,
 } = require("../controllers/categoryController");
 
-const { verifyToken, isSuperAdmin } = require("../middlewares/authMiddleware");
+const {
+  authenticateToken,
+  authorizeRoles,
+} = require("../middlewares/authenticateToken");
 
 const router = express.Router();
 
-router.post(
-  "/",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin"]),
-  createCategory
-);
+// Verify token for all routes those follow
+router.use(authenticateToken);
+
+router.post("/", authorizeRoles(["super-admin", "admin"]), createCategory);
 
 router.get(
   "/:id",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin", "editor"]),
+  authorizeRoles(["super-admin", "admin", "editor"]),
   getCategoryById
 );
 
 router.get(
   "/",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin", "editor"]),
+  authorizeRoles(["super-admin", "admin", "editor"]),
   getAllCategories
 );
-router.patch(
-  "/:id",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin"]),
-  updateCategory
-);
 
-router.delete(
-  "/:id",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin"]),
-  deleteCategory
-);
+router.patch("/:id", authorizeRoles(["super-admin", "admin"]), updateCategory);
+
+router.delete("/:id", authorizeRoles(["super-admin", "admin"]), deleteCategory);
 
 module.exports = router;

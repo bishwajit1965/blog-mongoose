@@ -8,34 +8,28 @@ const {
   deleteTag,
 } = require("../controllers/tagController");
 
-const { verifyToken, isSuperAdmin } = require("../middlewares/authMiddleware");
+const {
+  authenticateToken,
+  authorizeRoles,
+} = require("../middlewares/authenticateToken");
 
 const router = express.Router();
 
-router.post(
-  "/",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin"]),
-  createTag
-);
+// Verifies token of all routes those follow
+router.use(authenticateToken);
+
+router.post("/", authorizeRoles(["super-admin", "admin"]), createTag);
+
 router.get(
   "/:id",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin", "editor"]),
+  authorizeRoles(["super-admin", "admin", "editor"]),
   getTagById
 );
-router.get(
-  "/",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin", "editor"]),
-  getAllTags
-);
-router.patch(
-  "/:id",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin"]),
-  updateTag
-);
-router.delete("/:id", verifyToken, isSuperAdmin(["super-admin"]), deleteTag);
+
+router.get("/", authorizeRoles(["super-admin", "admin", "editor"]), getAllTags);
+
+router.patch("/:id", authorizeRoles(["super-admin", "admin"]), updateTag);
+
+router.delete("/:id", authorizeRoles(["super-admin"]), deleteTag);
 
 module.exports = router;
