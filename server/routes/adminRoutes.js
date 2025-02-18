@@ -1,8 +1,17 @@
 const express = require("express");
-const { loginAdmin, logoutAdmin } = require("../controllers/adminController");
-const { verifyAdminRoles } = require("../middlewares/verifyAdminRoles");
+const {
+  loginAdmin,
+  // updateAdminUserRolesAndPermissions,
+  logoutAdmin,
+  // deleteUser,
+} = require("../controllers/adminController");
+
 const User = require("../models/User");
-const { authenticateToken } = require("../middlewares/authenticate");
+
+const {
+  authenticateToken,
+  authorizeRoles,
+} = require("../middlewares/authenticateToken");
 
 const router = express.Router();
 
@@ -11,28 +20,7 @@ router.post("/logout", logoutAdmin);
 
 router.use(authenticateToken);
 
-// Admin details route for auth state persistence(is a must)
-// router.get("/me", authenticateToken, async (req, res) => {
-//   try {
-//     // Fetch the user and populate roles with their names
-//     const user = await User.findById(req.user.id)
-//       .populate("roles", "name") // Populate roles with their names
-//       .populate("permissions", "name"); // Populate permissions with their names
-
-//     if (!user) {
-//       return res.status(401).json({ message: "User not found." });
-//     }
-//     // const roles = user.roles;
-//     res.status(200).json({ user }); // Send user details back
-//   } catch (error) {
-//     res.status(401).json({
-//       status: "error",
-//       message: "Unauthorized: Invalid or expired token.",
-//     });
-//   }
-// });
-
-router.get("/me", authenticateToken, async (req, res) => {
+router.get("/me", async (req, res) => {
   try {
     const user = await User.findById(req.user.id)
       .populate({
@@ -45,9 +33,6 @@ router.get("/me", authenticateToken, async (req, res) => {
     if (!user) {
       return res.status(401).json({ message: "User not found." });
     }
-
-    // Extract role names
-    // const roles = user.roles.map((role) => role.name);
 
     // Extract role IDs directly from the user document
     const roles = user.roles.map((role) => role._id.toString());
@@ -64,14 +49,6 @@ router.get("/me", authenticateToken, async (req, res) => {
       ...new Set([...directPermissionIds, ...rolePermissionIds]),
     ];
 
-    // Extract unique permissions from both user and role-based permissions
-    // const permissions = [
-    //   ...new Set([
-    //     ...user.permissions.map((p) => p.name), // Direct user permissions
-    //     ...user.roles.flatMap((role) => role.permissions.map((p) => p.name)), // Role-based permissions
-    //   ]),
-    // ];
-
     res.status(200).json({ user, roles, allPermissionIds }); // Send roles & permissions separately
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -83,7 +60,7 @@ router.get("/me", authenticateToken, async (req, res) => {
 });
 
 // Super-Admin Only Routes
-router.use("/super-admin", verifyAdminRoles(["super-admin"]));
+router.use("/super-admin", authorizeRoles(["super-admin"]));
 
 router.get("/super-admin/super-admin-dashboard", (req, res) => {
   res.status(200).json({
@@ -92,8 +69,16 @@ router.get("/super-admin/super-admin-dashboard", (req, res) => {
   });
 });
 
+// router.patch(
+//   "/admin/users/:userId/assign",
+//   authorizeRoles(["super-admin"]),
+//   updateAdminUserRolesAndPermissions
+// );
+
+// router.delete("/:id", authenticateToken, deleteUser);
+
 // Admin-only routes
-router.use("/admin", verifyAdminRoles(["admin", "super-admin"]));
+router.use("/admin", authorizeRoles(["admin", "super-admin"]));
 
 router.get("/admin/admin-home-dashboard", (req, res) => {
   res
@@ -102,7 +87,7 @@ router.get("/admin/admin-home-dashboard", (req, res) => {
 });
 
 // Editor-only routes
-router.use("/editor", verifyAdminRoles(["editor", "admin"]));
+router.use("/editor", authorizeRoles(["editor", "admin"]));
 
 router.get("/editor/dashboard", (req, res) => {
   res
@@ -111,7 +96,7 @@ router.get("/editor/dashboard", (req, res) => {
 });
 
 // Writer-only routes
-router.use("/writer", verifyAdminRoles(["writer", "admin", "super-admin"]));
+router.use("/writer", authorizeRoles(["writer", "admin", "super-admin"]));
 
 router.get("/writer/dashboard", (req, res) => {
   res
@@ -122,7 +107,7 @@ router.get("/writer/dashboard", (req, res) => {
 // Example of a protected admin-only route(Is a must)
 router.get(
   "/protected",
-  verifyAdminRoles(["admin", "super-admin"]),
+  authorizeRoles(["admin", "super-admin"]),
   (req, res) => {
     res
       .status(200)

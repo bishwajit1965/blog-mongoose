@@ -10,7 +10,7 @@ import useAdminUser from "../../adminHooks/useAdminUser";
 import { useState } from "react";
 
 const UsersTable = ({ onDelete, onEdit }) => {
-  const { users } = useAdminUser();
+  const { users, fetchUsers } = useAdminUser();
   const { adminData } = useAdminAuth();
   const { permissions } = useAdminPermission();
   const { roles } = useAdminRole();
@@ -23,6 +23,7 @@ const UsersTable = ({ onDelete, onEdit }) => {
       try {
         await deleteUser(id);
         alert("Permission deleted successfully!");
+        fetchUsers();
         onDelete();
       } catch (error) {
         console.error("Error deleting permission:", error);
@@ -52,7 +53,7 @@ const UsersTable = ({ onDelete, onEdit }) => {
             >
               <td>{index + 1}</td>
               <td>{user?.email}</td>
-              <td>
+              <td className="capitalize">
                 {user?.roles?.map((roleId, index) => {
                   const matchingRole = roles.find((r) => r._id === roleId._id);
                   if (matchingRole) {
@@ -63,7 +64,7 @@ const UsersTable = ({ onDelete, onEdit }) => {
                   return null;
                 })}
               </td>
-              <td>
+              <td className="capitalize">
                 {user?.permissions?.map((permissionId, index) => {
                   const matchingPermissions = permissions.find(
                     (p) => p._id === permissionId._id

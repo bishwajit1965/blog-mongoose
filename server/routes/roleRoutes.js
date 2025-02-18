@@ -8,39 +8,32 @@ const {
   deleteRole,
 } = require("../controllers/roleController");
 
-const { verifyToken, isSuperAdmin } = require("../middlewares/authMiddleware");
+const {
+  authenticateToken,
+  authorizeRoles,
+} = require("../middlewares/authenticateToken");
 
 const router = express.Router();
 
-router.post(
-  "/",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin"]),
-  createRole
-);
+// Checks token for all routes those follow
+router.use(authenticateToken);
+
+router.post("/", authorizeRoles(["super-admin", "admin"]), createRole);
+
 router.get(
   "/:id",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin", "editor"]),
+  authorizeRoles(["super-admin", "admin", "editor"]),
   getRoleById
 );
+
 router.get(
   "/",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin", "editor"]),
+  authorizeRoles(["super-admin", "admin", "editor"]),
   getAllRoles
 );
-router.patch(
-  "/:id",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin"]),
-  updateRole
-);
-router.delete(
-  "/:id",
-  verifyToken,
-  isSuperAdmin(["admin", "super-admin"]),
-  deleteRole
-);
+
+router.patch("/:id", authorizeRoles(["super-admin", "admin"]), updateRole);
+
+router.delete("/:id", authorizeRoles(["admin", "super-admin"]), deleteRole);
 
 module.exports = router;

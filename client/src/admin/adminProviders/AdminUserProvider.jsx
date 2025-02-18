@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import AdminUserContext from "../adminContexts/AdminUserContext";
 import { getAllUsers } from "../adminServices/userService";
@@ -7,7 +7,7 @@ const AdminUserProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       const usersData = await getAllUsers();
@@ -17,11 +17,11 @@ const AdminUserProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [fetchUsers]);
 
   const addUsersToState = (newUser) => {
     setUsers([...users, newUser]);

@@ -7,15 +7,20 @@ const {
   deleteUser,
 } = require("../controllers/userController");
 
-const { verifyToken } = require("../middlewares/authMiddleware");
-const { authenticateToken } = require("../middlewares/authenticate");
+const {
+  authenticateToken,
+  authorizeRoles,
+} = require("../middlewares/authenticateToken");
 
 const router = express.Router();
+
+// Verifies token of all routes those
+router.use(authenticateToken);
 
 // Route for user data insertion
 router.post("/auth/register", createUser);
 
-router.get("/me", authenticateToken, async (req, res) => {
+router.get("/me", async (req, res) => {
   try {
     const user = await User.findById(req.user.id)
       .populate({
@@ -28,9 +33,6 @@ router.get("/me", authenticateToken, async (req, res) => {
     if (!user) {
       return res.status(401).json({ message: "User not found." });
     }
-
-    // Extract role names
-    // const roles = user.roles.map((role) => role.name);
 
     // Extract role IDs directly from the user document
     const roles = user.roles.map((role) => role._id.toString());
@@ -47,14 +49,6 @@ router.get("/me", authenticateToken, async (req, res) => {
       ...new Set([...directPermissionIds, ...rolePermissionIds]),
     ];
 
-    // Extract unique permissions from both user and role-based permissions
-    // const permissions = [
-    //   ...new Set([
-    //     ...user.permissions.map((p) => p.name), // Direct user permissions
-    //     ...user.roles.flatMap((role) => role.permissions.map((p) => p.name)), // Role-based permissions
-    //   ]),
-    // ];
-
     res.status(200).json({ user, roles, allPermissionIds }); // Send roles & permissions separately
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -67,10 +61,10 @@ router.get("/me", authenticateToken, async (req, res) => {
 
 router.patch(
   "/:id/roles-permissions",
-  authenticateToken,
+  authorizeRoles(["super-admin"]),
   updateUserRolesAndPermissions
 );
 
-router.delete("/:id", authenticateToken, deleteUser);
-authenticateToken;
+router.delete("/:id", authorizeRoles(["super-admin"]), deleteUser);
+
 module.exports = router;

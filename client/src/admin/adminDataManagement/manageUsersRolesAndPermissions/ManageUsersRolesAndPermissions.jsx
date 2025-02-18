@@ -11,8 +11,8 @@ import { useState } from "react";
 
 const ManageUsersRolesAndPermissions = () => {
   const { permissions, fetchPermissions } = useAdminPermission();
-  const { roles } = useAdminRole();
-  const { users } = useAdminUser();
+  const { roles, fetchRoles } = useAdminRole();
+  const { users, fetchUsers } = useAdminUser();
   const [selectedUser, setSelectedUser] = useState(null);
 
   const handleEdit = (user) => {
@@ -39,15 +39,17 @@ const ManageUsersRolesAndPermissions = () => {
             <div className="lg:col-span-6 col-span-12 lg:border-r dark:border-gray-700 lg:pr-3">
               <h2 className="text-xl font-semibold mb-2">
                 {selectedUser
-                  ? "Update Roles Permission"
-                  : "Add Roles Permissions"}
+                  ? "Update Admin Users Roles Permission"
+                  : "Admin Users Roles Permissions"}
               </h2>
               <RolesAndPermissionsForm
                 permissions={permissions}
                 roles={roles}
                 user={selectedUser}
                 onSuccess={() => {
+                  fetchUsers();
                   fetchPermissions(); //Not needed as dynamic update works
+                  fetchRoles();
                   handleCancelEdit();
                 }}
               />

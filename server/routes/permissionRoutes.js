@@ -8,39 +8,41 @@ const {
   deletePermission,
 } = require("../controllers/permissionController");
 
-// To verify if authenticated and if isSuperAdmin
-const { verifyToken, isSuperAdmin } = require("../middlewares/authMiddleware");
+// To verify if authenticated and if has authorized role(s)
+const {
+  authenticateToken,
+  authorizeRoles,
+} = require("../middlewares/authenticateToken");
 
 const router = express.Router();
 
-router.post(
-  "/",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin"]),
-  createPermission
-);
+// Verify token for all routes those follow
+router.use(authenticateToken);
+
+router.post("/", authorizeRoles(["super-admin", "admin"]), createPermission);
+
 router.get(
   "/:id",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin", "editor"]),
+  authorizeRoles(["super-admin", "admin", "editor"]),
   getPermissionById
 );
+
 router.get(
   "/",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin", "editor"]),
+  authorizeRoles(["super-admin", "admin", "editor"]),
   getAllPermissions
 );
 router.patch(
   "/:id",
-  verifyToken,
-  isSuperAdmin(["super-admin", "admin"]),
+
+  authorizeRoles(["super-admin", "admin"]),
   updatePermission
 );
+
 router.delete(
   "/:id",
-  verifyToken,
-  isSuperAdmin(["admin", "super-admin"]),
+
+  authorizeRoles(["admin", "super-admin"]),
   deletePermission
 );
 

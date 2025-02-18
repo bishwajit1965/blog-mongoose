@@ -23,6 +23,7 @@ const verifyAdminRoles =
       if (!user) {
         return res.status(401).json({ message: "User not found." });
       }
+      console.log("Roles in verifyAdminRoles:", req.user.roles);
 
       // Check if the user has any of the required roles
       const userRoles = user.roles.map((role) => role.name);
@@ -30,7 +31,7 @@ const verifyAdminRoles =
       console.log("Required roles:", requiredRoles); // Debugging
 
       const hasRole = requiredRoles.some((requiredRole) =>
-        userRoles.includes(requiredRole.name)
+        userRoles.includes(requiredRole)
       );
 
       if (!hasRole) {

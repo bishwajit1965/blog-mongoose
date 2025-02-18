@@ -139,16 +139,6 @@ const AdminAuthProvider = ({ children }) => {
     }
   }, [baseURL]);
 
-  // Improved permission check
-  // const hasPermission = (per) => {
-  //   return state.permissions?.includes(per);
-  // };
-
-  // const hasPermission = (permissionName) => {
-  //   const permissionId = permissionsMap[permissionName];
-  //   return permissionId ? state.permissions.includes(permissionId) : false;
-  // };
-
   const hasPermission = (permissionName) => {
     const permissionId = permissionsMap[permissionName];
     return permissionId ? state.permissions.includes(permissionId) : false;
@@ -163,31 +153,6 @@ const AdminAuthProvider = ({ children }) => {
     rolesMap[roleName] ? state.roles.includes(rolesMap[roleName]) : false;
   const hasAnyRole = (roleNames) => roleNames.some(hasRole);
   const hasAllRoles = (roleNames) => roleNames.every(hasRole);
-
-  // Has any permission checks like ["red", "write", "edit"] etc
-  // const hasAnyPermission = (permissions) => {
-  //   return permissions.some((per) => state.permissions.includes(per));
-  // };
-
-  // Has all permissions check
-  // const hasAllPermissions = (permissions) => {
-  //   return permissions.every((per) => state.permissions.includes(per));
-  // };
-
-  // Single role check
-  // const hasRole = (role) => {
-  //   return state.roles?.includes(role);
-  // };
-
-  // Checks if user has any of the given roles
-  // const hasAnyRole = (roles) => {
-  //   return roles.some((role) => state.roles.includes(role));
-  // };
-
-  // Checks if user has all the given roles
-  // const hasAllRoles = (roles) => {
-  //   return roles.every((role) => state.roles.includes(role));
-  // };
 
   // Run once on mount
   useEffect(() => {
