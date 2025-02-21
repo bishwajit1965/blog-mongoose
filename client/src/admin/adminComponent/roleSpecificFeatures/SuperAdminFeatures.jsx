@@ -14,6 +14,11 @@ const SuperAdminFeatures = () => {
       route: "assign-roles-permissions",
       name: "Manage User Roles",
     },
+    {
+      id: 8,
+      route: "manage-profile",
+      name: "Manage User Profile",
+    },
   ];
   return (
     <div className="dark:bg-gray-800 bg-base-200 border-b border-gray-200 shadow-sm rounded-b-sm dark:border-gray-700">

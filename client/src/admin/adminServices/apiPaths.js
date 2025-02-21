@@ -4,5 +4,6 @@ const API_PATHS = {
   CATEGORIES: "/categories",
   TAGS: "/tags",
   USERS: "/admin/users",
+  PROFILE: "/profile",
 };
 export default API_PATHS;

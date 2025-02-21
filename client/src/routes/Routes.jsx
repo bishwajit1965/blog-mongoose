@@ -18,6 +18,7 @@ import ManageTags from "../admin/adminDataManagement/manageTags/ManageTags";
 import ManageUsers from "../admin/adminDataManagement/manageUsers/ManageUsers";
 import ManageUsersRolesAndPermissions from "../admin/adminDataManagement/manageUsersRolesAndPermissions/ManageUsersRolesAndPermissions";
 import PrivateRoute from "../privateRoute/PrivateRoute";
+import ProfileManagement from "../admin/adminDataManagement/profileManagement/ProfileManagement";
 import Register from "../pages/register/Register";
 import RequireAdmin from "../admin/requireAdmin/RequireAdmin";
 import RoleForm from "../admin/adminDataManagement/manageRoles/RoleForm";
@@ -31,7 +32,7 @@ import WriterLayout from "../admin/adminLayout/WriterLayout";
 import { createBrowserRouter } from "react-router-dom";
 
 // Common Admin Routes (Super Admin can access all)
-const adminRoutes = [
+const superAdminRoutes = [
   { path: "super-admin-dashboard", element: <SuperAdminDashboard /> },
   { path: "manage-blogs", element: <ManageBlogPosts /> },
   { path: "manage-categories", element: <ManageCategories /> },
@@ -44,6 +45,7 @@ const adminRoutes = [
     path: "assign-roles-permissions",
     element: <ManageUsersRolesAndPermissions />,
   },
+  { path: "manage-profile", element: <ProfileManagement /> },
 ];
 
 const router = createBrowserRouter([
@@ -95,7 +97,7 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <SuperAdminDashboard /> },
-      ...adminRoutes,
+      ...superAdminRoutes,
     ],
   },
 

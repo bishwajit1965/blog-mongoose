@@ -156,8 +156,7 @@ const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
               {computedPermissions?.map((perm) => (
                 <label key={perm} className="flex items-center opacity-50">
                   <input type="checkbox" checked readOnly className="mr-2" />
-                  {permissions.find((p) => p._id === perm)?.name ||
-                    "Unknown Permission"}
+                  {permissions.find((p) => p._id === perm)?.name || "Unknown"}
                 </label>
               ))}
             </div>
