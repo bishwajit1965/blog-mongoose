@@ -34,7 +34,7 @@ const UsersTable = ({ onDelete, onEdit }) => {
 
   return (
     <div>
-      <table className="table table-xs w-full">
+      <table className="min-w-full table table-xs dark:border-b-gray-700">
         <thead>
           <tr className="dark:border-gray-700 dark:text-gray-400 font-bold">
             <th>#</th>
