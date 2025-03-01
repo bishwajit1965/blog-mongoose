@@ -14,7 +14,6 @@ import ProfileUpdateForm from "./ProfileUpdateForm";
 const ProfileManagement = () => {
   const [profiles, setProfiles] = useState([]);
   const [selectedProfile, setSelectedProfile] = useState(null);
-  const [mode, setMode] = useState("form"); // "form" (default) | "edit" | "view"
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -54,11 +53,11 @@ const ProfileManagement = () => {
   const handleProfileUpdate = async (updatedProfile) => {
     try {
       const response = await updateProfile(selectedProfile._id, updatedProfile);
-      setProfiles(
-        profiles.map((profile) =>
-          profile._id === selectedProfile._id ? response : profile
-        )
-      );
+      // setProfiles(
+      //   profiles.map((profile) =>
+      //     profile._id === selectedProfile._id ? response.data : profile
+      //   )
+      // );
       setSelectedProfile(response.data);
       setIsEditing(false);
       setError("");
@@ -85,6 +84,60 @@ const ProfileManagement = () => {
           <div className="grid lg:grid-cols-12 grid-cols-1 md:grid-cols-2 gap-4">
             <div className="lg:col-span-6 col-span-12 lg:border-r dark:border-gray-700 lg:pr-3">
               {error && <p className="text-red-500">{error}</p>}
+              {!selectedProfile && !isEditing && (
+                <div className="p-2 border rounded-lg bg-gray- dark:bg-gray-700 dark:border-gray-700 mb-4 shadow-sm">
+                  <h3 className="text-xl font-semibold mb-2">
+                    Profile Details
+                  </h3>
+                  <p>Select a profile to view or edit</p>
+
+                  <form className="space-y-2">
+                    <div>
+                      <label className="block">Name:</label>
+                      <input
+                        type="text"
+                        name="name"
+                        className="w-full input-sm border p-2 rounded dark:bg-gray-800 dark:border-gray-700"
+                      />
+                    </div>
+                    <div>
+                      <label className="block">Email:</label>
+                      <input
+                        type="email"
+                        name="email"
+                        className="w-full input-sm border p-2 rounded dark:bg-gray-800 dark:border-gray-700"
+                      />
+                    </div>
+                    <div>
+                      <label className="block">Avatar:</label>
+                      <input
+                        type="text"
+                        name="avatar"
+                        className="w-full input-sm border p-2 rounded dark:bg-gray-800 dark:border-gray-700"
+                      />
+                    </div>
+
+                    {isEditing && (
+                      <>
+                        <button
+                          type="submit"
+                          className="bg-blue-500 btn btn-sm text-white px-4 py-2 rounded mt-2"
+                        >
+                          Update
+                        </button>
+
+                        <button
+                          // onClick={onCancel}
+                          className="bg-gray-500 btn btn-sm text-white px-4 py-2 rounded"
+                        >
+                          Cancel
+                        </button>
+                      </>
+                    )}
+                  </form>
+                </div>
+              )}
+
               {selectedProfile && (
                 <>
                   {isEditing ? (

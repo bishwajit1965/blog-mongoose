@@ -1,3 +1,7 @@
+import { FaClock, FaEdit, FaTimesCircle } from "react-icons/fa";
+
+import CTAButton from "../../../components/buttons/CTAButton";
+
 const ProfileData = ({ profile, onEdit, onCancel }) => {
   console.log("Profile data", profile);
   return (
@@ -7,7 +11,7 @@ const ProfileData = ({ profile, onEdit, onCancel }) => {
       </div>
       <div className="space-y-2">
         <div className="">
-          <img src={profile.avatar} alt="" className="w-12 h-12 rounded-full" />
+          <img src={profile.avatar} alt="" className="w-20 h-20 rounded-full" />
         </div>
         <div>
           <strong>Name:</strong> {profile.name}
@@ -33,21 +37,40 @@ const ProfileData = ({ profile, onEdit, onCancel }) => {
             </span>
           ))}
         </div>
+        <div className="mt-2 flex lg:space-x-6 space-x-1">
+          <span className="font-bold text-gray-500 flex items-center">
+            <FaClock className="mr-1" />
+            <strong className="mr-1">Created At:</strong>
+            {profile.createdAt
+              ? new Date(profile.createdAt).toLocaleDateString()
+              : "Not updated"}
+          </span>
+          <span className="font-bold text-gray-500 flex items-center">
+            <FaClock className="mr-1" />
+            <strong className="mr-1">Updated At:</strong>
+            {profile.updatedAt
+              ? new Date(profile.updatedAt).toLocaleDateString()
+              : "Not updated"}
+          </span>
+        </div>
       </div>
 
-      <button
-        onClick={onEdit}
-        className="mt-4 btn btn-sm bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Edit Profile
-      </button>
-
-      <button
-        onClick={onCancel}
-        className="bg-gray-500 btn btn-sm text-white px-4 py-2 rounded"
-      >
-        Cancel
-      </button>
+      <div className="flex lg:mt-4 mt-2 space-x-2">
+        <CTAButton
+          onClick={onEdit}
+          label="Edit Profile"
+          icon={<FaEdit />}
+          className="btn btn-sm text-sm"
+          variant="primary"
+        />
+        <CTAButton
+          onClick={onCancel}
+          label="Cancel"
+          icon={<FaTimesCircle />}
+          className="btn btn-sm text-sm"
+          variant="warning"
+        />
+      </div>
     </div>
   );
 };

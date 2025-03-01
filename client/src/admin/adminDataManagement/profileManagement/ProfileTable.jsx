@@ -36,7 +36,7 @@ const ProfileTable = ({ profiles, onView, onEdit }) => {
               </td>
               <td>{profile?.name}</td>
               <td>{profile?.email}</td>
-              <td className="flex justify-end">
+              <td className="flex justify-end space-x-1">
                 <CTAButton
                   onClick={() => onView(profile)}
                   label="View"
@@ -50,7 +50,7 @@ const ProfileTable = ({ profiles, onView, onEdit }) => {
                   label="Edit"
                   icon={<FaEdit />}
                   className="btn btn-xs text-xs"
-                  variant="success"
+                  variant="info"
                 />
               </td>
             </tr>

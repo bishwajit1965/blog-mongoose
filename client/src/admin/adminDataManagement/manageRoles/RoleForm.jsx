@@ -44,7 +44,6 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
             : null;
         })
         .filter(Boolean);
-
       setSelectedPermissions(existingPermissions);
     } else {
       setRoleName("");
