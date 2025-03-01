@@ -6,7 +6,7 @@ import { useState } from "react";
 
 const ProfileTable = ({ profiles, onView, onEdit }) => {
   // Pagination state
-  const [paginatedData, setPaginatedData] = useState([]);
+  const [paginatedData, setPaginatedData] = useState(profiles || []);
 
   return (
     <div className="">
@@ -17,6 +17,7 @@ const ProfileTable = ({ profiles, onView, onEdit }) => {
             <th>Avatar</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Role</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -36,6 +37,11 @@ const ProfileTable = ({ profiles, onView, onEdit }) => {
               </td>
               <td>{profile?.name}</td>
               <td>{profile?.email}</td>
+              <td className="capitalize">
+                {profile.roles?.map((role, index) => (
+                  <span key={index}>{role.name}</span>
+                ))}
+              </td>
               <td className="flex justify-end space-x-1">
                 <CTAButton
                   onClick={() => onView(profile)}

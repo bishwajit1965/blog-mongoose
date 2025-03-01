@@ -36,15 +36,15 @@ router.post(
 router.get(
   "/:slug",
   authorizeRoles(["super-admin"]),
-  authorizePermissions(["view"]),
+  authorizePermissions(["view-post"]),
   getBlogBySlug
 );
 
 // Update a blog post
 router.patch(
   "/:slug",
-  authorizeRoles(["super-admin"]),
-  authorizePermissions(["edit"]),
+  authorizeRoles(["super-admin", "admin"]),
+  authorizePermissions(["edit-post"]),
   upload.single("image"),
   updateBlogBySlug
 );
@@ -53,7 +53,7 @@ router.patch(
 router.delete(
   "/:slug",
   authorizeRoles(["super-admin"]),
-  authorizePermissions(["delete"]),
+  authorizePermissions(["delete-post"]),
   deleteBlogBySlug
 );
 

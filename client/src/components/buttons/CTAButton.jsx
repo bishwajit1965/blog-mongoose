@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 /**
  * A reusable CTA (Call to Action) button or link component.
  *
@@ -24,9 +26,11 @@ const CTAButton = ({
   icon = null,
   className = "",
   href = null,
+  to = null,
   target = "_self",
   rel = "noopener noreferrer",
 }) => {
+  const navigate = useNavigate();
   // Define base styles
   const baseStyle =
     "px-3 py- font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-lg transform transition-transform duration-300 inline-block lg:block";
@@ -64,8 +68,24 @@ const CTAButton = ({
     </span>
   );
 
-  // Conditionally render <a> or <button>
-  return href ? (
+  const handleNavigation = () => {
+    if (to) {
+      navigate(to);
+    } else if (onClick) {
+      onClick();
+    }
+  };
+
+  // Conditionally render <"to"-- it will not reload page> <"a" it will reload page> or <button>
+  return to ? (
+    <button
+      className={combinedClass}
+      onClick={handleNavigation}
+      disabled={disabled || loading}
+    >
+      {content}
+    </button>
+  ) : href ? (
     <a
       href={href}
       target={target}

@@ -1,9 +1,10 @@
-import { FaLayerGroup, FaTags, FaTimesCircle } from "react-icons/fa";
+import { FaBloggerB, FaLayerGroup, FaTags } from "react-icons/fa";
 
 import CTAButton from "../../../components/buttons/CTAButton";
 
 const BlogDetailsView = ({ blog }) => {
   const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   // International date time format without any library
   const formattedDate = new Intl.DateTimeFormat("en-GB").format(
     new Date(blog.publishedAt)
@@ -56,11 +57,11 @@ const BlogDetailsView = ({ blog }) => {
       </div>
       <div className="">
         <CTAButton
+          label="Go to Blogs Page"
+          icon={<FaBloggerB />}
           href="manage-blogs"
-          label="Cancel Blog Upload"
-          className="btn btn-xs text-xs w-1/3"
-          variant="warning"
-          icon={<FaTimesCircle />}
+          className="m-0 p-2 w-full"
+          variant="primary"
         />
       </div>
     </div>
