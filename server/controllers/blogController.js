@@ -116,7 +116,7 @@ const updateBlogBySlug = async (req, res) => {
         .json({ message: "Tags must be an array of ObjectIds" });
     }
 
-    if (!req.user.permissions.includes("edit")) {
+    if (!req.user.permissions.includes("edit-post")) {
       return res.status(403).json({
         message: "You do not have permission to update this blog!",
       });
@@ -167,7 +167,7 @@ const updateBlogBySlug = async (req, res) => {
 const deleteBlogBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
-    if (!req.user.permissions.includes("delete")) {
+    if (!req.user.permissions.includes("delete-post")) {
       return res.status(403).json({ message: "Unauthorized to delete blog" });
     }
 

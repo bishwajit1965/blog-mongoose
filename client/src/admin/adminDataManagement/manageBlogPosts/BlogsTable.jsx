@@ -13,7 +13,7 @@ const BlogsTable = ({
   fetchBlogsCategoriesAndTags,
   handleBlogDetailView,
 }) => {
-  const { adminData } = useAdminAuth();
+  const { adminData, hasPermission } = useAdminAuth();
 
   // Pagination state
   const [paginatedData, setPaginatedData] = useState(blogs || []);
@@ -21,10 +21,12 @@ const BlogsTable = ({
   const handleDelete = async (slug) => {
     if (window.confirm("Are you sure you want to delete this blog?")) {
       try {
-        await deleteBlogBySlug(slug);
-        alert("Blog deleted successfully!");
-        fetchBlogsCategoriesAndTags();
-        onDelete();
+        if (hasPermission("delete-post")) {
+          await deleteBlogBySlug(slug);
+          alert("Blog deleted successfully!");
+          fetchBlogsCategoriesAndTags();
+          onDelete();
+        }
       } catch (error) {
         console.error("Error deleting blog:", error);
         alert("Failed to delete blog.");

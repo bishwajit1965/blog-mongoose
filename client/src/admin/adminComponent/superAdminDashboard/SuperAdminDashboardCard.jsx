@@ -11,6 +11,7 @@ const SuperAdminDashboardCard = ({ loading, isAuthenticated, adminData }) => {
       <div className="p-2">
         {isAuthenticated && adminData ? (
           <>
+            <p>Id: {adminData?.user?._id || "N/A"}</p>
             <p>Email: {adminData?.user?.email || "N/A"}</p>
             <p>
               Role:{" "}
@@ -38,6 +39,7 @@ const SuperAdminDashboardCard = ({ loading, isAuthenticated, adminData }) => {
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio
           explicabo nostrum iusto quod ipsum adipisci voluptates.
         </p>
+        <h1 className="font-bold">Super-admin Dashboard</h1>
       </div>
     </div>
   );

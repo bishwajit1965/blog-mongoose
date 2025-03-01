@@ -12,7 +12,7 @@ const TagsTable = ({ onEdit, onDelete }) => {
   const { adminData } = useAdminAuth();
 
   // Pagination state
-  const [paginatedData, setPaginatedData] = useState([]);
+  const [paginatedData, setPaginatedData] = useState(tags || []);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this tag?")) {

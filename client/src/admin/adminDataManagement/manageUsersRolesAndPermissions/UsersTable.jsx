@@ -16,7 +16,7 @@ const UsersTable = ({ onDelete, onEdit }) => {
   const { roles } = useAdminRole();
 
   // Pagination state
-  const [paginatedData, setPaginatedData] = useState([]);
+  const [paginatedData, setPaginatedData] = useState(users || []);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this permission?")) {

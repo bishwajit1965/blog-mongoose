@@ -12,7 +12,7 @@ const CategoriesTable = ({ onEdit, onDelete }) => {
   const { adminData } = useAdminAuth();
 
   // Pagination state
-  const [paginatedData, setPaginatedData] = useState([]);
+  const [paginatedData, setPaginatedData] = useState(categories || []);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this category?")) {

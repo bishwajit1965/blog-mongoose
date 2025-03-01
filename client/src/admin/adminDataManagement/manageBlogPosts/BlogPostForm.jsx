@@ -19,7 +19,6 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
   const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
   const fileInputRef = useRef();
 
-  // Use useMemo to memoize tagOptions so it only changes when tags change.
   const tagOptions = useMemo(
     () =>
       tags.map((tag) => ({
@@ -29,7 +28,6 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
     [tags]
   );
 
-  // Cancel creating blog and reset form fields
   const handleCancelCreateBlog = () => {
     setFormData({
       title: "",
@@ -43,7 +41,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
     });
     setImagePreview(null);
     setSelectedTags(null);
-    // Reset file input field
+
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -57,7 +55,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
     tags: [],
     image: "",
     imageFile: null,
-    status: "draft", // Add status field here
+    status: "draft",
   });
 
   useEffect(() => {
@@ -66,12 +64,12 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
         title: existingBlog.title || "",
         content: existingBlog.content || "",
         author: adminData.user?._id || "",
-        // author: existingBlog?.author?._id || "",
+
         category: existingBlog.category._id || "",
-        // tags: existingBlog.tags || [],
-        tags: existingBlog.tags?.map((tag) => tag._id) || [], // Ensure array format
+
+        tags: existingBlog.tags?.map((tag) => tag._id) || [],
         image: existingBlog.image || [],
-        status: existingBlog.status || "draft", // Ensure status is set
+        status: existingBlog.status || "draft",
       });
       console.log("Existing image URL:", existingBlog.image); // Debugging log
 
@@ -144,7 +142,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form data:", formData);
+
     // Send form data to the server
     try {
       setLoading(true);
@@ -160,7 +158,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
         formDataToSend.append("image", formData.imageFile);
       }
       if (existingBlog) {
-        if (hasPermission("edit")) {
+        if (hasPermission("edit-post")) {
           await updateBlogBySlug(existingBlog.slug, formDataToSend);
           notifySuccess("Blog post updated successfully!");
         } else {
@@ -188,7 +186,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
       {adminData.user?._id}
       <form
         onSubmit={handleSubmit}
-        className="p-2 bg-gray-100 rounded-lg"
+        className="p-2 bg-gray- rounded-lg shadow-md"
         encType="multipart/form-data"
       >
         {/* Image Preview to be updated with the existing one*/}
@@ -217,8 +215,10 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
           value={formData.content}
           onChange={handleChange}
           required
-          className="mb-1 p-1 w-full"
+          // className="mb-1 p-1 w-full"
+          className="textarea input-bordered w-full mb-1"
         />
+
         <label className="block text-xs font-bold text-gray-500">
           Category:
         </label>
@@ -227,7 +227,9 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
           onChange={handleChange}
           required
           value={formData.category}
-          className="mb-1 input-bordered input-sm w-full max-w-full"
+          defaultValue="Small"
+          className="select select-sm input-bordered w-full max-w-full mb-1"
+          // className="mb-1 input-bordered input-sm w-full max-w-full"
         >
           <option value="">Select Category</option>
           {categories.map((category) => (
@@ -303,7 +305,9 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
               name="status"
               onChange={handleChange}
               value={formData.status}
-              className="mb-1 input-bordered input-sm w-full max-w-full"
+              defaultValue="Small"
+              className="select select-sm input-bordered w-full max-w-full"
+              // className="mb-1 input-bordered input-sm w-full max-w-full"
             >
               <option value="draft">Draft</option>
               <option value="published">Published</option>
