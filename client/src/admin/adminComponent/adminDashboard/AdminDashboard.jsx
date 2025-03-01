@@ -6,6 +6,7 @@ import useAdminAuth from "../../adminHooks/useAdminAuth";
 const AdminDashboard = () => {
   const len = 20;
   const { loading, isAuthenticated, adminData } = useAdminAuth();
+
   return (
     <>
       <Helmet>

@@ -11,6 +11,7 @@ const AdminDashboardCard = ({ loading, isAuthenticated, adminData }) => {
       <div className="p-2">
         {isAuthenticated && adminData ? (
           <>
+            <p>Id: {adminData ? adminData.user._id : "N/A"}</p>
             <p>Email: {adminData?.user?.email || "N/A"}</p>
             <p>
               Role:{" "}
@@ -32,12 +33,12 @@ const AdminDashboardCard = ({ loading, isAuthenticated, adminData }) => {
           <p>Not authenticated</p>
         )}
       </div>
-
       <div className="p-2">
         <p>
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio
           explicabo nostrum iusto quod ipsum adipisci voluptates.
         </p>
+        <h1 className="text-3xl font-bold">Hello</h1>
       </div>
     </div>
   );

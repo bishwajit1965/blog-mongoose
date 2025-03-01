@@ -6,6 +6,7 @@ const cors = require("cors");
 require("dotenv").config();
 const app = express();
 const connectDB = require("./utils/db");
+const path = require("path");
 
 // Initializes Mongoose connection
 connectDB();
@@ -19,6 +20,9 @@ app.use(
     credentials: true, // Allow cookies to be sent
   })
 );
+
+// Serve static files from the 'uploads' directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -32,6 +36,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const tagRoutes = require("./routes/tagRoutes");
 const userManagementRoutes = require("./routes/userManagementRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const blogRoutes = require("./routes/blogRoutes");
 
 // Instantiate routes for execution
 app.use("/api/auth", authRoutes);
@@ -43,6 +48,7 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/tags", tagRoutes);
 app.use("/api/admin/users", userManagementRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/blogs", blogRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to blog-mongoose server,");

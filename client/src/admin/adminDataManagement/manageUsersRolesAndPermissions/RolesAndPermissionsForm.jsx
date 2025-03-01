@@ -27,7 +27,6 @@ const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
 
       const inheritedPermissions =
         user.roles?.flatMap((role) => normalizeIds(role.permissions)) || [];
-
       setSelectedRoles(directRoles || []);
       setUserPermissions(directPermissions || []);
       setComputedPermissions(inheritedPermissions || []);

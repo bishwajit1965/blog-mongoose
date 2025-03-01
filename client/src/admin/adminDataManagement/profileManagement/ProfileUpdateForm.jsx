@@ -1,3 +1,6 @@
+import { FaEdit, FaTimesCircle } from "react-icons/fa";
+
+import CTAButton from "../../../components/buttons/CTAButton";
 import { useState } from "react";
 
 const ProfileUpdateForm = ({ profile, isEditing, onUpdate, onCancel }) => {
@@ -30,7 +33,7 @@ const ProfileUpdateForm = ({ profile, isEditing, onUpdate, onCancel }) => {
             value={formData.name}
             onChange={handleChange}
             disabled={!isEditing}
-            className="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-700"
+            className="w-full border p-2 input-sm rounded dark:bg-gray-800 dark:border-gray-700"
           />
         </div>
         <div>
@@ -41,7 +44,7 @@ const ProfileUpdateForm = ({ profile, isEditing, onUpdate, onCancel }) => {
             value={formData.email}
             onChange={handleChange}
             disabled={!isEditing}
-            className="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-700"
+            className="w-full border p-2 input-sm rounded dark:bg-gray-800 dark:border-gray-700"
           />
         </div>
         <div>
@@ -52,26 +55,27 @@ const ProfileUpdateForm = ({ profile, isEditing, onUpdate, onCancel }) => {
             value={formData?.avatar}
             onChange={handleChange}
             disabled={!isEditing}
-            className="w-full border p-2 rounded dark:bg-gray-800 dark:border-gray-700"
+            className="w-full border p-2 input-sm rounded dark:bg-gray-800 dark:border-gray-700"
           />
         </div>
 
         {isEditing && (
-          <>
-            <button
-              type="submit"
-              className="bg-blue-500 btn btn-sm text-white px-4 py-2 rounded mt-2"
-            >
-              Update
-            </button>
+          <div className="flex space-x-2 pt-2">
+            <CTAButton
+              label="Update Data"
+              icon={<FaEdit />}
+              className="btn btn-sm text-sm"
+              variant="primary"
+            />
 
-            <button
+            <CTAButton
               onClick={onCancel}
-              className="bg-gray-500 btn btn-sm text-white px-4 py-2 rounded"
-            >
-              Cancel
-            </button>
-          </>
+              label="Cancel"
+              icon={<FaTimesCircle />}
+              className="btn btn-sm text-sm"
+              variant="warning"
+            />
+          </div>
         )}
       </form>
     </div>

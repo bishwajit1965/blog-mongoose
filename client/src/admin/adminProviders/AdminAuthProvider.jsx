@@ -3,8 +3,6 @@ import { useCallback, useEffect, useReducer, useState } from "react";
 import AdminAuthContext from "../adminContexts/AdminAuthContext";
 import axios from "axios";
 
-// import { set } from "mongoose";
-
 const initialState = {
   isAuthenticated: false,
   adminData: null,
@@ -71,10 +69,10 @@ const AdminAuthProvider = ({ children }) => {
     }
   }, [baseURL]);
 
-  console.log("Permissions Map:", permissionsMap);
-  console.log("Roles Map:", rolesMap);
-  console.log("User Permissions:", state.permissions);
-  console.log("User Roles:", state.roles);
+  // console.log("Permissions Map:", permissionsMap);
+  // console.log("Roles Map:", rolesMap);
+  // console.log("User Permissions:", state.permissions);
+  // console.log("User Roles:", state.roles);
 
   const loginAdmin = async (credentials) => {
     try {

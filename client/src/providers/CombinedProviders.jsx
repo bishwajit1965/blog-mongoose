@@ -1,4 +1,5 @@
 import AdminAuthProvider from "../admin/adminProviders/AdminAuthProvider";
+import AdminBlogProvider from "../admin/adminProviders/AdminBlogProvider";
 import AdminCategoryProvider from "../admin/adminProviders/AdminCategoryProvider";
 import AdminPermissionProvider from "../admin/adminProviders/AdminPermissionProvider";
 import AdminRoleProvider from "../admin/adminProviders/AdminRoleProvider";
@@ -10,13 +11,15 @@ const CombinedProviders = ({ children }) => (
   <AdminAuthProvider>
     <AuthProvider>
       <AdminRoleProvider>
-        <AdminPermissionProvider>
-          <AdminCategoryProvider>
-            <AdminUserProvider>
-              <AdminTagProvider>{children}</AdminTagProvider>
-            </AdminUserProvider>
-          </AdminCategoryProvider>
-        </AdminPermissionProvider>
+        <AdminBlogProvider>
+          <AdminPermissionProvider>
+            <AdminCategoryProvider>
+              <AdminUserProvider>
+                <AdminTagProvider>{children}</AdminTagProvider>
+              </AdminUserProvider>
+            </AdminCategoryProvider>
+          </AdminPermissionProvider>
+        </AdminBlogProvider>
       </AdminRoleProvider>
     </AuthProvider>
   </AdminAuthProvider>

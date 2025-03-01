@@ -58,7 +58,7 @@ const getAllRoles = async (req, res) => {
     const roles = await Role.find();
     res.status(200).json(roles);
   } catch (error) {
-    res.status.json({
+    res.status(500).json({
       message: "Error in fetching roles",
       error: error.message,
     });

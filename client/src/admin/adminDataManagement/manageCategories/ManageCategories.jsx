@@ -36,7 +36,7 @@ const ManageCategories = () => {
           <div className="grid lg:grid-cols-12 grid-cols-1 md:grid-cols-2 gap-4">
             <div className="lg:col-span-6 col-span-12 lg:border-r dark:border-gray-700 lg:pr-3">
               <h2 className="text-xl font-semibold mb-2">
-                {editingCategory ? "Update Permission" : "Add Permission"}
+                {editingCategory ? "Update Category" : "Add Category"}
               </h2>
               <CategoryForm
                 onSuccess={() => {

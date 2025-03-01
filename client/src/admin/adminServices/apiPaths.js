@@ -1,9 +1,10 @@
 const API_PATHS = {
-  ROLES: "/roles",
-  PERMISSIONS: "/permissions",
+  BLOGS: "/blogs",
   CATEGORIES: "/categories",
+  PERMISSIONS: "/permissions",
+  PROFILE: "/profile",
+  ROLES: "/roles",
   TAGS: "/tags",
   USERS: "/admin/users",
-  PROFILE: "/profile",
 };
 export default API_PATHS;
