@@ -24,6 +24,13 @@ const ProfileUpdateForm = ({ profile, isEditing, onUpdate, onCancel }) => {
       <h3 className="text-xl font-semibold mb-2">
         {isEditing ? "Edit Profile" : "Profile Details"}
       </h3>
+      <div className="flex justify-center">
+        <img
+          src={formData.avatar}
+          alt={formData.name}
+          className="w-20 rounded-full"
+        />
+      </div>
       <form onSubmit={handleSubmit} className="space-y-2">
         <div>
           <label className="block">Name:</label>
