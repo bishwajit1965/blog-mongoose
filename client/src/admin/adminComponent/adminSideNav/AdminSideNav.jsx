@@ -6,7 +6,6 @@ import useAdminAuth from "../../adminHooks/useAdminAuth";
 
 const AdminSideNav = () => {
   const { isAuthenticated, adminData } = useAdminAuth();
-
   if (!isAuthenticated || !adminData) return null; // Return null if not authenticated
 
   // Function to check if the user has a specific role

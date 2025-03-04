@@ -1,19 +1,33 @@
+import AdminCardTitle from "../../adminCardTitle/AdminCardTitle";
 import AdminLoader from "../adminLoader/AdminLoader";
 
 const SuperAdminDashboardCard = ({ loading, isAuthenticated, adminData }) => {
   if (loading) return <AdminLoader />;
 
   return (
-    <div className="lg:col-span-3 col-span-12 rounded-md shadow-md dark:bg-gray-800 border border-gray-300 dark:border-gray-700">
-      <div className="bg-base-300 text-center p-2 dark:bg-gray-700">
-        <h1 className="text-xl font-bold">Blog Posts Details</h1>
-      </div>
+    <div className="lg:col-span-6 col-span-12 rounded-md shadow-md dark:bg-gray-800 border border-gray-300 dark:border-gray-700">
+      <AdminCardTitle subTitle="Super" decoratedText="Admin Details" />
       <div className="p-2">
         {isAuthenticated && adminData ? (
           <>
-            <p>Id: {adminData?.user?._id || "N/A"}</p>
-            <p>Email: {adminData?.user?.email || "N/A"}</p>
-            <p>
+            <div className="flex justify-center">
+              <img
+                src={adminData.user.avatar}
+                alt={adminData.user.name}
+                className="w-24 rounded-full shadow-md"
+              />
+            </div>
+            <p className="text-xl font-bold">
+              Name: {adminData?.user?.name || "N/A"}
+            </p>
+            <p className="text-md font-bold">
+              Id: {adminData?.user?._id || "N/A"}
+            </p>
+
+            <p className="text-md font-bold">
+              Email: {adminData?.user?.email || "N/A"}
+            </p>
+            <p className="text-md font-bold">
               Role:{" "}
               {adminData?.user?.roles && Array.isArray(adminData.user.roles) ? (
                 adminData.user.roles.map((role) =>
@@ -27,19 +41,13 @@ const SuperAdminDashboardCard = ({ loading, isAuthenticated, adminData }) => {
                 <span>No roles</span>
               )}
             </p>
-            <p>Authenticated: {isAuthenticated.toString()}</p>
+            <p className="text-md font-bold">
+              Authenticated: {isAuthenticated.toString()}
+            </p>
           </>
         ) : (
           <p>Not authenticated</p>
         )}
-      </div>
-
-      <div className="p-2">
-        <p>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio
-          explicabo nostrum iusto quod ipsum adipisci voluptates.
-        </p>
-        <h1 className="font-bold">Super-admin Dashboard</h1>
       </div>
     </div>
   );

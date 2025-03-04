@@ -26,7 +26,7 @@ router.use(authenticateToken);
 // Create a new blog post
 router.post(
   "/",
-  authorizeRoles(["super-admin"]),
+  authorizeRoles(["super-admin", "editor", "writer"]),
   authorizePermissions(["create-post"]),
   upload.single("image"),
   createBlog
@@ -43,7 +43,7 @@ router.get(
 // Update a blog post
 router.patch(
   "/:slug",
-  authorizeRoles(["super-admin", "admin"]),
+  authorizeRoles(["super-admin", "admin", "editor", "writer"]),
   authorizePermissions(["edit-post"]),
   upload.single("image"),
   updateBlogBySlug
