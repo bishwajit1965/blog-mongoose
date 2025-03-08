@@ -25,21 +25,20 @@ const getProfile = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   try {
-    console.log("Updating profile for ID:", req.params.id);
     const user = await User.findById(req.params.id);
     if (!user) {
       console.log("User not found");
       return res.status(404).json({ message: "User not found" });
     }
-    console.log("User found, updating...");
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     })
       .populate("roles")
       .populate("permissions");
 
-    console.log("Updated user:", updatedUser);
-    res.status(200).json(updatedUser);
+    res
+      .status(200)
+      .json({ message: "Profile updated successfully!", updatedUser });
   } catch (error) {
     console.error("Error during update:", error);
     res.status(500).json({ message: "Error updating profile", error });

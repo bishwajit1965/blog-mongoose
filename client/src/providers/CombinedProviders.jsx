@@ -8,8 +8,8 @@ import AdminUserProvider from "../admin/adminProviders/AdminUserProvider";
 import AuthProvider from "./AuthProvider";
 
 const CombinedProviders = ({ children }) => (
-  <AdminAuthProvider>
-    <AuthProvider>
+  <AuthProvider>
+    <AdminAuthProvider>
       <AdminRoleProvider>
         <AdminBlogProvider>
           <AdminPermissionProvider>
@@ -21,8 +21,8 @@ const CombinedProviders = ({ children }) => (
           </AdminPermissionProvider>
         </AdminBlogProvider>
       </AdminRoleProvider>
-    </AuthProvider>
-  </AdminAuthProvider>
+    </AdminAuthProvider>
+  </AuthProvider>
 );
 
 export default CombinedProviders;

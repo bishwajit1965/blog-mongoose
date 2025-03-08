@@ -38,6 +38,7 @@ const SuperAdminDashboard = () => {
           adminData={adminData}
           loading={loading}
         />
+
         <AllStatisticsCard
           blogs={blogs}
           totalBlogs={totalBlogs}
@@ -53,6 +54,7 @@ const SuperAdminDashboard = () => {
           totalUsers={totalUsers}
         />
         <BlogStatisticsCard blogs={blogs} totalBlogs={totalBlogs} />
+
         <CategoryWiseBlogCard blogs={blogs} totalBlogs={totalBlogs} />
       </div>
     </div>

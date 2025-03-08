@@ -1,9 +1,12 @@
 import { FaBloggerB, FaClock, FaLayerGroup, FaTags } from "react-icons/fa";
 
 import CTAButton from "../../../components/buttons/CTAButton";
+import useAdminUser from "../../adminHooks/useAdminUser";
 
 const BlogDetailsView = ({ blog }) => {
   const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const { users } = useAdminUser();
+  const author = users.find((user) => user._id === blog.author._id);
 
   // International date time format without any library
   const formattedDate = new Intl.DateTimeFormat("en-GB").format(
@@ -24,6 +27,26 @@ const BlogDetailsView = ({ blog }) => {
         className="w-full h-60 object-cover rounded-md shadow-sm mb-2"
       />
       <h1 className="text-xl font-bold text-gray-600">{blog.title}</h1>
+      <p className="font-bold"></p>
+
+      {/* Author Section */}
+      <div className="flex items-center space-x-2">
+        <span>
+          {author ? (
+            <img
+              src={author.avatar}
+              alt={blog.author.name || "Unknown"}
+              className="w-10 rounded-full border"
+            />
+          ) : (
+            <p className="font-bold">{author ? author.name : "Unknown"}</p>
+          )}
+        </span>
+        <span className="text-gray-400 font-bold">
+          {blog?.author ? blog?.author.name : "N/A"}
+        </span>
+      </div>
+
       <p>{blog.content}</p>
       <div className="flex items-center">
         <span className="flex items-center w-fit font-bold bg-gray-300 shadow-sm text-gray-900 rounded-md mr-2 text-xs px-2 py-1">

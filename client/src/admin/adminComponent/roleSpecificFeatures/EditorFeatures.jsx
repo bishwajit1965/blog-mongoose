@@ -1,5 +1,12 @@
-import { FaArrowAltCircleRight } from "react-icons/fa";
+import { Suspense, lazy } from "react";
+
 import { NavLink } from "react-router-dom";
+
+const FaArrowAltCircleRight = lazy(() =>
+  import("react-icons/fa").then((module) => ({
+    default: module.FaArrowAltCircleRight,
+  }))
+);
 
 const EditorFeatures = () => {
   const editorRoutesFeatures = [
@@ -13,9 +20,17 @@ const EditorFeatures = () => {
           <NavLink
             key={path.id}
             to={path.route}
-            className="m-0 flex items-center hover:link-neutral hover:font-bold dark:hover:link-success hover:animate-pulse"
+            className={({ isActive }) =>
+              `m-0 flex items-center px-3 py-2 rounded-lg transition-all ${
+                isActive
+                  ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-white font-bold"
+                  : "hover:bg-gray-100 dark:hover:bg-gray-600 hover:font-bold"
+              }`
+            }
           >
-            <FaArrowAltCircleRight className="mr-2 hover:animate-spin" />{" "}
+            <Suspense fallback={<span>🔄</span>}>
+              <FaArrowAltCircleRight className="mr-2" />
+            </Suspense>
             {path.name}
           </NavLink>
         ))}

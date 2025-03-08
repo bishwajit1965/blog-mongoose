@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require("../models/User");
 
 const {
-  createUser,
+  // createUser,
   getAllUsers,
   assignRolesAndPermissions,
   deleteUser,
@@ -65,7 +65,7 @@ router.get("/me", async (req, res) => {
 });
 
 // Super-Admin Only Route
-router.post("/", authorizeRoles(["super-admin"]), createUser);
+// router.post("/", authorizeRoles(["super-admin"]), createUser);
 
 router.get("/", authorizeRoles(["super-admin"]), getAllUsers);
 

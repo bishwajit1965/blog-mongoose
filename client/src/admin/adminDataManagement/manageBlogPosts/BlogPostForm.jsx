@@ -64,9 +64,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
         title: existingBlog.title || "",
         content: existingBlog.content || "",
         author: adminData.user?._id || "",
-
         category: existingBlog.category._id || "",
-
         tags: existingBlog.tags?.map((tag) => tag._id) || [],
         image: existingBlog.image || [],
         status: existingBlog.status || "draft",

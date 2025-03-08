@@ -2,6 +2,10 @@ import {
   getAllProfiles,
   updateProfile,
 } from "../../adminServices/profileService";
+import {
+  notifyError,
+  notifySuccess,
+} from "../../adminComponent/adminToastNotification/AdminToastNotification";
 import { useCallback, useEffect, useState } from "react";
 
 import AdminLoader from "../../adminComponent/adminLoader/AdminLoader";
@@ -53,18 +57,15 @@ const ProfileManagement = () => {
   const handleProfileUpdate = async (updatedProfile) => {
     try {
       const response = await updateProfile(selectedProfile._id, updatedProfile);
-      // setProfiles(
-      //   profiles.map((profile) =>
-      //     profile._id === selectedProfile._id ? response.data : profile
-      //   )
-      // );
       setSelectedProfile(response.data);
+      notifySuccess(response.message);
       setIsEditing(false);
       setError("");
       // Refetch updated profiles from the server
       fetchProfiles();
     } catch (err) {
       setError("Error updating profile: " + err);
+      notifyError(err.message);
     }
   };
 

@@ -5,58 +5,6 @@ const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const { default: mongoose } = require("mongoose");
 
-// Create a new user (Admin functionality)
-const createUser = async (req, res) => {
-  try {
-    const {
-      firebaseUid,
-      name,
-      email,
-      password,
-      avatar,
-      roles = ["viewer"],
-      permissions = ["read"],
-    } = req.body; // Default role as "viewer"
-
-    // Check if the user has permission to create users
-    if (!req.user.permissions.includes("create")) {
-      return res.status(403).json({ message: "Permission denied" });
-    }
-
-    if (!firebaseUid || !email) {
-      return res.status(400).json({ message: "All fields are required." });
-    }
-
-    // Check if the email already exists
-    const emailExists = await UserManagement.findOne({ email });
-    if (emailExists) {
-      return res.status(409).json({ message: "User already exists." });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 12);
-
-    // Create a new user
-    const newUser = new UserManagement({
-      firebaseUid,
-      name,
-      email,
-      password: hashedPassword,
-      avatar,
-      roles,
-      permissions,
-    });
-
-    const savedUser = await newUser.save();
-    return res.status(201).json({
-      message: "User created successfully",
-      user: savedUser,
-    });
-  } catch (error) {
-    console.error("Error creating user:", error.message);
-    return res.status(500).json({ message: "Internal server error." });
-  }
-};
-
 const getAllUsers = async (req, res) => {
   try {
     const result = await User.find()
@@ -149,7 +97,7 @@ const deleteUser = async (req, res) => {
     const { id } = req.params;
 
     // Ensure the user has permission to delete
-    if (!req.user.permissions.includes("delete")) {
+    if (!req.user.permissions.includes("delete-post")) {
       return res
         .status(403)
         .json({ status: "error", message: "Permission denied" });
@@ -174,7 +122,6 @@ const deleteUser = async (req, res) => {
 };
 
 module.exports = {
-  createUser,
   getAllUsers,
   assignRolesAndPermissions,
   deleteUser,
