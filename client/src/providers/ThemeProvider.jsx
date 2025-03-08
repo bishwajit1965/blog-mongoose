@@ -20,7 +20,9 @@ const ThemeProvider = ({ children }) => {
   }, []);
 
   if (isLoading) {
-    return <div className="loading loading-infinity loading-lg"></div>;
+    return (
+      <div className="loading loading-bars loading-xl flex mx-auto min-h-24"></div>
+    );
   }
 
   const toggleTheme = () => {

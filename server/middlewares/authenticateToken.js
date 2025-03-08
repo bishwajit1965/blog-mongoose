@@ -1,7 +1,7 @@
 const { verifyJWT } = require("../utils/jwt");
 
 const authenticateToken = (req, res, next) => {
-  const token = req.cookies.authToken;
+  const token = req.cookies?.authToken;
   console.log("Token in admin:", token);
   if (!token) {
     return res.status(401).json({

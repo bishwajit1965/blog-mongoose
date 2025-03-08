@@ -4,14 +4,20 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Loader from "../../components/loader/Loader";
 import Swal from "sweetalert2";
+import api from "../../services/api";
 import { sendEmailVerification } from "firebase/auth";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 
 const Register = () => {
-  const { user, loading, registerUserWithEmailAndPassword, updateUserProfile } =
-    useAuth();
+  const {
+    user,
+    token,
+    loading,
+    registerUserWithEmailAndPassword,
+    updateUserProfile,
+  } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -19,8 +25,7 @@ const Register = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
-  const baseURL =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+
   const {
     register,
     handleSubmit,
@@ -30,7 +35,6 @@ const Register = () => {
   } = useForm();
 
   const handleRegister = (data) => {
-    console.log("Sign up data", data);
     if (!data.terms) {
       setError("You must accept the terms and conditions.");
       return;
@@ -38,7 +42,7 @@ const Register = () => {
 
     registerUserWithEmailAndPassword(data.email, data.password)
       .then(() => {
-        updateUserProfile(data.name, data.photoURL).then(() => {
+        updateUserProfile(data.name, data.photoURL).then(async () => {
           const saveUser = {
             firebaseUid: user.uid,
             name: data.name,
@@ -47,12 +51,15 @@ const Register = () => {
             password: data.password,
             roles: ["user"],
           };
+          const response = await api.post(
+            "/users/register",
+            saveUser, // ✅ Send user data directly
+            {
+              headers: token ? { Authorization: `Bearer ${token}` } : {}, // ✅ Only include if token exists
+            }
+          );
 
-          fetch(`${baseURL}/users`, {
-            method: "POST",
-            headers: { "Content-type": "application/json" },
-            body: JSON.stringify(saveUser),
-          });
+          return response.data;
         });
       })
       .then(() => {

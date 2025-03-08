@@ -1,11 +1,7 @@
 const express = require("express");
 const User = require("../models/User");
 
-const {
-  createUser,
-  updateUserRolesAndPermissions,
-  deleteUser,
-} = require("../controllers/userController");
+const { createUser } = require("../controllers/userController");
 
 const {
   authenticateToken,
@@ -14,11 +10,11 @@ const {
 
 const router = express.Router();
 
+// Route for user data insertion
+router.post("/register", createUser);
+
 // Verifies token of all routes those
 router.use(authenticateToken);
-
-// Route for user data insertion
-router.post("/auth/register", createUser);
 
 router.get("/me", async (req, res) => {
   try {
@@ -35,15 +31,17 @@ router.get("/me", async (req, res) => {
     }
 
     // Extract role IDs directly from the user document
-    const roles = user.roles.map((role) => role._id.toString());
+    const roles = user.roles
+      ? user.roles.map((role) => role._id.toString())
+      : [];
 
     // Extract effective permissions as IDs:
     // Direct permissions (if any) plus permissions from roles
-    const directPermissionIds = user.permissions.map((perm) =>
-      perm._id.toString()
+    const directPermissionIds = user.permissions?.map(
+      (perm) => perm._id.toString() || []
     );
-    const rolePermissionIds = user.roles.flatMap((role) =>
-      role.permissions.map((perm) => perm._id.toString())
+    const rolePermissionIds = user.roles?.flatMap(
+      (role) => role.permissions.map((perm) => perm._id.toString()) || []
     );
     const allPermissionIds = [
       ...new Set([...directPermissionIds, ...rolePermissionIds]),
@@ -59,12 +57,8 @@ router.get("/me", async (req, res) => {
   }
 });
 
-router.patch(
-  "/:id/roles-permissions",
-  authorizeRoles(["super-admin"]),
-  updateUserRolesAndPermissions
-);
+//NOTE:  UPDATE USER IS MANAGED BY userManagementController.js
 
-router.delete("/:id", authorizeRoles(["super-admin"]), deleteUser);
+//NOTE:  DELETE USER IS MANAGED BY userManagementController.js
 
 module.exports = router;

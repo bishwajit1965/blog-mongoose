@@ -48,7 +48,7 @@ const AllStatisticsCard = ({
               <td>
                 {tags.map((tag, index) => (
                   <span key={index} className="capitalize">
-                    {tag.name} ,
+                    {tag.name.concat(",")}
                   </span>
                 ))}
               </td>

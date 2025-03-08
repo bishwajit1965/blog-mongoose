@@ -86,10 +86,10 @@ const Navbar = () => {
                 open ? "top-[65px]" : "-top-72"
               } dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 dark:shadow-lg`}
             >
-              {routes.map((item) =>
+              {routes.map((item, index) =>
                 item ? (
                   item.isThemeToggle ? ( // Check for the theme toggle button
-                    <li key={item.id}>
+                    <li key={index}>
                       <button
                         className={`theme-toggle-btn items-center ml-3 ${theme}`}
                         onClick={toggleTheme}
@@ -117,8 +117,8 @@ const Navbar = () => {
         </div>
         <div className="navbar-center hidden md:block lg:flex">
           <ul className="menu-horizontal">
-            {routes.map((route) => (
-              <li key={route.id} className="">
+            {routes.map((route, index) => (
+              <li key={index} className="">
                 <NavLink
                   className={({ isActive, isPending }) =>
                     isPending ? "pending" : isActive ? "active" : ""

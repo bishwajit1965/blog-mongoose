@@ -23,14 +23,12 @@ const gitHubProvider = new GithubAuthProvider();
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
-  const baseUrl =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
 
   // Send token to backend
   const sendUserToBackend = async (token) => {
     try {
       const response = await api.post(
-        "/auth/register",
+        "/users/register",
         {},
         {
           headers: { Authorization: `Bearer ${token}` }, //Send token as a bearer token
@@ -73,6 +71,7 @@ const AuthProvider = ({ children }) => {
         email,
         password
       );
+
       await handleUserAuthentication(userCredential.user);
 
       const firebaseUid = userCredential.user.uid;
@@ -87,12 +86,7 @@ const AuthProvider = ({ children }) => {
       };
 
       // Save user data to MongoDB
-      const response = await fetch(`${baseUrl}/auth/register`, {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify(userData),
-      });
-
+      const response = await api.post("/users/register", userData);
       const result = await response.json();
       if (!response.ok) {
         throw new Error(

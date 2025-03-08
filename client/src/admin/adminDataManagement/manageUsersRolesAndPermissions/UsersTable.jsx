@@ -19,15 +19,14 @@ const UsersTable = ({ onDelete, onEdit }) => {
   const [paginatedData, setPaginatedData] = useState(users || []);
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this permission?")) {
+    if (window.confirm("Are you sure you want to delete this user?")) {
       try {
         await deleteUser(id);
-        alert("Permission deleted successfully!");
+        alert("User deleted successfully!");
         fetchUsers();
         onDelete();
       } catch (error) {
-        console.error("Error deleting permission:", error);
-        alert("Failed to delete permission.");
+        console.error("Error deleting user:", error);
       }
     }
   };

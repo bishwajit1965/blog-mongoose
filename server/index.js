@@ -7,6 +7,7 @@ require("dotenv").config();
 const app = express();
 const connectDB = require("./utils/db");
 const path = require("path");
+const morgan = require("morgan");
 
 // Initializes Mongoose connection
 connectDB();
@@ -21,13 +22,15 @@ app.use(
   })
 );
 
+// Logs concise output to the console
+app.use(morgan("dev"));
+
 // Serve static files from the 'uploads' directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 app.use(cookieParser());
 
 // Routes configured and called
-const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const roleRoutes = require("./routes/roleRoutes");
@@ -39,7 +42,6 @@ const profileRoutes = require("./routes/profileRoutes");
 const blogRoutes = require("./routes/blogRoutes");
 
 // Instantiate routes for execution
-app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/roles", roleRoutes);
