@@ -72,64 +72,6 @@ const loginAdmin = async (req, res) => {
   }
 };
 
-// const updateAdminUserRolesAndPermissions = async (req, res) => {
-//   try {
-//     const { userId } = req.params;
-//     const { roles = [], permissions = [] } = req.body;
-
-//     // Validate if userId is a valid MongoDB ObjectId
-//     if (!mongoose.Types.ObjectId.isValid(userId)) {
-//       return res.status(400).json({ message: "Invalid user ID format" });
-//     }
-
-//     console.log("Roles request for update:", roles);
-//     console.log("Permissions request for update:", permissions);
-//     console.log("Request body:", req.body);
-
-//     // Fetch existing roles and permissions in parallel
-//     const [validRoles, validPermissions] = await Promise.all([
-//       Role.find({ _id: { $in: roles } }),
-//       Permission.find({ _id: { $in: permissions } }),
-//     ]);
-
-//     // Ensure roles and permissions exist before updating
-//     if (roles.length && validRoles.length !== roles.length) {
-//       return res.status(400).json({ message: "One or more roles are invalid" });
-//     }
-//     if (permissions.length && validPermissions.length !== permissions.length) {
-//       return res
-//         .status(400)
-//         .json({ message: "One or more permissions are invalid" });
-//     }
-
-//     // Check if the user exists before updating
-//     const user = await User.findById(userId);
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     // Update the user
-//     const updatedUser = await User.findByIdAndUpdate(
-//       userId,
-//       {
-//         roles: validRoles.map((role) => role._id),
-//         permissions: validPermissions.map((permission) => permission._id),
-//       },
-//       { new: true }
-//     )
-//       .populate("roles", "name")
-//       .populate("permissions", "name")
-//       .lean();
-
-//     res.status(200).json({ message: "User updated successfully", updatedUser });
-//   } catch (error) {
-//     console.error("Error updating user:", error);
-//     res
-//       .status(500)
-//       .json({ message: "Error updating user", error: error.message });
-//   }
-// };
-
 const logoutAdmin = (req, res) => {
   // Clear the authentication cookie
   res.clearCookie("authToken");
@@ -153,7 +95,6 @@ const deleteUser = async (req, res) => {
 
 module.exports = {
   loginAdmin,
-  // updateAdminUserRolesAndPermissions,
   logoutAdmin,
   deleteUser,
 };
