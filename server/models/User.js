@@ -21,6 +21,9 @@ const userSchema = new mongoose.Schema(
     },
     roles: [{ type: mongoose.Schema.Types.ObjectId, ref: "Role" }],
     permissions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Permission" }],
+    isActive: { type: Boolean, default: true }, // Active or Inactive
+    isOnline: { type: Boolean, default: false }, // Real-time online status
+    lastSeen: { type: Date, default: null }, // Last active timestamp
   },
   { timestamps: true }
 );

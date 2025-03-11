@@ -6,5 +6,7 @@ const API_PATHS = {
   ROLES: "/roles",
   TAGS: "/tags",
   USERS: "/admin/users",
+  USER_STATS: "/users/stats",
+  RECENT_USERS: "/users/recent", // Add this
 };
 export default API_PATHS;
