@@ -1,7 +1,7 @@
 const AdminCardTitle = ({ dataLength, subTitle, decoratedText }) => {
   return (
-    <div className="grid lg:grid-cols-12 justify-between gap-2 bg-base-300 dark:bg-gray-700 shadow-sm p-2">
-      <div className="lg:col-span-8 col-span-12">
+    <div className="lg:grid lg:grid-cols-12 flex items-center justify-between gap-2 bg-base-300 dark:bg-gray-700 shadow-sm p-2">
+      <div className="lg:col-span-8 col-span-6">
         <h2 className="text-sm font-bold space-x-2">
           {subTitle && <span className="text-xl font-bold">{subTitle}</span>}
           {decoratedText && (
@@ -11,7 +11,7 @@ const AdminCardTitle = ({ dataLength, subTitle, decoratedText }) => {
           )}
         </h2>
       </div>
-      <div className="lg:col-span-4 col-span-12 flex justify-end">
+      <div className="lg:col-span-4 col-span-6 flex justify-end">
         {dataLength ? (
           <>
             <h2 className="text-xl font-bold">

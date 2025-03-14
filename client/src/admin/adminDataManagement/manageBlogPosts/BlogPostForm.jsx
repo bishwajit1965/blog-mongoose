@@ -202,7 +202,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
           value={formData.title}
           onChange={handleChange}
           required
-          className="mb-1 input input-bordered input-sm w-full max-w-full"
+          className="mb-1 input input-bordered input-sm w-full max-w-full dark:bg-gray-700"
         />
         <label className="block text-xs font-bold text-gray-500">
           Content:
@@ -213,8 +213,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
           value={formData.content}
           onChange={handleChange}
           required
-          // className="mb-1 p-1 w-full"
-          className="textarea input-bordered w-full mb-1"
+          className="textarea input-bordered w-full mb-1 dark:bg-gray-700"
         />
 
         <label className="block text-xs font-bold text-gray-500">
@@ -226,8 +225,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
           required
           value={formData.category}
           defaultValue="Small"
-          className="select select-sm input-bordered w-full max-w-full mb-1"
-          // className="mb-1 input-bordered input-sm w-full max-w-full"
+          className="select select-sm input-bordered w-full max-w-full mb-1 dark:bg-gray-700"
         >
           <option value="">Select Category</option>
           {categories.map((category) => (
@@ -244,7 +242,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
           options={tagOptions}
           onChange={handleTagChange}
           value={selectedTags}
-          className="mb-1 p-0"
+          className="mb-1 p-0 dark:bg-gray-700"
         />
 
         {/* Image upload */}
@@ -257,7 +255,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
           name="image"
           accept="image/*"
           onChange={handleFileChange}
-          className="mb-1 file-input file-input-bordered file-input-sm w-full max-w-full"
+          className="mb-1 file-input file-input-bordered file-input-sm w-full max-w-full dark:bg-gray-700"
         />
 
         <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between mb-2">
@@ -272,9 +270,8 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
                   name=""
                   placeholder="Author..."
                   value={authorName}
-                  // onChange={handleChange}
                   readOnly
-                  className="mb-1 input input-bordered input-sm w-full max-w-full"
+                  className="mb-1 input input-bordered input-sm w-full max-w-full dark:bg-gray-700"
                 />
               </div>
             ) : (
@@ -285,12 +282,11 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
                 <input
                   name="author"
                   placeholder="Author..."
-                  // value={formData.author}
                   value={adminData.user._id}
                   onChange={handleChange}
                   readOnly
                   required
-                  className="mb-1 input input-bordered input-sm w-full max-w-full"
+                  className="mb-1 input input-bordered input-sm w-full max-w-full dark:bg-gray-700"
                 />
               </div>
             )}
@@ -304,11 +300,11 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
               onChange={handleChange}
               value={formData.status}
               defaultValue="Small"
-              className="select select-sm input-bordered w-full max-w-full"
-              // className="mb-1 input-bordered input-sm w-full max-w-full"
+              className="select select-sm input-bordered w-full max-w-full dark:bg-gray-700"
             >
               <option value="draft">Draft</option>
               <option value="published">Published</option>
+              <option value="archived">Archived</option>
             </select>
           </div>
         </div>

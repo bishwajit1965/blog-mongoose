@@ -1,11 +1,18 @@
 const mongoose = require("mongoose");
 
-const validRoles = ["admin", "editor", "viewer", "writer", "user"];
+const validRoles = [
+  "admin",
+  "editor",
+  "viewer",
+  "writer",
+  "user",
+  "super-admin",
+];
 const validPermissions = [
-  "create",
-  "read",
-  "update",
-  "delete",
+  "create-post",
+  "read-post",
+  "update-post",
+  "delete-post",
   "super_admin",
   "member",
 ];

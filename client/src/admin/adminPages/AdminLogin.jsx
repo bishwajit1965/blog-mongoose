@@ -126,6 +126,8 @@ const AdminLogin = () => {
                 icon={<FaSignInAlt />}
                 variant="primary"
                 className="btn btn-sm"
+                type="submit" // ✅ Ensures form submission
+                disabled={loading} // ✅ Prevents multiple clicks
               />
             </form>
           </div>

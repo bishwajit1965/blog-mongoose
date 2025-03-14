@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 
 import AdminAuthContext from "../adminContexts/AdminAuthContext";
-import axios from "axios";
+import api from "../../services/api";
 
 const initialState = {
   isAuthenticated: false,
@@ -41,18 +41,12 @@ const AdminAuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [permissionsMap, setPermissionsMap] = useState({});
   const [rolesMap, setRolesMap] = useState({});
-  const baseURL =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
 
   const fetchPermissionsAndRoles = useCallback(async () => {
     try {
       const [permissionsResponse, rolesResponse] = await Promise.all([
-        axios.get(`${baseURL}/permissions`, {
-          withCredentials: true,
-        }),
-        axios.get(`${baseURL}/roles`, {
-          withCredentials: true,
-        }),
+        api.get("/permissions"),
+        api.get("/roles"),
       ]);
 
       const permissionsMap = {};
@@ -67,7 +61,7 @@ const AdminAuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Error fetching roles and permissions:", error);
     }
-  }, [baseURL]);
+  }, []);
 
   // console.log("Permissions Map:", permissionsMap);
   // console.log("Roles Map:", rolesMap);
@@ -78,9 +72,7 @@ const AdminAuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.post(`${baseURL}/admin/login`, credentials, {
-        withCredentials: true,
-      });
+      const response = await api.post("/admin/login", credentials);
       const { user } = response.data;
       dispatch({ type: "LOGIN_SUCCESS", payload: user });
       return user;
@@ -99,11 +91,7 @@ const AdminAuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      await axios.post(
-        `${baseURL}/admin/logout`,
-        {},
-        { withCredentials: true }
-      );
+      await api.post("/admin/logout");
       dispatch({ type: "LOGOUT" });
     } catch (error) {
       console.error("Logout failed:", error);
@@ -117,9 +105,7 @@ const AdminAuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get(`${baseURL}/admin/me`, {
-        withCredentials: true,
-      });
+      const response = await api.get("/admin/me");
 
       dispatch({
         type: "LOGIN_SUCCESS",
@@ -131,11 +117,35 @@ const AdminAuthProvider = ({ children }) => {
       });
     } catch (error) {
       console.error("Error verifying token:", error);
+      if (error.response?.status === 401) {
+        try {
+          // Try refreshing the token
+          console.log("Attempting to refresh token...");
+          await api.post("/admin/refresh-token");
+
+          // Retry fetching user info
+          const response = await api.get("/admin/me");
+
+          dispatch({
+            type: "LOGIN_SUCCESS",
+            payload: {
+              user: response.data.user,
+              permissions: response.data.allPermissionIds,
+              roles: response.data.roles,
+            },
+          });
+
+          return;
+        } catch (refreshError) {
+          console.error("Token refresh failed, logging out", refreshError);
+        }
+      }
+
       dispatch({ type: "LOGOUT" });
     } finally {
       setLoading(false);
     }
-  }, [baseURL]);
+  }, []);
 
   const hasPermission = (permissionName) => {
     const permissionId = permissionsMap[permissionName];

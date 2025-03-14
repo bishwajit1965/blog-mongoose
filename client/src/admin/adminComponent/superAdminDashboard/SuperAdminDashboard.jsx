@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import AdminSubTitle from "../adminSubTitle/AdminSubTitle";
 import AllStatisticsCard from "./AllStatisticsCard";
+import BlogPostStatisticsCard from "./BlogPostStatisticsCard";
 import BlogStatisticsCard from "./BlogStatisticsCard";
 import CategoryWiseBlogCard from "./CategoryWiseBlogCard";
 import RecentUsersTableCard from "./RecentUsersTableCard";
@@ -76,7 +77,11 @@ const SuperAdminDashboard = () => {
   const { loading, isAuthenticated, adminData } = useAdminAuth();
   return (
     <div className="">
-      <AdminSubTitle subTitle="Super Admin dashboard" dataLength={len} />
+      <AdminSubTitle
+        subTitle="Super Admin"
+        decoratedText="Dashboard"
+        dataLength={len}
+      />
 
       <div className="grid lg:grid-cols-12 grid-cols-1 justify-between gap-4 p-2">
         <SuperAdminDashboardCard
@@ -102,11 +107,13 @@ const SuperAdminDashboard = () => {
         <BlogStatisticsCard blogs={blogs} totalBlogs={totalBlogs} />
 
         <CategoryWiseBlogCard blogs={blogs} totalBlogs={totalBlogs} />
+
         {userStats && <UserStatusCard userStats={userStats} />}
 
         {recentUsers.length > 0 && (
           <RecentUsersTableCard recentUsers={recentUsers} />
         )}
+        <BlogPostStatisticsCard />
       </div>
     </div>
   );
