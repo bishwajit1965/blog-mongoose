@@ -27,7 +27,6 @@ const ProfileData = ({ profile, onEdit, onCancel }) => {
         </div>
         <div>
           <strong>Permissions:</strong>
-
           {profile.permissions.map((p) => (
             <span
               className="bg-gray-300 ml-2 p-1 rounded-md shadow-sm dark:bg-gray-800 text-xs"

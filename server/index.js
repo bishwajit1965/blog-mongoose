@@ -1,11 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const connectDB = require("./utils/db");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
 const app = express();
-const connectDB = require("./utils/db");
 const path = require("path");
 const morgan = require("morgan");
 const onlineUsers = new Set();
@@ -53,6 +53,7 @@ const userManagementRoutes = require("./routes/userManagementRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const blogRoutes = require("./routes/blogRoutes");
 const adminStatsRoutes = require("./routes/adminStatsRoutes");
+const blogStatusRoutes = require("./routes/blogStatusRoutes");
 
 // Instantiate routes for execution
 app.use("/api/users", userRoutes);
@@ -65,6 +66,7 @@ app.use("/api/admin/users", userManagementRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api", adminStatsRoutes);
+app.use("/api/blog", blogStatusRoutes);
 
 // WebSocket for real-time user presence tracking
 io.on("connection", (socket) => {
@@ -79,7 +81,7 @@ io.on("connection", (socket) => {
   const cookies = cookie.parse(socket.request.headers.cookie);
   console.log("🍪 Received Cookies:", cookies); // Debugging
 
-  const token = cookies.authToken; // Ensure this matches your actual cookie name
+  const token = cookies.refreshToken; // Using 'refreshToken' instead of 'authToken'
   if (!token) {
     console.log("❌ No token found in cookies");
     return;

@@ -18,70 +18,70 @@ const AllStatisticsCard = ({
       <AdminCardTitle subTitle="Summary" decoratedText="Section" />
 
       <div className="overflow-x-auto">
-        <table className="table table-xs">
-          <thead>
-            <tr>
+        <table className="table table-xs dark:border-b-gray-700">
+          <thead className="dark:text-gray-300">
+            <tr className="dark:border-b-gray-700">
               <th>Items</th>
               <th>Name</th>
               <th className="pr-2">Total</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr className="dark:border-b-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 hover:text-gray-900 hover:text-[14px]">
               <td className="font-bold">Blogs: </td>
               <td>Blogs data...</td>
               <td className="flex justify-end">{totalBlogs}</td>
             </tr>
-            <tr>
+            <tr className="dark:border-b-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 hover:text-gray-900 hover:text-[14px]">
               <td className="font-bold">Categories: </td>
               <td>
                 {categories.map((category, index) => (
                   <span key={index} className="capitalize">
-                    {category.name},
+                    {category.name} {index !== categories.length - 1 && ", "}
                   </span>
                 ))}
               </td>
               <td className="flex justify-end">{totalCategories}</td>
             </tr>
-            <tr>
+            <tr className="dark:border-b-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 hover:text-gray-900 hover:text-[14px]">
               <td className="font-bold">Tags: </td>
               <td>
                 {tags.map((tag, index) => (
                   <span key={index} className="capitalize">
-                    {tag.name.concat(",")}
+                    {tag.name} {index !== tags.length - 1 && ", "}
                   </span>
                 ))}
               </td>
               <td className="flex justify-end">{totalTags}</td>
             </tr>
-            <tr>
+            <tr className="dark:border-b-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 hover:text-gray-900 hover:text-[14px]">
               <td className="font-bold">Permissions: </td>
               <td>
                 {permissions.map((permission, index) => (
                   <span key={index} className="capitalize">
-                    {permission.name} ,
+                    {permission.name} {index !== permissions.length - 1 && ", "}
                   </span>
                 ))}
               </td>
               <td className="flex justify-end">{totalPermissions}</td>
             </tr>
-            <tr>
+            <tr className="dark:border-b-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 hover:text-gray-900 hover:text-[14px]">
               <td className="font-bold">Roles: </td>
               <td>
                 {roles.map((role, index) => (
                   <span key={index} className="capitalize">
-                    {role.name} ,
+                    {role.name} {index !== roles.length - 1 && ", "}
                   </span>
                 ))}
               </td>
               <td className="flex justify-end">{totalRoles}</td>
             </tr>
-            <tr>
+            <tr className="dark:border-b-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 hover:text-gray-900 hover:text-[14px]">
               <td className="font-bold">Users: </td>
               <td>
                 {users.map((user, index) => (
                   <span key={index} className="capitalize">
-                    {user.name} ,
+                    {user.name} {index !== users.length - 1 && ", "}
                   </span>
                 ))}
               </td>

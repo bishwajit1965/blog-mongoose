@@ -1,12 +1,11 @@
 const express = require("express");
+const User = require("../models/User");
+
 const {
   loginAdmin,
-  // updateAdminUserRolesAndPermissions,
   logoutAdmin,
-  // deleteUser,
+  refreshAccessToken,
 } = require("../controllers/adminController");
-
-const User = require("../models/User");
 
 const {
   authenticateToken,
@@ -17,11 +16,17 @@ const router = express.Router();
 
 router.post("/login", loginAdmin);
 router.post("/logout", logoutAdmin);
+// Refresh token endpoint (public, but requires the refresh token cookie)
+router.post("/refresh-token", refreshAccessToken);
 
 router.use(authenticateToken);
 
 router.get("/me", async (req, res) => {
   try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: "Unauthorized: No valid token." });
+    }
+
     const user = await User.findById(req.user.id)
       .populate({
         path: "roles",
@@ -30,8 +35,9 @@ router.get("/me", async (req, res) => {
       })
       .populate("permissions", "name"); // Populate direct user permissions (if any)
 
+    // ✅ Handle case where user is not found
     if (!user) {
-      return res.status(401).json({ message: "User not found." });
+      return res.status(404).json({ message: "User not found." });
     }
 
     // Extract role IDs directly from the user document
@@ -52,9 +58,16 @@ router.get("/me", async (req, res) => {
     res.status(200).json({ user, roles, allPermissionIds }); // Send roles & permissions separately
   } catch (error) {
     console.error("Error fetching user data:", error);
-    res.status(401).json({
+    // ✅ Handle expired token case
+    if (error.name === "TokenExpiredError") {
+      return res.status(403).json({
+        status: "error",
+        message: "Token expired. Please refresh your token.",
+      });
+    }
+    res.status(500).json({
       status: "error",
-      message: "Unauthorized: Invalid or expired token.",
+      message: "Internal server error.",
     });
   }
 });
@@ -69,13 +82,8 @@ router.get("/super-admin/super-admin-dashboard", (req, res) => {
   });
 });
 
-// router.patch(
-//   "/admin/users/:userId/assign",
-//   authorizeRoles(["super-admin"]),
-//   updateAdminUserRolesAndPermissions
-// );
-
-// router.delete("/:id", authenticateToken, deleteUser);
+// NOTE: IMPORTANT!
+// UPDATE AND DELETE FUNCTIONALITIES ARE INCLUDED IN userManagementController.js & userManagementRoutes.js
 
 // Admin-only routes
 router.use("/admin", authorizeRoles(["admin", "super-admin"]));
