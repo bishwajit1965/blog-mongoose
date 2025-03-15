@@ -3,6 +3,7 @@ import AdminDashboard from "../admin/adminComponent/adminDashboard/AdminDashboar
 import AdminLayout from "../admin/adminLayout/adminLayout";
 import AdminLogin from "../admin/adminPages/AdminLogin";
 import BlogPosts from "../pages/blogPosts/BlogPosts";
+import ComingSoonPosts from "../admin/adminDataManagement/manageBlogPosts/ComingSoonPosts";
 import ContactMe from "../pages/contactMe/ContactMe";
 import EditorDashboard from "../admin/adminComponent/editorDashboard/EditorDashboard";
 import EditorLayout from "../admin/adminLayout/EditorLayout";
@@ -23,6 +24,7 @@ import Register from "../pages/register/Register";
 import RequireAdmin from "../admin/requireAdmin/RequireAdmin";
 import RoleForm from "../admin/adminDataManagement/manageRoles/RoleForm";
 import RootLayout from "../layouts/rootLayout/RootLayout";
+import ScheduledPosts from "../admin/adminDataManagement/manageBlogPosts/ScheduledPosts";
 import SuperAdminDashboard from "../admin/adminComponent/superAdminDashboard/SuperAdminDashboard";
 import SuperAdminLayout from "../admin/adminLayout/SuperAdminLayout";
 import TermsConditions from "../pages/TermsConditions/TermsConditions";
@@ -35,6 +37,8 @@ import { createBrowserRouter } from "react-router-dom";
 const superAdminRoutes = [
   { path: "super-admin-dashboard", element: <SuperAdminDashboard /> },
   { path: "manage-blogs", element: <ManageBlogPosts /> },
+  { path: "coming-soon", element: <ComingSoonPosts /> },
+  { path: "scheduled-posts", element: <ScheduledPosts /> },
   { path: "manage-categories", element: <ManageCategories /> },
   { path: "manage-tags", element: <ManageTags /> },
   { path: "manage-users", element: <ManageUsers /> },

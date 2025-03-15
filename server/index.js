@@ -54,6 +54,7 @@ const profileRoutes = require("./routes/profileRoutes");
 const blogRoutes = require("./routes/blogRoutes");
 const adminStatsRoutes = require("./routes/adminStatsRoutes");
 const blogStatusRoutes = require("./routes/blogStatusRoutes");
+const comingSoonRoutes = require("./routes/comingSoonRoutes");
 
 // Instantiate routes for execution
 app.use("/api/users", userRoutes);
@@ -67,6 +68,7 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api", adminStatsRoutes);
 app.use("/api/blog", blogStatusRoutes);
+app.use("/api/posts", comingSoonRoutes);
 
 // WebSocket for real-time user presence tracking
 io.on("connection", (socket) => {

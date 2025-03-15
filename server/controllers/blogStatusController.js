@@ -6,9 +6,10 @@ const getBlogStatus = async (req, res) => {
     const publishedPosts = await Blog.countDocuments({ status: "published" });
     const draftPosts = await Blog.countDocuments({ status: "draft" });
     const archivedPosts = await Blog.countDocuments({ status: "archived" });
+    const scheduledPosts = await Blog.countDocuments({ status: "scheduled" });
     const comingSoonPosts = await Blog.countDocuments({
-      status: "draft",
-      willPublishAt: { $gt: new Date() },
+      status: "coming-soon",
+      publishAt: { $gt: new Date() },
     });
 
     // Category wise posts
@@ -45,6 +46,7 @@ const getBlogStatus = async (req, res) => {
       draftPosts,
       archivedPosts,
       comingSoonPosts,
+      scheduledPosts,
       categoryWisePosts,
     });
   } catch (error) {
