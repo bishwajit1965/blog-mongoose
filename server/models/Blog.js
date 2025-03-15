@@ -35,10 +35,17 @@ const BlogSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      enum: ["draft", "published", "archived"],
+      enum: [
+        "draft",
+        "published",
+        "scheduled",
+        "publishAt",
+        "archived",
+        "coming-soon",
+      ],
       default: "draft",
     },
-    publishedAt: {
+    publishAt: {
       type: Date,
       default: null,
     },
@@ -64,8 +71,15 @@ BlogSchema.pre("save", async function (next) {
       this.slug = `${this.slug}-${Date.now()}`;
     }
   }
+  // Automatically set `publishAt` for "scheduled" or "coming-soon" if not already set
+  if (
+    (this.status === "scheduled" || this.status === "coming-soon") &&
+    !this.publishAt
+  ) {
+    this.publishAt = new Date();
+  }
   // Set the `publishedAt` date if the status is "published"
-  if (this.status === "published" && !this.publishedAt) {
+  if (this.status === "publishAt" && !this.publishedAt) {
     this.publishedAt = new Date();
   }
 

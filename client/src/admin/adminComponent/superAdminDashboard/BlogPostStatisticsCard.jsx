@@ -42,11 +42,21 @@ const BlogPostStatisticsCard = () => {
       value: blogStats.publishedPosts,
       color: "#4CAF50",
     },
-    { name: "Draft Posts", value: blogStats.draftPosts, color: "#FF9800" },
+    { name: "Draft Posts", value: blogStats.comingSoonPosts, color: "#FF00ff" },
+    {
+      name: "Coming Soon Posts",
+      value: blogStats.draftPosts,
+      color: "#FF9800",
+    },
     {
       name: "Archived Posts",
       value: blogStats.archivedPosts,
       color: "#F44336",
+    },
+    {
+      name: "Scheduled Posts",
+      value: blogStats.scheduledPosts,
+      color: "#00cc00",
     },
   ];
 

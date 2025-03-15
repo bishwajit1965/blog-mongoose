@@ -38,6 +38,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
       image: "",
       status: "draft",
       imageFile: null,
+      publishAt: null,
     });
     setImagePreview(null);
     setSelectedTags(null);
@@ -56,6 +57,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
     image: "",
     imageFile: null,
     status: "draft",
+    publishAt: "",
   });
 
   useEffect(() => {
@@ -68,6 +70,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
         tags: existingBlog.tags?.map((tag) => tag._id) || [],
         image: existingBlog.image || [],
         status: existingBlog.status || "draft",
+        publishAt: existingBlog.publishAt || null,
       });
       console.log("Existing image URL:", existingBlog.image); // Debugging log
 
@@ -99,6 +102,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
         image: "",
         status: "draft",
         imageFile: null,
+        publishAt: null,
       });
       setSelectedTags([]);
       setImagePreview(null);
@@ -155,6 +159,14 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
       if (formData.imageFile) {
         formDataToSend.append("image", formData.imageFile);
       }
+
+      if (
+        formData.status === "scheduled" ||
+        (formData.status === "coming-soon" && formData.publishAt)
+      ) {
+        formDataToSend.append("publishAt", formData.publishAt);
+      }
+
       if (existingBlog) {
         if (hasPermission("edit-post")) {
           await updateBlogBySlug(existingBlog.slug, formDataToSend);
@@ -192,7 +204,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
           <img
             src={imagePreview}
             alt={formData.title}
-            className="mb-1 w-full h-auto object-cover rounded-md"
+            className="mb-1 w-full h-64 object-cover rounded-t-md"
           />
         )}
         <label className="block text-xs font-bold text-gray-500">Title:</label>
@@ -304,9 +316,43 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
             >
               <option value="draft">Draft</option>
               <option value="published">Published</option>
-              <option value="archived">Archived</option>
+              <option value="coming-soon">Coming Soon</option>
+              <option value="scheduled">Will Publish At</option>
             </select>
           </div>
+
+          {/* Show DateTime Input Only if 'coming-soon' is Selected */}
+          {formData.status === "coming-soon" && (
+            <div className="lg:col-span-6 col-span-12">
+              <label className="block text-xs font-bold text-gray-500">
+                Schedule Publish Date:
+              </label>
+              <input
+                type="datetime-local"
+                name="publishAt"
+                value={formData.publishAt || ""}
+                onChange={handleChange}
+                required={formData.status === "coming-soon"} // Make it required only for scheduled posts
+                className="input input-sm input-bordered w-full max-w-full dark:bg-gray-700"
+              />
+            </div>
+          )}
+          {/* Show DateTime Input Only if 'scheduled' is Selected */}
+          {formData.status === "scheduled" && (
+            <div className="lg:col-span-6 col-span-12">
+              <label className="block text-xs font-bold text-gray-500">
+                Schedule Publish Date:
+              </label>
+              <input
+                type="datetime-local"
+                name="publishAt"
+                value={formData.publishAt || ""}
+                onChange={handleChange}
+                required={formData.status === "scheduled"} // Make it required only for scheduled posts
+                className="input input-sm input-bordered w-full max-w-full dark:bg-gray-700"
+              />
+            </div>
+          )}
         </div>
 
         <div className="flex items-center space-x-2">

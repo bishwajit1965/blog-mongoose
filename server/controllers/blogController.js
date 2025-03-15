@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 
 const createBlog = async (req, res) => {
   try {
-    const { title, content, category, tags, status, publishedAt } = req.body;
+    const { title, content, category, tags, status, publishAt } = req.body;
     const userId = req.user?.id;
     console.log("User Id:", userId);
 
@@ -32,6 +32,17 @@ const createBlog = async (req, res) => {
       imagePath = `/uploads/${req.file.filename}`;
     }
 
+    // ✅ Validate `publishAt` conditionally for "scheduled" and "coming-soon"
+    let validPublishAt = null;
+    if (["scheduled", "coming-soon"].includes(status)) {
+      if (!publishAt || isNaN(new Date(publishAt).getTime())) {
+        return res
+          .status(400)
+          .json({ message: "Invalid publishAt date format!" });
+      }
+      validPublishAt = new Date(publishAt);
+    }
+
     const newBlog = new Blog({
       title,
       slug,
@@ -39,7 +50,7 @@ const createBlog = async (req, res) => {
       category,
       tags: formattedTags,
       status,
-      publishedAt,
+      publishAt: validPublishAt,
       author: userId,
       image: imagePath,
     });
@@ -81,7 +92,7 @@ const getBlogBySlug = async (req, res) => {
 
 const updateBlogBySlug = async (req, res) => {
   try {
-    const { title, content, category, tags, status, publishedAt, author } =
+    const { title, content, category, tags, status, publishAt, author } =
       req.body;
     const { userId } = req.user;
     console.log("Received tags:", tags);
@@ -153,7 +164,7 @@ const updateBlogBySlug = async (req, res) => {
     blog.tags = formattedTags;
     blog.markModified("tags");
     blog.status = status || blog.status;
-    blog.publishedAt = publishedAt || blog.publishedAt;
+    blog.publishAt = publishAt || blog.publishAt;
     blog.author = author || blog.author;
     const updatedBlog = await blog.save();
     console.log("Updated blog post:", updatedBlog);
