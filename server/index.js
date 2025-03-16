@@ -12,11 +12,13 @@ const onlineUsers = new Set();
 const cookie = require("cookie");
 const http = require("http"); // Import HTTP module
 const { Server } = require("socket.io"); // Import Socket.io
+require("./jobs/cronJobs");
 
 // Initializes Mongoose connection
 connectDB();
 
 const server = http.createServer(app); // Create HTTP server
+
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:5173", // Your frontend
@@ -24,15 +26,18 @@ const io = new Server(server, {
   },
 });
 
-const port = process.env.PORT || 3000;
+// Export io for use in other parts of your app
+module.exports = { io, server };
 
 // Middlewares
 app.use(
   cors({
-    origin: "http://localhost:5173", // Frontend URL
-    credentials: true, // Allow cookies to be sent
+    origin: "http://localhost:5173",
+    credentials: true,
   })
 );
+
+const port = process.env.PORT || 3000;
 
 // Logs concise output to the console
 app.use(morgan("dev"));
@@ -55,6 +60,7 @@ const blogRoutes = require("./routes/blogRoutes");
 const adminStatsRoutes = require("./routes/adminStatsRoutes");
 const blogStatusRoutes = require("./routes/blogStatusRoutes");
 const comingSoonRoutes = require("./routes/comingSoonRoutes");
+const scheduledPostsRoutes = require("./routes/scheduledPostsRoutes");
 
 // Instantiate routes for execution
 app.use("/api/users", userRoutes);
@@ -69,6 +75,7 @@ app.use("/api/blogs", blogRoutes);
 app.use("/api", adminStatsRoutes);
 app.use("/api/blog", blogStatusRoutes);
 app.use("/api/posts", comingSoonRoutes);
+app.use("/api/scheduled", scheduledPostsRoutes);
 
 // WebSocket for real-time user presence tracking
 io.on("connection", (socket) => {
@@ -125,7 +132,12 @@ app.use((err, req, res, next) => {
 // Graceful shutdown
 process.on("SIGINT", async () => {
   console.log("Shutting down gracefully...");
-  await mongoose.disconnect();
+  try {
+    await mongoose.disconnect();
+    console.log("MongoDB disconnected successfully.");
+  } catch (error) {
+    console.log("Error while disconnecting MongoDB.", error.message);
+  }
   process.exit(0);
 });
 

@@ -1,6 +1,7 @@
 import AdminAuthProvider from "../admin/adminProviders/AdminAuthProvider";
 import AdminBlogProvider from "../admin/adminProviders/AdminBlogProvider";
 import AdminCategoryProvider from "../admin/adminProviders/AdminCategoryProvider";
+import AdminNotificationProvider from "../admin/adminProviders/AdminNotificationProvider";
 import AdminPermissionProvider from "../admin/adminProviders/AdminPermissionProvider";
 import AdminRoleProvider from "../admin/adminProviders/AdminRoleProvider";
 import AdminTagProvider from "../admin/adminProviders/AdminTagProvider";
@@ -10,17 +11,19 @@ import AuthProvider from "./AuthProvider";
 const CombinedProviders = ({ children }) => (
   <AuthProvider>
     <AdminAuthProvider>
-      <AdminRoleProvider>
-        <AdminBlogProvider>
-          <AdminPermissionProvider>
-            <AdminCategoryProvider>
-              <AdminUserProvider>
-                <AdminTagProvider>{children}</AdminTagProvider>
-              </AdminUserProvider>
-            </AdminCategoryProvider>
-          </AdminPermissionProvider>
-        </AdminBlogProvider>
-      </AdminRoleProvider>
+      <AdminNotificationProvider>
+        <AdminRoleProvider>
+          <AdminBlogProvider>
+            <AdminPermissionProvider>
+              <AdminCategoryProvider>
+                <AdminUserProvider>
+                  <AdminTagProvider>{children}</AdminTagProvider>
+                </AdminUserProvider>
+              </AdminCategoryProvider>
+            </AdminPermissionProvider>
+          </AdminBlogProvider>
+        </AdminRoleProvider>
+      </AdminNotificationProvider>
     </AdminAuthProvider>
   </AuthProvider>
 );

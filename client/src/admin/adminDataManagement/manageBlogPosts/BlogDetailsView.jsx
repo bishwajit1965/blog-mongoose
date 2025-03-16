@@ -10,7 +10,7 @@ const BlogDetailsView = ({ blog }) => {
 
   // International date time format without any library
   const formattedDate = new Intl.DateTimeFormat("en-GB").format(
-    new Date(blog.publishedAt)
+    new Date(blog.publishAt)
   );
   const getRelativeTime = (date) => {
     const diff = Math.floor(
@@ -75,7 +75,7 @@ const BlogDetailsView = ({ blog }) => {
         </span>
         <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600 shadow-sm rounded-md px-2 py-1 mr-2 text-xs">
           {formattedDate}
-          {", "} ({getRelativeTime(blog.publishedAt)})
+          {", "} ({getRelativeTime(blog.publishAt)})
         </span>
       </div>
       <div className="">

@@ -1,14 +1,18 @@
 import axios from "axios";
-import { notifyError } from "../adminComponent/adminToastNotification/AdminToastNotification";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
   withCredentials: true, // Ensures cookies (httpOnly) are sent with requests
-  timeout: 10000,
 });
 
-let isRefreshing = false;
-let failedRequestsQueue = [];
+// Request Interceptor (Optional: Add any default request modifications)
+api.interceptors.request.use(
+  (config) => {
+    // Additional request modifications if needed
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // Response Interceptor
 api.interceptors.response.use(
@@ -16,22 +20,16 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // If unauthorized (401) and not already retried
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // If the response status is 401 (Unauthorized), try refreshing the token
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
 
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedRequestsQueue.push({ resolve, reject });
-        })
-          .then(() => api(originalRequest))
-          .catch((err) => Promise.reject(err));
-      }
-
-      isRefreshing = true;
-
       try {
-        // Refresh token request (cookie-based)
+        // Attempt to refresh token
         await axios.post(
           `${
             import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api"
@@ -40,26 +38,12 @@ api.interceptors.response.use(
           { withCredentials: true }
         );
 
-        // Retry failed requests
-        failedRequestsQueue.forEach((req) => req.resolve());
-        failedRequestsQueue = [];
-        isRefreshing = false;
-
+        // Retry the original request after a successful token refresh
         return api(originalRequest);
       } catch (refreshError) {
-        console.error("❌ Refresh token expired. Logging out...");
-
-        // Reject all queued requests
-        failedRequestsQueue.forEach((req) => req.reject(refreshError));
-        failedRequestsQueue = [];
-        isRefreshing = false;
-
-        // Notify user
-        notifyError("Session expired. Please log in again.");
-
-        // Redirect to login page
+        console.error("Token refresh failed. Logging out user...");
+        // Redirect user to login page
         window.location.href = "/admin/login";
-
         return Promise.reject(refreshError);
       }
     }
@@ -71,11 +55,76 @@ api.interceptors.response.use(
 export default api;
 
 // import axios from "axios";
+
+// const api = axios.create({
+//   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
+//   withCredentials: true, // Ensures cookies (httpOnly) are sent
+//   timeout: 10000, // 10 seconds timeout
+// });
+
+// let isRefreshing = false;
+// let refreshSubscribers = [];
+
+// const subscribeTokenRefresh = (callback) => {
+//   refreshSubscribers.push(callback);
+// };
+
+// const onRefreshed = (token) => {
+//   refreshSubscribers.forEach((callback) => callback(token));
+//   refreshSubscribers = [];
+// };
+
+// api.interceptors.response.use(
+//   (response) => response, // Pass through successful responses
+//   async (error) => {
+//     const originalRequest = error.config;
+
+//     // If the error is 401 (Unauthorized) and it's NOT a refresh request itself
+//     if (
+//       error.response &&
+//       error.response.status === 401 &&
+//       !originalRequest._retry
+//     ) {
+//       if (!isRefreshing) {
+//         isRefreshing = true;
+
+//         try {
+//           const response = await axios.post(
+//             `${
+//               import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api"
+//             }/admin/refresh-token`,
+//             {},
+//             { withCredentials: true }
+//           );
+
+//           isRefreshing = false;
+//           onRefreshed(response.data.accessToken);
+//         } catch (refreshError) {
+//           isRefreshing = false;
+//           return Promise.reject(refreshError);
+//         }
+//       }
+
+//       return new Promise((resolve) => {
+//         subscribeTokenRefresh((token) => {
+//           originalRequest.headers["Authorization"] = `Bearer ${token}`;
+//           resolve(api(originalRequest)); // Retry the failed request
+//         });
+//       });
+//     }
+
+//     return Promise.reject(error);
+//   }
+// );
+
+// export default api;
+
+// import axios from "axios";
 // import { notifyError } from "../adminComponent/adminToastNotification/AdminToastNotification";
 
 // const api = axios.create({
 //   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
-//   withCredentials: true, // Ensure cookies (httpOnly) are sent with requests
+//   withCredentials: true, // Ensures cookies (httpOnly) are sent with requests
 //   timeout: 10000,
 // });
 
@@ -88,9 +137,22 @@ export default api;
 //   async (error) => {
 //     const originalRequest = error.config;
 
-//     // If the request is unauthorized (401) and not already retried
+//     // If unauthorized (401) and not already retried
 //     if (error.response?.status === 401 && !originalRequest._retry) {
 //       originalRequest._retry = true;
+
+//       // Check if the refresh token is available in cookies
+//       const cookies = document.cookie
+//         .split(";")
+//         .find((cookie) => cookie.trim().startsWith("refreshToken="));
+
+//       if (!cookies) {
+//         console.log("❌ No refresh token found, user likely logged out");
+//         // No refresh token available, so we stop the retry and show error
+//         notifyError("Session expired. Please log in again.");
+//         window.location.href = "/admin/login"; // Redirect to login
+//         return Promise.reject(error);
+//       }
 
 //       if (isRefreshing) {
 //         return new Promise((resolve, reject) => {
@@ -103,7 +165,7 @@ export default api;
 //       isRefreshing = true;
 
 //       try {
-//         // Attempt to refresh the token
+//         // Refresh token request (cookie-based)
 //         await axios.post(
 //           `${
 //             import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api"
@@ -112,7 +174,7 @@ export default api;
 //           { withCredentials: true }
 //         );
 
-//         // Retry all failed requests
+//         // Retry failed requests
 //         failedRequestsQueue.forEach((req) => req.resolve());
 //         failedRequestsQueue = [];
 //         isRefreshing = false;
@@ -129,13 +191,6 @@ export default api;
 //         // Notify user
 //         notifyError("Session expired. Please log in again.");
 
-//         // Clear authentication state
-//         localStorage.removeItem("authToken"); // Remove stored token
-//         sessionStorage.removeItem("authToken"); // Remove from session if used
-
-//         // Optional: Dispatch logout if using React Context or Redux
-//         // dispatch({ type: "LOGOUT" });
-
 //         // Redirect to login page
 //         window.location.href = "/admin/login";
 
@@ -144,349 +199,6 @@ export default api;
 //     }
 
 //     return Promise.reject(error);
-//   }
-// );
-
-// export default api;
-
-// import axios from "axios";
-// import { notifyError } from "../adminComponent/adminToastNotification/AdminToastNotification";
-
-// const api = axios.create({
-//   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
-//   withCredentials: true, // Ensure cookies are sent
-//   timeout: 10000,
-// });
-
-// let isRefreshing = false;
-// let failedRequestsQueue = [];
-
-// api.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-//     const originalRequest = error.config;
-
-//     if (error.response?.status === 401 && !originalRequest._retry) {
-//       originalRequest._retry = true;
-
-//       if (isRefreshing) {
-//         return new Promise((resolve, reject) => {
-//           failedRequestsQueue.push({ resolve, reject });
-//         })
-//           .then(() => api(originalRequest))
-//           .catch((err) => Promise.reject(err));
-//       }
-
-//       isRefreshing = true;
-
-//       try {
-//         await axios.post(
-//           `${
-//             import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api"
-//           }/admin/refresh-token`,
-//           {},
-//           { withCredentials: true }
-//         );
-
-//         failedRequestsQueue.forEach((req) => req.resolve());
-//         failedRequestsQueue = [];
-//         isRefreshing = false;
-
-//         return api(originalRequest);
-//       } catch (refreshError) {
-//         console.error("❌ Refresh token expired. Logging out...");
-//         failedRequestsQueue.forEach((req) => req.reject(refreshError));
-//         failedRequestsQueue = [];
-//         isRefreshing = false;
-
-//         notifyError("Session expired. Please log in again.");
-//         window.location.href = "/admin/login"; // Redirect to login
-//       }
-//     }
-
-//     return Promise.reject(error);
-//   }
-// );
-
-// export default api;
-
-// import axios from "axios";
-// import { notifyError } from "../adminComponent/adminToastNotification/AdminToastNotification";
-
-// const api = axios.create({
-//   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
-//   withCredentials: true, // Automatically send cookies with requests
-//   timeout: 10000, // ⏳ Set a timeout of 10 seconds
-// });
-
-// // Request Interceptor: Set content type dynamically
-// api.interceptors.request.use(
-//   (config) => {
-//     if (!config.headers["Content-Type"]) {
-//       if (config.data instanceof FormData) {
-//         delete config.headers["Content-Type"]; // Let the browser set it
-//       } else {
-//         config.headers["Content-Type"] = "application/json";
-//       }
-//     }
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
-
-// // Flag to prevent multiple refresh calls
-// let isRefreshing = false;
-// let failedRequestsQueue = [];
-
-// // Response Interceptor: Handles token expiration
-// api.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-//     const originalRequest = error.config;
-//     const { response } = error;
-
-//     if (response) {
-//       const { status, data } = response;
-
-//       if (status === 401 && !originalRequest._retry) {
-//         if (isRefreshing) {
-//           return new Promise((resolve, reject) => {
-//             failedRequestsQueue.push({ resolve, reject });
-//           })
-//             .then(() => api(originalRequest))
-//             .catch((err) => Promise.reject(err));
-//         }
-
-//         originalRequest._retry = true;
-//         isRefreshing = true;
-
-//         try {
-//           // Send a request to refresh the token
-//           await axios.post(
-//             `${
-//               import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api"
-//             }/admin/refresh-token`,
-//             {},
-//             { withCredentials: true }
-//           );
-
-//           // Retry all stored requests
-//           failedRequestsQueue.forEach((req) => req.resolve());
-//           failedRequestsQueue = [];
-//           isRefreshing = false;
-
-//           return api(originalRequest); // Retry original request
-//         } catch (refreshError) {
-//           console.error("❌ Refresh token failed. Logging out...");
-//           failedRequestsQueue.forEach((req) => req.reject(refreshError));
-//           failedRequestsQueue = [];
-//           isRefreshing = false;
-
-//           notifyError("Session expired. Please log in again.");
-//           window.location.href = "/admin/login"; // Redirect to login
-//         }
-//       } else {
-//         notifyError(data?.message || "An error occurred. Please try again.");
-//       }
-//     } else {
-//       notifyError("Network error. Please check your connection.");
-//     }
-
-//     console.error("API error:", response?.data || error.message);
-//     return Promise.reject(error);
-//   }
-// );
-
-// export default api;
-
-// import axios from "axios";
-// import { notifyError } from "../adminComponent/adminToastNotification/AdminToastNotification";
-
-// const api = axios.create({
-//   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
-//   withCredentials: true, // Ensure cookies are sent with requests
-//   timeout: 10000, // ⏳ Set a timeout of 10 seconds
-// });
-
-// // Request Interceptor: Automatically set content type
-// api.interceptors.request.use(
-//   (config) => {
-//     if (!config.headers["Content-Type"]) {
-//       if (config.data instanceof FormData) {
-//         delete config.headers["Content-Type"]; // Let the browser set it automatically
-//       } else {
-//         config.headers["Content-Type"] = "application/json";
-//       }
-//     }
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
-
-// // Flag to prevent infinite refresh loops
-// let isRefreshing = false;
-// let failedRequestsQueue = [];
-
-// // Response Interceptor: Handles token expiration
-// api.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-//     const originalRequest = error.config;
-//     const { response } = error;
-
-//     if (response) {
-//       const { status, data } = response;
-
-//       if (status === 401 && !originalRequest._retry) {
-//         if (isRefreshing) {
-//           // Store the failed request and retry it once refresh is done
-//           return new Promise((resolve, reject) => {
-//             failedRequestsQueue.push({ resolve, reject });
-//           })
-//             .then((token) => {
-//               originalRequest.headers["Authorization"] = `Bearer ${token}`;
-//               return api(originalRequest);
-//             })
-//             .catch((err) => Promise.reject(err));
-//         }
-
-//         originalRequest._retry = true;
-//         isRefreshing = true;
-
-//         try {
-//           const refreshResponse = await axios.post(
-//             `${
-//               import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api"
-//             }/admin/refresh-token`,
-//             {},
-//             { withCredentials: true }
-//           );
-
-//           if (refreshResponse.status === 200) {
-//             const newAccessToken = refreshResponse.data.accessToken;
-
-//             // Retry failed requests with the new token
-//             failedRequestsQueue.forEach((req) => req.resolve(newAccessToken));
-//             failedRequestsQueue = [];
-
-//             isRefreshing = false;
-
-//             // Retry the original request with new token
-//             originalRequest.headers[
-//               "Authorization"
-//             ] = `Bearer ${newAccessToken}`;
-//             return api(originalRequest);
-//           }
-//         } catch (refreshError) {
-//           console.error("❌ Refresh token failed. Logging out...");
-//           failedRequestsQueue.forEach((req) => req.reject(refreshError));
-//           failedRequestsQueue = [];
-//           isRefreshing = false;
-
-//           notifyError("Session expired. Please log in again.");
-//           window.location.href = "/login"; // Redirect user to login
-//         }
-//       } else {
-//         notifyError(data?.message || "An error occurred. Please try again.");
-//       }
-//     } else {
-//       notifyError("Network error. Please check your connection.");
-//     }
-
-//     console.error("API error:", response?.data || error.message);
-//     return Promise.reject(error);
-//   }
-// );
-
-// export default api;
-
-// import axios from "axios";
-// import { notifyError } from "../adminComponent/adminToastNotification/AdminToastNotification";
-
-// const api = axios.create({
-//   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
-//   withCredentials: true, // Ensure cookies are sent with requests
-//   timeout: 10000, // ⏳ Set a timeout of 10 seconds
-// });
-
-// // Request interceptor to dynamically set Content-Type
-// api.interceptors.request.use(
-//   (config) => {
-//     if (!config.headers["Content-Type"]) {
-//       if (config.data instanceof FormData) {
-//         delete config.headers["Content-Type"]; // Let the browser set it automatically
-//       } else {
-//         config.headers["Content-Type"] = "application/json";
-//       }
-//     }
-//     return config;
-//   },
-//   (error) => Promise.reject(error) // Handle request errors
-// );
-
-// // Response interceptor for centralized error handling
-// api.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     const { response } = error;
-
-//     if (response) {
-//       const { status, data } = response;
-
-//       if (status === 401) {
-//         notifyError("Session expired. Please log in again.");
-//         window.location.href = "/login"; // Redirect user to login
-//       } else {
-//         notifyError(data?.message || "An error occurred. Please try again.");
-//       }
-//     } else {
-//       notifyError("Network error. Please check your connection.");
-//     }
-
-//     console.error("API error:", response?.data || error.message);
-//     return Promise.reject(error);
-//   }
-// );
-
-// export default api;
-
-// import axios from "axios";
-// import { notifyError } from "../adminComponent/adminToastNotification/AdminToastNotification";
-
-// const api = axios.create({
-//   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
-//   withCredentials: true, // Ensure cookies are sent with requests
-// });
-
-// // Request interceptor to dynamically set Content-Type
-// api.interceptors.request.use(
-//   (config) => {
-//     if (!config.headers["Content-Type"]) {
-//       // Adjust Content-Type based on data type
-//       if (config.data instanceof FormData) {
-//         delete config.headers["Content-Type"];
-//       } else {
-//         config.headers["Content-Type"] = "application/json";
-//       }
-//     }
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error); // Handle request errors
-//   }
-// );
-
-// // Response interceptor for centralized error handling
-// api.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     if (error.response && error.response.data.message) {
-//       notifyError(error.response.data.message);
-//     } else {
-//       notifyError("An error occurred. Please try again later.");
-//     }
-//     console.error("API error:", error.response?.data || error.message);
-//     return Promise.reject(error); // Optionally rethrow for caller to handle
 //   }
 // );
 

@@ -7,7 +7,10 @@ import { FaEye } from "react-icons/fa";
 import UserModal from "./UserModal";
 import { io } from "socket.io-client"; // Import socket.io-client
 
-const socket = io("http://localhost:3000", { withCredentials: true }); // Adjust backend URL if needed
+const socket = io("http://localhost:3000", {
+  withCredentials: true,
+  autoConnect: false,
+});
 
 const RecentUsersTableCard = ({ recentUsers }) => {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -16,19 +19,26 @@ const RecentUsersTableCard = ({ recentUsers }) => {
 
   // Listen for real-time updates
   useEffect(() => {
+    // Ensure socket connects when the component mounts
+    socket.connect();
+
+    // Log socket connection
     socket.on("connect", () => {
       console.log("✅ Socket Connected:", socket.id);
     });
 
+    // Log updates to the online users
     socket.on("update-users", (onlineUserIds) => {
       console.log("🔄 Updated Online Users:", onlineUserIds);
-      setOnlineUsers(new Set(onlineUserIds)); // Update UI state
+      setOnlineUsers(new Set(onlineUserIds)); // Update the online users state
     });
 
+    // Clean up on unmount
     return () => {
       socket.off("update-users");
+      socket.disconnect();
     };
-  }, []);
+  }, []); // Empty dependency array ensures this effect runs once
 
   return (
     <div className="lg:col-span-6 col-span-12 rounded-md shadow-md dark:bg-gray-800 border border-gray-300 dark:border-gray-700">
@@ -57,7 +67,7 @@ const RecentUsersTableCard = ({ recentUsers }) => {
                   {onlineUsers.has(String(user._id)) ? (
                     <span className="text-green-500 font-bold">🟢 Online</span>
                   ) : (
-                    <span className="text-gray-500">Offline</span>
+                    <span className="text-gray-500">🔴 Offline</span>
                   )}
                 </td>
                 <td className="py-2 px-4">
