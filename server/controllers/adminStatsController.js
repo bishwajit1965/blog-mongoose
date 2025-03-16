@@ -23,7 +23,7 @@ const fetchRecentUsers = async (req, res) => {
       .limit(10)
       .populate("roles", "name")
       .populate("permissions", "name")
-      .select("name email roles permissions isActive createdAt");
+      .select("name email avatar roles permissions isActive createdAt");
     res.status(200).json(recentUsers);
   } catch (error) {
     res.status(500).json({

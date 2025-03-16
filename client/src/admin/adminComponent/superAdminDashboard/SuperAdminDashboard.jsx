@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import AdminSubTitle from "../adminSubTitle/AdminSubTitle";
 import AllStatisticsCard from "./AllStatisticsCard";
+import AutoPublishNotification from "../autoPublishNotification/AutoPublishNotification";
 import BlogPostStatisticsCard from "./BlogPostStatisticsCard";
 import BlogStatisticsCard from "./BlogStatisticsCard";
 import CategoryWiseBlogCard from "./CategoryWiseBlogCard";
@@ -53,6 +54,7 @@ const SuperAdminDashboard = () => {
   const [userStats, setUserStats] = useState(null);
   const [recentUsers, setRecentUsers] = useState([]);
 
+  console.log("Users SADB", recentUsers);
   useEffect(() => {
     const getStats = async () => {
       try {
@@ -70,6 +72,17 @@ const SuperAdminDashboard = () => {
     getStats();
   }, []);
 
+  // Coming soon / scheduled post publish auto notification alert
+  useEffect(() => {
+    socket.on("publish-alert", (message) => {
+      alert(message);
+    });
+
+    return () => {
+      socket.off("publish-alert");
+    };
+  }, []);
+
   console.log("User status:", userStats);
   console.log("Recent users:", recentUsers);
 
@@ -82,6 +95,9 @@ const SuperAdminDashboard = () => {
         decoratedText="Dashboard"
         dataLength={len}
       />
+
+      {/* Framer Motion Auto Publish Notification */}
+      <AutoPublishNotification />
 
       <div className="grid lg:grid-cols-12 grid-cols-1 justify-between gap-4 p-2">
         <SuperAdminDashboardCard

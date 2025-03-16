@@ -11,8 +11,13 @@ import api from "../../adminServices/api";
 const ComingSoonPosts = () => {
   const [selectedComingSoonBlog, setSelectedComingSoonBlog] = useState(null);
   const [comingSoonPosts, setComingSoonPosts] = useState([]);
+
   // Pagination state
   const [paginatedData, setPaginatedData] = useState(comingSoonPosts || []);
+  useEffect(() => {
+    setPaginatedData(comingSoonPosts);
+  }, [comingSoonPosts]);
+
   useEffect(() => {
     const fetchComingSoonPosts = async () => {
       const posts = await api.get("/posts/coming-soon");
@@ -60,12 +65,12 @@ const ComingSoonPosts = () => {
       <AdminSubTitle
         subTitle="Coming Soon"
         decoratedText="Blog Posts"
-        dataLength={0}
+        dataLength={comingSoonPosts?.length > 0 ? comingSoonPosts?.length : "0"}
       />
       <div className="container mx-auto p-2">
-        <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+        <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
           <table className="min-w-full table-auto">
-            <thead className="bg-blue-600 text-white">
+            <thead className="bg-base-300 dark:bg-gray-700 dark:text-white">
               <tr>
                 <th className="py-3 px-4 text-left">Post Title</th>
                 <th className="py-3 px-4 text-left">Status</th>
@@ -74,34 +79,48 @@ const ComingSoonPosts = () => {
                 <th className="py-3 px-4 text-left">View Blog</th>
               </tr>
             </thead>
-            <tbody>
-              {paginatedData.map((post) => (
-                <tr key={post._id} className="border-b hover:bg-gray-50">
-                  <td className="py-3 px-4">{post.title}</td>
-                  <td className="py-3 px-4">
-                    <span className="inline-block px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold text-sm">
-                      {post.status}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4">
-                    {new Date(post.publishAt).toLocaleString()}
-                  </td>
-                  <td className="py-3 px-4">
-                    <span className="timer text-lg font-bold">
-                      {getTimeRemaining(post.publishAt)}
-                    </span>
-                  </td>
-                  <td className="py-2 px-4">
-                    <CTAButton
-                      onClick={() => setSelectedComingSoonBlog(post)}
-                      label="View"
-                      icon={<FaEye />}
-                      className="btn btn-sm text-sm"
-                      variant="primary"
-                    />
+            <tbody className="dark:bg-gray-800">
+              {paginatedData.length > 0 ? (
+                paginatedData.map((post) => (
+                  <tr
+                    key={post._id}
+                    className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  >
+                    <td className="py-3 px-4">{post.title}</td>
+                    <td className="py-3 px-4">
+                      <span className="inline-block px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold text-sm">
+                        {post.status}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4">
+                      {new Date(post.publishAt).toLocaleString()}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className="timer text-lg font-bold">
+                        {getTimeRemaining(post.publishAt)}
+                      </span>
+                    </td>
+                    <td className="py-2 px-4">
+                      <CTAButton
+                        onClick={() => setSelectedComingSoonBlog(post)}
+                        label="View"
+                        icon={<FaEye />}
+                        className="btn btn-sm text-sm"
+                        variant="primary"
+                      />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="5"
+                    className="pt-7 text-center text-md font-semibold text-red-600"
+                  >
+                    No Coming soon post is available at this moment!
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
 

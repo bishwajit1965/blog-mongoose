@@ -1,4 +1,4 @@
-const ComingSoonModal = ({ blog, onClose }) => {
+const ScheduledPostModal = ({ blog, onClose }) => {
   const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
   return (
     <div className={`modal ${blog ? "modal-open" : ""}`}>
@@ -12,14 +12,9 @@ const ComingSoonModal = ({ blog, onClose }) => {
               <div className="lg:col-span-6 col-span-12">
                 <img
                   src={`${apiURL}${blog.image}`}
-                  alt={blog.title || "N/A"}
+                  alt={blog.title}
                   className="rounded-md w-full shadow-md"
                 />
-                {console.log(
-                  "Image URL for post:",
-                  blog.title,
-                  `${apiURL}${blog.image}`
-                )}
               </div>
               <div className="lg:col-span-6 col-span-12">
                 <p>
@@ -50,4 +45,4 @@ const ComingSoonModal = ({ blog, onClose }) => {
   );
 };
 
-export default ComingSoonModal;
+export default ScheduledPostModal;

@@ -1,12 +1,20 @@
 const UserModal = ({ user, onClose }) => {
+  console.log("USERS", user);
   return (
     <div className={`modal ${user ? "modal-open" : ""}`}>
       <div className="modal-box p-0 dark:bg-gray-700">
-        <div className="bg-base-300 dark:bg-gray-800 p-2 shadow-sm border-b dark:border-gray-700">
-          <h2 className="text-xl  font-bold">User Details</h2>
+        <div className="bg-base-300 dark:bg-gray-800 p-3 shadow-sm border-b dark:border-gray-700">
+          <h2 className="text-xl font-bold">User Details</h2>
         </div>
         {user && (
           <div className="mt-2 py-2 px-4 space-y-2">
+            <div className="flex justify-center">
+              <img
+                src={user.avatar}
+                alt={user.name}
+                className="w-20 rounded-full"
+              />
+            </div>
             <p>
               <strong>Name:</strong> {user.name}
             </p>
@@ -33,7 +41,7 @@ const UserModal = ({ user, onClose }) => {
             </p>
           </div>
         )}
-        <div className="modal-action p-1 dark:bg-gray-800">
+        <div className="modal-action p-2 bg-base-300 dark:bg-gray-800">
           <button className="btn btn-sm btn-secondary" onClick={onClose}>
             Close
           </button>

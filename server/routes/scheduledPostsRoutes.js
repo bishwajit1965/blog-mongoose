@@ -1,9 +1,6 @@
 const express = require("express");
 
-const {
-  getComingSoonPosts,
-  getPublishedPosts,
-} = require("../controllers/comingSoonController");
+const { getScheduledPosts } = require("../controllers/scheduledPostController");
 
 const {
   authenticateToken,
@@ -15,20 +12,12 @@ const router = express.Router();
 
 router.use(authenticateToken);
 
-// Fetch coming soon posts
+// Fetch scheduled posts
 router.get(
-  "/coming-soon",
+  "/scheduled-posts",
   authorizeRoles(["super-admin"]),
   authorizePermissions(["view-post"]),
-  getComingSoonPosts
-);
-
-// Fetch published posts
-router.get(
-  "/published-posts",
-  authorizeRoles(["super-admin"]),
-  authorizePermissions(["view-post"]),
-  getPublishedPosts
+  getScheduledPosts
 );
 
 module.exports = router;
