@@ -1,8 +1,14 @@
 const cron = require("node-cron");
 const mongoose = require("mongoose");
 const Blog = require("../models/Blog");
-const { io } = require("../index"); // Ensure you are importing your socket.io instance
+const { app, server, io } = require("../index"); // Ensure you are importing your socket.io instance
 
+// Debugging: Check if io is available
+if (!io) {
+  console.error("🚨 Socket.io instance is undefined in cronJobs.js!");
+} else {
+  console.log("✅ Socket.io instance loaded successfully in cronJobs.js");
+}
 // Schedule job to run every minute
 cron.schedule("* * * * *", async () => {
   try {
