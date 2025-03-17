@@ -74,6 +74,8 @@ app.use("/api/scheduled", scheduledPostsRoutes);
 // WebSocket for real-time user presence tracking
 io.on("connection", (socket) => {
   console.log("🔗 A user connected");
+  // Emit event on publish alert (this is your backend trigger for front-end notification)
+  socket.emit("publish-alert", "This is a test message");
 
   if (!socket.request.headers.cookie) {
     console.log("❌ No cookies found in request");
