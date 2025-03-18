@@ -1,7 +1,6 @@
 const cron = require("node-cron");
-const mongoose = require("mongoose");
 const Blog = require("../models/Blog");
-const { app, server, io } = require("../index"); // Ensure you are importing your socket.io instance
+const { io } = require("../index"); // Ensure you are importing your socket.io instance
 
 // Debugging: Check if io is available
 if (!io) {
@@ -24,6 +23,7 @@ cron.schedule("* * * * *", async () => {
 
     if (postsToPublish.length > 0) {
       console.log(`Publishing ${postsToPublish.length} post(s)...`);
+
       for (const post of postsToPublish) {
         // Correctly update the post status to 'published'
         post.status = "published";
