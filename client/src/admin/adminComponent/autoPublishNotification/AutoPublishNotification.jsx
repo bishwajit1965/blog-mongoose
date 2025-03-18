@@ -7,7 +7,7 @@ const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 const socket = io(`${apiURL}`); // Ensure this matches your backend
 
 const AutoPublishNotification = () => {
-  const { addNotification } = useAdminNotification();
+  const addNotification = useAdminNotification();
 
   useEffect(() => {
     const handlePublishAlert = (message) => {

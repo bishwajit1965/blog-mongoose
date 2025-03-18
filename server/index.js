@@ -1,26 +1,26 @@
+require("dotenv").config();
 const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
 const mongoose = require("mongoose");
 const connectDB = require("./utils/db");
-const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
-require("dotenv").config();
-const app = express();
 const path = require("path");
-const morgan = require("morgan");
-const onlineUsers = new Set();
 const cookie = require("cookie");
-const http = require("http"); // Import HTTP module
-const { Server } = require("socket.io"); // Import Socket.io
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+const cors = require("cors");
+const morgan = require("morgan");
+const app = express();
+const onlineUsers = new Set();
 
-// Initializes Mongoose connection
+//Initializes Mongoose connection
 connectDB();
 
 const server = http.createServer(app); // Create HTTP server
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
     credentials: true,
   },
 });
@@ -30,7 +30,7 @@ const port = process.env.PORT || 3000;
 // MIDDLEWARES
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
     credentials: true,
   })
 );
@@ -75,8 +75,10 @@ app.use("/api/scheduled", scheduledPostsRoutes);
 io.on("connection", (socket) => {
   console.log("🔗 A user connected");
   // Emit event on publish alert (this is your backend trigger for front-end notification)
-  socket.emit("publish-alert", "This is a test message");
+  socket.emit("publish-alert", "Server has successfully restarted!");
 
+  // Emit a test event to check if frontend receives it
+  // socket.emit("test-event", "Hello from the backend! 🚀");
   if (!socket.request.headers.cookie) {
     console.log("❌ No cookies found in request");
     return;
@@ -138,7 +140,8 @@ process.on("SIGINT", async () => {
 });
 
 // Export io for use in other parts of your app
-module.exports = { app, server, io };
+module.exports = { io };
+
 // cronJobs should be required after io export
 require("./jobs/cronJobs");
 

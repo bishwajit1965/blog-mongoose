@@ -6,6 +6,7 @@ const AdminNotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const addNotification = (message) => {
     setNotifications((prev) => [...prev, message]);
+
     setTimeout(() => {
       setNotifications((prev) => prev.slice(1)); //Auto remove after sometime
     }, 5000);

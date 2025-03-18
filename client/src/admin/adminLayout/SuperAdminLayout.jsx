@@ -2,6 +2,7 @@ import AdminFooter from "../adminComponent/adminFooter/AdminFooter";
 import AdminNavbar from "../adminComponent/adminNavbar/AdminNavbar";
 import AdminPageTitle from "../adminComponent/adminPageTitle/AdminPageTitle";
 import AdminSideNav from "../adminComponent/adminSideNav/AdminSideNav";
+import AutoPublishNotification from "../adminComponent/autoPublishNotification/AutoPublishNotification";
 import { Outlet } from "react-router-dom";
 
 const SuperAdminLayout = () => {
@@ -29,6 +30,7 @@ const SuperAdminLayout = () => {
 
           <div className="">
             <AdminFooter />
+            <AutoPublishNotification />
           </div>
         </div>
       </div>

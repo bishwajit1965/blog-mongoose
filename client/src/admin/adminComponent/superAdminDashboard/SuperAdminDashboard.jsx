@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 
 import AdminSubTitle from "../adminSubTitle/AdminSubTitle";
 import AllStatisticsCard from "./AllStatisticsCard";
-import AutoPublishNotification from "../autoPublishNotification/AutoPublishNotification";
 import BlogPostStatisticsCard from "./BlogPostStatisticsCard";
 import BlogStatisticsCard from "./BlogStatisticsCard";
 import CategoryWiseBlogCard from "./CategoryWiseBlogCard";
@@ -20,6 +19,8 @@ import useAdminPermission from "../../adminHooks/useAdminPermission";
 import useAdminRole from "../../adminHooks/useAdminRole";
 import useAdminTag from "../../adminHooks/useAdminTag";
 import useAdminUser from "../../adminHooks/useAdminUser";
+
+// import AutoPublishNotification from "../autoPublishNotification/AutoPublishNotification";
 
 const SuperAdminDashboard = () => {
   const { blogs } = useAdminBlog();
@@ -67,7 +68,7 @@ const SuperAdminDashboard = () => {
       />
 
       {/* Framer Motion Auto Publish Notification */}
-      <AutoPublishNotification />
+      {/* <AutoPublishNotification /> */}
 
       <div className="grid lg:grid-cols-12 grid-cols-1 justify-between gap-4 p-2">
         <SuperAdminDashboardCard
