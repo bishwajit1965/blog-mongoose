@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 const AdminPagination = ({
   items, // Pass the full list of items here
-  itemsPerPageOptions = [5, 10, 15, 20, 25, 30, 50],
+  itemsPerPageOptions = [5, 10, 15, 20, 25, 30, 50, 70, 100],
   onPaginatedDataChange, // Callback to send the paginated data to the parent
 }) => {
   const [currentPage, setCurrentPage] = useState(1);

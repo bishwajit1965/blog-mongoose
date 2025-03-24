@@ -72,6 +72,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
         status: existingBlog.status || "draft",
         publishAt: existingBlog.publishAt || null,
       });
+
       console.log("Existing image URL:", existingBlog.image); // Debugging log
 
       setImagePreview(
@@ -193,7 +194,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
 
   return (
     <div>
-      {adminData.user?._id}
+      {/* {adminData.user?.name} */}
       <form
         onSubmit={handleSubmit}
         className="p-2 bg-gray- rounded-lg shadow-md"
@@ -270,7 +271,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
           className="mb-1 file-input file-input-bordered file-input-sm w-full max-w-full dark:bg-gray-700"
         />
 
-        <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between mb-2">
+        <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between">
           {/* Post Status */}
           <div className="lg:col-span-6 col-span-12">
             {existingBlog ? (
@@ -320,39 +321,43 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
               <option value="scheduled">Will Publish At</option>
             </select>
           </div>
+        </div>
 
-          {/* Show DateTime Input Only if 'coming-soon' is Selected */}
-          {formData.status === "coming-soon" && (
-            <div className="lg:col-span-6 col-span-12">
-              <label className="block text-xs font-bold text-gray-500">
-                Schedule Publish Date:
-              </label>
-              <input
-                type="datetime-local"
-                name="publishAt"
-                value={formData.publishAt || ""}
-                onChange={handleChange}
-                required={formData.status === "coming-soon"} // Make it required only for scheduled posts
-                className="input input-sm input-bordered w-full max-w-full dark:bg-gray-700"
-              />
-            </div>
-          )}
-          {/* Show DateTime Input Only if 'scheduled' is Selected */}
-          {formData.status === "scheduled" && (
-            <div className="lg:col-span-6 col-span-12">
-              <label className="block text-xs font-bold text-gray-500">
-                Schedule Publish Date:
-              </label>
-              <input
-                type="datetime-local"
-                name="publishAt"
-                value={formData.publishAt || ""}
-                onChange={handleChange}
-                required={formData.status === "scheduled"} // Make it required only for scheduled posts
-                className="input input-sm input-bordered w-full max-w-full dark:bg-gray-700"
-              />
-            </div>
-          )}
+        <div className="grid lg:grid-cols-12 justify-between gap-2 mb-2">
+          <div className="lg:col-span-12 col-span-12">
+            {/* Show DateTime Input Only if 'coming-soon' is Selected */}
+            {formData.status === "coming-soon" && (
+              <div className="lg:col-span-6 col-span-12">
+                <label className="block text-xs font-bold text-gray-500">
+                  Coming Soon Date:
+                </label>
+                <input
+                  type="datetime-local"
+                  name="publishAt"
+                  value={formData.publishAt || ""}
+                  onChange={handleChange}
+                  required={formData.status === "coming-soon"} // Make it required only for scheduled posts
+                  className="input input-sm input-bordered w-full max-w-full dark:bg-gray-700"
+                />
+              </div>
+            )}
+            {/* Show DateTime Input Only if 'scheduled' is Selected */}
+            {formData.status === "scheduled" && (
+              <div className="lg:col-span-12 col-span-12">
+                <label className="block text-xs font-bold text-gray-500">
+                  Schedule Publish Date:
+                </label>
+                <input
+                  type="datetime-local"
+                  name="publishAt"
+                  value={formData.publishAt || ""}
+                  onChange={handleChange}
+                  required={formData.status === "scheduled"} // Make it required only for scheduled posts
+                  className="input input-sm input-bordered w-full max-w-full dark:bg-gray-700"
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="flex items-center space-x-2">

@@ -2,6 +2,7 @@ import AboutMe from "../pages/aboutMe/AboutMe";
 import AdminDashboard from "../admin/adminComponent/adminDashboard/AdminDashboard";
 import AdminLayout from "../admin/adminLayout/adminLayout";
 import AdminLogin from "../admin/adminPages/AdminLogin";
+import ArchivedBlogPosts from "../admin/adminDataManagement/manageBlogPosts/ArchivedBlogPosts";
 import BlogPosts from "../pages/blogPosts/BlogPosts";
 import ComingSoonPosts from "../admin/adminDataManagement/manageBlogPosts/ComingSoonPosts";
 import ContactMe from "../pages/contactMe/ContactMe";
@@ -37,6 +38,7 @@ import { createBrowserRouter } from "react-router-dom";
 const superAdminRoutes = [
   { path: "super-admin-dashboard", element: <SuperAdminDashboard /> },
   { path: "manage-blogs", element: <ManageBlogPosts /> },
+  { path: "archived-blogs", element: <ArchivedBlogPosts /> },
   { path: "coming-soon", element: <ComingSoonPosts /> },
   { path: "scheduled-posts", element: <ScheduledPosts /> },
   { path: "manage-categories", element: <ManageCategories /> },

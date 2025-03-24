@@ -42,6 +42,7 @@ const BlogSchema = new mongoose.Schema(
         "publishAt",
         "archived",
         "coming-soon",
+        "deleted",
       ],
       default: "draft",
     },
@@ -58,9 +59,48 @@ const BlogSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    //✅ Seo fields
+    metaTitle: {
+      type: String,
+      default: "",
+    },
+    metaDescription: {
+      type: String,
+      default: "",
+    },
+    metaKeywords: {
+      type: [String],
+      default: [],
+    },
+    deletedAt: { type: Date, default: null }, //Null means not deleted
   },
   { timestamps: true }
 );
+
+// Soft delete method
+BlogSchema.methods.softDelete = function () {
+  this.deletedAt = new Date();
+  return this.save();
+};
+
+// Restore method
+BlogSchema.methods.restore = function () {
+  this.deletedAt = null;
+  return this.save();
+};
+
+// Archive method
+BlogSchema.methods.archive = async function () {
+  const archivedBlog = new ArchivedBlog({
+    ...this.toObject(),
+    archivedAt: new Date(),
+  });
+
+  await archivedBlog.save();
+
+  this.status = "archived";
+  return this.save();
+};
 
 // Pre-save hook to generate slug from title and handle uniqueness
 BlogSchema.pre("save", async function (next) {
@@ -78,9 +118,20 @@ BlogSchema.pre("save", async function (next) {
   ) {
     this.publishAt = new Date();
   }
-  // Set the `publishedAt` date if the status is "published"
-  if (this.status === "publishAt" && !this.publishedAt) {
-    this.publishedAt = new Date();
+
+  // Set the `publishAt` date if the status is "published"
+  if (this.status === "published" && !this.publishAt) {
+    this.publishAt = new Date();
+  }
+  // ✅ Auto generate SEO meta title and description if not provided
+  if (!this.metaTitle) {
+    this.metaTitle = this.title.substring(0, 60);
+  }
+  if (!this.metaDescription) {
+    this.metaDescription = this.content.substring(0, 160);
+  }
+  if (!this.metaKeywords || !this.metaKeywords.length === 0) {
+    this.metaKeywords = this.title.toLowerCase().split(" ").slice(0, 10);
   }
 
   next();
