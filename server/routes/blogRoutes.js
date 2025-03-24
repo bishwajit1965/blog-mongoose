@@ -7,6 +7,9 @@ const {
   getAllBlogs,
   getBlogBySlug,
   updateBlogBySlug,
+  softDeletePost,
+  restoreSoftDeletedPost,
+  getAllNonDeletedBlogs,
   deleteBlogBySlug,
 } = require("../controllers/blogController");
 
@@ -19,6 +22,10 @@ const {
 // Public routes - No authentication required
 router.get("/", getAllBlogs); // View all blogs
 router.get("/:slug", getBlogBySlug); // View single blog by slug
+
+router.get("/sitemap.xml", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/sitemap.xml"));
+});
 
 // Authenticate all admin routes routes those follow it
 router.use(authenticateToken);
@@ -40,6 +47,22 @@ router.get(
   getBlogBySlug
 );
 
+// Fetch all non-deleted blog posts
+router.get(
+  "/",
+  authorizeRoles(["super-admin"]),
+  authorizePermissions(["view-post"]),
+  getAllNonDeletedBlogs
+);
+
+// Restore a soft deleted blog post
+router.patch(
+  "/restore/:slug",
+  authorizeRoles(["super-admin"]),
+  authorizePermissions(["restore-post"]),
+  restoreSoftDeletedPost
+);
+
 // Update a blog post
 router.patch(
   "/:slug",
@@ -47,6 +70,14 @@ router.patch(
   authorizePermissions(["edit-post"]),
   upload.single("image"),
   updateBlogBySlug
+);
+
+// Soft delete a blog post
+router.patch(
+  "/soft-delete/:slug",
+  authorizeRoles(["super-admin"]),
+  authorizePermissions(["delete-post"]),
+  softDeletePost
 );
 
 // Delete a blog post

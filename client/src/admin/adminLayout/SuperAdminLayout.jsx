@@ -7,7 +7,7 @@ import { Outlet } from "react-router-dom";
 
 const SuperAdminLayout = () => {
   return (
-    <div className="lg:max-w-7xl mx-auto">
+    <div className="lg:max-w-full mx-auto">
       <AdminNavbar />
 
       <div className="grid lg:grid-cols-12 grid-cols-1 justify-between">
@@ -24,7 +24,7 @@ const SuperAdminLayout = () => {
             />
           </div>
 
-          <div className="lg:min-h-[calc(100vh-188px)]">
+          <div className="lg:min-h-[calc(100vh-188px)] bg-white dark:bg-gray-800 dark:text-gray-300">
             <Outlet />
           </div>
 

@@ -5,9 +5,11 @@ import BlogDetailsView from "./BlogDetailsView";
 import BlogPostForm from "./BlogPostForm";
 import BlogsTable from "./BlogsTable";
 import { Helmet } from "react-helmet-async";
+import useAdminAuth from "../../adminHooks/useAdminAuth";
 import useAdminBlog from "../../adminHooks/useAdminBlog";
 
 const ManageBlogPosts = () => {
+  const { adminData } = useAdminAuth();
   const { blogs, categories, tags, fetchBlogsCategoriesAndTags } =
     useAdminBlog();
   const [editingBlog, setEditingBlog] = useState(null);
@@ -55,18 +57,36 @@ const ManageBlogPosts = () => {
         decoratedText="Blog Posts"
         dataLength={blogs.length}
       />
-      <div className="p-2">
+      <div className="">
         <div className="container mx-auto">
-          <div className="grid lg:grid-cols-12 grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid lg:grid-cols-12 grid-cols-1 md:grid-cols-2 gap-2 justify-between">
             {/* Blog Creation & Update Form Follows  */}
-            <div className="lg:col-span-6 col-span-12 lg:border-r dark:border-gray-700 lg:pr-3">
-              <h2 className="text-xl font-semibold mb-2">
-                {editingBlog
-                  ? "Update Blog"
-                  : blogDetailDataView
-                  ? "Blog Details View"
-                  : "Add Blog Post"}
-              </h2>
+            <div className="lg:col-span-6 col-span-12 lg:border-r dark:border-gray-700">
+              <div className="bg-gray-100 pl-2 rounded-sm dark:bg-gray-800 shadow-sm">
+                <h2 className="text-xl font-semibold">
+                  {editingBlog ? (
+                    <>
+                      <span className="text-xl text-gray-700 dark:text-teal-500">
+                        {`${editingBlog?.author?.name}`}
+                      </span>
+                      <span className="text-orange-700 dark:text-amber-400 pl-2">
+                        Update Blog
+                      </span>
+                    </>
+                  ) : blogDetailDataView ? (
+                    "Blog Details View"
+                  ) : adminData ? (
+                    <>
+                      <span className="text-xl text-gray-700 dark:text-teal-500">{`${adminData?.user?.name}`}</span>
+                      <span className="text-orange-700 dark:text-amber-400 pl-2">
+                        Add Blog Post
+                      </span>
+                    </>
+                  ) : (
+                    "N/A"
+                  )}
+                </h2>
+              </div>
 
               {blogDetailDataView ? (
                 <BlogDetailsView blog={singleBlog} />
@@ -85,8 +105,10 @@ const ManageBlogPosts = () => {
             </div>
 
             {/* Blogs Table Follows */}
-            <div className="lg:col-span-6 col-span-12 dark:border-gray-700 lg:pr-">
-              <h2 className="text-xl font-semibold mb-2">Blog Posts</h2>
+            <div className="lg:col-span-6 col-span-12 dark:border-gray-700 border rounded-md shadow-md px-2">
+              <h2 className="text-xl font-bold mb-5 bg-base-200 shadow-sm pl-2 rounded-md dark:bg-gray-800">
+                Blog Posts
+              </h2>
               <BlogsTable
                 blogs={blogs}
                 handleBlogDetailView={handleBlogDetailView}

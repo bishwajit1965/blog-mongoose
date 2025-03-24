@@ -28,3 +28,4 @@ server/uploads/
 server/mongoose/
 server/.vscode/
 server/node_modules/
+backups/

@@ -13,7 +13,15 @@ const getAllBlogs = () => handleApiCall(() => api.get(API_PATHS.BLOGS));
 const updateBlogBySlug = (slug, blog) =>
   handleApiCall(() => api.patch(`${API_PATHS.BLOGS}/${slug}`, blog));
 
-const deleteBlogBySlug = (slug) =>
+// Soft delete a blog post
+const softDeletePost = (slug) =>
+  handleApiCall(() => api.patch(`${API_PATHS.BLOGS}/soft-delete/${slug}`));
+
+// Restore a soft deleted blog post
+const restoreSoftDeletedPost = (slug) =>
+  handleApiCall(() => api.patch(`${API_PATHS.BLOGS}/restore/${slug}`));
+
+const permanentDeleteBlogBySlug = (slug) =>
   handleApiCall(() => api.delete(`${API_PATHS.BLOGS}/${slug}`));
 
 export {
@@ -21,5 +29,7 @@ export {
   getBlogBySlug,
   getAllBlogs,
   updateBlogBySlug,
-  deleteBlogBySlug,
+  softDeletePost,
+  restoreSoftDeletedPost,
+  permanentDeleteBlogBySlug,
 };

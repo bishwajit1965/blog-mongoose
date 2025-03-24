@@ -1,4 +1,5 @@
 const API_PATHS = {
+  ARCHIVED: "/archived-blogs",
   BLOGS: "/blogs",
   CATEGORIES: "/categories",
   PERMISSIONS: "/permissions",

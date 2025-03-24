@@ -12,11 +12,12 @@ const cors = require("cors");
 const morgan = require("morgan");
 const app = express();
 const onlineUsers = new Set();
+const createBackup = require("./backupService");
 
-//Initializes Mongoose connection
+// Initializing database connection
 connectDB();
 
-const server = http.createServer(app); // Create HTTP server
+const server = http.createServer(app); // HTTP server creation
 
 const io = new Server(server, {
   cors: {
@@ -27,21 +28,24 @@ const io = new Server(server, {
 
 const port = process.env.PORT || 3000;
 
-// MIDDLEWARES
+// Middlewares
 app.use(
   cors({
     origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
     credentials: true,
   })
 );
-// Logs concise output to the console
+
+createBackup(); // Uncomment to create a backup on server start
+
+// Logs concise output to console
 app.use(morgan("dev"));
-// Serve static files from the 'uploads' directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
 
-// Routes configured and called
+// Importing routes
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const roleRoutes = require("./routes/roleRoutes");
@@ -55,8 +59,9 @@ const adminStatsRoutes = require("./routes/adminStatsRoutes");
 const blogStatusRoutes = require("./routes/blogStatusRoutes");
 const comingSoonRoutes = require("./routes/comingSoonRoutes");
 const scheduledPostsRoutes = require("./routes/scheduledPostsRoutes");
+const archivedBlogPostRoutes = require("./routes/archivedBlogPostRoutes");
 
-// Instantiate routes for execution
+// Routes setup
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/roles", roleRoutes);
@@ -70,25 +75,28 @@ app.use("/api", adminStatsRoutes);
 app.use("/api/blog", blogStatusRoutes);
 app.use("/api/posts", comingSoonRoutes);
 app.use("/api/scheduled", scheduledPostsRoutes);
+app.use("/api/archived-blogs", archivedBlogPostRoutes);
 
-// WebSocket for real-time user presence tracking
+// WebSocket connection for real-time presence tracking
 io.on("connection", (socket) => {
   console.log("🔗 A user connected");
-  // Emit event on publish alert (this is your backend trigger for front-end notification)
-  socket.emit("publish-alert", "Server has successfully restarted!");
 
-  // Emit a test event to check if frontend receives it
-  // socket.emit("test-event", "Hello from the backend! 🚀");
+  // Emit event on publish alert
+  socket.emit("publish-alert", "Server has successfully restarted! 🎉");
+
   if (!socket.request.headers.cookie) {
     console.log("❌ No cookies found in request");
     return;
   }
 
-  // Parse cookies
+  // Parse cookies and handle authorization
   const cookies = cookie.parse(socket.request.headers.cookie);
-  console.log("🍪 Received Cookies:", cookies); // Debugging
+  console.log(
+    "🍪 Received Cookies: ",
+    cookies.refreshToken ? "*****" : "No refreshToken"
+  );
+  const token = cookies.refreshToken;
 
-  const token = cookies.refreshToken; // Using 'refreshToken' instead of 'authToken'
   if (!token) {
     console.log("❌ No token found in cookies");
     return;
@@ -112,9 +120,13 @@ io.on("connection", (socket) => {
     });
   } catch (err) {
     console.log("❌ Token Verification Failed:", err.message);
+    socket.emit("error", {
+      message: "Token verification failed. Please log in again.",
+    });
   }
 });
 
+// Root endpoint
 app.get("/", (req, res) => {
   res.send("Welcome to blog-mongoose server,");
 });
@@ -139,10 +151,10 @@ process.on("SIGINT", async () => {
   process.exit(0);
 });
 
-// Export io for use in other parts of your app
+// Export io for external use
 module.exports = { io };
 
-// cronJobs should be required after io export
+// cronJobs initialization before server start
 require("./jobs/cronJobs");
 
 server.listen(port, () => {

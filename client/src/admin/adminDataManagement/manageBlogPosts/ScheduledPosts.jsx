@@ -66,7 +66,7 @@ const ScheduledPosts = () => {
         decoratedText="Blog Posts"
         dataLength={scheduledPosts?.length > 0 ? scheduledPosts?.length : "0"}
       />
-      <div className="p-2">
+      <div className="">
         <div className="container mx-auto">
           <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
             <table className="min-w-full table-auto">
