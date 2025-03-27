@@ -4,9 +4,12 @@ import AdminSubTitle from "../../adminComponent/adminSubTitle/AdminSubTitle";
 import BlogDetailsView from "./BlogDetailsView";
 import BlogPostForm from "./BlogPostForm";
 import BlogsTable from "./BlogsTable";
+import CTAButton from "../../../components/buttons/CTAButton";
+import { FaRegPlusSquare } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 import useAdminAuth from "../../adminHooks/useAdminAuth";
 import useAdminBlog from "../../adminHooks/useAdminBlog";
+import useToggleColumn from "../../adminHooks/useToggleColumn";
 
 const ManageBlogPosts = () => {
   const { adminData } = useAdminAuth();
@@ -15,6 +18,7 @@ const ManageBlogPosts = () => {
   const [editingBlog, setEditingBlog] = useState(null);
   const [singleBlog, setSingleBlog] = useState(null);
   const [blogDetailDataView, setBlogDetailDataView] = useState(null);
+  const { isColumnHidden, toggleColumnHide } = useToggleColumn(false);
 
   useEffect(() => {
     if (
@@ -47,6 +51,12 @@ const ManageBlogPosts = () => {
     setBlogDetailDataView(true);
   };
 
+  const handleUploadBlogView = () => {
+    setEditingBlog(null); // Reset editing mode when switching to details view
+    setSingleBlog(null);
+    setBlogDetailDataView(null);
+  };
+
   return (
     <div>
       <Helmet>
@@ -58,10 +68,32 @@ const ManageBlogPosts = () => {
         dataLength={blogs.length}
       />
       <div className="">
+        {editingBlog && (
+          <CTAButton
+            label="Upload Blog"
+            onClick={() => handleUploadBlogView()}
+            icon={<FaRegPlusSquare />}
+            variant="primary"
+          />
+        )}
+        {blogDetailDataView && (
+          <CTAButton
+            label="Manage Blog"
+            onClick={() => handleUploadBlogView()}
+            icon={<FaRegPlusSquare />}
+            variant="primary"
+          />
+        )}
+
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-12 grid-cols-1 md:grid-cols-2 gap-2 justify-between">
             {/* Blog Creation & Update Form Follows  */}
-            <div className="lg:col-span-6 col-span-12 lg:border-r dark:border-gray-700">
+            {/* {!isColumnHidden && ( */}
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                isColumnHidden ? "lg:col-span-12" : "lg:col-span-6"
+              } lg:border-r dark:border-gray-700`}
+            >
               <div className="bg-gray-100 pl-2 rounded-sm dark:bg-gray-800 shadow-sm">
                 <h2 className="text-xl font-semibold">
                   {editingBlog ? (
@@ -89,7 +121,12 @@ const ManageBlogPosts = () => {
               </div>
 
               {blogDetailDataView ? (
-                <BlogDetailsView blog={singleBlog} />
+                <BlogDetailsView
+                  blog={singleBlog}
+                  manageBlog={handleUploadBlogView}
+                  toggler={toggleColumnHide}
+                  isHidden={isColumnHidden}
+                />
               ) : (
                 <BlogPostForm
                   onSuccess={() => {
@@ -103,10 +140,16 @@ const ManageBlogPosts = () => {
                 />
               )}
             </div>
+            {/* )} */}
 
             {/* Blogs Table Follows */}
-            <div className="lg:col-span-6 col-span-12 dark:border-gray-700 border rounded-md shadow-md px-2">
-              <h2 className="text-xl font-bold mb-5 bg-base-200 shadow-sm pl-2 rounded-md dark:bg-gray-800">
+            {/* {isColumnHidden && ( */}
+            <div
+              className={`transition-all duration-500 ease-in-out ${
+                isColumnHidden ? "lg:col-span-12" : "lg:col-span-6"
+              } lg:border-r dark:border-gray-700`}
+            >
+              <h2 className="text-xl font-bold mb-2 bg-base-200 shadow-sm pl-2 rounded-md dark:bg-gray-800">
                 Blog Posts
               </h2>
               <BlogsTable
@@ -114,8 +157,11 @@ const ManageBlogPosts = () => {
                 handleBlogDetailView={handleBlogDetailView}
                 onEdit={handleEdit}
                 onDelete={fetchBlogsCategoriesAndTags}
+                toggler={toggleColumnHide}
+                isHidden={isColumnHidden}
               />
             </div>
+            {/* )} */}
           </div>
         </div>
       </div>

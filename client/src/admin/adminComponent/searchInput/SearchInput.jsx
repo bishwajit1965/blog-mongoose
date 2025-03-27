@@ -33,7 +33,7 @@ const SearchInput = ({ data, onFilteredDataChange, pageLimit = 5 }) => {
         className="input input-sm input-bordered w-full dark:bg-gray-700"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Search blog..."
+        placeholder="Search blog post by title..."
       />
     </div>
   );

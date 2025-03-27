@@ -20,6 +20,7 @@ const BlogSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    excerpt: { type: String, maxlength: 250 },
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
