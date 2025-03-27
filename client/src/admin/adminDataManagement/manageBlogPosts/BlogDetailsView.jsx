@@ -1,12 +1,22 @@
-import { FaBloggerB, FaClock, FaLayerGroup, FaTags } from "react-icons/fa";
+import {
+  FaArrowCircleLeft,
+  FaArrowCircleRight,
+  FaBloggerB,
+  FaClock,
+  FaLayerGroup,
+  FaQuoteLeft,
+  FaTags,
+} from "react-icons/fa";
 
 import AdminLoader from "../../adminComponent/adminLoader/AdminLoader";
 import CTAButton from "../../../components/buttons/CTAButton";
 import { Helmet } from "react-helmet-async";
 import useAdminUser from "../../adminHooks/useAdminUser";
+import useWordCount from "../../adminHooks/useWordCount";
 
-const BlogDetailsView = ({ blog }) => {
+const BlogDetailsView = ({ blog, manageBlog, toggler, isHidden }) => {
   const { users } = useAdminUser();
+  const wordCount = useWordCount(blog.content);
   if (!blog) {
     return <AdminLoader />;
   }
@@ -73,11 +83,12 @@ const BlogDetailsView = ({ blog }) => {
         <img
           src={`${apiURL}${blog.image}`}
           alt={blog.title}
-          className="w-full h-60 object-cover rounded-md shadow-sm mb-2"
+          className={`${
+            isHidden ? "h-96" : "h-60"
+          } w-full  object-cover rounded-md shadow-sm mb-2`}
           loading="lazy" // Lazy load the image
         />
         <h1 className="text-xl font-bold text-gray-600">{blog.title}</h1>
-        <p className="font-bold"></p>
 
         {/* Author Section */}
         <div className="flex items-center space-x-2">
@@ -96,6 +107,25 @@ const BlogDetailsView = ({ blog }) => {
             {blog?.author ? blog?.author.name : "N/A"}
           </span>
         </div>
+
+        {blog?.excerpt ? (
+          <div className="p-2">
+            <div
+              className={`${
+                isHidden ? "min-h-[40px]" : "min-h-[90px]"
+              } relative mt-[5px]`}
+            >
+              <FaQuoteLeft className="absolute top-0 text-xl text-gray-600 dark:text-gray-300" />
+              <p className="absolute top-0 indent-7">
+                {blog.excerpt ? blog.excerpt : "N/A"}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <p className="text-red-500 text-xl font-bold">
+            😃 No summary is available for this blog post now! ⌚
+          </p>
+        )}
 
         <p>{blog.content}</p>
         <div className="flex items-center">
@@ -140,12 +170,25 @@ const BlogDetailsView = ({ blog }) => {
             {blog.status}
           </span>
         </div>
-        <div className="">
+        <div className="my-2">
+          <p className="text-xl font-bold">
+            <span className="">Blog word count: &nbsp;</span>
+            {wordCount}
+          </p>
+        </div>
+        <div className="flex space-x-4">
           <CTAButton
+            onClick={() => manageBlog()}
             label="Go to Blogs Page"
             icon={<FaBloggerB />}
-            href="manage-blogs"
-            className="m-0 p-2 w-full btn btn-sm"
+            className="m-0 p-2 btn btn-sm"
+            variant="primary"
+          />
+          <CTAButton
+            onClick={() => toggler()}
+            label={isHidden ? "Show Right Column" : "Hide Right Column"}
+            icon={isHidden ? <FaArrowCircleRight /> : <FaArrowCircleLeft />}
+            className="m-0 p-2 btn btn-sm"
             variant="primary"
           />
         </div>

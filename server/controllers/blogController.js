@@ -5,11 +5,56 @@ const slugify = require("slugify");
 const mongoose = require("mongoose");
 const generateSitemap = require("../utils/sitemap");
 
+const generateExcerpt = (content, maxLength = 500) => {
+  if (!content) return ""; // Return empty if no content is provided
+
+  // If content length is less than or equal to maxLength, return it with "..."
+  if (content.length <= maxLength) {
+    return content.trim() + "..."; // Add ellipsis if it's short enough
+  }
+
+  // Truncate the content to the specified maxLength
+  let excerpt = content.substring(0, maxLength);
+
+  // Look for the last period within the last 40 characters of the excerpt
+  const lastPeriodIndex = excerpt.lastIndexOf(".");
+
+  // If a period is found within the last 40 characters, cut the excerpt at the period
+  if (lastPeriodIndex !== -1 && lastPeriodIndex > maxLength - 40) {
+    excerpt = excerpt.substring(0, lastPeriodIndex + 1) + "..."; // Add ellipsis after the period
+  } else {
+    // If no period is found within the acceptable range, just truncate and add "..."
+    excerpt = excerpt.substring(0, maxLength - 3) + "..."; // Add ellipsis at the end of the truncated string
+  }
+  return excerpt;
+};
+
+// const generateExcerpt = (content, maxLength = 250) => {
+//   if (!content) return "";
+
+//   let excerpt = content.substring(0, maxLength);
+
+//   // Ensure the excerpt ends at a full sentence if possible
+//   const lastPeriodIndex = excerpt.lastIndexOf(".");
+//   if (lastPeriodIndex !== -1 && lastPeriodIndex > maxLength * 0.5) {
+//     excerpt = excerpt.substring(0, lastPeriodIndex + 1); // Cut at the last period
+//   } else {
+//     // Trim to the last full word if no suitable period is found
+//     const lastSpaceIndex = excerpt.lastIndexOf(" ");
+//     if (lastSpaceIndex > -1) {
+//       excerpt = excerpt.substring(0, lastSpaceIndex);
+//     }
+//   }
+//   // Always add ellipses if the excerpt is shorter than the original content
+//   return content.length > excerpt.length ? excerpt.trim() + "..." : excerpt;
+// };
+
 const createBlog = async (req, res) => {
   try {
-    const {
+    let {
       title,
       content,
+      excerpt,
       category,
       tags,
       status,
@@ -29,6 +74,19 @@ const createBlog = async (req, res) => {
 
     console.log("User Id:", userId);
 
+    if (!excerpt) {
+      excerpt = await generateExcerpt(content); // ✅ Now allowed because `excerpt` is `let`
+    }
+
+    if (excerpt.length > 250) {
+      excerpt = excerpt.substring(0, 247) + "..."; // ✅ Allowed with `let`
+    } else if (excerpt.length === 0) {
+      excerpt = await generateExcerpt(content);
+      if (excerpt.length > 250) {
+        excerpt = excerpt.substring(0, 247) + "...";
+      }
+    }
+
     const formattedTags = Array.isArray(tags)
       ? tags
           .map((tag) =>
@@ -36,8 +94,11 @@ const createBlog = async (req, res) => {
           )
           .filter(Boolean)
       : [];
+
     let slug = slugify(title, { lower: true, strict: true });
+
     const slugExists = await Blog.findOne({ slug });
+
     if (slugExists) {
       slug = `${slug}-${Date.now()}`;
     }
@@ -73,6 +134,7 @@ const createBlog = async (req, res) => {
       title,
       slug,
       content,
+      excerpt,
       category,
       tags: formattedTags,
       status,
@@ -124,10 +186,35 @@ const getBlogBySlug = async (req, res) => {
   }
 };
 
+const trimExcerpt = (text, maxLength = 250) => {
+  if (!text) return "";
+  if (text.length <= maxLength) return text; // ✅ Return as is if within limit
+
+  let trimmed = text.substring(0, maxLength); // Take first `maxLength` chars
+  const lastSentenceEnd = trimmed.lastIndexOf("."); // Find last full stop
+  const lastSpace = trimmed.lastIndexOf(" "); // Find last space
+
+  if (lastSentenceEnd !== -1 && lastSentenceEnd > maxLength * 0.5) {
+    return trimmed.substring(0, lastSentenceEnd + 1) + "..."; // ✅ Ends at sentence + ellipsis
+  } else if (lastSpace !== -1) {
+    return trimmed.substring(0, lastSpace) + "..."; // ✅ Ends at word boundary
+  } else {
+    return trimmed + "..."; // ✅ Fallback (cuts mid-word)
+  }
+};
+
 const updateBlogBySlug = async (req, res) => {
   try {
-    const { title, content, category, tags, status, publishAt, author } =
-      req.body;
+    const {
+      title,
+      content,
+      excerpt,
+      category,
+      tags,
+      status,
+      publishAt,
+      author,
+    } = req.body;
 
     const { userId } = req.user;
     console.log("Received tags:", tags);
@@ -236,6 +323,7 @@ const updateBlogBySlug = async (req, res) => {
 
     blog.title = title || blog.title;
     blog.content = content || blog.content;
+    blog.excerpt = excerpt ? trimExcerpt(excerpt) : blog.excerpt;
     blog.category = category || blog.category;
     blog.tags = formattedTags;
     blog.markModified("tags");

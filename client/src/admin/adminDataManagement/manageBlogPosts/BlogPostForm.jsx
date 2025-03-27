@@ -9,6 +9,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import CTAButton from "../../../components/buttons/CTAButton";
 import Select from "react-select";
 import useAdminAuth from "../../adminHooks/useAdminAuth";
+import useBlogContentLimit from "../../adminHooks/useBlogContentLimit";
+import useExcerpt from "../../adminHooks/useExcerpt";
 
 const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
   const [loading, setLoading] = useState(false);
@@ -18,6 +20,15 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
   const [authorName, setAuthorName] = useState("");
   const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
   const fileInputRef = useRef();
+
+  const {
+    excerpt,
+    handleExcerptChange,
+    remaining,
+    progressPercent,
+    progressBarStyle,
+    counterStyle,
+  } = useExcerpt(500, existingBlog?.excerpt || "");
 
   const tagOptions = useMemo(
     () =>
@@ -32,6 +43,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
     setFormData({
       title: "",
       content: "",
+      excerpt: "",
       author: "",
       category: "",
       tags: [],
@@ -51,6 +63,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
+    excerpt: "",
     author: "",
     category: "",
     tags: [],
@@ -60,11 +73,22 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
     publishAt: "",
   });
 
+  const {
+    content,
+    selectedLength,
+    wordCount,
+    progress,
+    progressBarColor,
+    handleContentChange,
+    handleSelectChange,
+  } = useBlogContentLimit(formData.content);
+
   useEffect(() => {
     if (existingBlog) {
       setFormData({
         title: existingBlog.title || "",
         content: existingBlog.content || "",
+        excerpt: existingBlog.excerpt || "",
         author: adminData.user?._id || "",
         category: existingBlog.category._id || "",
         tags: existingBlog.tags?.map((tag) => tag._id) || [],
@@ -97,6 +121,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
       setFormData({
         title: "",
         content: "",
+        excerpt: "",
         author: "",
         category: "",
         tags: [],
@@ -105,6 +130,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
         imageFile: null,
         publishAt: null,
       });
+
       setSelectedTags([]);
       setImagePreview(null);
 
@@ -117,7 +143,9 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
   }, [existingBlog, tags, tagOptions, apiURL, adminData.user._id]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.value.length <= 500) {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
   };
 
   const handleTagChange = (selectedOptions) => {
@@ -132,6 +160,16 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
     const file = e.target.files[0];
     console.log("Selected file:", file); // Debugging log
     if (file) {
+      if (!file.type.startsWith("image/")) {
+        notifyError("Only image files are allowed!");
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        // 5MB limit
+        notifyError("File size should not exceed 5MB.");
+        return;
+      }
       setFormData({ ...formData, imageFile: file });
       // Preview the image
       const reader = new FileReader();
@@ -152,6 +190,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
       formDataToSend.append("content", formData.content);
+      formDataToSend.append("excerpt", formData.excerpt);
       formDataToSend.append("author", formData.author);
       formDataToSend.append("category", formData.category);
       formData.tags.forEach((tag) => formDataToSend.append("tags", tag));
@@ -201,77 +240,179 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
         encType="multipart/form-data"
       >
         {/* Image Preview to be updated with the existing one*/}
-        {imagePreview && (
-          <img
-            src={imagePreview}
-            alt={formData.title}
-            className="mb-1 w-full h-64 object-cover rounded-t-md"
-          />
-        )}
-        <label className="block text-xs font-bold text-gray-500">Title:</label>
-        <input
-          name="title"
-          placeholder="Title..."
-          value={formData.title}
-          onChange={handleChange}
-          required
-          className="mb-1 input input-bordered input-sm w-full max-w-full dark:bg-gray-700"
-        />
-        <label className="block text-xs font-bold text-gray-500">
-          Content:
-        </label>
-        <textarea
-          name="content"
-          placeholder="Content"
-          value={formData.content}
-          onChange={handleChange}
-          required
-          className="textarea input-bordered w-full mb-1 dark:bg-gray-700"
-        />
+        <div className="mb-2">
+          {imagePreview && (
+            <img
+              src={imagePreview}
+              alt={formData.title}
+              className="w-full h-64 object-cover rounded-t-md"
+            />
+          )}
+        </div>
 
-        <label className="block text-xs font-bold text-gray-500">
-          Category:
-        </label>
-        <select
-          name="category"
-          onChange={handleChange}
-          required
-          value={formData.category}
-          defaultValue="Small"
-          className="select select-sm input-bordered w-full max-w-full mb-1 dark:bg-gray-700"
-        >
-          <option value="">Select Category</option>
-          {categories.map((category) => (
-            <option key={category._id} value={category._id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
+        <div className="mb-2">
+          <label className="block text-xs font-bold text-gray-500">
+            Title:
+          </label>
+          <input
+            name="title"
+            placeholder="Title..."
+            value={formData.title}
+            onChange={handleChange}
+            required
+            className="input input-bordered input-sm w-full max-w-full dark:bg-gray-700"
+          />
+        </div>
+
+        <div className="mb-2">
+          <label className="block text-xs font-bold text-gray-500">
+            Content:
+          </label>
+          <div className="border border-gray-300 dark:border-gray-700 shadow-sm rounded-md">
+            <label className="block text-sm font-semibold bg-gray-200 p-1 dark:bg-gray-700 rounded-t-md border-b border-gray-300 shadow-sm dark:border-gray-600">
+              Blog post Length
+            </label>
+            <select
+              value={selectedLength}
+              onChange={handleSelectChange}
+              className="mt- p-1 border w-full bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:focus-visible:shadow rounded-b-md"
+            >
+              <option value="Medium">Medium (300-600 words)</option>
+              <option value="Large">Large (600-1200 words)</option>
+              <option value="ExtraLarge">Extra Large (1200-2000 words)</option>
+              <option value="Jumbo">Jumbo (2000-3000 words)</option>
+            </select>
+          </div>
+
+          <div className="mt-2">
+            <textarea
+              name="content"
+              placeholder="Content for the blog post..."
+              maxLength="30000"
+              value={content}
+              // value={formData.content}
+              // onChange={handleChange}
+              // onChange={handleContentChange}
+              onChange={(e) => {
+                handleContentChange(e); // Update content state from hook
+                setFormData({ ...formData, content: e.target.value }); // Also update the formData state
+              }}
+              required
+              className="textarea input-bordered w-full mb-1 dark:bg-gray-700"
+            />
+          </div>
+
+          <div className="bg-gray-100 dark:border-gray-700 shadow-md dark:bg-gray-700 rounded-md border border-gray-300">
+            <div className="flex items-center justify-between text-sm font-semibold bg-gray-200 p-1 dark:bg-gray-700 rounded-t-md border-b border-gray-300 shadow-sm dark:border-gray-600">
+              <span className="text-sm font-semibold  block bg-gray-200 p-1 dark:bg-gray-700 rounded-t-md border-b border-gray-300 shadow-sm dark:border-gray-600">
+                Word Count: {wordCount}
+              </span>
+              <span className="text-sm font-semibold">{selectedLength}</span>
+            </div>
+            <div className="flex items-center justify-between px-2">
+              <span>Progress</span>
+              <span>{Math.min(progress, 100).toFixed(0)}%</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2.5">
+              {/* Ensure that the progress bar color is applied correctly */}
+              <div
+                className={`h-2.5 rounded-full ${progressBarColor}`}
+                style={{
+                  width: `${Math.min(progress, 100)}%`,
+                  transition: "width 0.3s ease", // Smooth transition for the width change
+                }}
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-2">
+          <div className="mt-2">
+            <label className="block text-red-400 text-xs font-bold mb-[2px]">
+              Excerpt(Optional)
+            </label>
+            <textarea
+              name="excerpt"
+              id="excerpt"
+              // maxLength="500"
+              value={excerpt}
+              maxLength={500}
+              onChange={(e) => {
+                handleExcerptChange(e);
+                setFormData({ ...formData, excerpt: e.target.value });
+              }}
+              className="textarea input-bordered w-full mb-1 dark:bg-gray-700"
+              placeholder="Excerpt for the blog post..."
+            />
+
+            {/* Progress Bar */}
+            <div className="bg-gray-100 rounded-md shadow-sm border dark:border-gray-700 dark:bg-gray-700 dark:text-gray-200">
+              <div className="progress-bar bg-gray-200 h-2.5 w-full rounded">
+                <div className="h-2.5 rounded" style={progressBarStyle}></div>
+              </div>
+
+              {/* Character Counter and Percentage */}
+              <div
+                className="text-right text-sm mt-1 h-6 dark:text-gray-200"
+                style={counterStyle}
+              >
+                <div className="h-4 dark:text-gray-200 px-2">
+                  {remaining} characters left || {progressPercent}% used
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-2">
+          <label className="block text-xs font-bold text-gray-500">
+            Category:
+          </label>
+          <select
+            name="category"
+            onChange={handleChange}
+            required
+            value={formData.category}
+            defaultValue="Small"
+            className="select select-sm input-bordered w-full max-w-full mb-1 dark:bg-gray-700"
+          >
+            <option value="">Select Category</option>
+            {categories.map((category) => (
+              <option key={category._id} value={category._id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* React-Select Multi-Select for Tags */}
-        <label className="block text-xs font-bold text-gray-500">Tags:</label>
-        <Select
-          isMulti
-          options={tagOptions}
-          onChange={handleTagChange}
-          value={selectedTags}
-          className="mb-1 p-0 dark:bg-gray-700"
-        />
+        <div className="mb-2">
+          <label className="block text-xs font-bold text-gray-500">Tags:</label>
+          <Select
+            isMulti
+            options={tagOptions}
+            onChange={handleTagChange}
+            value={selectedTags}
+            className="mb-1 p-0 dark:bg-gray-700"
+          />
+        </div>
 
         {/* Image upload */}
-        <label className="block text-xs font-bold text-gray-500">
-          Upload Image:
-        </label>
-        <input
-          type="file"
-          ref={fileInputRef} // Attach the ref here
-          name="image"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="mb-1 file-input file-input-bordered file-input-sm w-full max-w-full dark:bg-gray-700"
-        />
+        <div className="mb-2">
+          <label className="block text-xs font-bold text-gray-500">
+            Upload Image:
+          </label>
+          <input
+            type="file"
+            ref={fileInputRef} // Attach the ref here
+            name="image"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="mb-1 file-input file-input-bordered file-input-sm w-full max-w-full dark:bg-gray-700"
+          />
+        </div>
 
-        <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between">
+        <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between mb-2">
           {/* Post Status */}
           <div className="lg:col-span-6 col-span-12">
             {existingBlog ? (
@@ -323,7 +464,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-12 justify-between gap-2 mb-2">
+        <div className="grid lg:grid-cols-12 justify-between gap-2">
           <div className="lg:col-span-12 col-span-12">
             {/* Show DateTime Input Only if 'coming-soon' is Selected */}
             {formData.status === "coming-soon" && (
@@ -393,7 +534,9 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
             {!existingBlog &&
               (formData.title !== "" ||
                 formData.content !== "" ||
+                formData.excerpt !== "" ||
                 formData.category !== "" ||
+                formData.status !== "draft" ||
                 formData.tags.length > 0 ||
                 formData.imageFile !== null) && (
                 <div className="">
