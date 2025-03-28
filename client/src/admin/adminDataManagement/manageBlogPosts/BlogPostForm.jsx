@@ -1,4 +1,10 @@
-import { FaEdit, FaPlusCircle, FaTimesCircle } from "react-icons/fa";
+import {
+  FaEdit,
+  FaExchangeAlt,
+  FaExpandArrowsAlt,
+  FaPlusCircle,
+  FaTimesCircle,
+} from "react-icons/fa";
 import { createBlog, updateBlogBySlug } from "../../adminServices/blogService";
 import {
   notifyError,
@@ -12,7 +18,14 @@ import useAdminAuth from "../../adminHooks/useAdminAuth";
 import useBlogContentLimit from "../../adminHooks/useBlogContentLimit";
 import useExcerpt from "../../adminHooks/useExcerpt";
 
-const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
+const BlogPostForm = ({
+  existingBlog,
+  categories,
+  tags,
+  onSuccess,
+  isHidden,
+  toggler,
+}) => {
   const [loading, setLoading] = useState(false);
   const [selectedTags, setSelectedTags] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
@@ -232,14 +245,14 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
   };
 
   return (
-    <div>
+    <div className="mt-[-15px] relative mb-2">
       <form
         onSubmit={handleSubmit}
         className="p-2 rounded-lg shadow-md"
-        encType="multipart/form-data"
+        encType="multipart/form-data pb-2"
       >
         {/* Image Preview to be updated with the existing one*/}
-        <div className="mb-2">
+        <div className="mb-2 mt-2">
           {imagePreview && (
             <img
               src={imagePreview}
@@ -463,7 +476,7 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-12 justify-between gap-2">
+        <div className="grid lg:grid-cols-12 justify-between gap-2 mb-2">
           <div className="lg:col-span-12 col-span-12">
             {/* Show DateTime Input Only if 'coming-soon' is Selected */}
             {formData.status === "coming-soon" && (
@@ -551,6 +564,16 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
           </div>
         </div>
       </form>
+
+      <div className="absolute bottom-[8px] right-2">
+        <CTAButton
+          onClick={() => toggler()}
+          label={!isHidden ? "Expand View" : "Shrink View"}
+          icon={!isHidden ? <FaExpandArrowsAlt /> : <FaExchangeAlt />}
+          variant="primary"
+          className="btn btn-sm invisible lg:visible"
+        />
+      </div>
     </div>
   );
 };

@@ -72,7 +72,7 @@ const BlogsTable = ({ blogs, onEdit, onDelete, handleBlogDetailView }) => {
     }
   };
   return (
-    <div className="">
+    <div className="pb-4 mb-2 shadow-md pr-2">
       {/* Search input functionality */}
       <SearchInput data={blogs} onFilteredDataChange={setPaginatedData} />
 

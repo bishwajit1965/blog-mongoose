@@ -149,7 +149,7 @@ const ManageBlogPosts = () => {
                   isColumnHidden ? "lg:col-span-12" : "lg:col-span-6"
                 } lg:border-r dark:border-gray-700`}
               >
-                <h2 className="text-xl font-bold mb-2 bg-base-200 shadow-sm pl-2 rounded-md dark:bg-gray-800">
+                <h2 className="text-xl font-bold mb-4 bg-base-200 shadow-sm pl-2 rounded-md dark:bg-gray-800">
                   Blog Posts
                 </h2>
                 <BlogsTable
