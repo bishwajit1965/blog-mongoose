@@ -17,14 +17,7 @@ import SearchInput from "../../adminComponent/searchInput/SearchInput";
 import useAdminAuth from "../../adminHooks/useAdminAuth";
 import { useState } from "react";
 
-const BlogsTable = ({
-  blogs,
-  onEdit,
-  onDelete,
-  handleBlogDetailView,
-  isHidden,
-  toggler,
-}) => {
+const BlogsTable = ({ blogs, onEdit, onDelete, handleBlogDetailView }) => {
   const { adminData, hasPermission } = useAdminAuth();
 
   const [paginatedData, setPaginatedData] = useState(blogs);
@@ -173,15 +166,6 @@ const BlogsTable = ({
       </table>
       {/* Pagination */}
       <AdminPagination items={blogs} onPaginatedDataChange={setPaginatedData} />
-      <div className="">
-        <CTAButton
-          onClick={() => toggler()}
-          label="Toggler"
-          icon={<FaTrashAlt />}
-          className="btn btn-xs text-xs"
-          variant="primary"
-        />
-      </div>
     </div>
   );
 };

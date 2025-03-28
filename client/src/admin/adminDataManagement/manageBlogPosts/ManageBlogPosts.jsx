@@ -18,7 +18,7 @@ const ManageBlogPosts = () => {
   const [editingBlog, setEditingBlog] = useState(null);
   const [singleBlog, setSingleBlog] = useState(null);
   const [blogDetailDataView, setBlogDetailDataView] = useState(null);
-  const { isColumnHidden, toggleColumnHide } = useToggleColumn(false);
+  const { isColumnHidden, toggleColumnHide } = useToggleColumn();
 
   useEffect(() => {
     if (
@@ -88,7 +88,6 @@ const ManageBlogPosts = () => {
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-12 grid-cols-1 md:grid-cols-2 gap-2 justify-between">
             {/* Blog Creation & Update Form Follows  */}
-            {/* {!isColumnHidden && ( */}
             <div
               className={`transition-all duration-500 ease-in-out ${
                 isColumnHidden ? "lg:col-span-12" : "lg:col-span-6"
@@ -124,8 +123,8 @@ const ManageBlogPosts = () => {
                 <BlogDetailsView
                   blog={singleBlog}
                   manageBlog={handleUploadBlogView}
-                  toggler={toggleColumnHide}
                   isHidden={isColumnHidden}
+                  toggler={toggleColumnHide}
                 />
               ) : (
                 <BlogPostForm
@@ -137,31 +136,30 @@ const ManageBlogPosts = () => {
                   categories={categories}
                   tags={tags}
                   existingBlog={editingBlog}
+                  isHidden={isColumnHidden}
+                  toggler={toggleColumnHide}
                 />
               )}
             </div>
-            {/* )} */}
 
             {/* Blogs Table Follows */}
-            {/* {isColumnHidden && ( */}
-            <div
-              className={`transition-all duration-500 ease-in-out ${
-                isColumnHidden ? "lg:col-span-12" : "lg:col-span-6"
-              } lg:border-r dark:border-gray-700`}
-            >
-              <h2 className="text-xl font-bold mb-2 bg-base-200 shadow-sm pl-2 rounded-md dark:bg-gray-800">
-                Blog Posts
-              </h2>
-              <BlogsTable
-                blogs={blogs}
-                handleBlogDetailView={handleBlogDetailView}
-                onEdit={handleEdit}
-                onDelete={fetchBlogsCategoriesAndTags}
-                toggler={toggleColumnHide}
-                isHidden={isColumnHidden}
-              />
-            </div>
-            {/* )} */}
+            {!isColumnHidden && (
+              <div
+                className={`transition-all duration-500 ease-in-out ${
+                  isColumnHidden ? "lg:col-span-12" : "lg:col-span-6"
+                } lg:border-r dark:border-gray-700`}
+              >
+                <h2 className="text-xl font-bold mb-2 bg-base-200 shadow-sm pl-2 rounded-md dark:bg-gray-800">
+                  Blog Posts
+                </h2>
+                <BlogsTable
+                  blogs={blogs}
+                  handleBlogDetailView={handleBlogDetailView}
+                  onEdit={handleEdit}
+                  onDelete={fetchBlogsCategoriesAndTags}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
