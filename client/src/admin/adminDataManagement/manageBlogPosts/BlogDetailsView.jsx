@@ -1,9 +1,9 @@
 import {
-  FaArrowCircleLeft,
-  FaArrowCircleRight,
-  FaBloggerB,
   FaClock,
+  FaExchangeAlt,
+  FaExpandArrowsAlt,
   FaLayerGroup,
+  FaPlusCircle,
   FaQuoteLeft,
   FaTags,
 } from "react-icons/fa";
@@ -88,7 +88,15 @@ const BlogDetailsView = ({ blog, manageBlog, toggler, isHidden }) => {
           } w-full  object-cover rounded-md shadow-sm mb-2`}
           loading="lazy" // Lazy load the image
         />
-        <h1 className="text-xl font-bold text-gray-600">{blog.title}</h1>
+        <h1
+          className={`${
+            !isHidden
+              ? "text-xl font-bold text-gray-600 first-letter:text-gray-600 first-letter:capitalize"
+              : "first-letter:font-roboto first-letter:capitalize first-letter:text-amber-500 first-letter:italic first-letter:font-extrabold first-letter:text-5xl"
+          } text-xl font-bold text-gray-600`}
+        >
+          {blog.title}
+        </h1>
 
         {/* Author Section */}
         <div className="flex items-center space-x-2">
@@ -177,17 +185,19 @@ const BlogDetailsView = ({ blog, manageBlog, toggler, isHidden }) => {
           </p>
         </div>
         <div className="flex space-x-4">
-          <CTAButton
-            onClick={() => manageBlog()}
-            label="Go to Blogs Page"
-            icon={<FaBloggerB />}
-            className="m-0 p-2 btn btn-sm"
-            variant="primary"
-          />
+          {!isHidden && (
+            <CTAButton
+              onClick={() => manageBlog()}
+              label="Create Blog Post"
+              icon={<FaPlusCircle />}
+              className="m-0 p-2 btn btn-sm"
+              variant="primary"
+            />
+          )}
           <CTAButton
             onClick={() => toggler()}
-            label={isHidden ? "Show Right Column" : "Hide Right Column"}
-            icon={isHidden ? <FaArrowCircleRight /> : <FaArrowCircleLeft />}
+            label={isHidden ? "Reverse View" : "Expand View"}
+            icon={!isHidden ? <FaExpandArrowsAlt /> : <FaExchangeAlt />}
             className="m-0 p-2 btn btn-sm"
             variant="primary"
           />

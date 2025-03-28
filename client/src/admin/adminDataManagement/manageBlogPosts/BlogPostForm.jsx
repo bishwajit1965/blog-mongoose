@@ -233,10 +233,9 @@ const BlogPostForm = ({ existingBlog, categories, tags, onSuccess }) => {
 
   return (
     <div>
-      {/* {adminData.user?.name} */}
       <form
         onSubmit={handleSubmit}
-        className="p-2 bg-gray- rounded-lg shadow-md"
+        className="p-2 rounded-lg shadow-md"
         encType="multipart/form-data"
       >
         {/* Image Preview to be updated with the existing one*/}
