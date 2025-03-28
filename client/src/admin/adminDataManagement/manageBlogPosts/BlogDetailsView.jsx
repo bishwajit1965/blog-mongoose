@@ -79,7 +79,7 @@ const BlogDetailsView = ({ blog, manageBlog, toggler, isHidden }) => {
         </script>
       </Helmet>
 
-      <div className="lg:space-y-3 shadow-md pb-2 rounded-lg p-2">
+      <div className="lg:space-y-3 shadow-md rounded-lg p-2 mb-2">
         <img
           src={`${apiURL}${blog.image}`}
           alt={blog.title}
@@ -188,7 +188,7 @@ const BlogDetailsView = ({ blog, manageBlog, toggler, isHidden }) => {
           {!isHidden && (
             <CTAButton
               onClick={() => manageBlog()}
-              label="Create Blog Post"
+              label="Go to Create Blog Page"
               icon={<FaPlusCircle />}
               className="m-0 p-2 btn btn-sm"
               variant="primary"
@@ -198,7 +198,7 @@ const BlogDetailsView = ({ blog, manageBlog, toggler, isHidden }) => {
             onClick={() => toggler()}
             label={isHidden ? "Reverse View" : "Expand View"}
             icon={!isHidden ? <FaExpandArrowsAlt /> : <FaExchangeAlt />}
-            className="m-0 p-2 btn btn-sm"
+            className="m-0 p-2 btn btn-sm invisible lg:visible "
             variant="primary"
           />
         </div>
