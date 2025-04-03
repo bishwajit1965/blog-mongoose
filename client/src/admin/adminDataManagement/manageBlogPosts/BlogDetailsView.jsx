@@ -124,9 +124,13 @@ const BlogDetailsView = ({ blog, manageBlog, toggler, isHidden }) => {
               } relative mt-[5px]`}
             >
               <FaQuoteLeft className="absolute top-0 text-xl text-gray-600 dark:text-gray-300" />
-              <p className="absolute top-0 indent-7">
-                {blog.excerpt ? blog.excerpt : "N/A"}
-              </p>
+
+              <p
+                className="absolute top-0 indent-7"
+                dangerouslySetInnerHTML={{
+                  __html: blog?.excerpt ? blog.excerpt : "N/A",
+                }}
+              />
             </div>
           </div>
         ) : (
@@ -134,8 +138,11 @@ const BlogDetailsView = ({ blog, manageBlog, toggler, isHidden }) => {
             😃 No summary is available for this blog post now! ⌚
           </p>
         )}
-
-        <p>{blog.content}</p>
+        <div
+          dangerouslySetInnerHTML={{ __html: blog.content }}
+          className="prose max-w-none list-decimal"
+        />
+        {/* <p>{blog.content}</p> */}
         <div className="flex items-center">
           <span className="flex items-center w-fit font-bold bg-gray-300 shadow-sm text-gray-900 rounded-md mr-2 text-xs px-2 py-1">
             <FaLayerGroup className="mr-1" /> Category :

@@ -60,6 +60,7 @@ const blogStatusRoutes = require("./routes/blogStatusRoutes");
 const comingSoonRoutes = require("./routes/comingSoonRoutes");
 const scheduledPostsRoutes = require("./routes/scheduledPostsRoutes");
 const archivedBlogPostRoutes = require("./routes/archivedBlogPostRoutes");
+const flaggedBlogPostRoutes = require("./routes/flaggedPostRoutes");
 
 // Routes setup
 app.use("/api/users", userRoutes);
@@ -76,6 +77,7 @@ app.use("/api/blog", blogStatusRoutes);
 app.use("/api/posts", comingSoonRoutes);
 app.use("/api/scheduled", scheduledPostsRoutes);
 app.use("/api/archived-blogs", archivedBlogPostRoutes);
+app.use("/api/flagged-blogs", flaggedBlogPostRoutes);
 
 // WebSocket connection for real-time presence tracking
 io.on("connection", (socket) => {

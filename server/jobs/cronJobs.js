@@ -45,4 +45,36 @@ cron.schedule("* * * * *", async () => {
   }
 });
 
+// 🚫 **User Unbanning (Runs Every Day at Midnight)**
+cron.schedule("0 0 * * *", async () => {
+  try {
+    console.log("Checking for banned users to unban...");
+
+    const now = new Date();
+
+    // Find users whose ban period has expired
+    const usersToUnban = await User.find({
+      isBanned: true,
+      banExpiresAt: { $lte: now },
+    });
+
+    if (usersToUnban.length > 0) {
+      console.log(`Unbanning ${usersToUnban.length} user(s)...`);
+
+      for (const user of usersToUnban) {
+        user.isBanned = false;
+        user.falseFlagCount = 0; // Reset false flag count
+        user.banExpiresAt = null;
+        await user.save();
+      }
+
+      console.log("Users successfully unbanned.");
+    } else {
+      console.log("No users to unban.");
+    }
+  } catch (error) {
+    console.error("Error in unbanning users:", error);
+  }
+});
+
 module.exports = cron;

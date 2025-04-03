@@ -1,4 +1,6 @@
 const Blog = require("../models/Blog");
+const User = require("../models/User");
+const FlaggedPost = require("../models/FlaggedPost");
 const path = require("path");
 const fs = require("fs");
 const slugify = require("slugify");
@@ -28,26 +30,6 @@ const generateExcerpt = (content, maxLength = 500) => {
   }
   return excerpt;
 };
-
-// const generateExcerpt = (content, maxLength = 250) => {
-//   if (!content) return "";
-
-//   let excerpt = content.substring(0, maxLength);
-
-//   // Ensure the excerpt ends at a full sentence if possible
-//   const lastPeriodIndex = excerpt.lastIndexOf(".");
-//   if (lastPeriodIndex !== -1 && lastPeriodIndex > maxLength * 0.5) {
-//     excerpt = excerpt.substring(0, lastPeriodIndex + 1); // Cut at the last period
-//   } else {
-//     // Trim to the last full word if no suitable period is found
-//     const lastSpaceIndex = excerpt.lastIndexOf(" ");
-//     if (lastSpaceIndex > -1) {
-//       excerpt = excerpt.substring(0, lastSpaceIndex);
-//     }
-//   }
-//   // Always add ellipses if the excerpt is shorter than the original content
-//   return content.length > excerpt.length ? excerpt.trim() + "..." : excerpt;
-// };
 
 const createBlog = async (req, res) => {
   try {
@@ -424,6 +406,67 @@ const getAllNonDeletedBlogs = async (req, res) => {
   }
 };
 
+// Flag post method
+const flagPost = async (req, res) => {
+  const { slug } = req.params;
+  const { reason, reviewComment } = req.body;
+  const userId = req.user.id; // User who is flagging the post
+
+  try {
+    const blogPost = await Blog.findOne({ slug });
+    if (!blogPost) {
+      return res.status(404).json({
+        status: "error",
+        message: "Blog post not found.",
+      });
+    }
+
+    const postId = blogPost._id;
+    const flaggedPostSlug = blogPost.slug;
+
+    if (blogPost.flaggedBy.includes(userId)) {
+      return res.status(400).json({
+        status: "error",
+        message: "You have already flagged this post.",
+      });
+    }
+
+    blogPost.flaggedBy.push(userId);
+    blogPost.flagCount += 1;
+    blogPost.isFlagged = true;
+    blogPost.reviewComment = reviewComment;
+    blogPost.lastFlaggedAt = new Date();
+
+    await blogPost.save();
+
+    const newFlaggedPost = new FlaggedPost({
+      postId: postId,
+      flaggedSlug: flaggedPostSlug,
+      flaggedBy: [userId],
+      reviewComment: reviewComment,
+      flaggedReason: reason && reason.length ? reason : ["Other"],
+    });
+    console.log("New flagged post:", newFlaggedPost);
+    await newFlaggedPost.save();
+
+    // Track flagging in user model
+    await User.findByIdAndUpdate(userId, {
+      $push: { flaggedPosts: newFlaggedPost._id },
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Post has been flagged successfully.",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: "error",
+      message: "An error occurred while flagging the post.",
+    });
+  }
+};
+
 const deleteBlogBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
@@ -468,5 +511,6 @@ module.exports = {
   softDeletePost,
   restoreSoftDeletedPost,
   getAllNonDeletedBlogs,
+  flagPost,
   deleteBlogBySlug,
 };
