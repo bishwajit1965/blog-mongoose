@@ -41,7 +41,6 @@ router.patch(
 
 router.delete(
   "/:id",
-
   authorizeRoles(["admin", "super-admin"]),
   deletePermission
 );

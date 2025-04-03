@@ -13,6 +13,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import CTAButton from "../../../components/buttons/CTAButton";
+import RichTextEditor from "../../adminComponent/richTextEditor/RichTextEditor";
 import Select from "react-select";
 import useAdminAuth from "../../adminHooks/useAdminAuth";
 import useBlogContentLimit from "../../adminHooks/useBlogContentLimit";
@@ -84,6 +85,8 @@ const BlogPostForm = ({
     imageFile: null,
     status: "draft",
     publishAt: "",
+    wordCount: 0, // ✅ Add this
+    selectedLength: "300-600", // ✅ Add this (default range)
   });
 
   const {
@@ -94,10 +97,27 @@ const BlogPostForm = ({
     progressBarColor,
     handleContentChange,
     handleSelectChange,
-  } = useBlogContentLimit(formData.content);
+  } = useBlogContentLimit(existingBlog?.content || "", 3000);
 
   useEffect(() => {
+    const wordRanges = {
+      "300-600": { min: 300, max: 600 },
+      "600-1200": { min: 600, max: 1200 },
+      "1200-2000": { min: 1200, max: 2000 },
+      "2000-3000": { min: 2000, max: 3000 },
+    };
+
     if (existingBlog) {
+      const blogWordCount = existingBlog.content
+        ? existingBlog.content.trim().split(/\s+/).length
+        : 0;
+
+      const detectedRange =
+        Object.keys(wordRanges).find((range) => {
+          const { min, max } = wordRanges[range];
+          return blogWordCount >= min && blogWordCount <= max;
+        }) || "300-600"; // Default if no match found
+
       setFormData({
         title: existingBlog.title || "",
         content: existingBlog.content || "",
@@ -105,12 +125,13 @@ const BlogPostForm = ({
         author: adminData.user?._id || "",
         category: existingBlog.category._id || "",
         tags: existingBlog.tags?.map((tag) => tag._id) || [],
-        image: existingBlog.image || [],
+        image: existingBlog.image || "",
         status: existingBlog.status || "draft",
+        imageFile: null,
         publishAt: existingBlog.publishAt || null,
+        wordCount: blogWordCount, // ✅ Fix: Use calculated word count
+        selectedLength: detectedRange, // ✅ Fix: Select range dynamically
       });
-
-      console.log("Existing image URL:", existingBlog.image); // Debugging log
 
       setImagePreview(
         existingBlog.image ? `${apiURL}${existingBlog.image}` : null
@@ -119,8 +140,7 @@ const BlogPostForm = ({
       if (Array.isArray(existingBlog.tags) && existingBlog.tags.length > 0) {
         setSelectedTags(
           existingBlog.tags
-            .filter((tag) => tag && tag._id && tag.name) // Ensures tag has valid data
-            .filter(Boolean)
+            .filter((tag) => tag && tag._id && tag.name)
             .map((tag) => ({
               value: tag._id,
               label: tag.name,
@@ -129,7 +149,8 @@ const BlogPostForm = ({
       } else {
         setSelectedTags([]);
       }
-      setAuthorName(existingBlog.author?.name || ""); // Display name in UI
+
+      setAuthorName(existingBlog.author?.name || "");
     } else {
       setFormData({
         title: "",
@@ -142,16 +163,17 @@ const BlogPostForm = ({
         status: "draft",
         imageFile: null,
         publishAt: null,
+        wordCount: 0,
+        selectedLength: "300-600",
       });
 
       setSelectedTags([]);
       setImagePreview(null);
 
-      // Reset file input field
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
-      handleCancelCreateBlog(); // Use the reset function
+      handleCancelCreateBlog();
     }
   }, [existingBlog, tags, tagOptions, apiURL, adminData.user._id]);
 
@@ -202,7 +224,9 @@ const BlogPostForm = ({
       setLoading(true);
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
-      formDataToSend.append("content", formData.content);
+      formDataToSend.append("content", content);
+      formDataToSend.append("wordCount", wordCount);
+      formDataToSend.append("selectedLength", selectedLength);
       formDataToSend.append("excerpt", formData.excerpt);
       formDataToSend.append("author", formData.author);
       formDataToSend.append("category", formData.category);
@@ -223,6 +247,7 @@ const BlogPostForm = ({
       if (existingBlog) {
         if (hasPermission("edit-post")) {
           await updateBlogBySlug(existingBlog.slug, formDataToSend);
+          console.log("Sent data to update:", formData.content);
           notifySuccess("Blog post updated successfully!");
         } else {
           notifyError("You do not have permission to edit a blog post.");
@@ -257,7 +282,10 @@ const BlogPostForm = ({
             <img
               src={imagePreview}
               alt={formData.title}
-              className="w-full h-64 object-cover rounded-t-md"
+              className={`${
+                isHidden ? "h-96" : "h-60"
+              } w-full  object-cover rounded-md shadow-sm mb-2`}
+              loading="lazy" // Lazy load the image    "w-full h-64 object-cover rounded-t-md"
             />
           )}
         </div>
@@ -276,65 +304,17 @@ const BlogPostForm = ({
           />
         </div>
 
-        <div className="mb-2">
-          <label className="block text-xs font-bold text-gray-500">
-            Content:
-          </label>
-          <div className="border border-gray-300 dark:border-gray-700 shadow-sm rounded-md">
-            <label className="block text-sm font-semibold bg-gray-200 p-1 dark:bg-gray-700 rounded-t-md border-b border-gray-300 shadow-sm dark:border-gray-600">
-              Blog post Length
-            </label>
-            <select
-              value={selectedLength}
-              onChange={handleSelectChange}
-              className="mt- p-1 border w-full bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:focus-visible:shadow rounded-b-md"
-            >
-              <option value="Medium">Medium (300-600 words)</option>
-              <option value="Large">Large (600-1200 words)</option>
-              <option value="ExtraLarge">Extra Large (1200-2000 words)</option>
-              <option value="Jumbo">Jumbo (2000-3000 words)</option>
-            </select>
-          </div>
-
+        <div className="mb-2 rounded-md shadow-md">
           <div className="mt-2">
-            <textarea
-              name="content"
-              placeholder="Content for the blog post..."
-              maxLength="30000"
-              value={content}
-              // value={formData.content}
-              // onChange={handleChange}
-              // onChange={handleContentChange}
-              onChange={(e) => {
-                handleContentChange(e); // Update content state from hook
-                setFormData({ ...formData, content: e.target.value }); // Also update the formData state
-              }}
-              required
-              className="textarea input-bordered w-full mb-1 dark:bg-gray-700"
+            <RichTextEditor
+              content={content}
+              onContentChange={handleContentChange}
+              wordCount={wordCount}
+              progress={progress}
+              progressBarColor={progressBarColor}
+              selectedLength={selectedLength}
+              onSelectChange={handleSelectChange}
             />
-          </div>
-
-          <div className="bg-gray-100 dark:border-gray-700 shadow-md dark:bg-gray-700 rounded-md border border-gray-300">
-            <div className="flex items-center justify-between text-sm font-semibold bg-gray-200 p-1 dark:bg-gray-700 rounded-t-md border-b border-gray-300 shadow-sm dark:border-gray-600">
-              <span className="text-sm font-semibold  block bg-gray-200 p-1 dark:bg-gray-700 rounded-t-md border-b border-gray-300 shadow-sm dark:border-gray-600">
-                Word Count: {wordCount}
-              </span>
-              <span className="text-sm font-semibold">{selectedLength}</span>
-            </div>
-            <div className="flex items-center justify-between px-2">
-              <span>Progress</span>
-              <span>{Math.min(progress, 100).toFixed(0)}%</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5">
-              {/* Ensure that the progress bar color is applied correctly */}
-              <div
-                className={`h-2.5 rounded-full ${progressBarColor}`}
-                style={{
-                  width: `${Math.min(progress, 100)}%`,
-                  transition: "width 0.3s ease", // Smooth transition for the width change
-                }}
-              ></div>
-            </div>
           </div>
         </div>
 
@@ -346,7 +326,7 @@ const BlogPostForm = ({
             <textarea
               name="excerpt"
               id="excerpt"
-              // maxLength="500"
+              rows={2}
               value={excerpt}
               maxLength={500}
               onChange={(e) => {
@@ -358,16 +338,17 @@ const BlogPostForm = ({
             />
 
             {/* Progress Bar */}
-            <div className="bg-gray-100 rounded-md shadow-sm border dark:border-gray-700 dark:bg-gray-700 dark:text-gray-200">
-              <div className="progress-bar bg-gray-200 h-2.5 w-full rounded">
+            <div className="bg-gray-100 rounded-b shadow-sm border mt-[-6px] dark:border-gray-700 dark:bg-gray-700 dark:text-gray-200">
+              <div className="progress-bar bg-gray-200 h-2.5 w-full">
                 <div className="h-2.5 rounded" style={progressBarStyle}></div>
               </div>
 
               {/* Character Counter and Percentage */}
               <div
-                className="text-right text-sm mt-1 h-6 dark:text-gray-200"
+                className="text-rights flex justify-between items-center text-sm mt-1 h-6 dark:text-gray-200"
                 style={counterStyle}
               >
+                <div className="">Counter:</div>
                 <div className="h-4 dark:text-gray-200 px-2">
                   {remaining} characters left || {progressPercent}% used
                 </div>

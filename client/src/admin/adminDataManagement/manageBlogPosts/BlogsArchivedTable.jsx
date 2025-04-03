@@ -19,7 +19,7 @@ const BlogsArchivedTable = ({ archivedBlogs, loading, onSuccess }) => {
   const [paginatedData, setPaginatedData] = useState(archivedBlogs || []);
   const [restoring, setRestoring] = useState(null);
   const [softDeleting, setSoftDeleting] = useState(null);
-  const { isOpen, blogData, openModal, closeModal } = useToggleViewModal();
+  const { isOpen, modalData, openModal, closeModal } = useToggleViewModal();
 
   //Handle archive blog post
   const handleRestoreBlogPost = async (slug) => {
@@ -67,19 +67,19 @@ const BlogsArchivedTable = ({ archivedBlogs, loading, onSuccess }) => {
       />
 
       {/* Modal Section */}
-      {isOpen && blogData && (
+      {isOpen && modalData && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
           <div className="bg-white p-4 rounded shadow-lg max-w-xl w-full">
             <div className="h-auto">
               <img
-                src={`${apiURL}${blogData.image}`}
-                alt={blogData.title}
+                src={`${apiURL}${modalData.image}`}
+                alt={modalData.title}
                 className="rounded-md w-full h-64 shadow-md"
               />
             </div>
-            <h2 className="text-xl font-bold">{blogData.title}</h2>
+            <h2 className="text-xl font-bold">{modalData.title}</h2>
             <div className="my-2 mt-2 max-h-60 overflow-y-auto p-2 border rounded">
-              <p className="mt-2">{blogData.content}</p>
+              <p className="mt-2">{modalData.content}</p>
             </div>
             <div className="text-right">
               <button

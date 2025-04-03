@@ -9,7 +9,7 @@ import { useState } from "react";
 import useToggleViewModal from "../../adminHooks/useToggleViewModal";
 
 const ArchiveBlogPostTable = ({ blogs, loading, onSuccess }) => {
-  const { isOpen, blogData, openModal, closeModal } = useToggleViewModal();
+  const { isOpen, modalData, openModal, closeModal } = useToggleViewModal();
   const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
   const { adminData, hasPermission } = useAdminAuth();
   const [paginatedData, setPaginatedData] = useState(blogs || []);
@@ -137,19 +137,25 @@ const ArchiveBlogPostTable = ({ blogs, loading, onSuccess }) => {
         />
 
         {/* Modal Section */}
-        {isOpen && blogData && (
+        {isOpen && modalData && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
             <div className="bg-white p-4 rounded shadow-lg max-w-xl w-full">
               <div className="h-">
                 <img
-                  src={`${apiURL}${blogData.image}`}
-                  alt={blogData.title}
+                  src={`${apiURL}${modalData.image}`}
+                  alt={modalData.title}
                   className="rounded-md w-full h-64 shadow-md"
                 />
               </div>
-              <h2 className="text-xl font-bold">{blogData.title}</h2>
+              <h2 className="text-xl font-bold">{modalData.title}</h2>
               <div className="my-2 mt-2 max-h-60 overflow-y-auto p-2 border rounded">
-                <p className="mt-2">{blogData.content}</p>
+                {/* <p className="mt-2">{modalData.content}</p> */}
+                <p
+                  className="indent-7"
+                  dangerouslySetInnerHTML={{
+                    __html: modalData?.content ? modalData.content : "N/A",
+                  }}
+                />
               </div>
               <div className="text-right">
                 <button

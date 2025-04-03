@@ -15,22 +15,23 @@ const SuperAdminFeatures = () => {
     { id: 3, route: "archived-blogs", name: "Manage Archived Posts" },
     { id: 4, route: "coming-soon", name: "Coming Soon Posts" },
     { id: 5, route: "scheduled-posts", name: "Scheduled Posts" },
-    { id: 6, route: "manage-categories", name: "Manage Categories" },
-    { id: 7, route: "manage-tags", name: "Manage Tags" },
-    { id: 8, route: "manage-roles", name: "Manage Roles" },
-    { id: 9, route: "manage-permissions", name: "Manage Permission" },
+    { id: 6, route: "flagged-blogs", name: "Flagged Blog Posts" },
+    { id: 7, route: "manage-categories", name: "Manage Categories" },
+    { id: 8, route: "manage-tags", name: "Manage Tags" },
+    { id: 9, route: "manage-roles", name: "Manage Roles" },
+    { id: 10, route: "manage-permissions", name: "Manage Permission" },
     {
-      id: 10,
+      id: 11,
       route: "assign-roles-permissions",
       name: "Manage Roles Perm",
     },
-    { id: 11, route: "manage-profile", name: "Manage User Profile" },
-    { id: 12, route: "manage-users", name: "Manage Users" },
+    { id: 12, route: "manage-profile", name: "Manage User Profile" },
+    { id: 13, route: "manage-users", name: "Manage Users" },
   ];
 
   return (
     <div className="dark:bg-gray-800 bg-base-200 border-b border-gray-200 shadow-sm rounded-b-sm dark:border-gray-700">
-      <div className="lg:space-y-1 p-1">
+      <div className="lg:space-y-1 p-1 overflow-y-scroll h-[calc(100vh-148px)]">
         {superAdminRoutesFeatures.map((path) => (
           <NavLink
             key={path.id}

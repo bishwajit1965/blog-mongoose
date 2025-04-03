@@ -2,19 +2,19 @@ import { useState } from "react";
 
 const useToggleViewModal = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [blogData, setBlogData] = useState(null);
+  const [modalData, setModalData] = useState(null);
 
   const openModal = (data) => {
-    setBlogData(data);
+    setModalData(data);
     setIsOpen(true);
   };
 
   const closeModal = () => {
     setIsOpen(false);
-    setBlogData(null);
+    setModalData(null);
   };
 
-  return { isOpen, blogData, openModal, closeModal };
+  return { isOpen, modalData, openModal, closeModal };
 };
 
 export default useToggleViewModal;

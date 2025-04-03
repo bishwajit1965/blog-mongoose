@@ -21,6 +21,9 @@ const softDeletePost = (slug) =>
 const restoreSoftDeletedPost = (slug) =>
   handleApiCall(() => api.patch(`${API_PATHS.BLOGS}/restore/${slug}`));
 
+const flagPost = (slug) =>
+  handleApiCall(() => api.patch(`${API_PATHS.BLOGS}/flag/${slug}`));
+
 const permanentDeleteBlogBySlug = (slug) =>
   handleApiCall(() => api.delete(`${API_PATHS.BLOGS}/${slug}`));
 
@@ -31,5 +34,6 @@ export {
   updateBlogBySlug,
   softDeletePost,
   restoreSoftDeletedPost,
+  flagPost,
   permanentDeleteBlogBySlug,
 };
