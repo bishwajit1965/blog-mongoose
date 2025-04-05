@@ -47,6 +47,7 @@ const BlogSchema = new mongoose.Schema(
     flaggedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     flagCount: { type: Number, default: 0 },
     lastFlaggedAt: { type: Date },
+    flaggedAt: { type: [Date], default: [] },
     reviewStatus: {
       type: String,
       enum: ["pending", "approved", "rejected"],
@@ -58,6 +59,22 @@ const BlogSchema = new mongoose.Schema(
       default: null,
     },
     reviewComment: { type: String, default: null },
+    reviewHistory: [
+      {
+        comment: { type: String },
+        reviewedAt: { type: Date },
+        reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      },
+    ],
+
+    reviewedAt: { type: [Date], default: [] }, // empty array by default
+
+    // ✅ Flagging reasons
+    flaggedReason: {
+      type: [String],
+      enum: ["Spam", "Offensive", "Incorrect Information", "Other"], // predefined reasons
+      default: ["Other"], // default to 'Other' if no reason is provided
+    },
 
     // ✅ SEO fields
     metaTitle: { type: String, default: "" },

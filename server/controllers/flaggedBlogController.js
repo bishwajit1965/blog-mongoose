@@ -1,12 +1,14 @@
 const FlaggedPost = require("../models/FlaggedPost");
 const Blog = require("../models/Blog");
-const { Blog, ArchivedBlog } = require("../models/Archive");
 
 const getFlaggedPosts = async (req, res) => {
   try {
     const flaggedPosts = await FlaggedPost.find({})
       .populate("postId")
-      .populate("flaggedBy", "name");
+      .populate("flaggedBy", "name email")
+      .populate("userId", "name email")
+      .populate("reviewedBy", "name email")
+      .populate("flaggedBy", "name email");
     res.status(200).json(flaggedPosts);
   } catch (error) {
     res
@@ -34,19 +36,29 @@ const getFlaggedBlogBySlug = async (req, res) => {
 const approveFlaggedBlog = async (req, res) => {
   console.log("Approving flagged post...");
   const { slug } = req.params;
-  const adminId = req.user.id; // Admin reviewing the flag
+  const reviewerId = req.user.id; // Admin reviewing the flag
   const { reviewComment } = req.body;
+
   try {
     const flaggedPost = await FlaggedPost.findOne({ flaggedSlug: slug });
     if (!flaggedPost)
       return res
-        .status(404)
+        .status(400)
         .json({ status: "error", message: "No flagged blog is found." });
 
-    // Update flagged post review status
+    const now = new Date();
+    // Update flagged post review status as approved
     flaggedPost.reviewStatus = "approved";
-    flaggedPost.reviewedBy = adminId;
-    flaggedPost.reviewComment = reviewComment;
+    flaggedPost.reviewedBy = reviewerId;
+    flaggedPost.reviewedAt = now;
+    flaggedPost.reviewComment = reviewComment || "flagging grounded";
+    flaggedPost.reviewHistory.push({
+      comment: reviewComment || "flagging grounded",
+      reviewedAt: new Date(),
+      reviewedBy: reviewerId,
+    });
+
+    flaggedPost.reviewedAt = new Date();
     flaggedPost.updatedAt = new Date();
 
     const flaggedBlog = await flaggedPost.save();
@@ -57,7 +69,7 @@ const approveFlaggedBlog = async (req, res) => {
     if (!blogPost)
       return res
         .status(400)
-        .json({ status: "error", message: "No approved blogPost is found." });
+        .json({ status: "error", message: "No blogPost is found." });
 
     if (!blogPost.isFlagged)
       return res
@@ -65,18 +77,28 @@ const approveFlaggedBlog = async (req, res) => {
         .json({ status: "error", message: "Post is not flagged for review." });
 
     if (blogPost) {
-      blogPost.isFlagged = true;
-      blogPost.flagCount = flaggedPost.flaggedBy.length; // Set correct flag count
-      blogPost.reviewStatus = "approved";
+      blogPost.isFlagged = false;
       blogPost.flagCount = 0;
+      blogPost.reviewStatus = "approved";
       blogPost.flaggedBy = [];
       blogPost.lastFlaggedAt = null;
+      if (!Array.isArray(blogPost.reviewedAt)) {
+        blogPost.reviewedAt = [];
+      }
+      blogPost.reviewedAt.push(now);
+      blogPost.reviewedBy = reviewerId;
+      blogPost.reviewComment = reviewComment || "flagging grounded";
+      blogPost.reviewHistory.push({
+        comment: reviewComment || "flagging grounded",
+        reviewedAt: now,
+        reviewedBy: reviewerId,
+      });
 
       const updatedBlog = await blogPost.save();
       console.log("Updated blog:", updatedBlog);
       res
         .status(200)
-        .json({ status: "error", message: "Post is approved successfully!" });
+        .json({ status: "success", message: "Post is approved successfully!" });
     }
   } catch (error) {
     console.error("Error in approving blog.", error);
@@ -91,10 +113,10 @@ const rejectFlaggedBlog = async (req, res) => {
     console.log("Reject blog route is hit!");
     const { slug } = req.params;
     const { reviewComment } = req.body;
-    const adminId = req.user.id;
+    const reviewerId = req.user.id;
 
     console.log("Flagged Slug:", slug);
-    console.log("Admin Id:", adminId);
+    console.log("Admin Id:", reviewerId);
     console.log("Review comment:", reviewComment);
 
     const flaggedPost = await FlaggedPost.findOne({ flaggedSlug: slug });
@@ -106,15 +128,26 @@ const rejectFlaggedBlog = async (req, res) => {
 
     console.log("Flagged Blog post:", flaggedPost);
 
+    const now = new Date();
     // Mark as rejected
     flaggedPost.reviewStatus = "rejected";
-    flaggedPost.reviewedBy = adminId;
-    flaggedPost.reviewComment = reviewComment;
+    flaggedPost.reviewedBy = reviewerId;
+    flaggedPost.reviewedAt = now;
+    flaggedPost.reviewComment = reviewComment || "no violation found";
+    flaggedPost.reviewHistory.push({
+      comment: reviewComment || "no violation found",
+      reviewedAt: new Date(),
+      reviewedBy: reviewerId,
+    });
+    flaggedPost.reviewedAt = new Date();
+    flaggedPost.updatedAt = new Date();
+
     const savedFlaggedBlog = await flaggedPost.save();
     console.log("Saving flagged Blog", savedFlaggedBlog);
 
     const blogPost = await Blog.findOne({ slug });
     console.log("Blog found to update:", blogPost);
+
     if (!blogPost)
       return res
         .status(404)
@@ -125,16 +158,31 @@ const rejectFlaggedBlog = async (req, res) => {
         .status(404)
         .json({ status: "error", message: "Blog is not flagged for review." });
 
-    blogPost.isFlagged = false;
-    blogPost.flagCount = 0;
-    blogPost.flaggedBy = [];
-    blogPost.lastFlaggedAt = null;
+    if (blogPost) {
+      blogPost.isFlagged = false;
+      blogPost.flagCount = 0;
+      blogPost.reviewStatus = "rejected";
+      blogPost.flaggedBy = [];
+      blogPost.lastFlaggedAt = null;
+      if (!Array.isArray(blogPost.reviewedAt)) {
+        blogPost.reviewedAt = [];
+      }
+      blogPost.reviewedAt.push(now);
+      blogPost.reviewedBy = reviewerId;
+      blogPost.reviewComment = reviewComment || "no violation found";
+      blogPost.reviewHistory.push({
+        comment: reviewComment || "no violation found",
+        reviewedAt: now,
+        reviewedBy: reviewerId,
+      });
 
-    await blogPost.save();
-    res.status(200).json({
-      status: "success",
-      message: "Blog post review status is rejected.",
-    });
+      const rejectedPost = await blogPost.save();
+      console.log("Rejected blog:", rejectedPost);
+      res.status(200).json({
+        status: "success",
+        message: "Blog post review status is rejected.",
+      });
+    }
   } catch (error) {
     console.error("Error in rejecting blog flag status.", error);
     res
@@ -168,6 +216,7 @@ const undoRejection = async (req, res) => {
 
 module.exports = {
   getFlaggedPosts,
+  // reviewFlaggedPost,
   getFlaggedBlogBySlug,
   approveFlaggedBlog,
   rejectFlaggedBlog,

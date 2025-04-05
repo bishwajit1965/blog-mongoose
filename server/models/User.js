@@ -24,10 +24,25 @@ const userSchema = new mongoose.Schema(
     isActive: { type: Boolean, default: true }, // Active or Inactive
     isOnline: { type: Boolean, default: false }, // Real-time online status
     lastSeen: { type: Date, default: null }, // Last active timestamp
+
     flaggedPosts: [
       {
         postId: { type: mongoose.Schema.Types.ObjectId, ref: "Blog" },
+        flaggedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // Add flaggedBy here
+        flaggedSlug: { type: String, required: true },
         flaggedAt: { type: Date, default: Date.now },
+        flaggedReason: {
+          type: [String],
+          enum: [
+            "Inappropriate content",
+            "Spam",
+            "Offensive language",
+            "Misinformation",
+            "Other",
+          ],
+          default: ["Other"],
+          required: true,
+        },
         reason: String,
         reviewStatus: {
           type: String,
