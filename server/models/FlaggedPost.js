@@ -30,6 +30,7 @@ const FlaggedPostSchema = new mongoose.Schema(
       required: true,
     },
     flaggedAt: { type: [Date], default: () => [new Date()] },
+    lastFlaggedAt: { type: Date },
 
     // ✅ Review and moderation fields
     reviewStatus: {
@@ -39,16 +40,51 @@ const FlaggedPostSchema = new mongoose.Schema(
     },
     reviewComment: {
       type: String,
-      enum: ["verified", "approved", "rejected", "reviewed", "none"],
-      default: "reviewed",
+      enum: [
+        "verified",
+        "approved",
+        "rejected",
+        "reviewed",
+        "none",
+        "fact-checked",
+        "flagging grounded",
+        "authentic",
+        "accurate",
+        "no violation",
+        "no violation found",
+        "compliant",
+        "suitable for publication",
+        "violates guidelines",
+        "inappropriate content",
+        "inappropriate flag",
+        "spam",
+        "misleading",
+        "offensive",
+        "hate speech",
+        "violence",
+        "explicit content",
+        "under review",
+        "pending review",
+        "awaiting further action",
+        "no issue found",
+        "under investigation",
+        "needs further revision",
+      ],
+      default: "none",
     },
+    reviewHistory: [
+      {
+        comment: { type: String, required: true },
+        reviewedAt: { type: Date, default: Date.now },
+        reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      },
+    ],
     reviewedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       default: null,
     },
-    reviewedAt: { type: [Date], default: () => [new Date()] },
-
+    reviewedAt: { type: [Date], default: [] }, // empty array by default
     // ✅ False flagging and penalties
     isFalseFlag: { type: Boolean, default: false },
     falseFlagCount: { type: Number, default: 0 },

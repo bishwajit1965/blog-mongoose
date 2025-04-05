@@ -1,4 +1,4 @@
-import { FaCheck, FaEye, FaTimes } from "react-icons/fa";
+import { FaCheck, FaEye, FaFlag, FaTimes } from "react-icons/fa";
 import {
   approveFlaggedBlog,
   rejectFlaggedBlog,
@@ -24,7 +24,21 @@ const FlaggedPostsTable = ({
   const { isOpen, modalData, openModal, closeModal } = useToggleViewModal();
   const [paginatedData, setPaginatedData] = useState(flaggedBlogPosts || []);
   const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-  console.log("Flagged Blog post Data", flaggedBlogPosts);
+  console.log("Modal Data", modalData);
+
+  const formatDateTime = (dateString) => {
+    const options = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    };
+    return new Date(dateString)
+      .toLocaleString("en-US", options)
+      .replace(",", " -");
+  };
 
   const handleFilterChange = (e) => {
     const selectedFilter = e.target.value;
@@ -50,7 +64,7 @@ const FlaggedPostsTable = ({
     if (result.isConfirmed) {
       try {
         if (hasPermission("approve-post")) {
-          await approveFlaggedBlog(slug, "approved");
+          await approveFlaggedBlog(slug);
           await Swal.fire({
             title: "Approved!",
             text: "This post has been approved successfully.",
@@ -169,6 +183,9 @@ const FlaggedPostsTable = ({
               Flagged At
             </th>
             <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+              Updated At
+            </th>
+            <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
               Review Status
             </th>
             <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
@@ -204,15 +221,29 @@ const FlaggedPostsTable = ({
                 <td className="p-2">
                   {new Date(post?.flaggedAt[0]).toLocaleString()}
                 </td>
+                <td className="p-2">
+                  {new Date(post?.updatedAt).toLocaleString()}
+                </td>
                 <td className="p-2">{post?.reviewStatus}</td>
-                <td className="p-2">{post?.postId?.flagCount}</td>
-                <td className="flex items-center justify-end space-x-1 pr-1">
+                <td className="p-2">
+                  {post?.postId?.flagCount >= 1 && (
+                    <span className="text-gray-500 relative flex justify-center items-center">
+                      <FaFlag className="text-3xl" />
+                      <span className="absolute top-[-px] left-[px] right-[] bg-red-500 text-white text-xs rounded-full px-1">
+                        {post?.postId?.flagCount >= 1
+                          ? post?.postId?.flagCount
+                          : 0}
+                      </span>
+                    </span>
+                  )}
+                </td>
+                <td>
                   {Array.isArray(adminData?.user?.roles) &&
                   adminData.user.roles.some(
                     (role) =>
                       role.name === "super-admin" || role.name === "admin"
                   ) ? (
-                    <>
+                    <div className="flex items-center space-x-1 justify-end">
                       <CTAButton
                         onClick={() => openModal(post)}
                         label="View"
@@ -221,7 +252,6 @@ const FlaggedPostsTable = ({
                         variant="primary"
                       />
 
-                      {/* If the post is being reviewed, show approve and reject buttons */}
                       {post?.reviewStatus === "pending" && (
                         <>
                           <CTAButton
@@ -266,7 +296,7 @@ const FlaggedPostsTable = ({
                           />
                         </>
                       )}
-                    </>
+                    </div>
                   ) : (
                     ""
                   )}
@@ -275,7 +305,7 @@ const FlaggedPostsTable = ({
             ))
           ) : (
             <tr>
-              <td colSpan="8" className="text-center p-4 text-gray-500">
+              <td colSpan="11" className="text-center p-4 text-gray-500">
                 No flagged data is available!
               </td>
             </tr>
@@ -293,7 +323,7 @@ const FlaggedPostsTable = ({
       {/* Modal Section */}
       {isOpen && modalData && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
-          <div className="bg-white p-4 rounded shadow-lg max-w-xl w-full">
+          <div className="bg-white p-4 rounded shadow-lg max-w-3xl w-full">
             <div className="h-64">
               <img
                 src={`${apiURL}${modalData?.postId?.image}`}
@@ -309,7 +339,113 @@ const FlaggedPostsTable = ({
                 dangerouslySetInnerHTML={{ __html: modalData.content }}
                 className="prose max-w-none list-decimal text-gray-600"
               ></p>
+              <div className="bg-gray-100 p-2 rounded-md space-y-2">
+                <div className="flex items-center justify-between">
+                  {modalData?.flaggedBy?.length > 0 ? (
+                    <span className="text-gray-500 font-bold">
+                      {modalData?.flaggedBy.map((user) => (
+                        <div key={user._id} className="space-x-4">
+                          <span className="font-bold text-gray-900">
+                            Flagged By:
+                          </span>
+                          <span>Name: {user.name}</span>
+                          <span>Email: {user.email}</span>
+                        </div>
+                      ))}
+                    </span>
+                  ) : (
+                    <span className="text-gray-500 font-bold">
+                      No one has flagged this post yet.
+                    </span>
+                  )}
+                  {modalData.flaggedAt?.length > 0 && (
+                    <span>{formatDateTime(modalData.flaggedAt?.[0])}</span>
+                  )}
+                </div>
+
+                <div className="">
+                  {modalData.reviewStatus === "pending" ? (
+                    <span className="text-yellow-500 font-bold">
+                      This post is under review.
+                    </span>
+                  ) : modalData.reviewStatus === "approved" ? (
+                    <span className="text-red-500 font-bold">
+                      🔴 This post has been approved. Flagging grounded.
+                    </span>
+                  ) : modalData.reviewStatus === "rejected" ? (
+                    <span className="text-green-500 font-bold">
+                      ✅ This post has been rejected for inappropriate
+                      flagging.Flagging ungrounded.
+                    </span>
+                  ) : (
+                    <span className="text-gray-500 font-bold">
+                      No review status available.
+                    </span>
+                  )}
+                </div>
+
+                <div className="">
+                  {modalData?.reviewedBy ? (
+                    <div className="space-x-4">
+                      <span className="font-bold">Reviewed By:</span>
+                      <span className="text-gray-500 font-bold">
+                        {modalData.reviewedBy.name}
+                      </span>
+                      <span>{modalData.reviewedBy.email}</span>
+                    </div>
+                  ) : (
+                    <span className="text-yellow-500 font-bold">
+                      No one has reviewed this post yet.
+                    </span>
+                  )}
+                </div>
+                <div className="">
+                  {modalData?.reviewHistory
+                    ? modalData?.postId?.reviewHistory.map((history) => (
+                        <div
+                          key={history._id}
+                          className="flex items-center mb-2 justify-between"
+                        >
+                          <span className="font-bold text-gray-900">
+                            Rev History
+                          </span>
+                          <span className="ml-2 capitalize">
+                            {history?.comment}
+                          </span>
+                          <span
+                            className={`bg-red-600 ml-2 font-semibold ${
+                              history?.reviewStatus === "approved"
+                                ? "text-red-600"
+                                : history?.reviewStatus === "rejected"
+                                ? "text-green-600"
+                                : history?.reviewStatus === "pending"
+                                ? "text-yellow-500"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            {history?.reviewStatus}
+                          </span>
+                          <span
+                            className={`px-2 py-1 rounded-md text-xs shadow-sm uppercase ${
+                              modalData?.reviewStatus === "rejected"
+                                ? "text-green-600 bg-red-100"
+                                : modalData?.reviewStatus === "approved"
+                                ? "text-red-700 bg-red-100"
+                                : modalData?.reviewStatus === "pending"
+                                ? "text-yellow-500 bg-red-400"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            {modalData?.reviewStatus}
+                          </span>
+                          <span>{formatDateTime(history.reviewedAt)}</span>
+                        </div>
+                      ))
+                    : "No data is available!"}
+                </div>
+              </div>
             </div>
+
             <div className="text-right">
               <button
                 onClick={closeModal}

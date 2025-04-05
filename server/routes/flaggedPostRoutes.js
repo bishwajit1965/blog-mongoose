@@ -8,7 +8,6 @@ const {
 
 const {
   getFlaggedPosts,
-  // reviewFlaggedPost,
   approveFlaggedBlog,
   rejectFlaggedBlog,
   undoRejection,
@@ -27,17 +26,9 @@ router.get(
   getFlaggedPosts
 );
 
-/**===================================
+/**=========================================
  * REVIEW RELATED ROUTES
- * ===================================*/
-// Review a post
-// router.patch(
-//   "/review/:slug",
-//   authorizeRoles(["super-admin"]),
-//   authorizePermissions(["review-post"]),
-//   reviewFlaggedPost
-// );
-
+ * =========================================*/
 // Fetch a flagged blog post for approval of flagged status
 router.patch(
   "/approve/:slug",

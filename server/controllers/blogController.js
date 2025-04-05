@@ -409,7 +409,7 @@ const getAllNonDeletedBlogs = async (req, res) => {
 // Flag post method
 const flagPost = async (req, res) => {
   const { slug } = req.params;
-  const { reason, reviewComment } = req.body;
+  const { reason } = req.body;
   const userId = req.user.id; // User who is flagging the post
 
   try {
@@ -431,33 +431,74 @@ const flagPost = async (req, res) => {
       });
     }
 
+    const now = new Date();
     blogPost.flaggedBy.push(userId);
     blogPost.flagCount += 1;
     blogPost.isFlagged = true;
-    blogPost.reviewComment = reviewComment;
-    blogPost.lastFlaggedAt = new Date();
+    blogPost.flaggedAt.push(now);
+    blogPost.lastFlaggedAt = now;
+    blogPost.reviewStatus = "pending";
+    blogPost.flaggedReason = reason && reason.length ? reason : ["Other"];
 
     await blogPost.save();
 
-    const newFlaggedPost = new FlaggedPost({
-      postId: postId,
+    // ✅ Check if the flagged post already exists in FlaggedPost collection
+    // If it does, update it; if not, create a new one
+    const existingFlaggedPost = await FlaggedPost.findOne({
       flaggedSlug: flaggedPostSlug,
-      flaggedBy: [userId],
-      reviewComment: reviewComment,
-      flaggedReason: reason && reason.length ? reason : ["Other"],
-    });
-    console.log("New flagged post:", newFlaggedPost);
-    await newFlaggedPost.save();
-
-    // Track flagging in user model
-    await User.findByIdAndUpdate(userId, {
-      $push: { flaggedPosts: newFlaggedPost._id },
     });
 
-    return res.status(200).json({
-      status: "success",
-      message: "Post has been flagged successfully.",
-    });
+    if (existingFlaggedPost) {
+      existingFlaggedPost.flaggedBy.push(userId);
+      existingFlaggedPost.flagCount += 1;
+      existingFlaggedPost.isFlagged = true;
+      existingFlaggedPost.flaggedAt.push(now);
+      existingFlaggedPost.flaggedReason =
+        reason && reason.length ? reason : ["Other"];
+      existingFlaggedPost.lastFlaggedAt = now;
+      await existingFlaggedPost.save();
+
+      // Update flaggedPosts array in User model
+      await User.findByIdAndUpdate(userId, {
+        $push: {
+          flaggedPosts: {
+            postId: postId,
+            flaggedSlug: flaggedPostSlug,
+            flaggedReason: reason && reason.length ? reason : ["Other"],
+            flaggedBy: userId,
+            flaggedAt: new Date(),
+          },
+        },
+      });
+    } else {
+      const newFlaggedPost = new FlaggedPost({
+        postId: postId,
+        flaggedSlug: flaggedPostSlug,
+        flaggedBy: [userId],
+        flaggedReason: reason && reason.length ? reason : ["Other"],
+        flaggedAt: [new Date()],
+      });
+      console.log("New flagged post:", newFlaggedPost);
+      await newFlaggedPost.save();
+
+      // Update flaggedPosts array in User model
+      await User.findByIdAndUpdate(userId, {
+        $push: {
+          flaggedPosts: {
+            postId: postId, // Add postId here
+            flaggedSlug: flaggedPostSlug, // Add flaggedSlug here
+            flaggedReason: reason && reason.length ? reason : ["Other"],
+            flaggedBy: userId, // Add flaggedBy here
+            flaggedAt: new Date(),
+          },
+        },
+      });
+
+      return res.status(200).json({
+        status: "success",
+        message: "Post has been flagged successfully.",
+      });
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).json({

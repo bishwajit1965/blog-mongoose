@@ -186,8 +186,8 @@ const BlogDetailsView = ({ blog, manageBlog, toggler, isHidden }) => {
           </span>
         </div>
         <div className="my-2">
-          <p className="text-xl font-bold">
-            <span className="">Blog word count: &nbsp;</span>
+          <p className="font-bold text-gray-500">
+            <span className="">Blog post word count: &nbsp;</span>
             {wordCount}
           </p>
         </div>
