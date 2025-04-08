@@ -59,6 +59,7 @@ const BlogSchema = new mongoose.Schema(
       default: null,
     },
     reviewComment: { type: String, default: null },
+
     reviewHistory: [
       {
         comment: { type: String },

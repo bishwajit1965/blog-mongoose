@@ -19,7 +19,7 @@ const FlagBlogPosts = () => {
         decoratedText="Blog Posts"
         dataLength={blogs?.length > 0 ? blogs?.length : "0"}
       />
-      <div className="mb-10">
+      <div className="">
         <BlogPostsToFlagTable
           blogs={blogs}
           loading={loading}

@@ -21,6 +21,12 @@ const approveFlaggedBlog = (slug) =>
 const rejectFlaggedBlog = (slug) =>
   handleApiCall(() => api.patch(`${API_PATHS.FLAGGED_BLOGS}/reject/${slug}`));
 
+// Revert a flagged blog post review status
+const revertFlaggedBlogStatus = (slug) =>
+  handleApiCall(() =>
+    api.patch(`${API_PATHS.FLAGGED_BLOGS}/revert-review-status/${slug}`)
+  );
+
 // Undo Rejection of a flagged blog post
 const undoRejection = (slug) =>
   handleApiCall(() =>
@@ -42,6 +48,7 @@ export {
   getFlaggedBlogBySlug,
   approveFlaggedBlog,
   rejectFlaggedBlog,
+  revertFlaggedBlogStatus,
   undoRejection,
   permanentlyDeleteFlaggedBlogBySlug,
   banUser,

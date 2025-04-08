@@ -69,9 +69,11 @@ const FlaggedPostSchema = new mongoose.Schema(
         "no issue found",
         "under investigation",
         "needs further revision",
+        "review flag reverted",
       ],
       default: "none",
     },
+
     reviewHistory: [
       {
         comment: { type: String, required: true },
