@@ -1,15 +1,16 @@
-import { FaCheck, FaEye, FaFlag, FaTimes } from "react-icons/fa";
+import { FaCheck, FaEye, FaFlag, FaRecycle, FaTimes } from "react-icons/fa";
 import {
   approveFlaggedBlog,
   rejectFlaggedBlog,
+  revertFlaggedBlogStatus,
 } from "../../adminServices/flaggedBlogService";
+import { useMemo, useState } from "react";
 
 import AdminLoader from "../../adminComponent/adminLoader/AdminLoader";
 import AdminPagination from "../../adminComponent/adminPagination/AdminPagination";
 import CTAButton from "../../../components/buttons/CTAButton";
 import Swal from "sweetalert2";
 import useAdminAuth from "../../adminHooks/useAdminAuth";
-import { useState } from "react";
 import useToggleViewModal from "../../adminHooks/useToggleViewModal";
 
 const FlaggedPostsTable = ({
@@ -20,11 +21,31 @@ const FlaggedPostsTable = ({
   const { adminData, hasPermission } = useAdminAuth();
   const [approving, setApproving] = useState(null);
   const [rejecting, setRejecting] = useState(null);
+  const [reverting, setReverting] = useState(null);
   const [filter, setFilter] = useState("all"); // New state for dropdown filter
+  const [searchQuery, setSearchQuery] = useState("");
   const { isOpen, modalData, openModal, closeModal } = useToggleViewModal();
   const [paginatedData, setPaginatedData] = useState(flaggedBlogPosts || []);
   const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-  console.log("Modal Data", modalData);
+
+  const processedData = useMemo(() => {
+    if (!flaggedBlogPosts) return [];
+    let filtered = flaggedBlogPosts;
+    // Filter by reviewStatus
+    if (filter !== "all") {
+      filtered = filtered.filter((post) => post.reviewStatus === filter);
+    }
+    // Search by title
+    if (searchQuery.trim() !== "") {
+      const q = searchQuery.trim().toLowerCase();
+      filtered = filtered.filter((post) => {
+        const title = post?.postId?.title?.trim().toLowerCase?.();
+        return title && title?.includes(q);
+      });
+    }
+
+    return filtered;
+  }, [flaggedBlogPosts, filter, searchQuery]);
 
   const formatDateTime = (dateString) => {
     const options = {
@@ -40,17 +61,8 @@ const FlaggedPostsTable = ({
       .replace(",", " -");
   };
 
-  const handleFilterChange = (e) => {
-    const selectedFilter = e.target.value;
-    setFilter(selectedFilter);
-    // Here you can add logic to filter flagged posts based on the selected filter
-    // For now, it just logs the selected filter
-    console.log("Selected filter:", selectedFilter);
-  };
-
   const handleApproveFlaggedBlogPost = async (slug) => {
     setApproving(slug);
-
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "Are you sure you want to approve this post?",
@@ -95,7 +107,6 @@ const FlaggedPostsTable = ({
 
   const handleRejectFlaggedBlogPost = async (slug) => {
     setRejecting(slug);
-
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "Are you sure you want to review & reject this post?",
@@ -138,184 +149,257 @@ const FlaggedPostsTable = ({
     }
   };
 
+  const handleResetReviewStatus = async (slug) => {
+    setReverting(slug);
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Are you sure you want to revert post review status?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, revert it!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        if (hasPermission("undo-reviewed-post")) {
+          await revertFlaggedBlogStatus(slug);
+          await Swal.fire({
+            title: "Reverted!",
+            text: "This post status has been reverted successfully.",
+            icon: "success",
+          });
+        } else {
+          await Swal.fire({
+            title: "Permission Denied",
+            text: "You do not have permission to revert this post!",
+            icon: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Error in reverting blog:", error);
+        await Swal.fire({
+          title: "Error!",
+          text: "Failed to revert the blog post.",
+          icon: "error",
+        });
+      } finally {
+        setReverting(null);
+        await onFetchedBlogPostsSuccess();
+      }
+    } else {
+      setReverting(null); // Reset loading state if the user cancels
+    }
+  };
+
   return (
     <div>
       {loading && <AdminLoader />}
-      <div className="my-4">
-        <label htmlFor="filter" className="mr-2">
-          Filter by Status:
-        </label>
-        <select
-          id="filter"
-          value={filter}
-          onChange={handleFilterChange}
-          className="border p-2 rounded-md"
-        >
-          <option value="all">All Posts</option>
-          <option value="approved">Approved</option>
-          <option value="pending">Pending</option>
-          <option value="rejected">Rejected</option>
-        </select>
+      <div className="grid lg:grid-cols-12 grid-cols-1 items-center justify-between lg:gap-16 gap-4 w-full p-2 bg-gray-300 dark:bg-gray-600">
+        <div className="lg:col-span-6 col-span-12 shadow-sm">
+          <input
+            type="text"
+            placeholder="Search by title..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="border px-3 py-1 rounded w-full text-sm dark:bg-gray-700 dark:border-gray-600"
+          />
+        </div>
+
+        <div className="lg:col-span-6 col-span-12 shadow-sm">
+          <select
+            id="filter"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="border px-3 py-1 rounded-md w-full dark:bg-gray-700 dark:border-gray-600"
+          >
+            <option value="all">All Posts</option>
+            <option value="approved">Approved</option>
+            <option value="pending">Pending</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
       </div>
-
-      <table className="table table-xs w-full dark:border-gray-700 rounded-md shadow-md">
-        <thead className="dark:border-gray-700 bg-gray-200 dark:text-gray-400 font-bold dark:bg-gray-900">
-          <tr className="bg-gray-200 dark:bg-gray-700 dark:border-gray-700">
-            <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
-              #
-            </th>
-            <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
-              Id
-            </th>
-            <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
-              Post Title
-            </th>
-            <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
-              Slug
-            </th>
-            <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
-              Flagged By
-            </th>
-            <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
-              Reason
-            </th>
-            <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
-              Flagged At
-            </th>
-            <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
-              Updated At
-            </th>
-            <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
-              Review Status
-            </th>
-            <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
-              Flag Count
-            </th>
-            <th className="p-1 text-center py-2 text-gray-800 font-bold dark:text-gray-300">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody className="dark:hover:bg-gray-700 dark:hover:rounded-md">
-          {paginatedData.length > 0 ? (
-            paginatedData.map((post, index) => (
-              <tr
-                key={post._id}
-                className="dark:hover:bg-gray-600 hover:bg-gray-100 dark:border-gray-700"
-              >
-                <td className="p-2">{index + 1}</td>
-                <td>{post._id}</td>
-                <td className="p-2">
-                  <a
-                    href={`/blog/${post?.postId?.slug}`}
-                    className="text-blue-500"
-                  >
-                    {post?.postId?.title.slice(0, 20)}...
-                  </a>
-                </td>
-                <td>{post?.flaggedSlug}</td>
-                <td className="p-2">
-                  {post?.flaggedBy.map((user) => user?.name).join(", ")}
-                </td>
-                <td className="p-2">{post?.flaggedReason.join(", ")}</td>
-                <td className="p-2">
-                  {new Date(post?.flaggedAt[0]).toLocaleString()}
-                </td>
-                <td className="p-2">
-                  {new Date(post?.updatedAt).toLocaleString()}
-                </td>
-                <td className="p-2">{post?.reviewStatus}</td>
-                <td className="p-2">
-                  {post?.postId?.flagCount >= 1 && (
-                    <span className="text-gray-500 relative flex justify-center items-center">
-                      <FaFlag className="text-3xl" />
-                      <span className="absolute top-[-px] left-[px] right-[] bg-red-500 text-white text-xs rounded-full px-1">
-                        {post?.postId?.flagCount >= 1
-                          ? post?.postId?.flagCount
-                          : 0}
-                      </span>
-                    </span>
-                  )}
-                </td>
-                <td>
-                  {Array.isArray(adminData?.user?.roles) &&
-                  adminData.user.roles.some(
-                    (role) =>
-                      role.name === "super-admin" || role.name === "admin"
-                  ) ? (
-                    <div className="flex items-center space-x-1 justify-end">
-                      <CTAButton
-                        onClick={() => openModal(post)}
-                        label="View"
-                        icon={<FaEye />}
-                        className="btn btn-xs text-xs"
-                        variant="primary"
-                      />
-
-                      {post?.reviewStatus === "pending" && (
-                        <>
-                          <CTAButton
-                            onClick={() =>
-                              handleApproveFlaggedBlogPost(post?.flaggedSlug)
-                            }
-                            label={
-                              approving === post?.flaggedSlug
-                                ? "Approving..."
-                                : "Approve"
-                            }
-                            disabled={loading}
-                            icon={
-                              approving === post?.flaggedSlug ? (
-                                <AdminLoader />
-                              ) : (
-                                <FaCheck />
-                              )
-                            }
-                            className="btn btn-xs text-xs"
-                            variant="success"
-                          />
-                          <CTAButton
-                            onClick={() =>
-                              handleRejectFlaggedBlogPost(post?.flaggedSlug)
-                            }
-                            label={
-                              rejecting === post?.flaggedSlug
-                                ? "Rejecting..."
-                                : "Reject"
-                            }
-                            disabled={loading}
-                            icon={
-                              rejecting === post?.flaggedSlug ? (
-                                <AdminLoader />
-                              ) : (
-                                <FaTimes />
-                              )
-                            }
-                            className="btn btn-xs text-xs"
-                            variant="danger"
-                          />
-                        </>
-                      )}
-                    </div>
-                  ) : (
-                    ""
-                  )}
+      <div className="overflow-x-auto shadow-md">
+        <table className="table table-xs w-full dark:border-gray-700 rounded-md table-pin-rows table-pin-cols">
+          <thead className="dark:border-gray-700 bg-gray-200 dark:text-gray-400 font-bold dark:bg-gray-900">
+            <tr className="dark:border-gray-700 dark:text-gray-400 font-bold dark:bg-gray-700">
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+                #
+              </th>
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+                Id
+              </th>
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+                Post Title
+              </th>
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+                Slug
+              </th>
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+                Flagged By
+              </th>
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+                Reason
+              </th>
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+                Flagged At
+              </th>
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+                Updated At
+              </th>
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+                Review Status
+              </th>
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+                Flag Count
+              </th>
+              <th className="p-1 text-center py-2 text-gray-800 font-bold dark:text-gray-300">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="dark:hover:bg-gray-700 dark:hover:rounded-md">
+            {paginatedData.length === 0 ? (
+              <tr>
+                <td colSpan="10" className="text-center p-4 text-gray-500">
+                  No flagged data is available!
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="11" className="text-center p-4 text-gray-500">
-                No flagged data is available!
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            ) : (
+              paginatedData.map((post, index) => (
+                <tr
+                  key={post._id}
+                  className="dark:hover:bg-gray-600 hover:bg-gray-100 dark:border-gray-700"
+                >
+                  <td className="p-2">{index + 1}</td>
+                  <td>{post._id}</td>
+                  <td className="p-2">
+                    <a
+                      href={`/blog/${post?.postId?.slug}`}
+                      className="text-blue-500"
+                    >
+                      {post?.postId?.title.slice(0, 20)}...
+                    </a>
+                  </td>
+                  <td>{post?.flaggedSlug}</td>
+                  <td className="p-2">
+                    {post?.flaggedBy.map((user) => user?.name).join(", ")}
+                  </td>
+                  <td className="p-2">{post?.flaggedReason.join(", ")}</td>
+                  <td className="p-2">
+                    {new Date(post?.flaggedAt[0]).toLocaleString()}
+                  </td>
+                  <td className="p-2">
+                    {new Date(post?.updatedAt).toLocaleString()}
+                  </td>
+                  <td className="p-2">{post?.reviewStatus}</td>
+                  <td className="p-2">
+                    {post?.postId?.flagCount >= 1 && (
+                      <span className="text-gray-500 relative flex justify-center items-center">
+                        <FaFlag className="text-3xl" />
+                        <span className="absolute top-[-px] left-[px] right-[] bg-red-500 text-white text-xs rounded-full px-1">
+                          {post?.postId?.flagCount >= 1
+                            ? post?.postId?.flagCount
+                            : "0"}
+                        </span>
+                      </span>
+                    )}
+                  </td>
+                  <td>
+                    {Array.isArray(adminData?.user?.roles) &&
+                    adminData.user.roles.some(
+                      (role) =>
+                        role.name === "super-admin" || role.name === "admin"
+                    ) ? (
+                      <div className="flex items-center space-x-1 justify-end">
+                        <CTAButton
+                          onClick={() => openModal(post)}
+                          label="View"
+                          icon={<FaEye />}
+                          className="btn btn-xs text-xs"
+                          variant="primary"
+                        />
+                        <CTAButton
+                          onClick={() =>
+                            handleResetReviewStatus(post?.flaggedSlug)
+                          }
+                          label={
+                            reverting === post?.flaggedSlug
+                              ? "Resetting..."
+                              : "Reset"
+                          }
+                          icon={
+                            reverting === post?.flaggedSlug ? (
+                              <AdminLoader />
+                            ) : (
+                              <FaRecycle />
+                            )
+                          }
+                          className="btn btn-xs text-xs"
+                          variant="info"
+                        />
+
+                        {post?.reviewStatus === "pending" && (
+                          <>
+                            <CTAButton
+                              onClick={() =>
+                                handleApproveFlaggedBlogPost(post?.flaggedSlug)
+                              }
+                              label={
+                                approving === post?.flaggedSlug
+                                  ? "Approving..."
+                                  : "Approve"
+                              }
+                              disabled={loading}
+                              icon={
+                                approving === post?.flaggedSlug ? (
+                                  <AdminLoader />
+                                ) : (
+                                  <FaCheck />
+                                )
+                              }
+                              className="btn btn-xs text-xs"
+                              variant="success"
+                            />
+                            <CTAButton
+                              onClick={() =>
+                                handleRejectFlaggedBlogPost(post?.flaggedSlug)
+                              }
+                              label={
+                                rejecting === post?.flaggedSlug
+                                  ? "Rejecting..."
+                                  : "Reject"
+                              }
+                              disabled={loading}
+                              icon={
+                                rejecting === post?.flaggedSlug ? (
+                                  <AdminLoader />
+                                ) : (
+                                  <FaTimes />
+                                )
+                              }
+                              className="btn btn-xs text-xs"
+                              variant="danger"
+                            />
+                          </>
+                        )}
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
       {/* Pagination */}
-      <div className="py-6">
+      <div className="py-4">
         <AdminPagination
-          items={flaggedBlogPosts}
+          items={processedData}
           onPaginatedDataChange={setPaginatedData} // Directly update paginated data
         />
       </div>
@@ -446,12 +530,12 @@ const FlaggedPostsTable = ({
               </div>
             </div>
 
-            <div className="text-right">
+            <div className="flex justify-end">
               <button
                 onClick={closeModal}
-                className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+                className="mt-4 bg-red-500 text-white px-4 py-2 rounded flex items-center shadow-md"
               >
-                Close
+                <FaTimes className="mr-1" /> Close
               </button>
             </div>
           </div>

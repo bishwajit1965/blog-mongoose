@@ -10,6 +10,7 @@ const {
   getFlaggedPosts,
   approveFlaggedBlog,
   rejectFlaggedBlog,
+  revertFlaggedBlogStatus,
   undoRejection,
 } = require("../controllers/flaggedBlogController");
 
@@ -43,6 +44,14 @@ router.patch(
   authorizeRoles(["super-admin"]),
   authorizePermissions(["reject-post"]),
   rejectFlaggedBlog
+);
+
+// Revert review status approved/rejected
+router.patch(
+  "/revert-review-status/:slug",
+  authorizeRoles(["super-admin"]),
+  authorizePermissions(["undo-reviewed-post"]),
+  revertFlaggedBlogStatus
 );
 
 // Undo rejection of a flagged post
