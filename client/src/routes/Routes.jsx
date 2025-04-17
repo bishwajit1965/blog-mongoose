@@ -13,6 +13,8 @@ import FlagBlogPosts from "../admin/adminDataManagement/manageBlogPosts/FlagBlog
 import Home from "../pages/home/Home";
 import Login from "../pages/login/Login";
 import LoginLayout from "../layouts/loginLayout/LoginLayout";
+import ManageAdminNotification from "../admin/adminDataManagement/manageAdminNotifications/ManageAdminNotification";
+import ManageAuditLogsReview from "../admin/adminDataManagement/manageBlogPosts/ManageAuditLogsReview";
 import ManageBlogPosts from "../admin/adminDataManagement/manageBlogPosts/ManageBlogPosts";
 import ManageCategories from "../admin/adminDataManagement/manageCategories/ManageCategories";
 import ManagePermissions from "../admin/adminDataManagement/managePermissions/ManagePermissions";
@@ -41,6 +43,7 @@ const superAdminRoutes = [
   { path: "manage-blogs", element: <ManageBlogPosts /> },
   { path: "archived-blogs", element: <ArchivedBlogPosts /> },
   { path: "flagged-blogs", element: <FlagBlogPosts /> },
+  { path: "manage-audit-logs", element: <ManageAuditLogsReview /> },
   { path: "coming-soon", element: <ComingSoonPosts /> },
   { path: "scheduled-posts", element: <ScheduledPosts /> },
   { path: "manage-categories", element: <ManageCategories /> },
@@ -54,6 +57,7 @@ const superAdminRoutes = [
     element: <ManageUsersRolesAndPermissions />,
   },
   { path: "manage-profile", element: <ProfileManagement /> },
+  { path: "manage-notification", element: <ManageAdminNotification /> },
 ];
 
 const router = createBrowserRouter([

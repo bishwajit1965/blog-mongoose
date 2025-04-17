@@ -1,4 +1,14 @@
-import { FaCheck, FaEye, FaFlag, FaRecycle, FaTimes } from "react-icons/fa";
+import {
+  FaCheck,
+  FaEye,
+  FaFlag,
+  FaHistory,
+  FaMailBulk,
+  FaRecycle,
+  FaRegCalendarAlt,
+  FaTimes,
+  FaUserCircle,
+} from "react-icons/fa";
 import {
   approveFlaggedBlog,
   rejectFlaggedBlog,
@@ -26,6 +36,7 @@ const FlaggedPostsTable = ({
   const [searchQuery, setSearchQuery] = useState("");
   const { isOpen, modalData, openModal, closeModal } = useToggleViewModal();
   const [paginatedData, setPaginatedData] = useState(flaggedBlogPosts || []);
+
   const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   const processedData = useMemo(() => {
@@ -63,6 +74,18 @@ const FlaggedPostsTable = ({
 
   const handleApproveFlaggedBlogPost = async (slug) => {
     setApproving(slug);
+
+    const predefinedComments = [
+      "Approving - Violation confirmed.",
+      "Approving - Inappropriate or harmful content.",
+      "Approving - Post contains spam.",
+      "Approving - Offensive or abusive language.",
+      "Approving - Misinformation or false claims",
+      "Approving - Violates community guidelines",
+      "Approving - Sensitive or disturbing content",
+      "Approving - Content incites hate or violence",
+    ];
+
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "Are you sure you want to approve this post?",
@@ -71,12 +94,34 @@ const FlaggedPostsTable = ({
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, approve it!",
+      input: "select", // Dropdown for selecting predefined comment
+      inputOptions: predefinedComments.reduce((acc, comment, idx) => {
+        acc[idx] = comment;
+        return acc;
+      }, {}),
+      inputPlaceholder: "Select a review comment",
+      showLoaderOnConfirm: true,
+      preConfirm: (selectedIdx) => {
+        if (selectedIdx === null || selectedIdx === undefined) {
+          Swal.showValidationMessage("Please select a comment.");
+          return;
+        }
+        const selectedComment = predefinedComments[selectedIdx];
+        return selectedComment; // Ensure that the selected comment is returned
+      },
     });
 
     if (result.isConfirmed) {
+      const reviewComment = result.value;
+      if (!reviewComment) {
+        console.error("No review comment selected!");
+        return;
+      }
+
       try {
         if (hasPermission("approve-post")) {
-          await approveFlaggedBlog(slug);
+          // Send the review comment to the backend
+          await approveFlaggedBlog(slug, reviewComment); // Pass reviewComment as argument
           await Swal.fire({
             title: "Approved!",
             text: "This post has been approved successfully.",
@@ -107,6 +152,18 @@ const FlaggedPostsTable = ({
 
   const handleRejectFlaggedBlogPost = async (slug) => {
     setRejecting(slug);
+
+    const predefinedComments = [
+      "Rejecting - No violation found.",
+      "Rejecting - Content is appropriate.",
+      "Rejecting - Flag lacks sufficient reason.",
+      "Rejecting - Post complies with community guidelines.",
+      "Rejecting - Misunderstanding — content is within acceptable limits.",
+      "Rejecting - False or frivolous flag.",
+      "Rejecting - No evidence of policy breach.",
+      "Rejecting - Personal bias or disagreement detected",
+    ];
+
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "Are you sure you want to review & reject this post?",
@@ -115,12 +172,32 @@ const FlaggedPostsTable = ({
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, reject it!",
+      input: "select", // Dropdown for selecting predefined comment
+      inputOptions: predefinedComments.reduce((acc, comment, idx) => {
+        acc[idx] = comment;
+        return acc;
+      }, {}),
+      inputPlaceholder: "Select a review comment",
+      showLoaderOnConfirm: true,
+      preConfirm: (selectedIdx) => {
+        if (selectedIdx === null || selectedIdx === undefined) {
+          Swal.showValidationMessage("Please select a comment.");
+          return;
+        }
+        const selectedComment = predefinedComments[selectedIdx];
+        return selectedComment; // Ensure that the selected comment is returned
+      },
     });
 
     if (result.isConfirmed) {
+      const reviewComment = result.value;
+      if (!reviewComment) {
+        console.error("No review comment selected!");
+        return;
+      }
       try {
         if (hasPermission("reject-post")) {
-          await rejectFlaggedBlog(slug);
+          await rejectFlaggedBlog(slug, reviewComment);
           await Swal.fire({
             title: "Rejected!",
             text: "This post has been reviewed & rejected successfully.",
@@ -196,7 +273,7 @@ const FlaggedPostsTable = ({
   return (
     <div>
       {loading && <AdminLoader />}
-      <div className="grid lg:grid-cols-12 grid-cols-1 items-center justify-between lg:gap-16 gap-4 w-full p-2 bg-gray-300 dark:bg-gray-600">
+      <div className="grid lg:grid-cols-12 grid-cols-1 items-center justify-between lg:gap-16 gap-4 w-full p-2 bg-gray-200 dark:bg-gray-600">
         <div className="lg:col-span-6 col-span-12 shadow-sm">
           <input
             type="text"
@@ -296,13 +373,11 @@ const FlaggedPostsTable = ({
                   </td>
                   <td className="p-2">{post?.reviewStatus}</td>
                   <td className="p-2">
-                    {post?.postId?.flagCount >= 1 && (
+                    {post?.flagCount && (
                       <span className="text-gray-500 relative flex justify-center items-center">
                         <FaFlag className="text-3xl" />
                         <span className="absolute top-[-px] left-[px] right-[] bg-red-500 text-white text-xs rounded-full px-1">
-                          {post?.postId?.flagCount >= 1
-                            ? post?.postId?.flagCount
-                            : "0"}
+                          {post?.flagCount ? post?.flagCount : "0"}
                         </span>
                       </span>
                     )}
@@ -321,25 +396,29 @@ const FlaggedPostsTable = ({
                           className="btn btn-xs text-xs"
                           variant="primary"
                         />
-                        <CTAButton
-                          onClick={() =>
-                            handleResetReviewStatus(post?.flaggedSlug)
-                          }
-                          label={
-                            reverting === post?.flaggedSlug
-                              ? "Resetting..."
-                              : "Reset"
-                          }
-                          icon={
-                            reverting === post?.flaggedSlug ? (
-                              <AdminLoader />
-                            ) : (
-                              <FaRecycle />
-                            )
-                          }
-                          className="btn btn-xs text-xs"
-                          variant="info"
-                        />
+                        {post.reviewStatus !== "pending" ? (
+                          <CTAButton
+                            onClick={() =>
+                              handleResetReviewStatus(post?.flaggedSlug)
+                            }
+                            label={
+                              reverting === post?.flaggedSlug
+                                ? "Resetting..."
+                                : "Reset"
+                            }
+                            icon={
+                              reverting === post?.flaggedSlug ? (
+                                <AdminLoader />
+                              ) : (
+                                <FaRecycle />
+                              )
+                            }
+                            className="btn btn-xs text-xs"
+                            variant="info"
+                          />
+                        ) : (
+                          ""
+                        )}
 
                         {post?.reviewStatus === "pending" && (
                           <>
@@ -418,19 +497,22 @@ const FlaggedPostsTable = ({
             <h2 className="text-xl font-bold text-gray-600">
               {modalData?.postId?.title}
             </h2>
-            <div className="my-2 mt-2 max-h-60 overflow-y-auto p-2 border rounded ">
+            <div className="my-2 mt-2 max-h-60 overflow-y-auto p-2 border rounded">
               <p
                 dangerouslySetInnerHTML={{ __html: modalData.content }}
                 className="prose max-w-none list-decimal text-gray-600"
               ></p>
-              <div className="bg-gray-100 p-2 rounded-md space-y-2">
+              <div className="bg-gray-100 p-2 rounded-md space-y-3 text-sm">
                 <div className="flex items-center justify-between">
                   {modalData?.flaggedBy?.length > 0 ? (
                     <span className="text-gray-500 font-bold">
                       {modalData?.flaggedBy.map((user) => (
-                        <div key={user._id} className="space-x-4">
-                          <span className="font-bold text-gray-900">
-                            Flagged By:
+                        <div
+                          key={user._id}
+                          className="space-x-4 lg:flex flex-1 items-center justify-between"
+                        >
+                          <span className="font-bold text-gray-900 flex items-center">
+                            <FaUserCircle className="mr-1" /> Flagged By:
                           </span>
                           <span>Name: {user.name}</span>
                           <span>Email: {user.email}</span>
@@ -443,7 +525,10 @@ const FlaggedPostsTable = ({
                     </span>
                   )}
                   {modalData.flaggedAt?.length > 0 && (
-                    <span>{formatDateTime(modalData.flaggedAt?.[0])}</span>
+                    <span className="flex items-center">
+                      <FaRegCalendarAlt className="mr-1" />
+                      {formatDateTime(modalData.flaggedAt?.[0])}
+                    </span>
                   )}
                 </div>
 
@@ -470,12 +555,24 @@ const FlaggedPostsTable = ({
 
                 <div className="">
                   {modalData?.reviewedBy ? (
-                    <div className="space-x-4">
-                      <span className="font-bold">Reviewed By:</span>
-                      <span className="text-gray-500 font-bold">
-                        {modalData.reviewedBy.name}
+                    <div className="space-x-4 lg:flex flex-1 items-center justify-evenly">
+                      <span className="font-bold lg:flex flex-1 items-center">
+                        <FaUserCircle className="mr-1" />
+                        Reviewed By :
+                        <span className="text-gray-500 font-bold ml-1">
+                          {modalData.reviewedBy.name}
+                        </span>
                       </span>
-                      <span>{modalData.reviewedBy.email}</span>
+
+                      <span className="flex items-center">
+                        <FaMailBulk className="mr-1" />{" "}
+                        {modalData.reviewedBy.email}
+                      </span>
+
+                      <span className="flex items-center">
+                        <FaRegCalendarAlt className="mr-1" />
+                        {formatDateTime(modalData.reviewedAt)}
+                      </span>
                     </div>
                   ) : (
                     <span className="text-yellow-500 font-bold">
@@ -483,46 +580,51 @@ const FlaggedPostsTable = ({
                     </span>
                   )}
                 </div>
+
                 <div className="">
                   {modalData?.reviewHistory
                     ? modalData?.postId?.reviewHistory.map((history) => (
-                        <div
-                          key={history._id}
-                          className="flex items-center mb-2 justify-between"
-                        >
-                          <span className="font-bold text-gray-900">
-                            Rev History
-                          </span>
-                          <span className="ml-2 capitalize">
-                            {history?.comment}
-                          </span>
-                          <span
-                            className={`bg-red-600 ml-2 font-semibold ${
-                              history?.reviewStatus === "approved"
-                                ? "text-red-600"
-                                : history?.reviewStatus === "rejected"
-                                ? "text-green-600"
-                                : history?.reviewStatus === "pending"
-                                ? "text-yellow-500"
-                                : "text-gray-500"
-                            }`}
-                          >
-                            {history?.reviewStatus}
-                          </span>
-                          <span
-                            className={`px-2 py-1 rounded-md text-xs shadow-sm uppercase ${
-                              modalData?.reviewStatus === "rejected"
-                                ? "text-green-600 bg-red-100"
-                                : modalData?.reviewStatus === "approved"
-                                ? "text-red-700 bg-red-100"
-                                : modalData?.reviewStatus === "pending"
-                                ? "text-yellow-500 bg-red-400"
-                                : "text-gray-500"
-                            }`}
-                          >
-                            {modalData?.reviewStatus}
-                          </span>
-                          <span>{formatDateTime(history.reviewedAt)}</span>
+                        <div key={history._id} className="">
+                          <div className="font-bold text-gray-900 border-b border-dashed border-gray-300  mb-1 flex items-center">
+                            <FaHistory className="mr-1" /> Rev History:
+                          </div>
+
+                          <div className="lg:flex flex-1 items-center justify-between">
+                            <span
+                              className={`px-2 py-1 rounded-md text-xs shadow-sm uppercase ${
+                                modalData?.reviewStatus === "rejected"
+                                  ? "text-green-600 bg-red-100"
+                                  : modalData?.reviewStatus === "approved"
+                                  ? "text-red-700 bg-red-100"
+                                  : modalData?.reviewStatus === "pending"
+                                  ? "text-yellow-500 bg-red-400"
+                                  : "text-gray-500"
+                              }`}
+                            >
+                              {modalData?.reviewStatus}
+                            </span>
+                            <span className="ml-2 capitalize">
+                              {history?.comment}
+                            </span>
+                            <span
+                              className={`bg-red-600 ml-2 font-semibold ${
+                                history?.reviewStatus === "approved"
+                                  ? "text-red-600"
+                                  : history?.reviewStatus === "rejected"
+                                  ? "text-green-600"
+                                  : history?.reviewStatus === "pending"
+                                  ? "text-yellow-500"
+                                  : "text-gray-500"
+                              }`}
+                            >
+                              {history?.reviewStatus}
+                            </span>
+
+                            <span className="flex items-center">
+                              <FaRegCalendarAlt className="mr-1" />
+                              {formatDateTime(history.reviewedAt)}
+                            </span>
+                          </div>
                         </div>
                       ))
                     : "No data is available!"}
@@ -533,7 +635,7 @@ const FlaggedPostsTable = ({
             <div className="flex justify-end">
               <button
                 onClick={closeModal}
-                className="mt-4 bg-red-500 text-white px-4 py-2 rounded flex items-center shadow-md"
+                className="btn btn-sm mt-1 hover:bg-red-600 hover:text-gray-200 bg-red-500 text-white rounded flex items-center shadow-md"
               >
                 <FaTimes className="mr-1" /> Close
               </button>

@@ -3,6 +3,7 @@ const Permission = require("../models/Permission");
 const Role = require("../models/Role");
 const bcrypt = require("bcrypt");
 const { validateUserInput } = require("../utils/validators");
+const UserActionAuditLog = require("../models/UserActionAuditLog");
 
 // Used for creating user in MongoDB immediately after Firebase signUp
 const createUser = async (req, res) => {
@@ -97,7 +98,79 @@ const getUserById = async (req, res) => {
   }
 };
 
+const banUser = async (req, res) => {
+  const { userId, durationDays, flaggedReason } = req.body;
+  try {
+    const banUntil = durationDays
+      ? new Date(Date.now() + durationDays * 86400000)
+      : null;
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { isBanned: true, banExpiresAt: banUntil },
+      { new: true }
+    );
+    // If no user return an error
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    await UserActionAuditLog.create({
+      action: "user-banned",
+      moderatorId: req.user.id,
+      affectedUserId: user._id,
+      comment: flaggedReason || "No specific reason provided",
+      timestamp: new Date(),
+    });
+
+    return res
+      .status(200)
+      .json({ message: "User is banned successfully.", user });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Ban operation failed", details: error });
+  }
+};
+
+const unbanUser = async (req, res) => {
+  const { userId, flaggedReason } = req.body;
+  try {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        isBanned: false,
+        banExpiresAt: null,
+      },
+      {
+        new: true,
+      }
+    );
+    if (!user) {
+      return res.status(404).json({ message: " User not found." });
+    }
+
+    // Log the unban action in the audit log
+    await UserActionAuditLog.create({
+      action: "user-unbanned",
+      moderatorId: req.user.id,
+      comment: flaggedReason || "No specific reason provided.",
+      timestamp: new Date(),
+    });
+
+    return res
+      .status(200)
+      .json({ message: "User is unbanned successfully.", user });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Unban operation failed", details: error });
+  }
+};
+
 module.exports = {
   createUser,
   getUserById,
+  banUser,
+  unbanUser,
 };

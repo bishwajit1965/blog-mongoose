@@ -1,3 +1,4 @@
+import { FaCompass, FaTimesCircle } from "react-icons/fa";
 import {
   notifyError,
   notifySuccess,
@@ -7,7 +8,6 @@ import { useEffect, useState } from "react";
 import API_PATHS from "../../adminServices/apiPaths";
 import AdminLoader from "../../adminComponent/adminLoader/AdminLoader";
 import CTAButton from "../../../components/buttons/CTAButton";
-import { FaCompass } from "react-icons/fa";
 import api from "../../adminServices/api";
 import { normalizeIds } from "../../../../../server/utils/utils";
 
@@ -97,7 +97,7 @@ const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
     <>
       {loading && <AdminLoader />}
 
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-full mx-auto">
         {successMessage && (
           <p className="text-base-100 bg-green-600 rounded-md p-2">
             {successMessage}
@@ -186,11 +186,24 @@ const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
             </div>
           </div>
           {user && (
-            <CTAButton
-              label="Assign Role & Permission"
-              className="btn btn-sm"
-              icon={<FaCompass />}
-            />
+            <div className="flex items-center lg:space-x-4">
+              <div className="">
+                <CTAButton
+                  label="Assign Role & Permission"
+                  className="btn btn-sm"
+                  icon={<FaCompass />}
+                />
+              </div>
+              <div className="">
+                <CTAButton
+                  onClick={onSuccess}
+                  label="Cancel Edit"
+                  className="btn btn-sm"
+                  variant="warning"
+                  icon={<FaTimesCircle />}
+                />
+              </div>
+            </div>
           )}
         </form>
       </div>

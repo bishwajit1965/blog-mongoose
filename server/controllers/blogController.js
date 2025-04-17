@@ -423,6 +423,7 @@ const flagPost = async (req, res) => {
 
     const postId = blogPost._id;
     const flaggedPostSlug = blogPost.slug;
+    const flaggedPostTitle = blogPost.title;
 
     if (blogPost.flaggedBy.includes(userId)) {
       return res.status(400).json({
@@ -439,6 +440,11 @@ const flagPost = async (req, res) => {
     blogPost.lastFlaggedAt = now;
     blogPost.reviewStatus = "pending";
     blogPost.flaggedReason = reason && reason.length ? reason : ["Other"];
+    blogPost.flaggingHistory.push({
+      userId,
+      reason,
+      flaggedAt: new Date(),
+    });
 
     await blogPost.save();
 
@@ -464,6 +470,7 @@ const flagPost = async (req, res) => {
           flaggedPosts: {
             postId: postId,
             flaggedSlug: flaggedPostSlug,
+            flaggedTitle: flaggedPostTitle,
             flaggedReason: reason && reason.length ? reason : ["Other"],
             flaggedBy: userId,
             flaggedAt: new Date(),
@@ -474,6 +481,7 @@ const flagPost = async (req, res) => {
       const newFlaggedPost = new FlaggedPost({
         postId: postId,
         flaggedSlug: flaggedPostSlug,
+        flaggedTitle: flaggedPostTitle,
         flaggedBy: [userId],
         flaggedReason: reason && reason.length ? reason : ["Other"],
         flaggedAt: [new Date()],
@@ -487,6 +495,7 @@ const flagPost = async (req, res) => {
           flaggedPosts: {
             postId: postId, // Add postId here
             flaggedSlug: flaggedPostSlug, // Add flaggedSlug here
+            flaggedTitle: flaggedPostTitle,
             flaggedReason: reason && reason.length ? reason : ["Other"],
             flaggedBy: userId, // Add flaggedBy here
             flaggedAt: new Date(),
@@ -505,6 +514,25 @@ const flagPost = async (req, res) => {
       status: "error",
       message: "An error occurred while flagging the post.",
     });
+  }
+};
+
+// Get flagging history
+const getFlaggingHistory = async (req, res) => {
+  const { slug } = req.params;
+  try {
+    const blog = await Blog.findById(slug).populate(
+      "flaggingHistory.userId",
+      "name"
+    );
+    if (!blog) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+    return res.json({ flaggingHistory: blog.flaggingHistory });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Failed to fetch flagging history.", error });
   }
 };
 
@@ -553,5 +581,6 @@ module.exports = {
   restoreSoftDeletedPost,
   getAllNonDeletedBlogs,
   flagPost,
+  getFlaggingHistory,
   deleteBlogBySlug,
 };

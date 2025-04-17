@@ -1,6 +1,4 @@
 import AdminSubTitle from "../../adminComponent/adminSubTitle/AdminSubTitle";
-import CTAButton from "../../../components/buttons/CTAButton";
-import { FaTimesCircle } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 import RolesAndPermissionsForm from "./RolesAndPermissionsForm";
 import UsersTable from "./UsersTable";
@@ -35,7 +33,7 @@ const ManageUsersRolesAndPermissions = () => {
       />
       <div className="p-2">
         <div className="container mx-auto">
-          <div className="grid lg:grid-cols-12 grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid lg:grid-cols-12 grid-cols-1 md:grid-cols-2 gap-2">
             <div className="lg:col-span-6 col-span-12 lg:border-r dark:border-gray-700 lg:pr-3">
               <h2 className="text-xl font-semibold mb-2">
                 {selectedUser
@@ -53,18 +51,6 @@ const ManageUsersRolesAndPermissions = () => {
                   handleCancelEdit();
                 }}
               />
-
-              {selectedUser && (
-                <div className="lg:mt-[-40px] lg:pl-[220px]">
-                  <CTAButton
-                    onClick={handleCancelEdit}
-                    label="Cancel Edit"
-                    className="btn btn-sm mt-2"
-                    variant="warning"
-                    icon={<FaTimesCircle />}
-                  />
-                </div>
-              )}
             </div>
             <div className="lg:col-span-6 col-span-12">
               <h2 className="text-xl font-semibold mb-2">Existing Users</h2>

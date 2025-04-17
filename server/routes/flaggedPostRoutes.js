@@ -11,7 +11,9 @@ const {
   approveFlaggedBlog,
   rejectFlaggedBlog,
   revertFlaggedBlogStatus,
-  undoRejection,
+  addModeratorNote,
+  changeReviewStatus,
+  getFlaggedPostAnalytics,
 } = require("../controllers/flaggedBlogController");
 
 const router = express.Router();
@@ -54,12 +56,31 @@ router.patch(
   revertFlaggedBlogStatus
 );
 
-// Undo rejection of a flagged post
+/**==================================================
+ * REVIEW STATUS TRACKING AND UPDATING RELATED ROUTES
+ * ==================================================*/
+// Add a moderator note to a flagged post
 router.patch(
-  "/undo-reject/:slug",
-  authorizeRoles(["super-admin"]),
-  authorizePermissions(["undo-rejected-post"]),
-  undoRejection
+  "/:slug/moderator-note",
+  authorizeRoles(["super-admin", "admin", "editor"]),
+  authorizePermissions(["review-post"]),
+  addModeratorNote
+);
+
+// Change review status manually (e.g., from under review → approved/rejected etc.)
+router.patch(
+  "/:slug/review-status",
+  authorizeRoles(["super-admin", "admin"]),
+  authorizePermissions(["review-post"]),
+  changeReviewStatus
+);
+
+// Get flagged post analytics (e.g., for dashboard insights)
+router.get(
+  "/analytics",
+  authorizeRoles(["super-admin", "admin"]),
+  authorizePermissions(["view-analytics"]),
+  getFlaggedPostAnalytics
 );
 
 module.exports = router;

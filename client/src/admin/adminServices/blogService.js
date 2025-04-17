@@ -8,6 +8,9 @@ const createBlog = (blog) =>
 const getBlogBySlug = (slug) =>
   handleApiCall(() => api.get(`${API_PATHS.BLOGS}/${slug}`));
 
+const getFlaggingHistory = (slug) =>
+  handleApiCall(() => api.get(`${API_PATHS.BLOGS}/flag-history/${slug}`));
+
 const getAllBlogs = () => handleApiCall(() => api.get(API_PATHS.BLOGS));
 
 const updateBlogBySlug = (slug, blog) =>
@@ -30,6 +33,7 @@ const permanentDeleteBlogBySlug = (slug) =>
 export {
   createBlog,
   getBlogBySlug,
+  getFlaggingHistory,
   getAllBlogs,
   updateBlogBySlug,
   softDeletePost,
