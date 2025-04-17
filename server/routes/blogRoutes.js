@@ -11,6 +11,7 @@ const {
   restoreSoftDeletedPost,
   getAllNonDeletedBlogs,
   flagPost,
+  getFlaggingHistory,
   deleteBlogBySlug,
 } = require("../controllers/blogController");
 
@@ -46,6 +47,14 @@ router.get(
   authorizeRoles(["super-admin"]),
   authorizePermissions(["view-post"]),
   getBlogBySlug
+);
+
+// Fetch flagging history
+router.get(
+  "/flag-history/:slug",
+  authorizeRoles(["super-admin", "admin"]),
+  authorizePermissions(["view-post"]),
+  getFlaggingHistory
 );
 
 // Fetch all non-deleted blog posts

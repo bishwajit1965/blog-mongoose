@@ -15,18 +15,16 @@ const SuperAdminFeatures = () => {
     { id: 3, route: "archived-blogs", name: "Manage Archived Posts" },
     { id: 4, route: "coming-soon", name: "Coming Soon Posts" },
     { id: 5, route: "scheduled-posts", name: "Scheduled Posts" },
-    { id: 6, route: "flagged-blogs", name: "Flagged Blog Posts" },
-    { id: 7, route: "manage-categories", name: "Manage Categories" },
-    { id: 8, route: "manage-tags", name: "Manage Tags" },
-    { id: 9, route: "manage-roles", name: "Manage Roles" },
-    { id: 10, route: "manage-permissions", name: "Manage Permission" },
-    {
-      id: 11,
-      route: "assign-roles-permissions",
-      name: "Manage Roles Perm",
-    },
-    { id: 12, route: "manage-profile", name: "Manage User Profile" },
-    { id: 13, route: "manage-users", name: "Manage Users" },
+    { id: 6, route: "flagged-blogs", name: "Manage Flagged Posts" },
+    { id: 7, route: "manage-audit-logs", name: "Manage Audit Logs" },
+    { id: 8, route: "manage-categories", name: "Manage Categories" },
+    { id: 9, route: "manage-tags", name: "Manage Tags" },
+    { id: 10, route: "manage-roles", name: "Manage Roles" },
+    { id: 11, route: "manage-permissions", name: "Manage Permission" },
+    { id: 12, route: "assign-roles-permissions", name: "Manage Roles Perm" },
+    { id: 13, route: "manage-profile", name: "Manage User Profile" },
+    { id: 14, route: "manage-users", name: "Manage Users" },
+    { id: 15, route: "manage-notification", name: "Manage Notifications" },
   ];
 
   return (

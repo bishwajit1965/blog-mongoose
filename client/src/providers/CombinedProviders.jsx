@@ -1,7 +1,9 @@
+import AdminAuditLogContextProvider from "../admin/adminProviders/AdminAuditLogContextProvider";
 import AdminAuthProvider from "../admin/adminProviders/AdminAuthProvider";
 import AdminBlogProvider from "../admin/adminProviders/AdminBlogProvider";
 import AdminCategoryProvider from "../admin/adminProviders/AdminCategoryProvider";
 import AdminFlaggedPostContextProvider from "../admin/adminProviders/AdminFlaggedPostContextProvider";
+import AdminMessageNotificationContextProvider from "../admin/adminProviders/AdminMessageNotificationContextProvider";
 import AdminNotificationProvider from "../admin/adminProviders/AdminNotificationProvider";
 import AdminPermissionProvider from "../admin/adminProviders/AdminPermissionProvider";
 import AdminRoleProvider from "../admin/adminProviders/AdminRoleProvider";
@@ -14,21 +16,25 @@ const CombinedProviders = ({ children }) => (
   <AuthProvider>
     <AdminAuthProvider>
       <ArchivedBlogProvider>
-        <AdminFlaggedPostContextProvider>
-          <AdminNotificationProvider>
-            <AdminRoleProvider>
-              <AdminBlogProvider>
-                <AdminPermissionProvider>
-                  <AdminCategoryProvider>
-                    <AdminUserProvider>
-                      <AdminTagProvider>{children}</AdminTagProvider>
-                    </AdminUserProvider>
-                  </AdminCategoryProvider>
-                </AdminPermissionProvider>
-              </AdminBlogProvider>
-            </AdminRoleProvider>
-          </AdminNotificationProvider>
-        </AdminFlaggedPostContextProvider>
+        <AdminAuditLogContextProvider>
+          <AdminMessageNotificationContextProvider>
+            <AdminFlaggedPostContextProvider>
+              <AdminNotificationProvider>
+                <AdminRoleProvider>
+                  <AdminBlogProvider>
+                    <AdminPermissionProvider>
+                      <AdminCategoryProvider>
+                        <AdminUserProvider>
+                          <AdminTagProvider>{children}</AdminTagProvider>
+                        </AdminUserProvider>
+                      </AdminCategoryProvider>
+                    </AdminPermissionProvider>
+                  </AdminBlogProvider>
+                </AdminRoleProvider>
+              </AdminNotificationProvider>
+            </AdminFlaggedPostContextProvider>
+          </AdminMessageNotificationContextProvider>
+        </AdminAuditLogContextProvider>
       </ArchivedBlogProvider>
     </AdminAuthProvider>
   </AuthProvider>

@@ -274,7 +274,7 @@ const BlogPostForm = ({
       <form
         onSubmit={handleSubmit}
         className="p-2 rounded-lg shadow-md"
-        encType="multipart/form-data pb-2"
+        encType="multipart/form-data"
       >
         {/* Image Preview to be updated with the existing one*/}
         <div className="mb-2 mt-2">

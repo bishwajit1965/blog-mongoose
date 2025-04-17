@@ -1,6 +1,8 @@
 const FlaggedPost = require("../models/FlaggedPost");
 const Blog = require("../models/Blog");
 const User = require("../models/User");
+const AuditLog = require("../models/AuditLog");
+const { createAuditLog } = require("./auditLogController");
 
 const getFlaggedPosts = async (req, res) => {
   try {
@@ -39,6 +41,7 @@ const approveFlaggedBlog = async (req, res) => {
   const { slug } = req.params;
   const reviewerId = req.user.id; // Admin reviewing the flag
   const { reviewComment } = req.body;
+  console.log("Review Comment Received:", reviewComment);
 
   try {
     const flaggedPost = await FlaggedPost.findOne({ flaggedSlug: slug });
@@ -99,6 +102,18 @@ const approveFlaggedBlog = async (req, res) => {
       console.log("Blog post status before save:", blogPost.reviewStatus);
       const updatedBlog = await blogPost.save();
       console.log("Updated blog:", updatedBlog);
+
+      // Create the audit log for the approval action
+      await createAuditLog({
+        action: "review-approved",
+        postId: flaggedPost._id,
+        flaggedTitle: flaggedPost.flaggedTitle,
+        flaggedSlug: flaggedPost.flaggedSlug,
+        moderatorId: reviewerId,
+        comment: reviewComment || "Reviewed and approved",
+        statusChange: { oldStatus: "flagged", newStatus: "approved" },
+      });
+
       res
         .status(200)
         .json({ status: "success", message: "Post is approved successfully!" });
@@ -182,6 +197,18 @@ const rejectFlaggedBlog = async (req, res) => {
 
       const rejectedPost = await blogPost.save();
       console.log("Rejected blog:", rejectedPost);
+
+      // Create the audit log for the rejection action
+      await createAuditLog({
+        action: "review-rejected",
+        postId: flaggedPost._id,
+        flaggedTitle: flaggedPost.flaggedTitle,
+        flaggedSlug: flaggedPost.flaggedSlug,
+        moderatorId: reviewerId,
+        comment: reviewComment || "Rejected due to policy violation",
+        statusChange: { oldStatus: "flagged", newStatus: "rejected" },
+      });
+
       res.status(200).json({
         status: "success",
         message: "Blog post review status is rejected.",
@@ -241,7 +268,7 @@ const revertFlaggedBlogStatus = async (req, res) => {
       reviewedAt: now,
       reviewedBy: reviewerId,
     });
-    console.log("Almost saving reverted blog post:"); //🟢
+    console.log("Almost saving reverted blog post:");
 
     const revertedBlog = await blogPost.save();
     console.log("Reverted Blog:", revertedBlog);
@@ -286,28 +313,127 @@ const revertFlaggedBlogStatus = async (req, res) => {
   }
 };
 
-const undoRejection = async (req, res) => {
+/**==============================================
+ * Update FlaggedPost review status
+ * ==============================================*/
+const updateFlaggedPostReviewStatus = async (flaggedPostId) => {
   try {
-    const { slug } = req.params;
-    const blog = await Blog.findOne({ slug });
-    if (!blog.isFlagged)
-      return res.status(400).json({
-        status: "error",
-        message: "Blog post is not flagged for review.",
-      });
-    blog.reviewStatus = "rejected";
-    blog.save();
-    res.status(200).json({
-      status: "error",
-      message: "Blog flagged status is rejected successfully!",
-    });
+    const flaggedPost = await FlaggedPost.findById(flaggedPostId);
+    if (flaggedPost.flagCount >= 5) {
+      flaggedPost.reviewStatus = "under review";
+      await flaggedPost.save();
+    }
+    console.log("Post has been automatically marked for review.");
   } catch (error) {
-    console.error("Error in undoing rejection.", error);
-    res
-      .status(500)
-      .json({ status: "error", message: "Internal server error." });
+    console.error("Error in updating review status.", error);
   }
 };
+
+/**==============================================
+ * Add moderator's note
+ * ==============================================*/
+const addModeratorNote = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const { note } = req.body;
+
+    const flaggedPost = await FlaggedPost.findOne({ flaggedSlug: slug });
+    if (!flaggedPost)
+      return res.status(404).json({ message: "Flagged post not found" });
+
+    flaggedPost.moderatorNote = note;
+    await flaggedPost.save();
+
+    res.status(200).json({ message: "Moderator note added successfully." });
+  } catch (error) {
+    res.status(500).json({ message: "Error adding moderator note.", error });
+  }
+};
+
+/**==============================================
+ * Change review status
+ * ==============================================*/
+const changeReviewStatus = async (flaggedPostId, newStatus, reviewComment) => {
+  try {
+    const flaggedPost = await FlaggedPost.findById(flaggedPostId);
+    flaggedPost.reviewStatus = newStatus;
+    flaggedPost.reviewComment = reviewComment;
+    await flaggedPost.save();
+    console.log("Review status updated successfully.");
+  } catch (error) {
+    console.error("Error in updating review status.", error);
+  }
+};
+
+/**==============================================
+ * Rate limiting flagging
+ * ==============================================*/
+const rateLimitFlagging = async (userId) => {
+  try {
+    const recentFlags = await FlaggedPost.find({
+      flaggedBy: userId,
+      flaggedAt: { $gt: new Date(Date.now() - 60 * 60 * 1000) }, //One hour ago
+    });
+    if (recentFlags.length >= 3) {
+      throw new Error("You have exceeded the flag limit for this hour.");
+    }
+    return true; //Allow flagging if within the limit
+  } catch (error) {
+    console.error("Error with rate limiting in flagging.", error);
+    throw error;
+  }
+};
+
+/**==============================================
+ * Get Flagged post analytics
+ * ==============================================*/
+const getFlaggedPostAnalytics = async () => {
+  try {
+    // Aggregate the total number of flagged posts
+    const totalFlags = await FlaggedPost.countDocuments();
+
+    // Get the top 5 most flagged posts by flag count
+    const topFlaggedPosts = await FlaggedPost.aggregate([
+      { $group: { _id: "$postId", flagCount: { $sum: 1 } } },
+      { $sort: { flagCount: -1 } },
+      { $limit: 5 },
+    ]);
+
+    return { totalFlags, topFlaggedPosts };
+  } catch (err) {
+    console.error("Error getting flagged post analytics:", err);
+    throw err;
+  }
+};
+
+/**==============================================
+ * Create audit log
+ * ==============================================*/
+// const createAuditLog = async (action, postId, userId) => {
+//   try {
+//     // Create a new log entry with the moderator's action
+//     // const newLog = new AuditLog({
+//     //   action,
+//     //   postId,
+//     //   userId,
+//     //   timestamp: new Date(),
+//     // });
+
+//     await logModeratorAction({
+//       action: "approved flagged post",
+//       postId: blogPost._id,
+//       moderatorId: reviewerId,
+//       comment: reviewComment,
+//       statusChange: { oldStatus: "flagged", newStatus: "approved" },
+//     });
+
+//     // Save the log entry to the database
+//     await newLog.save();
+//     console.log("Audit log created.");
+//   } catch (err) {
+//     console.error("Error creating audit log:", err);
+//   }
+// };
 
 module.exports = {
   getFlaggedPosts,
@@ -315,5 +441,10 @@ module.exports = {
   approveFlaggedBlog,
   rejectFlaggedBlog,
   revertFlaggedBlogStatus,
-  undoRejection,
+  updateFlaggedPostReviewStatus,
+  addModeratorNote,
+  changeReviewStatus,
+  rateLimitFlagging,
+  getFlaggedPostAnalytics,
+  createAuditLog,
 };

@@ -72,7 +72,7 @@ const BlogPostsToFlagTable = ({
     <div>
       <div>
         {loading && <AdminLoader />}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto shadow-md">
           <table className="table table-xs w-full dark:border-gray-700 rounded-md shadow-md">
             <thead className="dark:border-gray-700 bg-gray-200 dark:text-gray-400 font-bold dark:bg-gray-900">
               <tr className="dark:border-gray-700 dark:text-gray-400 font-bold dark:bg-gray-700">
@@ -217,7 +217,7 @@ const BlogPostsToFlagTable = ({
               <div className="flex justify-end">
                 <button
                   onClick={closeModal}
-                  className="mt-4 bg-red-500 text-white px-4 py-2 rounded flex items-center shadow-md"
+                  className="mt-1 bg-red-500 text-white px-4 py-2 rounded flex items-center shadow-md"
                 >
                   <FaTimes className="mr-1" /> Close
                 </button>

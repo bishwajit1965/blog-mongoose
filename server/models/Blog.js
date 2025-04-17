@@ -48,6 +48,16 @@ const BlogSchema = new mongoose.Schema(
     flagCount: { type: Number, default: 0 },
     lastFlaggedAt: { type: Date },
     flaggedAt: { type: [Date], default: [] },
+    flaggingHistory: {
+      type: [
+        {
+          userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+          reason: { type: String },
+          flaggedAt: { type: Date, default: Date.now },
+        },
+      ],
+      default: [],
+    },
     reviewStatus: {
       type: String,
       enum: ["pending", "approved", "rejected"],

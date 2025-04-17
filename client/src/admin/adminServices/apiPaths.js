@@ -1,8 +1,10 @@
 const API_PATHS = {
   ARCHIVED: "/archived-blogs",
+  AUDIT_LOGS: "/audit-logs",
   FLAGGED_BLOGS: "flagged-blogs",
   BLOGS: "/blogs",
   CATEGORIES: "/categories",
+  NOTIFICATIONS: "/notifications",
   PERMISSIONS: "/permissions",
   PROFILE: "/profile",
   ROLES: "/roles",

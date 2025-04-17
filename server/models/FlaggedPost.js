@@ -7,6 +7,11 @@ const FlaggedPostSchema = new mongoose.Schema(
       ref: "Blog",
     },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    flaggedTitle: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     flaggedSlug: {
       type: String,
       required: true,
@@ -14,6 +19,7 @@ const FlaggedPostSchema = new mongoose.Schema(
       unique: true,
       index: true,
     },
+    flagCount: { type: Number, default: 1 },
     flaggedBy: [
       { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     ],
@@ -31,6 +37,15 @@ const FlaggedPostSchema = new mongoose.Schema(
     },
     flaggedAt: { type: [Date], default: () => [new Date()] },
     lastFlaggedAt: { type: Date },
+    statusHistory: [
+      {
+        status: { type: String },
+        changedAt: { type: Date, default: Date.now },
+        changedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      },
+    ],
+    moderatorNote: { type: String, default: "" },
+    isArchived: { type: Boolean, default: false },
 
     // ✅ Review and moderation fields
     reviewStatus: {
@@ -70,6 +85,22 @@ const FlaggedPostSchema = new mongoose.Schema(
         "under investigation",
         "needs further revision",
         "review flag reverted",
+        "Approving - Violation confirmed.",
+        "Approving - Inappropriate or harmful content.",
+        "Approving - Post contains spam.",
+        "Approving - Offensive or abusive language.",
+        "Approving - Misinformation or false claims",
+        "Approving - Violates community guidelines",
+        "Approving - Sensitive or disturbing content",
+        "Approving - Content incites hate or violence",
+        "Rejecting - No violation found.",
+        "Rejecting - Content is appropriate.",
+        "Rejecting - Flag lacks sufficient reason.",
+        "Rejecting - Post complies with community guidelines.",
+        "Rejecting - Misunderstanding — content is within acceptable limits.",
+        "Rejecting - False or frivolous flag.",
+        "Rejecting - No evidence of policy breach.",
+        "Rejecting - Personal bias or disagreement detected",
       ],
       default: "none",
     },

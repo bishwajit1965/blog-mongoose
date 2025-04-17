@@ -6,20 +6,25 @@ import handleApiCall from "./handleApiCall";
 const getFlaggedPosts = () =>
   handleApiCall(() => api.get(API_PATHS.FLAGGED_BLOGS));
 
-// const reviewFlaggedPost = (slug) =>
-//   handleApiCall(() => api.patch(`${API_PATHS.FLAGGED_BLOGS}/review/${slug}`));
-
 // Get a flagged post for review
 const getFlaggedBlogBySlug = (slug) =>
   handleApiCall(() => api.get(`${API_PATHS.FLAGGED_BLOGS}/flagged/${slug}`));
 
 // Approve a flagged blog post
-const approveFlaggedBlog = (slug) =>
-  handleApiCall(() => api.patch(`${API_PATHS.FLAGGED_BLOGS}/approve/${slug}`));
+const approveFlaggedBlog = (slug, reviewComment) =>
+  handleApiCall(() =>
+    api.patch(`${API_PATHS.FLAGGED_BLOGS}/approve/${slug}`, {
+      reviewComment,
+    })
+  );
 
 // Reject a flagged blog post
-const rejectFlaggedBlog = (slug) =>
-  handleApiCall(() => api.patch(`${API_PATHS.FLAGGED_BLOGS}/reject/${slug}`));
+const rejectFlaggedBlog = (slug, reviewComment) =>
+  handleApiCall(() =>
+    api.patch(`${API_PATHS.FLAGGED_BLOGS}/reject/${slug}`, {
+      reviewComment,
+    })
+  );
 
 // Revert a flagged blog post review status
 const revertFlaggedBlogStatus = (slug) =>
@@ -27,30 +32,36 @@ const revertFlaggedBlogStatus = (slug) =>
     api.patch(`${API_PATHS.FLAGGED_BLOGS}/revert-review-status/${slug}`)
   );
 
-// Undo Rejection of a flagged blog post
-const undoRejection = (slug) =>
+// Add or update a moderator note
+const addModeratorNote = (slug, note) =>
   handleApiCall(() =>
-    api.patch(`${API_PATHS.FLAGGED_BLOGS}/undo-reject/${slug}`)
+    api.patch(`${API_PATHS.FLAGGED_BLOGS}/${slug}/moderator-note`, { note })
   );
+
+// Change review status manually
+const changeReviewStatus = (slug, newStatus, reviewComment) =>
+  handleApiCall(() =>
+    api.patch(`${API_PATHS.FLAGGED_BLOGS}/${slug}/review-status`, {
+      newStatus,
+      reviewComment,
+    })
+  );
+
+// Get analytics data
+const getFlaggedPostAnalytics = () =>
+  handleApiCall(() => api.get(`${API_PATHS.FLAGGED_BLOGS}/analytics`));
 
 const permanentlyDeleteFlaggedBlogBySlug = (slug) =>
   handleApiCall(() => api.delete(`${API_PATHS.FLAGGED_BLOGS}/${slug}`));
 
-const banUser = (userId) =>
-  handleApiCall(() => api.patch(`${API_PATHS.USERS}/ban/${userId}`));
-
-const unbanUser = (userId) =>
-  handleApiCall(() => api.patch(`${API_PATHS.USERS}/unban/${userId}`));
-
 export {
   getFlaggedPosts,
-  // reviewFlaggedPost,
   getFlaggedBlogBySlug,
   approveFlaggedBlog,
   rejectFlaggedBlog,
   revertFlaggedBlogStatus,
-  undoRejection,
+  addModeratorNote,
+  changeReviewStatus,
+  getFlaggedPostAnalytics,
   permanentlyDeleteFlaggedBlogBySlug,
-  banUser,
-  unbanUser,
 };
