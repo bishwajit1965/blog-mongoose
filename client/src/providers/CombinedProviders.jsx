@@ -1,3 +1,5 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import AdminAuditLogContextProvider from "../admin/adminProviders/AdminAuditLogContextProvider";
 import AdminAuthProvider from "../admin/adminProviders/AdminAuthProvider";
 import AdminBlogProvider from "../admin/adminProviders/AdminBlogProvider";
@@ -12,27 +14,31 @@ import AdminUserProvider from "../admin/adminProviders/AdminUserProvider";
 import ArchivedBlogProvider from "../admin/adminProviders/ArchivedBlogProvider";
 import AuthProvider from "./AuthProvider";
 
+const queryClient = new QueryClient();
+
 const CombinedProviders = ({ children }) => (
   <AuthProvider>
     <AdminAuthProvider>
       <ArchivedBlogProvider>
         <AdminAuditLogContextProvider>
           <AdminMessageNotificationContextProvider>
-            <AdminFlaggedPostContextProvider>
-              <AdminNotificationProvider>
-                <AdminRoleProvider>
-                  <AdminBlogProvider>
-                    <AdminPermissionProvider>
-                      <AdminCategoryProvider>
-                        <AdminUserProvider>
-                          <AdminTagProvider>{children}</AdminTagProvider>
-                        </AdminUserProvider>
-                      </AdminCategoryProvider>
-                    </AdminPermissionProvider>
-                  </AdminBlogProvider>
-                </AdminRoleProvider>
-              </AdminNotificationProvider>
-            </AdminFlaggedPostContextProvider>
+            <QueryClientProvider client={queryClient}>
+              <AdminFlaggedPostContextProvider>
+                <AdminNotificationProvider>
+                  <AdminRoleProvider>
+                    <AdminBlogProvider>
+                      <AdminPermissionProvider>
+                        <AdminCategoryProvider>
+                          <AdminUserProvider>
+                            <AdminTagProvider>{children}</AdminTagProvider>
+                          </AdminUserProvider>
+                        </AdminCategoryProvider>
+                      </AdminPermissionProvider>
+                    </AdminBlogProvider>
+                  </AdminRoleProvider>
+                </AdminNotificationProvider>
+              </AdminFlaggedPostContextProvider>
+            </QueryClientProvider>
           </AdminMessageNotificationContextProvider>
         </AdminAuditLogContextProvider>
       </ArchivedBlogProvider>

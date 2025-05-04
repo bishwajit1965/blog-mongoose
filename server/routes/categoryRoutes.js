@@ -14,6 +14,10 @@ const {
 
 const router = express.Router();
 
+// Public routes - No authentication required
+router.get("/", getAllCategories); // View all categories
+router.get("/:id", getCategoryById); // View single category by id
+
 // Verify token for all routes those follow
 router.use(authenticateToken);
 

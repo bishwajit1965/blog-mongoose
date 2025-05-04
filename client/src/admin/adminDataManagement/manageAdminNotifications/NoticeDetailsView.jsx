@@ -1,4 +1,5 @@
 import {
+  FaClock,
   FaExchangeAlt,
   FaExpandArrowsAlt,
   FaFilePdf,
@@ -10,11 +11,25 @@ import { jsPDF } from "jspdf";
 import logo from "/assets/favicon/webDevProF.png"; // Import your logo
 
 const NoticeDetailsView = ({ notice, toggler, isHidden, manageNotice }) => {
-  const { _id, title, heading, subject, author, content, pdfUrl } = notice;
-
+  const { title, heading, subject, author, content, pdfUrl, publishedAt } =
+    notice;
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
   const fileUrl = pdfUrl ? `${apiUrl}${pdfUrl}` : null;
+
+  // Date time formatter
+  const formatDateTime = (dateString) => {
+    const options = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    };
+    return new Date(dateString)
+      .toLocaleString("en-US", options)
+      .replace(",", " -");
+  };
 
   const handleDownloadNoticeAsPDF = async () => {
     const doc = new jsPDF({
@@ -204,15 +219,22 @@ const NoticeDetailsView = ({ notice, toggler, isHidden, manageNotice }) => {
   };
 
   return (
-    <div className="lg:space-y-4 p-2">
-      <p>{_id}</p>
-      <h1 className="text-xl font-bold ">{title}</h1>
-      <h1 className="text-xl font-bold ">{heading}</h1>
-      <h1 className="text-xl font-bold ">{subject}</h1>
-      <h1 className="text-xl font-bold ">{author}</h1>
+    <div className="p-2 lg:space-y-4">
+      <div className="lg:space-y-2">
+        <h1 className="text-2xl font-bold text-gray-800">Title: {title}</h1>
+        <h2 className="text-xl font-bold ">Heading: {heading}</h2>
+        <h3 className="text-xl font-bold ">Subject: {subject}</h3>
+        <p className="font-bold text-gray-500">Author: {author}</p>
+        <p className="flex items-center">
+          <FaClock className="mr-1" />
+          {formatDateTime(publishedAt)}
+        </p>
+      </div>
+
       <div className="overflow-y-auto h-60 p-2 bg-gray-100">
         <p>{content}</p>
       </div>
+
       <div className="py-2">
         <button
           onClick={handleDownloadNoticeAsPDF}

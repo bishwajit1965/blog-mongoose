@@ -3,6 +3,7 @@ import AdminDashboard from "../admin/adminComponent/adminDashboard/AdminDashboar
 import AdminLayout from "../admin/adminLayout/adminLayout";
 import AdminLogin from "../admin/adminPages/AdminLogin";
 import ArchivedBlogPosts from "../admin/adminDataManagement/manageBlogPosts/ArchivedBlogPosts";
+import BlogDetailsPage from "../pages/blogPosts/BlogDetailsPage";
 import BlogPosts from "../pages/blogPosts/BlogPosts";
 import ComingSoonPosts from "../admin/adminDataManagement/manageBlogPosts/ComingSoonPosts";
 import ContactMe from "../pages/contactMe/ContactMe";
@@ -17,6 +18,7 @@ import ManageAdminNotification from "../admin/adminDataManagement/manageAdminNot
 import ManageAuditLogsReview from "../admin/adminDataManagement/manageBlogPosts/ManageAuditLogsReview";
 import ManageBlogPosts from "../admin/adminDataManagement/manageBlogPosts/ManageBlogPosts";
 import ManageCategories from "../admin/adminDataManagement/manageCategories/ManageCategories";
+import ManageComments from "../admin/adminDataManagement/manageComments/ManageComments";
 import ManagePermissions from "../admin/adminDataManagement/managePermissions/ManagePermissions";
 import ManageRoles from "../admin/adminDataManagement/manageRoles/ManageRoles";
 import ManageTags from "../admin/adminDataManagement/manageTags/ManageTags";
@@ -58,6 +60,7 @@ const superAdminRoutes = [
   },
   { path: "manage-profile", element: <ProfileManagement /> },
   { path: "manage-notification", element: <ManageAdminNotification /> },
+  { path: "manage-comments", element: <ManageComments /> },
 ];
 
 const router = createBrowserRouter([
@@ -78,6 +81,19 @@ const router = createBrowserRouter([
         ),
       },
       { path: "blog-posts", element: <BlogPosts /> },
+      {
+        path: "blog-details/:slug",
+        element: <BlogDetailsPage />,
+        loader: async ({ params }) => {
+          const response = await fetch(
+            `${import.meta.env.VITE_API_BASE_URL}/blogs/${params.slug}`
+          );
+          if (!response.ok) {
+            throw new Error("Blog not found");
+          }
+          return response.json();
+        },
+      },
     ],
   },
 

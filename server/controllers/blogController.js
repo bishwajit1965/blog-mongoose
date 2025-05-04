@@ -422,6 +422,7 @@ const flagPost = async (req, res) => {
     }
 
     const postId = blogPost._id;
+    const userId = blogPost.author; // Author of the blog post
     const flaggedPostSlug = blogPost.slug;
     const flaggedPostTitle = blogPost.title;
 
@@ -480,6 +481,7 @@ const flagPost = async (req, res) => {
     } else {
       const newFlaggedPost = new FlaggedPost({
         postId: postId,
+        userId: userId,
         flaggedSlug: flaggedPostSlug,
         flaggedTitle: flaggedPostTitle,
         flaggedBy: [userId],

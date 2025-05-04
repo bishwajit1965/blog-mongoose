@@ -4,7 +4,7 @@ const FlaggedPost = require("../models/FlaggedPost");
 const populateFields = (query) => {
   return query
     .populate("postId", "flaggedTitle flaggedSlug")
-    .populate("moderatorId", "name email role");
+    .populate("moderatorId", "name email role photoUrl");
 };
 
 const getAllAuditLogs = async (req, res) => {
