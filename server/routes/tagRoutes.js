@@ -15,6 +15,9 @@ const {
 
 const router = express.Router();
 
+// Public routes - No authentication required
+router.get("/", getAllTags); // View all tags
+
 // Verifies token of all routes those follow
 router.use(authenticateToken);
 

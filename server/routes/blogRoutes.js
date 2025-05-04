@@ -21,16 +21,19 @@ const {
   authorizePermissions,
 } = require("../middlewares/authenticateToken");
 
-// Authenticate all admin routes routes those follow it
-router.use(authenticateToken);
-
 // Public routes - No authentication required
 router.get("/", getAllBlogs); // View all blogs
 router.get("/:slug", getBlogBySlug); // View single blog by slug
 
+// Authenticate all admin routes routes those follow it
+router.use(authenticateToken);
+
 router.get("/sitemap.xml", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/sitemap.xml"));
 });
+
+// Public flagging history route - No authentication required
+router.patch("/flag/:slug", flagPost); // Flag a blog post
 
 // Create a new blog post
 router.post(

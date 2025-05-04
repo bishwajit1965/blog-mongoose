@@ -26,10 +26,13 @@ const FlaggedPostSchema = new mongoose.Schema(
     flaggedReason: {
       type: [String],
       enum: [
-        "Inappropriate content",
         "Spam",
+        "Offensive Content",
+        "Inappropriate content",
         "Offensive language",
         "Misinformation",
+        "Misleading Information",
+        "Harassment",
         "Other",
       ],
       default: ["Other"],
@@ -39,7 +42,15 @@ const FlaggedPostSchema = new mongoose.Schema(
     lastFlaggedAt: { type: Date },
     statusHistory: [
       {
-        status: { type: String },
+        status: {
+          type: String,
+          enum: ["pending", "approved", "rejected", "reverted"],
+          default: "pending",
+        },
+        statusChange: {
+          oldStatus: String,
+          newStatus: String,
+        },
         changedAt: { type: Date, default: Date.now },
         changedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
       },
@@ -50,7 +61,7 @@ const FlaggedPostSchema = new mongoose.Schema(
     // ✅ Review and moderation fields
     reviewStatus: {
       type: String,
-      enum: ["pending", "approved", "rejected"],
+      enum: ["pending", "approved", "rejected", "reverted"],
       default: "pending",
     },
     reviewComment: {
@@ -87,6 +98,7 @@ const FlaggedPostSchema = new mongoose.Schema(
         "review flag reverted",
         "Approving - Violation confirmed.",
         "Approving - Inappropriate or harmful content.",
+        "Approving - Educational or opinion-based content, acceptable as-is.",
         "Approving - Post contains spam.",
         "Approving - Offensive or abusive language.",
         "Approving - Misinformation or false claims",
@@ -101,12 +113,22 @@ const FlaggedPostSchema = new mongoose.Schema(
         "Rejecting - False or frivolous flag.",
         "Rejecting - No evidence of policy breach.",
         "Rejecting - Personal bias or disagreement detected",
+        "Rejecting - Content violates community guidelines.",
       ],
       default: "none",
     },
 
     reviewHistory: [
       {
+        status: {
+          type: String,
+          enum: ["approved", "rejected", "reverted"],
+          required: true,
+        },
+        statusChange: {
+          oldStatus: String,
+          newStatus: String,
+        },
         comment: { type: String, required: true },
         reviewedAt: { type: Date, default: Date.now },
         reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },

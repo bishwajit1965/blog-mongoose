@@ -20,7 +20,7 @@ import { useState } from "react";
 const BlogsTable = ({ blogs, onEdit, onDelete, handleBlogDetailView }) => {
   const { adminData, hasPermission } = useAdminAuth();
 
-  const [paginatedData, setPaginatedData] = useState(blogs);
+  const [paginatedData, setPaginatedData] = useState(blogs || []);
 
   // Restore soft deleted blog post
   const handleRestore = async (slug) => {

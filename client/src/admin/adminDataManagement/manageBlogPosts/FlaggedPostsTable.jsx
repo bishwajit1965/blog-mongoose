@@ -1,13 +1,12 @@
 import {
   FaCheck,
+  FaClock,
+  FaEnvelope,
   FaEye,
   FaFlag,
   FaHistory,
-  FaMailBulk,
   FaRecycle,
-  FaRegCalendarAlt,
   FaTimes,
-  FaUserCircle,
 } from "react-icons/fa";
 import {
   approveFlaggedBlog,
@@ -38,6 +37,8 @@ const FlaggedPostsTable = ({
   const [paginatedData, setPaginatedData] = useState(flaggedBlogPosts || []);
 
   const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  console.log("Modal data:", modalData);
+  console.log("Flagged Blog Posts:", flaggedBlogPosts);
 
   const processedData = useMemo(() => {
     if (!flaggedBlogPosts) return [];
@@ -226,7 +227,22 @@ const FlaggedPostsTable = ({
     }
   };
 
-  const handleResetReviewStatus = async (slug) => {
+  const verifyFlaggedBlogPostReviewLimit = async () => {
+    await Swal.fire({
+      title: "Review Limit Exceeded",
+      text: "This post has already been reviewed 3 times.",
+      icon: "warning",
+    });
+    setReverting(null); // Reset loading state
+    await onFetchedBlogPostsSuccess();
+  };
+
+  const handleResetReviewStatus = async (slug, post) => {
+    if (post.reviewHistory.length >= 3) {
+      verifyFlaggedBlogPostReviewLimit();
+      return;
+    }
+    if (reverting === slug) return; // Prevent multiple clicks
     setReverting(slug);
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -399,7 +415,7 @@ const FlaggedPostsTable = ({
                         {post.reviewStatus !== "pending" ? (
                           <CTAButton
                             onClick={() =>
-                              handleResetReviewStatus(post?.flaggedSlug)
+                              handleResetReviewStatus(post?.flaggedSlug, post)
                             }
                             label={
                               reverting === post?.flaggedSlug
@@ -413,6 +429,7 @@ const FlaggedPostsTable = ({
                                 <FaRecycle />
                               )
                             }
+                            // disabled={post.reviewHistory.length >= 3}
                             className="btn btn-xs text-xs"
                             variant="info"
                           />
@@ -486,149 +503,217 @@ const FlaggedPostsTable = ({
       {/* Modal Section */}
       {isOpen && modalData && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
-          <div className="bg-white p-4 rounded shadow-lg max-w-3xl w-full">
-            <div className="h-64">
-              <img
-                src={`${apiURL}${modalData?.postId?.image}`}
-                alt={modalData?.postId?.title}
-                className="rounded-md w-full h-64 shadow-md"
-              />
+          <div className="bg-white p-4 rounded shadow-lg max-w-2xl w-full">
+            {/* Flagged post header begins */}
+            <div className="">
+              <div className="h-60">
+                <img
+                  src={`${apiURL}${modalData?.postId?.image}`}
+                  alt={modalData?.postId?.title.slice(0, 20)}
+                  className="rounded-md w-full h-60 shadow-md"
+                />
+              </div>
+              <div className="border-b border-gray-300 mb-2 flex items-center justify-between">
+                <h1 className="text-2xl font-bold my-2">Flagged Post Review</h1>
+              </div>
+              <div className="my-2">
+                <div className="">
+                  <h2 className="text-xl font-bold text-gray-600">
+                    {modalData?.postId?.title.slice(0, 50)}...
+                  </h2>
+                </div>
+                <div className="flex justify-end items-center px-2">
+                  <CTAButton
+                    label="View Post"
+                    icon={<FaEye />}
+                    className="btn btn-xs text-xs mt-1"
+                  />
+                </div>
+              </div>
             </div>
-            <h2 className="text-xl font-bold text-gray-600">
-              {modalData?.postId?.title}
-            </h2>
+            {/* Flagged post header ends */}
+
             <div className="my-2 mt-2 max-h-60 overflow-y-auto p-2 border rounded">
-              <p
-                dangerouslySetInnerHTML={{ __html: modalData.content }}
-                className="prose max-w-none list-decimal text-gray-600"
-              ></p>
               <div className="bg-gray-100 p-2 rounded-md space-y-3 text-sm">
-                <div className="flex items-center justify-between">
-                  {modalData?.flaggedBy?.length > 0 ? (
-                    <span className="text-gray-500 font-bold">
-                      {modalData?.flaggedBy.map((user) => (
-                        <div
-                          key={user._id}
-                          className="space-x-4 lg:flex flex-1 items-center justify-between"
-                        >
-                          <span className="font-bold text-gray-900 flex items-center">
-                            <FaUserCircle className="mr-1" /> Flagged By:
-                          </span>
-                          <span>Name: {user.name}</span>
-                          <span>Email: {user.email}</span>
-                        </div>
-                      ))}
-                    </span>
-                  ) : (
-                    <span className="text-gray-500 font-bold">
-                      No one has flagged this post yet.
-                    </span>
-                  )}
-                  {modalData.flaggedAt?.length > 0 && (
-                    <span className="flex items-center">
-                      <FaRegCalendarAlt className="mr-1" />
-                      {formatDateTime(modalData.flaggedAt?.[0])}
-                    </span>
-                  )}
-                </div>
-
+                {/* Flagged post details begins */}
                 <div className="">
-                  {modalData.reviewStatus === "pending" ? (
-                    <span className="text-yellow-500 font-bold">
-                      This post is under review.
-                    </span>
-                  ) : modalData.reviewStatus === "approved" ? (
-                    <span className="text-red-500 font-bold">
-                      🔴 This post has been approved. Flagging grounded.
-                    </span>
-                  ) : modalData.reviewStatus === "rejected" ? (
-                    <span className="text-green-500 font-bold">
-                      ✅ This post has been rejected for inappropriate
-                      flagging.Flagging ungrounded.
-                    </span>
-                  ) : (
-                    <span className="text-gray-500 font-bold">
-                      No review status available.
-                    </span>
-                  )}
-                </div>
+                  <div className="font-bold text-gray-900 border-b border-dashed border-gray-300 mb-1 flex items-center text-xl">
+                    <FaFlag className="mr-1" />
+                    <h2 className="text-xl">Flagged Post Details:</h2>
+                  </div>
+                  {modalData.flaggedBy.length > 0 ? (
+                    modalData?.flaggedBy.map((user) => (
+                      <div
+                        key={user._id}
+                        className="lg:flex flex-1 items-center justify-between"
+                      >
+                        <span className="font-bold text-gray-900 flex items-center space-x-2">
+                          <img
+                            src={modalData?.userId?.avatar}
+                            alt=""
+                            className="w-8 rounded-full"
+                          />
 
-                <div className="">
-                  {modalData?.reviewedBy ? (
-                    <div className="space-x-4 lg:flex flex-1 items-center justify-evenly">
-                      <span className="font-bold lg:flex flex-1 items-center">
-                        <FaUserCircle className="mr-1" />
-                        Reviewed By :
-                        <span className="text-gray-500 font-bold ml-1">
-                          {modalData.reviewedBy.name}
+                          <span> {user.name}</span>
                         </span>
-                      </span>
-
-                      <span className="flex items-center">
-                        <FaMailBulk className="mr-1" />{" "}
-                        {modalData.reviewedBy.email}
-                      </span>
-
-                      <span className="flex items-center">
-                        <FaRegCalendarAlt className="mr-1" />
-                        {formatDateTime(modalData.reviewedAt)}
-                      </span>
-                    </div>
+                        <span>Email: {user.email}</span>
+                        <span>
+                          {modalData.flaggedAt?.length > 0 && (
+                            <span className="flex items-center">
+                              <FaClock className="mr-1" />
+                              {formatDateTime(modalData.flaggedAt?.[0])}
+                            </span>
+                          )}
+                        </span>
+                      </div>
+                    ))
                   ) : (
-                    <span className="text-yellow-500 font-bold">
-                      No one has reviewed this post yet.
-                    </span>
+                    <div>
+                      <p>No one has flagged this post yet.</p>
+                    </div>
                   )}
                 </div>
+                {/* Flagged post details ends */}
 
-                <div className="">
-                  {modalData?.reviewHistory
-                    ? modalData?.postId?.reviewHistory.map((history) => (
-                        <div key={history._id} className="">
-                          <div className="font-bold text-gray-900 border-b border-dashed border-gray-300  mb-1 flex items-center">
-                            <FaHistory className="mr-1" /> Rev History:
-                          </div>
+                {/* Flagged post review status history begins */}
+                <div className="space-y-2">
+                  <div className="font-bold text-gray-900 border-b border-dashed border-gray-300 mb-1 flex items-center text-xl">
+                    <FaHistory className="mr-1" />
+                    <h2 className="text-xl">Post Review Status History:</h2>
+                  </div>
 
-                          <div className="lg:flex flex-1 items-center justify-between">
-                            <span
-                              className={`px-2 py-1 rounded-md text-xs shadow-sm uppercase ${
-                                modalData?.reviewStatus === "rejected"
-                                  ? "text-green-600 bg-red-100"
-                                  : modalData?.reviewStatus === "approved"
-                                  ? "text-red-700 bg-red-100"
-                                  : modalData?.reviewStatus === "pending"
-                                  ? "text-yellow-500 bg-red-400"
-                                  : "text-gray-500"
-                              }`}
-                            >
-                              {modalData?.reviewStatus}
-                            </span>
-                            <span className="ml-2 capitalize">
-                              {history?.comment}
-                            </span>
-                            <span
-                              className={`bg-red-600 ml-2 font-semibold ${
-                                history?.reviewStatus === "approved"
-                                  ? "text-red-600"
-                                  : history?.reviewStatus === "rejected"
-                                  ? "text-green-600"
-                                  : history?.reviewStatus === "pending"
-                                  ? "text-yellow-500"
-                                  : "text-gray-500"
-                              }`}
-                            >
-                              {history?.reviewStatus}
-                            </span>
+                  <div className="">
+                    {modalData?.reviewedBy ? (
+                      <div className="lg:flex flex-1 items-center justify-between">
+                        <img
+                          src={modalData?.userId?.avatar}
+                          alt="Moderator"
+                          className="w-8 rounded-full"
+                        />
+                        <span className="font-bold flex items-center">
+                          <span className="text-gray-500 font-bold ml-1">
+                            {modalData.reviewedBy.name}
+                          </span>
+                        </span>
 
-                            <span className="flex items-center">
-                              <FaRegCalendarAlt className="mr-1" />
-                              {formatDateTime(history.reviewedAt)}
+                        <span className="flex items-center">
+                          <FaEnvelope className="mr-1" />{" "}
+                          {modalData.reviewedBy.email}
+                        </span>
+
+                        <span className="grid col-span-5">
+                          {modalData.reviewedAt.map((data) => (
+                            <span key={data._id} className="flex items-center">
+                              <FaClock className="mr-1" />{" "}
+                              {formatDateTime(data)}
+                              <br></br>
                             </span>
-                          </div>
+                          ))}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="text-yellow-500 font-bold">
+                        <p>No admin has reviewed this post yet.</p>
+                      </div>
+                    )}
+
+                    {/* Review message */}
+                    <div className="mt-2">
+                      {modalData.reviewStatus === "pending" ? (
+                        <span className="text-yellow-500 font-bold">
+                          This post is under review.
+                        </span>
+                      ) : modalData.reviewStatus === "approved" ? (
+                        <span className="text-red-500 font-bold">
+                          🔴 This flagged post has been approved. Flagging
+                          grounded for policy brach.
+                        </span>
+                      ) : modalData.reviewStatus === "rejected" ? (
+                        <span className="text-green-500 font-bold">
+                          ✅ This flagged blog post post has been rejected. No
+                          policy violation found.
+                        </span>
+                      ) : (
+                        <div className="text-gray-500 font-bold">
+                          <p>No review status available.</p>
                         </div>
-                      ))
-                    : "No data is available!"}
+                      )}
+                    </div>
+                  </div>
+                  {modalData?.reviewHistory ? (
+                    modalData?.postId?.reviewHistory.map((history) => (
+                      <div
+                        key={history._id}
+                        className="lg:flex items-center justify-between grid lg:grid-cols-2 grid-cols-1"
+                      >
+                        <span
+                          className={`px-2 py-1 rounded-md text-xs shadow-sm uppercase ${
+                            modalData?.reviewStatus === "rejected"
+                              ? "text-green-600 bg-red-100"
+                              : modalData?.reviewStatus === "approved"
+                              ? "text-red-700 bg-red-100"
+                              : modalData?.reviewStatus === "pending"
+                              ? "text-yellow-500 bg-red-400"
+                              : "text-gray-500"
+                          }`}
+                        >
+                          {modalData?.reviewStatus}
+                        </span>
+
+                        <span className="capitalize">{history?.comment}</span>
+
+                        <span
+                          className={`bg-red-600 ml-2 font-semibold ${
+                            history?.reviewStatus === "approved"
+                              ? "text-red-600"
+                              : history?.reviewStatus === "rejected"
+                              ? "text-green-600"
+                              : history?.reviewStatus === "pending"
+                              ? "text-yellow-500"
+                              : "text-gray-500"
+                          }`}
+                        >
+                          {history?.reviewStatus}
+                        </span>
+
+                        <span className="flex items-center">
+                          <FaClock className="mr-1" />
+                          {formatDateTime(history.reviewedAt)}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <div>
+                      <p>No data is available at this moment!</p>
+                    </div>
+                  )}
                 </div>
+                {/* Flagged post review status history ends */}
+
+                {/* Flagged post status history begins */}
+                <div className="grid lg:grid-cols-2 grid-cols-1">
+                  {modalData.statusHistory.map((entry, i) => (
+                    <div key={i} className="border-b py-2">
+                      <p>
+                        <strong>Status:</strong> {entry.status}
+                      </p>
+                      {entry.statusChange && (
+                        <p>
+                          <strong>Changed:</strong>{" "}
+                          {entry.statusChange.oldStatus} →{" "}
+                          {entry.statusChange.newStatus}
+                        </p>
+                      )}
+                      <p>
+                        <strong>By:</strong> {entry.changedBy.name}
+                      </p>
+                      <p>
+                        <strong>Date:</strong> {formatDateTime(entry.changedAt)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                {/* Flagged post status history ends */}
               </div>
             </div>
 

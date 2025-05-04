@@ -9,9 +9,10 @@ const getFlaggedPosts = async (req, res) => {
     const flaggedPosts = await FlaggedPost.find({})
       .populate("postId")
       .populate("flaggedBy", "name email")
-      .populate("userId", "name email")
-      .populate("reviewedBy", "name email")
-      .populate("flaggedBy", "name email");
+      .populate("userId", "name email avatar")
+      .populate("reviewedBy", "name email avatar")
+      .populate("statusHistory.changedBy", "name email")
+      .populate("reviewHistory.reviewedBy");
     res.status(200).json(flaggedPosts);
   } catch (error) {
     res
@@ -58,12 +59,12 @@ const approveFlaggedBlog = async (req, res) => {
     flaggedPost.reviewComment = reviewComment || "flagging grounded";
     flaggedPost.reviewHistory.push({
       comment: reviewComment || "flagging grounded",
-      reviewedAt: new Date(),
+      reviewedAt: now,
       reviewedBy: reviewerId,
+      status: "approved",
     });
 
-    flaggedPost.reviewedAt = new Date();
-    flaggedPost.updatedAt = new Date();
+    flaggedPost.updatedAt = now;
 
     const flaggedBlog = await flaggedPost.save();
     console.log("Flagging blog", flaggedBlog);
@@ -110,7 +111,7 @@ const approveFlaggedBlog = async (req, res) => {
         flaggedTitle: flaggedPost.flaggedTitle,
         flaggedSlug: flaggedPost.flaggedSlug,
         moderatorId: reviewerId,
-        comment: reviewComment || "Reviewed and approved",
+        comment: reviewComment || "Approved due to policy violation",
         statusChange: { oldStatus: "flagged", newStatus: "approved" },
       });
 
@@ -147,7 +148,7 @@ const rejectFlaggedBlog = async (req, res) => {
     console.log("Flagged Blog post:", flaggedPost);
 
     const now = new Date();
-    // Mark as rejected
+
     flaggedPost.reviewStatus = "rejected";
     flaggedPost.reviewedBy = reviewerId;
     flaggedPost.reviewedAt = now;
@@ -156,9 +157,10 @@ const rejectFlaggedBlog = async (req, res) => {
       comment: reviewComment || "no violation found",
       reviewedAt: new Date(),
       reviewedBy: reviewerId,
+      status: "rejected",
     });
-    flaggedPost.reviewedAt = new Date();
-    flaggedPost.updatedAt = new Date();
+
+    flaggedPost.updatedAt = now;
 
     const savedFlaggedBlog = await flaggedPost.save();
 
@@ -205,7 +207,7 @@ const rejectFlaggedBlog = async (req, res) => {
         flaggedTitle: flaggedPost.flaggedTitle,
         flaggedSlug: flaggedPost.flaggedSlug,
         moderatorId: reviewerId,
-        comment: reviewComment || "Rejected due to policy violation",
+        comment: reviewComment || "Rejected due to no policy violation",
         statusChange: { oldStatus: "flagged", newStatus: "rejected" },
       });
 
@@ -255,8 +257,17 @@ const revertFlaggedBlogStatus = async (req, res) => {
         message: "Blog is not yet reviewed, so there's nothing to revert.",
       });
     }
+    const previousBlogStatus = blogPost.reviewStatus;
+    const newBlogStatus = toggleStatus(previousBlogStatus);
 
-    blogPost.reviewStatus = toggleStatus(blogPost.reviewStatus);
+    if (blogPost.reviewHistory.length >= 3) {
+      return res.status(400).json({
+        status: "error",
+        message: "Blog post has already been reverted 3 times.",
+      });
+    }
+
+    blogPost.reviewStatus = newBlogStatus;
     blogPost.reviewedBy = reviewerId;
     blogPost.reviewComment = reviewComment || "review flag reverted";
     blogPost.updatedAt = now;
@@ -267,6 +278,16 @@ const revertFlaggedBlogStatus = async (req, res) => {
       comment: reviewComment || "review flag reverted",
       reviewedAt: now,
       reviewedBy: reviewerId,
+      status: "reverted",
+    });
+    blogPost.statusHistory.push({
+      status: "reverted",
+      statusChange: {
+        oldStatus: previousBlogStatus,
+        newStatus: newBlogStatus,
+      },
+      changedAt: now,
+      changedBy: reviewerId,
     });
     console.log("Almost saving reverted blog post:");
 
@@ -283,7 +304,17 @@ const revertFlaggedBlogStatus = async (req, res) => {
         message: "No flagged blog found.",
       });
     }
-    flaggedPost.reviewStatus = toggleStatus(flaggedPost.reviewStatus);
+
+    if (flaggedPost.reviewHistory.length >= 3) {
+      return res.status(400).json({
+        status: "error",
+        message: "Flagged post has already been reverted 3 times.",
+      });
+    }
+    const previousFlaggedPostStatus = flaggedPost.reviewStatus;
+    const newFlaggedPostStatus = toggleStatus(previousFlaggedPostStatus);
+
+    flaggedPost.reviewStatus = newFlaggedPostStatus;
     flaggedPost.reviewedBy = reviewerId;
     flaggedPost.updatedAt = now;
 
@@ -295,10 +326,33 @@ const revertFlaggedBlogStatus = async (req, res) => {
       comment: reviewComment || "review flag reverted",
       reviewedAt: now,
       reviewedBy: reviewerId,
+      status: "reverted",
+    });
+    flaggedPost.statusHistory.push({
+      status: "reverted",
+      statusChange: {
+        oldStatus: previousFlaggedPostStatus,
+        newStatus: newFlaggedPostStatus,
+      },
+      changedAt: now,
+      changedBy: reviewerId,
     });
 
     const savedFlaggedPost = await flaggedPost.save();
     console.log("Updated flagged post:", savedFlaggedPost);
+
+    await createAuditLog({
+      action: "review-reverted",
+      postId: flaggedPost._id,
+      flaggedTitle: flaggedPost.flaggedTitle,
+      flaggedSlug: flaggedPost.flaggedSlug,
+      moderatorId: reviewerId,
+      comment: reviewComment || "review flag reverted",
+      statusChange: {
+        oldStatus: previousFlaggedPostStatus,
+        newStatus: newFlaggedPostStatus,
+      },
+    });
 
     res.status(200).json({
       status: "success",
@@ -405,35 +459,6 @@ const getFlaggedPostAnalytics = async () => {
     throw err;
   }
 };
-
-/**==============================================
- * Create audit log
- * ==============================================*/
-// const createAuditLog = async (action, postId, userId) => {
-//   try {
-//     // Create a new log entry with the moderator's action
-//     // const newLog = new AuditLog({
-//     //   action,
-//     //   postId,
-//     //   userId,
-//     //   timestamp: new Date(),
-//     // });
-
-//     await logModeratorAction({
-//       action: "approved flagged post",
-//       postId: blogPost._id,
-//       moderatorId: reviewerId,
-//       comment: reviewComment,
-//       statusChange: { oldStatus: "flagged", newStatus: "approved" },
-//     });
-
-//     // Save the log entry to the database
-//     await newLog.save();
-//     console.log("Audit log created.");
-//   } catch (err) {
-//     console.error("Error creating audit log:", err);
-//   }
-// };
 
 module.exports = {
   getFlaggedPosts,
