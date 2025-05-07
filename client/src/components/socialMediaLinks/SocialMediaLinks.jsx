@@ -54,7 +54,7 @@ const SocialMediaLinks = () => {
             <ul key={link.id} className="inline-flex my-2">
               <li className="flex">
                 <a href={link.uri} target="_blank" className="">
-                  <span className="text-3xl">{link.icon}</span>
+                  <span className="text-xl">{link.icon}</span>
                   {/* <span className="text-red-500">{link.name}</span> */}
                 </a>
               </li>

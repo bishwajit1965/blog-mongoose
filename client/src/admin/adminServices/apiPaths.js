@@ -3,6 +3,7 @@ const API_PATHS = {
   AUDIT_LOGS: "/audit-logs",
   FLAGGED_BLOGS: "/flagged-blogs",
   BLOGS: "/blogs",
+  BOOKMARKED_POSTS: "/bookmark-post",
   CATEGORIES: "/categories",
   COMMENTS: "/comments",
   COMMENTS_ADMIN: "/admin-only-comments",

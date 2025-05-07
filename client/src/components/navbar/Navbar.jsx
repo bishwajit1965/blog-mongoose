@@ -30,17 +30,16 @@ const Navbar = () => {
     { id: 1, route: "/", name: "Home" },
     { id: 2, route: "/about-me", name: "About Me" },
     { id: 3, route: "/contact-me", name: "Contact" },
-    { id: 4, route: "/blog-posts", name: "Blogs" },
-    { id: 5, route: "/blog-coming-soon", name: "Blog Coming Soon" },
-    user ? { id: 6, route: "/bookmarked-posts", name: "Blogs Bookmarked" } : "",
-    { id: 7, route: "/rss", name: "Rss" },
+    { id: 4, route: "/blog-coming-soon", name: "Blog Coming Soon" },
+    user ? { id: 5, route: "/bookmarked-page", name: "My Bookmarks" } : "",
+    { id: 6, route: "/rss", name: "Rss" },
     {
-      id: 8,
+      id: 7,
       route: "/pdf",
       name: "Notice",
     },
     {
-      id: 9,
+      id: 8,
       isThemeToggle: true, // Differentiator key
     },
   ];

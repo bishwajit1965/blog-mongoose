@@ -1,7 +1,9 @@
+import { FaBlog, FaBookmark, FaSearch } from "react-icons/fa";
+import { Suspense, lazy } from "react";
+
 import BlogPosts from "../blogPosts/BlogPosts";
 import CTAButton from "../../components/buttons/CTAButton";
 import Categories from "../../components/categories/Categories";
-import { FaSearch } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 import PageTitle from "../../components/pageTitle/PageTitle";
 import SocialMediaLinks from "../../components/socialMediaLinks/SocialMediaLinks";
@@ -10,9 +12,16 @@ import useAuth from "../../hooks/useAuth";
 import useGetBlogs from "../../hooks/useGetBlogs";
 import useGetCategories from "../../hooks/useGetCategories";
 import useGetTags from "../../hooks/useGetTags";
+import { useState } from "react";
+
+// import BookmarkedPage from "../bookmarkedPage/BookmarkedPage";
+
+const BookmarkedPage = lazy(() => import("../bookmarkedPage/BookmarkedPage"));
 
 const Home = () => {
   const { user } = useAuth();
+  const [showBookmarks, setShowBookmarks] = useState(false);
+  const [showBlogPosts, setShowBlogPosts] = useState(true);
   const { data, isLoading, error } = useGetBlogs();
   const {
     data: categories,
@@ -26,6 +35,12 @@ const Home = () => {
     error: isTagError,
   } = useGetTags();
 
+  const handleToggle = () => {
+    setShowBookmarks((prev) => !prev);
+    setShowBlogPosts((prev) => !prev);
+  };
+
+  console.log("Toggler value", showBookmarks);
   return (
     <div className="lg:my-12 my-4">
       <Helmet>
@@ -118,12 +133,64 @@ const Home = () => {
             </div>
             {/* Slider area ends */}
 
-            <BlogPosts
-              data={data}
-              isLoading={isLoading}
-              error={error}
-              user={user}
-            />
+            {/* Bookmarked blog post section begins */}
+            <div className="flex flex-col items-center lg:my-4 my-2">
+              <button
+                type="button"
+                onClick={() => handleToggle(!showBookmarks)}
+                className={`px-5 py-2 rounded-lg font-semibold shadow-md transition-all duration-300 flex items-center space-x-2 ${
+                  showBookmarks
+                    ? "bg-yellow-400 text-white"
+                    : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                }`}
+              >
+                <span>{showBookmarks ? "Blog Posts" : "My Bookmarks"}</span>
+                <span>{showBookmarks ? <FaBlog /> : <FaBookmark />}</span>
+              </button>
+              {showBookmarks && (
+                <div className="w-full lg:mt-4 mt-2">
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <BookmarkedPage />
+                  </Suspense>
+                </div>
+              )}
+            </div>
+            {/* <div className="flex flex-col items-center my-4">
+              <button
+                type="button"
+                onClick={() => handleToggle(!showBookmarks)}
+                className={`px-5 py-2 rounded-lg font-semibold shadow-md transition-all duration-300 ${
+                  showBookmarks
+                    ? "bg-yellow-400 text-white"
+                    : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                }`}
+              >
+                {showBookmarks
+                  ? "📚 View All Blog Posts"
+                  : "🔖 View My Bookmarks"}
+              </button>
+
+              {showBookmarks && (
+                <div className="w-full mt-6">
+                  <BookmarkedPage />
+                </div>
+              )}
+            </div> */}
+
+            {/* Bookmarked blog post section ends */}
+
+            {/* Blog posts section begins */}
+            <div className="">
+              {showBlogPosts && (
+                <BlogPosts
+                  data={data}
+                  isLoading={isLoading}
+                  error={error}
+                  user={user}
+                />
+              )}
+            </div>
+            {/* Blog posts section ends */}
           </div>
           {/**============================
           | BLOG CONTENT AREA LEFT ENDS

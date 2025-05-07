@@ -1,24 +1,27 @@
 import {
   FaArrowAltCircleRight,
-  FaArrowRight,
   FaBars,
-  FaBookmark,
+  FaBook,
   FaClock,
   FaComment,
   FaQuoteLeft,
+  FaReadme,
   FaTags,
 } from "react-icons/fa";
 import { useCallback, useEffect, useState } from "react";
 
+import AuthorInfoModal from "../../components/authorInfoModal/AuthorInfoModal";
 import BlogReadingTimeCounter from "../../components/blogReadingTimeCounter/BlogReadingTimeCounter";
+import BookmarkButton from "../../components/bookmarkButton/BookmarkButton";
 import CTAButton from "../../components/buttons/CTAButton";
 import { Link } from "react-router-dom";
+import SocialMediaLinks from "../../components/socialMediaLinks/SocialMediaLinks";
 import { getComments } from "../../services/commentApiService";
 import useDateFormatter from "../../hooks/useDateFormatter";
 
-const BlogPostCard = ({ blog, user }) => {
+const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
   const {
-    // _id,
+    _id,
     title,
     slug,
     author,
@@ -31,6 +34,7 @@ const BlogPostCard = ({ blog, user }) => {
   } = blog || {};
 
   const formattedDate = useDateFormatter(publishAt);
+  const formattedBookmarkedDate = useDateFormatter(bookmarkedAt);
   const [fetchedComments, setFetchedComments] = useState([]);
   const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -49,39 +53,35 @@ const BlogPostCard = ({ blog, user }) => {
   }, [fetchCommentsList]);
 
   return (
-    <div className="lg:mb-14 mb-10 rounded-lg pb-4 bg-base-2000 relative">
+    <div className="lg:mb-14 mb-10 rounded-lg pb-4 relative">
       {/* Blog author section begins */}
-      <div className="p-2 border-b">
-        <div className="flex items-center lg:space-x-3 space-x-2">
+      <div className="p-2 border-b hover:link">
+        <div className="flex items-center lg:space-x-3 space-x-2 hover-target">
           <div className="">
-            {user ? (
-              <img
-                src={user?.photoURL}
-                alt={title.slice(0, 15)}
-                className="w-10 rounded-full"
-              />
-            ) : (
-              <img
-                src="https://i.ibb.co.com/1z7P2wJ/girl2.jpg"
-                alt=""
-                className="w-10 rounded-full"
-              />
-            )}
-          </div>
-          <div className="">
-            <p className="text-gray-500 lg:text-base text-sm flex items-center font-bold space-x-2">
-              <span>Author:</span> <span>{author.name}</span>
-            </p>
+            <AuthorInfoModal user={user} title="Bishwajit Paul" author={author}>
+              <>
+                <p>Email: {user?.email}</p>
+                <p>Role: Admin</p>
+                <p>
+                  <Link
+                    to="https://www.test.com"
+                    className="link underline m-0"
+                  >
+                    I teach everything I know at
+                  </Link>
+                </p>
+                <SocialMediaLinks />
+              </>
+            </AuthorInfoModal>
           </div>
         </div>
       </div>
       {/* Blog author section ends */}
-
       <div className="grid lg:grid-cols-12 grid-cols-1 gap-2 justify-between items-center p-2">
         <div className="col-span-12 lg:col-span-8 lg:space-y-4 space-y-2 rounded-md min-h-[13rem]">
           {/* Blog title begins */}
           <div className="">
-            {/* <p>{_id}</p> */}
+            <p>{_id}</p>
             <Link to={`/blog-details/${slug}`} className="m-0">
               <h2 className="lg:text-2xl text-xl font-extrabold text-gray-800 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-5xl first-letter:text-2xl first-letter:text-extra-bold">
                 {title.length > 60 ? `${title.slice(0, 60)}...` : title}
@@ -122,7 +122,6 @@ const BlogPostCard = ({ blog, user }) => {
           </Link>
         </div>
       </div>
-
       <div className="lg:p-4 p-2 lg:space-y-4 space-y-2">
         {/* Category & tags, comments & bookmark section begins */}
         <div className="lg:flex grid gap-2 items-center">
@@ -181,23 +180,36 @@ const BlogPostCard = ({ blog, user }) => {
               {fetchedComments.length > 0 ? fetchedComments.length : 0}
             </span>
             <span className="">
-              <FaBookmark />
+              <BookmarkButton blogId={_id} />
             </span>
           </div>
           {/* Comments & bookmarks section ends */}
         </div>
         {/* Category & tags, comments & bookmark  section ends */}
 
-        {/* Author published at section begins */}
-        <div className="lg:flex grid items-center lg:space-x-2">
+        {/* Author published on & bookmarked on section begins */}
+        <div className="lg:flex items-center grid lg:space-x-2 space-x-0 lg:space-y-0 space-y-2">
+          <div className="text-gray-500 lg:text-normal text-sm font-bold flex items-center space-x-2">
+            <span className="">Published on:</span>
+            <span>
+              <FaClock />
+            </span>
+            <span>{formattedDate}</span>
+          </div>
           <div className="">
-            <p className="text-gray-500 lg:text-normal text-sm font-bold flex items-center space-x-2">
-              <span className="">Published on:</span> <FaClock className="" />
-              <span>{formattedDate}</span>
-            </p>
+            {bookmarkedAt && (
+              <div className="text-gray-500 lg:text-normal text-sm font-bold flex items-center space-x-2">
+                <div className="hidden lg:block">||</div>
+                <span className="">Bookmarked on:</span>
+                <span>
+                  <FaClock />
+                </span>
+                <span>{formattedBookmarkedDate}</span>
+              </div>
+            )}
           </div>
         </div>
-        {/* Author published at section ends */}
+        {/* Author published on & bookmarked on section ends */}
 
         {/* Blog content begins */}
         <div className="">
@@ -213,8 +225,11 @@ const BlogPostCard = ({ blog, user }) => {
 
         {/* Read more button begins */}
         <div className="flex items-center justify-between">
-          <div className="lg:text-lg text-sm text-gray-500 font-bold italic border border-gray-400 rounded-md shadow-sm lg:p-2 p-1 flex items-center lg:space-x-2">
-            <span>Reading time:</span>
+          <div className="text-[16px] text-gray-500 font-bold italic border border-gray-400 rounded-md shadow-sm py-1 px-2 flex items-center space-x-2">
+            <span>
+              <FaReadme />
+            </span>
+            <span>Read in:</span>
             <span className="italic">
               {<BlogReadingTimeCounter content={content} />}
             </span>
@@ -227,9 +242,9 @@ const BlogPostCard = ({ blog, user }) => {
             >
               <CTAButton
                 label="Read More"
-                icon={<FaArrowRight />}
+                icon={<FaBook />}
                 variant="primary"
-                className="btn lg:text-normal lg:text-lg lg:btn-md text-sm btn-sm rounded-lg"
+                className="btn btn-sm font-bold text-[16px] text-sm rounded-lg"
               />
             </Link>
           </div>

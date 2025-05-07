@@ -5,6 +5,7 @@ import AdminLogin from "../admin/adminPages/AdminLogin";
 import ArchivedBlogPosts from "../admin/adminDataManagement/manageBlogPosts/ArchivedBlogPosts";
 import BlogDetailsPage from "../pages/blogPosts/BlogDetailsPage";
 import BlogPosts from "../pages/blogPosts/BlogPosts";
+import BookmarkedPage from "../pages/bookmarkedPage/BookmarkedPage";
 import ComingSoonPosts from "../admin/adminDataManagement/manageBlogPosts/ComingSoonPosts";
 import ContactMe from "../pages/contactMe/ContactMe";
 import EditorDashboard from "../admin/adminComponent/editorDashboard/EditorDashboard";
@@ -93,6 +94,10 @@ const router = createBrowserRouter([
           }
           return response.json();
         },
+      },
+      {
+        path: "bookmarked-page",
+        element: <BookmarkedPage/>
       },
     ],
   },

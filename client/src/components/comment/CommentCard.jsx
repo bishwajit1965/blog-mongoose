@@ -2,6 +2,7 @@ import {
   FaArrowAltCircleRight,
   FaClock,
   FaCommentAlt,
+  FaCommentDots,
   FaEdit,
   FaPlusCircle,
   FaReply,
@@ -16,6 +17,7 @@ import CTAButton from "../buttons/CTAButton";
 import ReplyToCommentForm from "./ReplyToCommentForm";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import useAuth from "../../hooks/useAuth";
 import useDateFormatter from "../../hooks/useDateFormatter";
 import { useMutation } from "@tanstack/react-query";
 import useToggleViewModal from "../../hooks/useToggleViewModal";
@@ -27,9 +29,11 @@ const CommentCard = ({
   index,
   // nestedComments,
 }) => {
+  const { user } = useAuth();
   const [editingMode, setEditingMode] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [replyingTo, setReplyingTo] = useState(null); // stores parentId
+  const [nestedCommentToggle, setNestedCommentToggle] = useState(false);
   console.log("Nested comments:", comment.replies);
   const [commentData, setCommentData] = useState({
     name: "",
@@ -58,7 +62,7 @@ const CommentCard = ({
   }, [comment]);
 
   const { isOpen, modalData, openModal, closeModal } = useToggleViewModal();
-  const { _id, author, level, content, name, createdAt } = comment || {};
+  const { author, content, name, createdAt } = comment || {};
   const formattedDate = useDateFormatter(createdAt);
   const [errors, setErrors] = useState({});
 
@@ -149,6 +153,11 @@ const CommentCard = ({
     });
   };
 
+  // Nested comments toggler
+  const handleNestCommentToggle = () => {
+    setNestedCommentToggle(!nestedCommentToggle);
+  };
+
   return (
     <div className="lg:py-4 grid py-2 lg:space-y-3 space-y-2">
       {isEditing && <AdminLoader />}
@@ -160,8 +169,6 @@ const CommentCard = ({
 
         <div className="lg:border-l-4 border-l-2 border-gray-300 rounded-lg shadow-sm shadow-gray-300 lg:w-full w-full lg:p-3 p-2 border">
           <div className="flex lg:grid items-center justify-between">
-            <p>{_id}</p>
-            <p>Level: {level}</p>
             <div className="">
               {author?.avatar ? (
                 <div className="flex items-center lg:space-x-3 space-x-2">
@@ -236,34 +243,66 @@ const CommentCard = ({
               className="lg:btn-xs lg:text-xs btn-xs rounded-lg text-xs transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90"
             />
             <div className="p-[2px]">
-              {comment.level < 2 && (
+              {user && comment.level < 2 && (
                 <button
                   onClick={() => setReplyingTo(comment._id)}
                   className="btn btn-xs shadow-md bg-purple-600 text-white transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90"
                 >
-                  <FaReply /> Reply {comment.level}
+                  <FaReply /> Reply
                 </button>
+              )}
+            </div>
+
+            {/* Nested comments toggler begins */}
+            <div className="">
+              {comment.level < 2 && (
+                <div className="">
+                  <button
+                    type="submit"
+                    onClick={() =>
+                      handleNestCommentToggle(!nestedCommentToggle)
+                    }
+                    className="flex items-center space-x-1 link text-indigo-500"
+                  >
+                    <span>
+                      <FaCommentDots />{" "}
+                    </span>
+                    <span>
+                      {!nestedCommentToggle
+                        ? "View Replies"
+                        : nestedCommentToggle
+                        ? "Hide Replies"
+                        : !nestedCommentToggle
+                        ? "View Replies"
+                        : "Hide Replies"}
+                    </span>
+                  </button>
+                </div>
               )}
             </div>
           </div>
 
           {/* Nested Replies */}
-          {comment.replies?.length > 0 && comment.level < 2 && (
+          {nestedCommentToggle && comment.level < 2 && (
             <div className="ml-8 border-l-2 border-gray-300 pl-3 space-y-3">
-              {comment.replies.map((reply, index) => (
-                <CommentCard
-                  key={reply._id}
-                  comment={reply}
-                  index={index}
-                  slug={slug}
-                  replyingTo={replyingTo}
-                  setReplyingTo={setReplyingTo}
-                  onDataChanged={onDataChanged}
-                  openModal={openModal}
-                  handleDeleteComment={handleDeleteComment}
-                  isDeleting={isDeleting}
-                />
-              ))}
+              {comment.replies.length > 0 ? (
+                comment.replies.map((reply, index) => (
+                  <CommentCard
+                    key={reply._id}
+                    comment={reply}
+                    index={index}
+                    slug={slug}
+                    replyingTo={replyingTo}
+                    setReplyingTo={setReplyingTo}
+                    onDataChanged={onDataChanged}
+                    openModal={openModal}
+                    handleDeleteComment={handleDeleteComment}
+                    isDeleting={isDeleting}
+                  />
+                ))
+              ) : (
+                <p className="text-gray-500 text-sm italic">No replies yet</p>
+              )}
             </div>
           )}
         </div>
