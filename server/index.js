@@ -66,6 +66,7 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const reactionRoutes = require("./routes/reactionRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 const adminCommentRoutes = require("./routes/adminCommentRoutes");
+const bookmarkRoutes = require("./routes/bookmarkRoutes");
 
 // Routes setup
 app.use("/api/users", userRoutes);
@@ -88,6 +89,7 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/reactions", reactionRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/admin-only-comments", adminCommentRoutes);
+app.use("/api/bookmark-post", bookmarkRoutes);
 
 // WebSocket connection for real-time presence tracking
 io.on("connection", (socket) => {
