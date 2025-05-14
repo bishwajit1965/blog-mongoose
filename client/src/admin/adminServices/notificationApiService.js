@@ -12,7 +12,7 @@ const createNotification = (notificationData) =>
 const getAllNotifications = () =>
   handleApiCall(() => api.get(`${API_PATHS.NOTIFICATIONS}/all`));
 
-// Get all active notifications (user-facing)
+// Get all active notifications (user-fetching)
 const getActiveNotifications = () =>
   handleApiCall(() => api.get(`${API_PATHS.NOTIFICATIONS}/active`));
 
@@ -45,9 +45,9 @@ const permanentDeleteNoticeById = (id) =>
   handleApiCall(() => api.delete(`${API_PATHS.NOTIFICATIONS}/${id}`));
 
 export {
+  createNotification,
   getAllNotifications,
   getActiveNotifications,
-  createNotification,
   toggleNotificationActiveStatus,
   updateNotification,
   publishNotice,

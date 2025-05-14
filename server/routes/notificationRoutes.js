@@ -21,29 +21,30 @@ const {
 
 const router = express.Router();
 
-/**=================================
+/**=============================================
  * PUBLIC ROUTES
- * =================================*/
-router.get("/active", getActiveNotifications);
+ * =============================================*/
 
 router.use(authenticateToken);
 
-/**=================================
+// router.get("/", getActiveNotifications);
+router.get("/active", getActiveNotifications);
+/**=============================================
  * ADMIN ONLY ROUTES
- * =================================*/
-router.get(
-  "/all",
-  authorizeRoles(["super-admin", "admin"]),
-  authorizePermissions(["view-notification"]),
-  getAllNotifications
-);
-
+ * =============================================*/
 router.post(
   "/create",
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["create-notification"]),
   uploadNotice.single("file"),
   createNotification
+);
+
+router.get(
+  "/all",
+  authorizeRoles(["super-admin", "admin"]),
+  authorizePermissions(["view-notification"]),
+  getAllNotifications
 );
 
 router.patch(

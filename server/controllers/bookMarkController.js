@@ -7,13 +7,13 @@ const bookMarkPost = async (req, res) => {
   const { blogId } = req.params;
 
   try {
-    const blog = await Blog.findById(blogId).select("slug");
+    const blog = await Blog.findById(blogId).select("slug status tags");
     if (!blog) {
       return res
         .status(404)
         .json({ success: false, message: "Blog not found" });
     }
-
+    console.log("Blog to bookmark", blog);
     // Prevent duplicate bookmark (unique index exists on userId + blogId)
     const alreadyBookmarked = await Bookmark.findOne({ userId, blogId });
     if (alreadyBookmarked) {
@@ -22,7 +22,13 @@ const bookMarkPost = async (req, res) => {
         .json({ success: false, message: "Already bookmarked." });
     }
 
-    const newBookmark = new Bookmark({ userId, blogId, slug: blog.slug });
+    const newBookmark = new Bookmark({
+      userId,
+      blogId,
+      slug: blog.slug,
+      status: blog.status,
+      tags: blog.tags,
+    });
     await newBookmark.save();
 
     res

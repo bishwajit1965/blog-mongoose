@@ -14,6 +14,7 @@ const BookmarkSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
+    status: { type: String },
     slug: { type: String },
     bookmarkedAt: {
       type: Date,

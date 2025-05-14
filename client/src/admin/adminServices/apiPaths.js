@@ -16,5 +16,6 @@ const API_PATHS = {
   USER_STATS: "/users/stats",
   RECENT_USERS: "/users/recent",
   REACTIONS: "/reactions",
+  REQUESTS: "/requests",
 };
 export default API_PATHS;

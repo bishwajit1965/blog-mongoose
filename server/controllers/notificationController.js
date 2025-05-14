@@ -42,7 +42,7 @@ const getAllNotifications = async (req, res) => {
     const notifications = await Notification.find().sort({
       createdAt: -1,
     });
-    res.json({ success: true, notifications });
+    res.status(200).json({ success: true, notifications });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -57,7 +57,7 @@ const getActiveNotifications = async (req, res) => {
     const notifications = await Notification.find({ isActive: true }).sort({
       createdAt: -1,
     });
-    res.json({ success: true, notifications });
+    res.status(200).json({ success: true, notifications });
   } catch (error) {
     res.status(500).json({
       success: false,

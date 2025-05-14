@@ -50,7 +50,7 @@ const ManageAdminNotification = () => {
         subTitle="Manage"
         decoratedText="Admin Notice"
         dataLength={
-          allMessageNotification.length ? allMessageNotification.length : "0"
+          allMessageNotification?.length ? allMessageNotification?.length : "0"
         }
       />
       {editingNotice && (

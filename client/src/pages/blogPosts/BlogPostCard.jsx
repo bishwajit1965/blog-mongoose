@@ -1,12 +1,11 @@
 import {
-  FaArrowAltCircleRight,
-  FaBars,
   FaBook,
   FaClock,
   FaComment,
   FaQuoteLeft,
   FaReadme,
   FaTags,
+  FaThList,
 } from "react-icons/fa";
 import { useCallback, useEffect, useState } from "react";
 
@@ -93,7 +92,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
           {/* Blog excerpt begins */}
           <div className="">
             {excerpt ? (
-              <div className="lg:min-h-28 min-h-44 rounded-lg p-3 border-l-4 border-teal-600">
+              <div className="lg:min-h-28 min-h-44">
                 <div className="min-h-[44px] relative">
                   <FaQuoteLeft className="absolute top-0 text-xl text-gray-600 dark:text-gray-300" />
                   <p
@@ -124,20 +123,16 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
       </div>
       <div className="lg:p-4 p-2 lg:space-y-4 space-y-2">
         {/* Category & tags, comments & bookmark section begins */}
-        <div className="lg:flex grid gap-2 items-center">
+        <div className="lg:flex grid gap-2 items-center lg:space-x-4">
           <div className="flex items-center">
-            <span className="flex items-center w-fit font-bold bg-gray-500 text-white rounded-md mr-2 py-1 lg:text-normal text-xs px-2 space-x-2">
+            <span className="flex items-center w-fit mr-1 py-1 lg:text-normal text-xs lg:space-x-2">
               <span>
-                <FaBars className="" />
-              </span>
-              <span>Category</span>
-              <span>
-                <FaArrowAltCircleRight />
+                <FaThList className="text-xl mr-1" />
               </span>
             </span>
             <span className="">
               {category ? (
-                <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-1 mr-2 lg:text-normal text-xs capitalize">
+                <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-[2px] mr-1 lg:text-normal text-sm capitalize">
                   {category.name}
                 </span>
               ) : (
@@ -148,20 +143,15 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
 
           {/* Tags section begins */}
           <div className="flex items-center">
-            <span className="flex items-center w-fit font-bold bg-gray-500 text-white  rounded-md mr-2 py-1 lg:text-normal text-xs px-2 space-x-2">
+            <span className="flex items-center w-fit mr-1 py-1 lg:text-normal text-xs lg:space-x-2">
               <span>
-                <FaTags className="" />
-              </span>
-              <span>Tags</span>
-
-              <span>
-                <FaArrowAltCircleRight />
+                <FaTags className="text-xl mr-1" />
               </span>
             </span>
             {tags && tags.length > 0 ? (
               tags.map((tag) => (
                 <span key={tag._id}>
-                  <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-800  rounded-md px-2 py-1 mr-2 lg:text-normal text-xs">
+                  <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-[2px] mr-1 lg:text-normal text-sm capitalize">
                     {tag.name}
                   </span>
                 </span>
@@ -172,13 +162,15 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
           </div>
 
           {/* Comments & bookmarks section begins */}
-          <div className="flex items-center lg:space-x-2 space-x-1">
-            <span>
-              <FaComment />
-            </span>
-            <span className="w-6 h-6 p-1 flex items-center justify-center rounded-full bg-gray-200 shadow-sm font-semibold">
-              {fetchedComments.length > 0 ? fetchedComments.length : 0}
-            </span>
+          <div className="flex items-center lg:space-x-4 space-x-3">
+            <div className="flex items-center lg:space-x-3 space-x-2">
+              <span>
+                <FaComment className="text-xl" />
+              </span>
+              <span className="w-6 h-6 p-1 flex items-center justify-center rounded-full border border-gray-300 bg-gray-200 shadow-sm font-semibold">
+                {fetchedComments.length > 0 ? fetchedComments.length : 0}
+              </span>
+            </div>
             <span className="">
               <BookmarkButton blogId={_id} />
             </span>
@@ -192,9 +184,9 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
           <div className="text-gray-500 lg:text-normal text-sm font-bold flex items-center space-x-2">
             <span className="">Published on:</span>
             <span>
-              <FaClock />
+              <FaClock className="text-xl" />
             </span>
-            <span>{formattedDate}</span>
+            <span className="text-normal">{formattedDate}</span>
           </div>
           <div className="">
             {bookmarkedAt && (
@@ -225,7 +217,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
 
         {/* Read more button begins */}
         <div className="flex items-center justify-between">
-          <div className="text-[16px] text-gray-500 font-bold italic border border-gray-400 rounded-md shadow-sm py-1 px-2 flex items-center space-x-2">
+          <div className="lg:text-[16px] text-sm text-gray-500 font-bold italic border border-gray-400 rounded-md shadow-sm lg:py-1 py-[4px] lg:px-2 px-1 flex items-center lg:space-x-2 space-x-1">
             <span>
               <FaReadme />
             </span>
