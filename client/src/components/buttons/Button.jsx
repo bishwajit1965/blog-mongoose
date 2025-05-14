@@ -1,41 +1,24 @@
 import { useNavigate } from "react-router-dom";
 
-/**
- * A reusable CTA (Call to Action) button or link component.
- *
- * @param {string} label - The text to display on the button/link.
- * @param {function} onClick - The function to call when the button is clicked (ignored for links).
- * @param {string} variant - The style variant of the button ('primary', 'secondary', etc.).
- * @param {boolean} disabled - Whether the button is disabled.
- * @param {boolean} loading - Whether the button is in a loading state.
- * @param {string} loadingLabel - The label to display when loading (optional).
- * @param {JSX.Element} icon - An optional icon to display inside the button.
- * @param {string} className - Additional Tailwind CSS classes for styling.
- * @param {string} href - The URL for the link (renders an <a> tag instead of a <button> if provided).
- * @param {string} target - Specifies where to open the linked document (e.g., "_blank").
- * @param {string} rel - Specifies the relationship between the current document and the linked document.
- * @returns {JSX.Element} The CTA button or link component.
- */
-const CTAButton = ({
-  label = "Submit",
+const Button = ({
+  label = "Click Me",
   onClick,
-  variant = "primary",
-  disabled = false,
-  loading = false,
-  loadingLabel = "Loading...",
+  variant = "white",
   icon = null,
   className = "",
-  href = null,
+  disabled = false,
+  loading = false,
   to = null,
   target = "_self",
   rel = "noopener noreferrer",
+  loadingLabel = "Loading...",
+  href = null,
 }) => {
   const navigate = useNavigate();
-  // Define base styles
-  const baseStyle =
-    "px-3 py-1 font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-lg transform transition-transform duration-300 inline-block lg:block";
 
-  // Define variant-specific styles
+  const baseStyle =
+    "px-4 py-1 font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 transition-transform duration-300";
+
   const variantStyles = {
     primary:
       "bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 focus:ring-blue-400",
@@ -51,11 +34,15 @@ const CTAButton = ({
     warning:
       "bg-gradient-to-r from-yellow-500 to-yellow-600 text-black hover:from-yellow-500 hover:to-yellow-600 focus:ring-yellow-400",
     white:
-      "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 hover:border-gray-400 hover:text-gray-800 focus:ring-gray-300",
+      "bg-white border border-1 border-gray-400 shadow-sm text-gray-700 hover:bg-gray-100 hover:border-gray-400 hover:text-gray-800 focus:ring-gray-300",
+
+    gray: "border border-1 border-gray-500 text-gray-700 bg-gray-200 rounded-full shadow-md focus:ring-2 focus:ring-offset-2 transition-transform duration-300",
+
+    active:
+      "bg-teal-600 border border-1 text-gray-100 hover:bg-emerald-700  border-emerald-400 shadow-sm focus:ring-2 focus:ring-offset-2 transition-transform duration-300",
   };
 
-  // Combine all styles
-  const combinedClass = `${baseStyle} ${variantStyles[variant]} ${
+  const combinedButtonStyles = `${baseStyle} ${variantStyles[variant]}  ${
     (disabled || loading) && "opacity-50 cursor-not-allowed"
   } ${className}`;
 
@@ -66,7 +53,7 @@ const CTAButton = ({
       ) : (
         icon && <span>{icon}</span>
       )}
-      <span className="text-base-200">{loading ? loadingLabel : label}</span>
+      <span className="text-gray-2000">{loading ? loadingLabel : label}</span>
     </span>
   );
 
@@ -77,11 +64,9 @@ const CTAButton = ({
       onClick();
     }
   };
-
-  // Conditionally render <"to"-- it will not reload page> <"a" it will reload page> or <button>
   return to ? (
     <button
-      className={combinedClass}
+      className={combinedButtonStyles}
       onClick={handleNavigation}
       disabled={disabled || loading}
     >
@@ -92,14 +77,14 @@ const CTAButton = ({
       href={href}
       target={target}
       rel={rel}
-      className={combinedClass}
+      className={combinedButtonStyles}
       aria-disabled={disabled || loading}
     >
       {content}
     </a>
   ) : (
     <button
-      className={combinedClass}
+      className={combinedButtonStyles}
       onClick={onClick}
       disabled={disabled || loading}
     >
@@ -108,4 +93,4 @@ const CTAButton = ({
   );
 };
 
-export default CTAButton;
+export default Button;

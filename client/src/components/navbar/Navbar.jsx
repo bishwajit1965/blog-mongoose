@@ -35,7 +35,7 @@ const Navbar = () => {
     { id: 6, route: "/rss", name: "Rss" },
     {
       id: 7,
-      route: "/pdf",
+      route: "/notice",
       name: "Notice",
     },
     {

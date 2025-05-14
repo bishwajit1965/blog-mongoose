@@ -1,18 +1,21 @@
 import {
   FaArrowAltCircleRight,
-  FaArrowRight,
-  FaBars,
+  FaArrowLeft,
   FaClock,
   FaComment,
   FaCommentAlt,
   FaEye,
+  FaEyeSlash,
   FaFlag,
   FaHome,
   FaPlusCircle,
   FaQuoteLeft,
+  FaRegTimesCircle,
   FaTags,
+  FaThList,
   FaThumbsDown,
   FaThumbsUp,
+  FaTimesCircle,
 } from "react-icons/fa";
 import {
   Link,
@@ -25,12 +28,15 @@ import {
   getReactionsForPost,
   reactToPost,
 } from "../../services/reactionApiService";
-import { useCallback, useEffect, useState } from "react";
+import { motion, useAnimation } from "framer-motion";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import AdminLoader from "../../admin/adminComponent/adminLoader/AdminLoader";
 import AuthorInfoModal from "../../components/authorInfoModal/AuthorInfoModal";
+import BlogDetailsPageSkeleton from "./BlogDetailsPageSkeleton";
 import BlogReadingTimeCounter from "../../components/blogReadingTimeCounter/BlogReadingTimeCounter";
 import BookmarkButton from "../../components/bookmarkButton/BookmarkButton";
+import Button from "../../components/buttons/Button";
 import CTAButton from "../../components/buttons/CTAButton";
 import CommentCard from "../../components/comment/CommentCard";
 import SocialMediaLinks from "../../components/socialMediaLinks/SocialMediaLinks";
@@ -41,14 +47,33 @@ import useFlagBlogPost from "../../hooks/useFlagBlogPost";
 import { useMutation } from "@tanstack/react-query";
 import useWordCount from "../../admin/adminHooks/useWordCount";
 
+// Button active state style
+const style = {
+  active:
+    "bg-teal-500 text-gray-100 hover:bg-emerald-700 border border-1 border-emerald-400 shadow-md focus:ring-2 focus:ring-offset-2 transition-transform duration-300 border-none",
+};
+
 const BlogDetailsPage = () => {
   const { user } = useAuth();
   const blog = useLoaderData();
   const slug = blog?.slug || blog?.blog?.slug;
   const wordCount = useWordCount(blog?.content);
   const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
+  const [isCommentBoxOpen, setIsCommentBoxOpen] = useState(false);
+  const [isViewCommentsOpen, setIsViewCommentsOpen] = useState(false);
+  const [isFlagOpen, setIsFlagOpen] = useState(false);
+  const { mutate, isLoading } = useFlagBlogPost();
+  const [reason, setReason] = useState("");
+  const [isVisible, setIsVisible] = useState(true);
+  const [customComment, setCustomComment] = useState("");
+  const [fetchedComments, setFetchedComments] = useState([]);
+  const [activeComment, setActiveComment] = useState(false);
+  const navigate = useNavigate();
+  const leftColumnRef = useRef(null);
+  const controls = useAnimation();
+  const location = useLocation();
   const [reactions, setReactions] = useState({ likes: 0, dislikes: 0 });
+
   const {
     _id,
     title,
@@ -62,15 +87,6 @@ const BlogDetailsPage = () => {
     flaggedReason,
   } = blog || {};
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [isCommentBoxOpen, setIsCommentBoxOpen] = useState(false);
-  const [isViewCommentsOpen, setIsViewCommentsOpen] = useState(false);
-  const [isFlagOpen, setIsFlagOpen] = useState(false);
-  const { mutate, isLoading } = useFlagBlogPost();
-  const [reason, setReason] = useState("");
-  const [customComment, setCustomComment] = useState("");
-  const [fetchedComments, setFetchedComments] = useState([]);
   // Comment form related code
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -112,6 +128,15 @@ const BlogDetailsPage = () => {
     "Other",
   ];
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000); // Simulating a delay
+    return () => clearTimeout(timer);
+  }, []);
+
   /**==========================================
    * FETCH COMMENTS LIST
    *===========================================*/
@@ -140,12 +165,16 @@ const BlogDetailsPage = () => {
     fetchReactions();
   }, [fetchReactions]);
 
+  /**==========================================
+   * HANDLE LIKES
+   *===========================================*/
   const handleLike = async (slug) => {
     try {
       const response = await reactToPost(slug, { type: "like" });
       if (response.success) {
         toast.success(response.message);
         fetchReactions();
+        handleLikePostToggler();
       }
     } catch (error) {
       if (error.response && error.response.data.message) {
@@ -165,6 +194,7 @@ const BlogDetailsPage = () => {
       if (response?.success) {
         toast.success(response?.message);
         fetchReactions();
+        handleDislikedPostToggler();
       }
     } catch (error) {
       if (error.response && error.response.data?.message) {
@@ -180,6 +210,7 @@ const BlogDetailsPage = () => {
    *===========================================*/
   const handleViewCommentsToggle = () => {
     setIsViewCommentsOpen((prev) => !prev);
+    handleCommentsViewToggler();
   };
 
   /**==============================================
@@ -187,11 +218,42 @@ const BlogDetailsPage = () => {
    *===============================================*/
   const handleFlagToggle = () => {
     setIsFlagOpen((prev) => !prev);
+    handleFlagPostToggler();
+    handleCancelFlagPostNowToggler();
     if (!user) {
       navigate("/login", { state: { from: location }, replace: true });
       return;
     }
   };
+
+  /**======================================================
+   * VANISH THE LEFT FLOATING TEXT BOX ON SCROLL TOP BEGINS
+   *=======================================================*/
+  useEffect(() => {
+    const handleScroll = () => {
+      if (leftColumnRef.current) {
+        const rect = leftColumnRef.current.getBoundingClientRect();
+        if (rect.top <= 80) {
+          setIsVisible(false);
+        } else {
+          setIsVisible(true);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    controls.start({
+      opacity: isVisible ? 1 : 0,
+      transition: { duration: 0.5 },
+    });
+  }, [isVisible, controls]);
+  /**======================================================
+   * VANISH THE LEFT FLOATING TEXT BOX ON SCROLL TOP ENDS
+   *=======================================================*/
 
   const handleFlagPost = (e) => {
     e.preventDefault();
@@ -203,12 +265,52 @@ const BlogDetailsPage = () => {
       alert("Please select a reason for flagging the post.");
       return;
     }
+    handleFlagPostNowToggler();
 
     mutate({
       slug,
       reason,
       comment: customComment || reason,
     });
+  };
+
+  /**==========================================
+   * HANDLE ACTIVE BUTTON TOGGLE VIEW
+   *===========================================*/
+  const [isOpenComments, setIsOpenComments] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isDisliked, setIsDisliked] = useState(false);
+  const [flag, setFlag] = useState(false);
+  const [flagPostNow, setFlagPostNow] = useState(false);
+  const [cancelFlag, setCancelFlag] = useState(false);
+
+  const handleActiveButton = () => {
+    setActiveComment((prev) => !prev);
+  };
+
+  const handleCommentsViewToggler = () => {
+    setIsOpenComments((prev) => !prev);
+  };
+
+  const handleLikePostToggler = () => {
+    setIsDisliked(false);
+    setIsLiked((prev) => !prev);
+  };
+  const handleDislikedPostToggler = () => {
+    setIsLiked(false);
+    setIsDisliked((prev) => !prev);
+  };
+
+  const handleFlagPostToggler = () => {
+    setFlag((prev) => !prev);
+  };
+
+  const handleFlagPostNowToggler = () => {
+    setFlagPostNow((prev) => !prev);
+  };
+  const handleCancelFlagPostNowToggler = () => {
+    setCancelFlag((prev) => !prev);
+    setFlagPostNow((prev) => !prev);
   };
 
   if (blog.error) return <div>Error!</div>;
@@ -221,16 +323,23 @@ const BlogDetailsPage = () => {
    *===================================================*/
   const handleCommentBoxToggle = () => {
     setIsCommentBoxOpen((prev) => !prev);
+    handleActiveButton();
     if (!user) {
       navigate("/login", { state: { from: location }, replace: true });
       return;
     }
   };
 
+  /**==========================================
+   * LOAD DATA TO RESPECTIVE VARIABLE PROPS
+   *===========================================*/
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  /**==========================================
+   * HANDLE SUBMIT THE FORM DATA TO PROCESS
+   *===========================================*/
   const handleSubmitComment = async (e) => {
     e.preventDefault();
 
@@ -253,15 +362,45 @@ const BlogDetailsPage = () => {
     fetchCommentsList();
   };
 
+  if (loading) {
+    return (
+      <div className="col-span-12 lg:col-span-8">
+        {[...Array(1)].map((_, index) => (
+          <BlogDetailsPageSkeleton key={index} />
+        ))}
+      </div>
+    );
+  }
+
   return (
-    <div className="lg:py-4 py-2 dark:bg-gray-800 dark:text-gray-200 shadow-lg">
+    <div className="lg:py-4 p-2 dark:bg-gray-800 dark:text-gray-200 lg:shadow-lg relative">
       {isLoading && <AdminLoader />}
 
+      {/* Floating text box left top begins */}
+      <div>
+        <motion.div
+          ref={leftColumnRef}
+          animate={controls}
+          className="w-[14rem] bg-gray-100 p-4 absolute top-6 left-2 rounded-md invisible lg:visible shadow-md"
+        >
+          <div className="border-b w-full border-gray-400">
+            <h1 className="text-xl font-bold">✅Hello Viewers!!</h1>
+          </div>
+          <p className="text-justify">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
+            tenetur velit excepturi voluptatem iusto, dolorum consectetur aut
+            sed, consequuntur nisi adipisci molestias distinctio pariatur vitae
+            et voluptatibus sit error. Odio.
+          </p>
+        </motion.div>
+      </div>
+      {/* Floating text box left top ends */}
+
       <div className="lg:max-w-3xl mx-auto">
-        <div className="lg:space-y-4 space-y-2">
+        <div className="lg:space-y-3 space-y-2">
           {/* Blog content wrapper begins */}
           {/* Blog post title begins */}
-          <div className="">
+          <div className="lg:mb-7">
             <Link to="/" className="m-0">
               <h2 className="lg:text-4xl font-extrabold text-gray-900 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-5xl first-letter:text-extra-bold">
                 {title}
@@ -319,19 +458,18 @@ const BlogDetailsPage = () => {
           {/* Author, follow, reading time, published at section ends */}
 
           {/* Flagging and dislikes flagged section begins */}
-          <div className="lg:flex items-center lg:space-x-4 lg:space-y-0 space-y-2">
+          <div className="lg:flex items-center lg:space-x-8 lg:space-y-0 space-y-2">
             {/* Flagged reason display begins */}
-            <div className="">
+            <div className="flex items-center lg:space-x-3 space-x-2">
+              <span>
+                <FaFlag />
+              </span>
               {flaggedReason.length > 0 ? (
                 flaggedReason.map((reason) => (
                   <div
                     key={reason._id}
                     className="flex items-center w-fit font-bold lg:text-[17px] text-xs lg:space-x-2 space-x-1"
                   >
-                    <span>
-                      <FaFlag />
-                    </span>
-
                     <span
                       className={`${
                         reason.length > 0
@@ -350,9 +488,9 @@ const BlogDetailsPage = () => {
               )}
             </div>
             {/* Flagged reason display ends */}
-            <div>||</div>
+
             {/* Likes dislikes section begins */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center lg:space-x-4">
               <div className="flex items-center lg:space-x-2 space-x-1">
                 <span className="">
                   <FaThumbsUp />
@@ -372,10 +510,8 @@ const BlogDetailsPage = () => {
             </div>
             {/* Likes dislikes section ends */}
 
-            <div className="">||</div>
-
             {/* Social media links section begins */}
-            <div className="">
+            <div className="flex justify-end">
               <SocialMediaLinks />
             </div>
             {/* Social media links section ends */}
@@ -387,7 +523,7 @@ const BlogDetailsPage = () => {
             <div className="flex items-center">
               <span className="flex items-center w-fit font-bold rounded-md mr-2 py-1 lg:text-[17px] text-xs">
                 <span>
-                  <FaBars />
+                  <FaThList />
                 </span>
               </span>
               <span className="">
@@ -400,7 +536,7 @@ const BlogDetailsPage = () => {
                 )}
               </span>
             </div>
-            <div>||</div>
+
             <div className="">
               <div className="flex items-center">
                 <span className="flex items-center w-fit font-bold   rounded-md mr-2 lg:text-[17px] text-xs">
@@ -411,7 +547,7 @@ const BlogDetailsPage = () => {
                 {tags && tags.length > 0 ? (
                   tags.map((tag) => (
                     <span key={tag._id}>
-                      <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600  rounded-md px-2 py-1 mr-2 lg:text-[17px] text-xs">
+                      <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-1 mr-2 lg:text-[17px] text-xs">
                         {tag.name}
                       </span>
                     </span>
@@ -441,7 +577,7 @@ const BlogDetailsPage = () => {
           {/* Excerpt section begins */}
           <div className="lg:py-4 py-2">
             {excerpt ? (
-              <div className="lg:min-h-32 min-h-32">
+              <div className="lg:min-h-24 min-h-40">
                 <div className="min-h-[40px] relative">
                   <FaQuoteLeft className="absolute top-0 text-xl font-bold text-gray-600 dark:text-gray-300" />
                   <p
@@ -473,7 +609,7 @@ const BlogDetailsPage = () => {
           {/* Blog image section ends */}
 
           {/* Blog post content section begins */}
-          <div className="">
+          <div className="lg:pt-6 pt-4">
             <p
               dangerouslySetInnerHTML={{
                 __html: content,
@@ -501,56 +637,72 @@ const BlogDetailsPage = () => {
         </div>
 
         {/* Like & dislike button begins */}
-        <div className="lg:flex grid gap-2 items-center justify-center lg:space-x-16 lg:space-y-0 space-y-4 lg:py-6 py-4">
-          <div className="relative">
-            <CTAButton
+        <div className="grid lg:grid-cols-3 grid-col-1 gap-2 items-center justify-center w-full lg:justify-between lg:space-x- lg:space-y-0 space-y-4 lg:py-4 py-4">
+          <div className="relative lg:flex lg:justify-start grid justify-center">
+            <Button
               onClick={() => handleLike(slug)}
-              label={`${reactions.likeCount > 0 ? "Liked" : "Like"}`}
-              icon={<FaThumbsUp />}
-              variant="primary"
-              className="btn lg:text-xl text-sm lg:btn-md btn-sm rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90 lg:w-40 w-40"
+              label={`${reactions.likeCount > 0 ? "Liked Post" : "Like Post"}`}
+              icon={reactions.likeCount > 0 ? <FaThumbsUp /> : <FaThumbsDown />}
+              variant={isLiked ? "active" : "white"}
+              className="lg:min-w-44 min-w-44"
             />
-            <div className="absolute -top-5 -left-5 size-8 rounded-full bg-teal-500 shadow-md text-base-100 flex items-center justify-center font-semibold">
+            <div
+              className={`${
+                reactions.likeCount > 0 ? style.active : "white"
+              } absolute lg:-top-5 lg:-left-5 -top-5 -right-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
+            >
               {reactions.likeCount}
             </div>
           </div>
 
-          <div className="relative">
-            <CTAButton
-              label={`${reactions.dislikeCount > 0 ? "Disliked" : "Dislike"}`}
+          <div className="relative lg:flex lg:justify-center grid justify-center">
+            <Button
+              label={`${
+                reactions.dislikeCount > 0 ? "Disliked Post" : "Dislike Post"
+              }`}
               onClick={() => handleDislike(slug)}
-              icon={<FaThumbsDown />}
-              variant="warning"
-              className="btn lg:text-xl text-sm lg:btn-md btn-sm rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90 lg:w-40 w-40"
+              icon={
+                reactions.dislikeCount > 0 ? <FaThumbsDown /> : <FaThumbsUp />
+              }
+              variant={isDisliked ? "active" : "white"}
+              className="lg:min-w-44 min-w-44"
             />
-
-            <div className="absolute -top-5 -left-5 size-8 rounded-full bg-amber-700 shadow-md text-base-100 flex items-center justify-center">
+            <div
+              className={`${
+                reactions.dislikeCount > 0 ? style.active : "white"
+              } absolute lg:-top-5 lg:left-4 -top-5 -right-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
+            >
               {reactions.dislikeCount}
             </div>
           </div>
           {!isFlagOpen ? (
-            <CTAButton
-              onClick={handleFlagToggle}
-              label="Flag Post"
-              icon={<FaFlag />}
-              variant="info"
-              className="btn lg:text-xl text-sm lg:btn-md btn-sm rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90 lg:w-40 w-40"
-            />
+            <div className="lg:flex lg:justify-end">
+              <Button
+                onClick={handleFlagToggle}
+                label="Flag Post"
+                icon={<FaFlag />}
+                variant={flag ? "active" : "white"}
+                className="lg:min-w-44 min-w-44"
+              />
+            </div>
           ) : (
             <>
-              <CTAButton
-                onClick={handleFlagPost}
-                label="Flag Post Now"
-                icon={<FaFlag />}
-                variant="info"
-                className="btn lg:text-xl text-sm lg:btn-md btn-sm rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90 lg:w-48 w-40"
-              />
+              <div className="lg:flex lg:justify-end grid justify-center">
+                <Button
+                  onClick={handleFlagPost}
+                  label="Flag Post Now"
+                  icon={<FaFlag />}
+                  variant={flagPostNow ? "active" : "white"}
+                  disabled={isPending}
+                  className="lg:min-w-44 min-w-44"
+                />
+              </div>
               {isFlagOpen && (
-                <div className="lg:w-48 w-40">
+                <div className="">
                   <select
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
-                    className="select lg:select-md select-sm lg:w-48 w-40"
+                    className="select lg:select-sm select-sm lg:max-w-44 max-w-44 rounded-full"
                   >
                     <option disabled value="">
                       Select one reason
@@ -564,7 +716,7 @@ const BlogDetailsPage = () => {
 
                   {reason === "Other" && (
                     <textarea
-                      className="textarea textarea-bordered w-full max-w-xs"
+                      className="textarea textarea-bordered lg:max-w-44 max-w-44 "
                       rows="3"
                       placeholder="Custom comment..."
                       value={customComment}
@@ -573,13 +725,15 @@ const BlogDetailsPage = () => {
                   )}
                 </div>
               )}
-              <CTAButton
-                onClick={handleFlagToggle}
-                label="Cancel Flagging"
-                icon={<FaFlag />}
-                variant="warning"
-                className="btn lg:text-xl text-sm lg:btn-md btn-sm rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90 lg:w-52 w-40"
-              />
+              <div className="flex lg:justify-center justify-center flex-start">
+                <Button
+                  onClick={handleFlagToggle}
+                  label="Cancel Flagging"
+                  icon={<FaRegTimesCircle />}
+                  variant={cancelFlag ? "white" : "warning"}
+                  className="lg:min-w-44 min-w-44 flex justify-end"
+                />
+              </div>
             </>
           )}
         </div>
@@ -590,39 +744,38 @@ const BlogDetailsPage = () => {
       <div className="lg:flex w-full flex-col lg:max-w-3xl mx-auto">
         <div className="divider font-bold">Comments Section</div>
       </div>
-      <div className="lg:mx-auto lg:w-1/2 w-full">
-        <div className="flex items-center justify-between lg:space-x- space-x-6 lg:py-6 py-4 lg:px-0 px-2">
-          <CTAButton
-            onClick={handleCommentBoxToggle}
-            label={isCommentBoxOpen ? "Hide Comment Box" : "Add Comment"}
-            icon={<FaComment />}
-            variant="primary"
-            className="btn lg:text-xl text-sm lg:btn-md btn-sm rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90"
-          />
-          <div className="relative">
-            <button
-              type="button"
-              className="border border-1 font-normal border-gray-500 min-w-32 rounded-full py-1 px-4 transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90 flex items-center space-x-2 shadow-sm"
-            >
-              <span>
-                <FaCommentAlt />
-              </span>{" "}
-              <span>Add comment</span>
-            </button>
 
-            <div className="absolute 6-8 w-8 border border-1 border-gray-500 rounded-full p-1 -top-5 -left-6 flex items-center justify-center shadow-sm text-sm">
-              10
+      <div className="lg:max-w-3xl mx-auto w-full">
+        <div className="lg:flex grid gap-6 items-center lg:justify-between justify-center lg:py-4 py-4 lg:px-0 px-2">
+          <div className="relative">
+            <Button
+              onClick={handleCommentBoxToggle}
+              icon={!activeComment ? <FaComment /> : <FaTimesCircle />}
+              label={activeComment ? "Hide Form" : "Add Comment"}
+              variant={activeComment ? "active" : "white"}
+              className="lg:text-[1rem] text-[1rem] lg:min-w-44 min-w-44"
+            />
+            <div
+              className={`${
+                activeComment ? style.active : "white"
+              } absolute lg:-top-5 lg:-left-5 -top-5 -right-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
+            >
+              {fetchedComments.length > 0 ? fetchedComments.length : 0}
             </div>
           </div>
           <div className="relative">
-            <CTAButton
+            <Button
               onClick={handleViewCommentsToggle}
               label={isViewCommentsOpen ? "Hide Comments" : "View Comments"}
-              icon={<FaEye />}
-              variant="info"
-              className="btn lg:text-xl text-sm lg:btn-md btn-sm rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90 lg:w-56 w-[152px]"
+              icon={!isViewCommentsOpen ? <FaEye /> : <FaEyeSlash />}
+              variant={isOpenComments ? "active" : "white"}
+              className="lg:text-[1rem] text-[1rem] lg:min-w-44 min-w-44"
             />
-            <div className="absolute -top-5 -left-5 size-8 bg-teal-600 text-white font-semibold flex items-center justify-center rounded-full shadow-md">
+            <div
+              className={`${
+                isOpenComments ? style.active : "white"
+              } absolute -top-5 -left-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
+            >
               {fetchedComments.length > 0 ? fetchedComments.length : 0}
             </div>
           </div>
@@ -632,10 +785,10 @@ const BlogDetailsPage = () => {
       {/* Comments list & comment form box begins */}
       {isCommentBoxOpen && (
         <div className="my-4">
-          <div className="mx-auto lg:w-1/2 w-full bg-gray-200 lg:p-8 p-2 rounded-lg shadow-sm">
+          <div className="mx-auto lg:max-w-3xl w-full bg-gray-200 lg:p-8 p-2 rounded-lg shadow-sm">
             <div className="lg:my-4 my-2">
               <h2 className="font-bold lg:text-3xl text-xl flex items-center">
-                <FaCommentAlt className="mr-1" /> Add Your Comment
+                <FaCommentAlt className="mr-1" /> Add Comment
               </h2>
             </div>
             <form
@@ -687,21 +840,22 @@ const BlogDetailsPage = () => {
                   type="submit"
                   icon={<FaPlusCircle />}
                   variant="primary"
-                  className="btn lg:text-xl text-sm lg:btn-md btn-sm rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90"
+                  className="btn lg:text-normal text-sm btn-sm transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90"
                 />
                 <CTAButton
                   onClick={handleCommentBoxToggle}
                   type="submit"
                   label="Cancel"
                   icon={<FaArrowAltCircleRight />}
-                  variant="secondary"
-                  className="btn lg:text-xl text-sm lg:btn-md btn-sm rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90"
+                  variant="warning"
+                  className="btn lg:text-normal text-sm btn-sm transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90"
                 />
               </div>
             </form>
           </div>
         </div>
       )}
+
       <div className="">
         {isViewCommentsOpen && (
           <div className="lg:px-4 px-2">
@@ -737,23 +891,24 @@ const BlogDetailsPage = () => {
       <div className="">
         <Link to="/">
           <div
-            className="tooltip fixed top-1/2 left-[10%] transform -translate-x-1/2 -translate-y-1/2 bg-gray-300 z-50 text-orange-500 px-3 py-1 shadow-lg h-14 w-14 opacity-50 rounded-full border border-gray-400 flex items-center justify-center"
+            className="tooltip fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-300 z-50 text-orange-500 px-3 py-1 shadow-lg h-14 w-14 opacity-50 rounded-full border border-gray-400 flex items-center justify-center"
             data-tip="Go Home Page"
           >
-            <FaArrowRight className="text-gray-500 text-xl" />
+            <FaArrowLeft className="text-gray-500 text-xl" />
           </div>
         </Link>
       </div>
       {/* Floating button to lead to homepage ends */}
 
       {/* Comments section ends */}
+
       <div className="lg:flex justify-end items-center space-x-4 lg:px-0 px-1">
         <Link to="/" className="m-0 flex items-center w-full">
-          <CTAButton
+          <Button
             label="Go Home Page"
             icon={<FaHome />}
             variant="secondary"
-            className="btn lg:text-xl text-sm lg:w-1/2 w-full mx-auto lg:btn-md btn-sm rounded-lg"
+            className="btn lg:text-xl text-sm lg:max-w-3xl w-full mx-auto lg:btn-md btn-sm rounded-full"
           />
         </Link>
       </div>

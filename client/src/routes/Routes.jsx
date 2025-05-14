@@ -12,6 +12,7 @@ import EditorDashboard from "../admin/adminComponent/editorDashboard/EditorDashb
 import EditorLayout from "../admin/adminLayout/EditorLayout";
 import ErrorPage from "../pages/errorPage/ErrorPage";
 import FlagBlogPosts from "../admin/adminDataManagement/manageBlogPosts/FlagBlogPosts";
+import FrontendNoticeManager from "../pages/notice/FrontendNoticeManager";
 import Home from "../pages/home/Home";
 import Login from "../pages/login/Login";
 import LoginLayout from "../layouts/loginLayout/LoginLayout";
@@ -97,7 +98,11 @@ const router = createBrowserRouter([
       },
       {
         path: "bookmarked-page",
-        element: <BookmarkedPage/>
+        element: <BookmarkedPage />,
+      },
+      {
+        path: "notice",
+        element: <FrontendNoticeManager />,
       },
     ],
   },

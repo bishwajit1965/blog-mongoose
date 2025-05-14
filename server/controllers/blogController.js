@@ -140,7 +140,7 @@ const createBlog = async (req, res) => {
 
 const getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find({})
+    const blogs = await Blog.find({ status: "published" })
       .populate("author", "name email")
       .populate("category", "name")
       .populate("tags", "name");
