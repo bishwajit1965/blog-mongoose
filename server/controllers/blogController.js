@@ -236,6 +236,7 @@ const trimExcerpt = (text, maxLength = 250) => {
 };
 
 const updateBlogBySlug = async (req, res) => {
+  console.log("🚀 Update blog method is hit.");
   try {
     const {
       title,
@@ -248,9 +249,10 @@ const updateBlogBySlug = async (req, res) => {
       author,
     } = req.body;
 
-    const { userId } = req.user;
+    const { userId } = req.user.id;
     console.log("Received tags:", tags);
     console.log("Type of tags:", typeof tags);
+    console.log("🚀 User Id:", userId);
 
     const blog = await Blog.findOne({ slug: req.params.slug });
     if (!blog) {
@@ -281,7 +283,11 @@ const updateBlogBySlug = async (req, res) => {
         .json({ message: "Tags must be an array of ObjectIds" });
     }
 
-    if (!req.user.permissions.includes("edit-post")) {
+    const isSuperAdmin = req.user.roles
+      .map((r) => r.toLowerCase())
+      .includes("super-admin");
+
+    if (!isSuperAdmin && !req.user.permissions.includes("edit-post")) {
       return res.status(403).json({
         message: "You do not have permission to update this blog!",
       });

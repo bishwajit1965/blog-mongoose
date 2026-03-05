@@ -116,7 +116,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
             <img
               src={`${apiURL}${image}`}
               alt={title.slice(0, 10)}
-              className="w-full object-cover min-h-[13.5rem] rounded-lg shadow-md"
+              className="w-full object-fill min-h-[13.5rem] rounded-lg shadow-md"
             />
           </Link>
         </div>
