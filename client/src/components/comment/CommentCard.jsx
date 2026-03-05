@@ -81,7 +81,7 @@ const CommentCard = ({
     },
     onError: (error) => {
       toast.error(
-        error?.response?.data?.message || "Failed to update comment."
+        error?.response?.data?.message || "Failed to update comment.",
       );
     },
   });
@@ -101,7 +101,7 @@ const CommentCard = ({
     },
     onError: (error) => {
       toast.error(
-        error?.response?.data?.message || "Failed to delete comment."
+        error?.response?.data?.message || "Failed to delete comment.",
       );
     },
   });
@@ -163,11 +163,11 @@ const CommentCard = ({
       {isEditing && <AdminLoader />}
 
       <div className="lg:flex flex-1 grid grid-cols-1 justify-between items-center gap-4">
-        <div className="lg:flex hidden lg:visible items-center justify-center w-8 h-8 rounded-full bg-gray-200 shadow-sm border border-gray-200">
+        <div className="lg:flex hidden lg:visible items-center justify-center w-6 h-6 text-sm rounded-full bg-gray-200 shadow-sm border border-gray-200 dark:border-slate-400  dark:bg-slate-700">
           <div className="lg:font-bold font-semibold">{index + 1}</div>
         </div>
 
-        <div className="lg:border-l-4 border-l-2 border-gray-300 rounded-lg shadow-sm shadow-gray-300 lg:w-full w-full lg:p-3 p-2 border">
+        <div className="border lg:border-l-4 border-l-2 border-gray-300 dark:border-gray-700 rounded-lg shadow-sm shadow-gray-300 dark:shadow-gray-700 lg:w-full w-full lg:p-3 p-2">
           <div className="flex lg:grid items-center justify-between">
             <div className="">
               {author?.avatar ? (
@@ -176,10 +176,10 @@ const CommentCard = ({
                     <img
                       src={author.avatar}
                       alt={name}
-                      className="w-12 rounded-full bg-white p-1"
+                      className="w-12 rounded-full bg-white dark:bg-slate-400 shadow p-1"
                     />
                   </span>
-                  <span className="text-gray-500 lg:text-base text-xs font-semibold flex items-center lg:space-x-2 space-x-1">
+                  <span className="text-gray-500 dark:text-slate-400 lg:text-base text-xs font-semibold flex items-center lg:space-x-2 space-x-1">
                     <span>{name}</span>
                   </span>{" "}
                 </div>
@@ -197,11 +197,11 @@ const CommentCard = ({
             </div>
           </div>
           <div className="">
-            <p className="text-gray-500 lg:text-base text-xs font-semibold lg:flex items-center lg:space-x-2 space-x-4 border-l-4 border-indigo-400 pl-2 rounded-md shadow-green-500">
+            <p className="text-gray-500 dark:text-slate-400 lg:text-base text-xs font-semibold lg:flex items-center lg:space-x-2 space-x-4 border-l-4 border-indigo-400 pl-2 rounded-md shadow-green-500">
               <span className="">{content}</span>
             </p>
 
-            <p className="text-gray-500 lg:text-base text-xs font-semibold flex items-center lg:space-x-2 space-x-1">
+            <p className="text-gray-500 dark:text-slate-400 lg:text-base text-xs font-semibold flex items-center lg:space-x-2 space-x-1">
               <span>Published on:</span> <FaClock className="" />
               <span>{formattedDate}</span>
             </p>
@@ -271,10 +271,10 @@ const CommentCard = ({
                       {!nestedCommentToggle
                         ? "View Replies"
                         : nestedCommentToggle
-                        ? "Hide Replies"
-                        : !nestedCommentToggle
-                        ? "View Replies"
-                        : "Hide Replies"}
+                          ? "Hide Replies"
+                          : !nestedCommentToggle
+                            ? "View Replies"
+                            : "Hide Replies"}
                     </span>
                   </button>
                 </div>
@@ -284,7 +284,7 @@ const CommentCard = ({
 
           {/* Nested Replies */}
           {nestedCommentToggle && comment.level < 2 && (
-            <div className="ml-8 border-l-2 border-gray-300 pl-3 space-y-3">
+            <div className="ml-8 border-l-2 border-gray-300 dark:border-gray-700 pl-3 space-y-3">
               {comment.replies.length > 0 ? (
                 comment.replies.map((reply, index) => (
                   <CommentCard

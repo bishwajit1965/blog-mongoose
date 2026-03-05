@@ -14,7 +14,7 @@ const AboutMe = () => {
 
         {/* Bio */}
         <div className="">
-          <h2 className="lg:text-xl text-lg font-bold mb-2 flex flex-wrap items-center gap-2">
+          <h2 className="lg:text-3xl text-lg font-extrabold mb-2 flex flex-wrap items-center gap-2">
             <span>Bishwajit Paul</span>
           </h2>
           <h2 className="lg:text-xl text-lg font-bold mb-2 flex flex-wrap items-center gap-2">

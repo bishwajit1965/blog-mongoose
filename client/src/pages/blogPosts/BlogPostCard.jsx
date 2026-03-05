@@ -76,12 +76,12 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
         </div>
       </div>
       {/* Blog author section ends */}
-      <div className="grid lg:grid-cols-12 grid-cols-1 gap-2 justify-between items-center">
-        <div className="col-span-12 lg:col-span-8 lg:space-y-4 space-y-2 rounded-md min-h-[13rem]">
+      <div className="grid lg:grid-cols-12 grid-cols-1 lg:gap-8 gap-2 justify-between items-center">
+        <div className="col-span-12 lg:col-span-7 lg:space-y-4 space-y-2 rounded-md min-h-[13.5rem]">
           {/* Blog title begins */}
           <div className="">
             <Link to={`/blog-details/${slug}`} className="m-0">
-              <h2 className="lg:text-3xl text-xl font-extrabold capitalize text-gray-800 dark:text-base-300 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-4xl first-letter:text-2xl first-letter:text-extra-bold">
+              <h2 className="lg:text-2xl text-xl font-extrabold capitalize text-gray-800 dark:text-base-300 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-4xl first-letter:text-2xl first-letter:text-extra-bold">
                 {title.length > 60 ? `${title.slice(0, 60)}...` : title}
               </h2>
             </Link>
@@ -111,7 +111,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
           {/* Blog excerpt ends */}
         </div>
 
-        <div className="col-span-12 lg:col-span-4 min-h-[13.5rem]">
+        <div className="col-span-12 lg:col-span-5 min-h-[13.5rem]">
           <Link to={`/blog-details/${slug}`} className="m-0">
             <img
               src={`${apiURL}${image}`}

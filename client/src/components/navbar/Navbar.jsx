@@ -69,9 +69,9 @@ const Navbar = () => {
     <div
       className={`navbar ${
         theme === "dark" ? "bg-gray-900" : "bg-base-200"
-      } lg:px-4 lg:bg-base-200 md:py-0 shadow-md fixed top-0 lg:max-w-full mx-auto z-50 lg:top-0 pt-0 mt-0`}
+      } lg:px-0 lg:bg-base-200 md:py-0 shadow-md fixed top-0 lg:max-w-full mx-auto z-50 lg:top-0 pt-0 mt-0`}
     >
-      <div className="navbar dark:bg-slate-900">
+      <div className="navbar dark:bg-slate-900 lg:px-[7rem]">
         <div className="navbar-start">
           <div className="dropdown">
             <label tabIndex={0} className="btn btn-ghost lg:hidden">
