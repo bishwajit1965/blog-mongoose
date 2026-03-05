@@ -88,7 +88,7 @@ This project was built to:
 
 ## Contact
 
-GitHub: https://github.com/yourusername
+GitHub: https://github.com/bishwajit1965/blog-mongoose
 Email: paul.bishwajit09@gmail.com
 
 # Features
