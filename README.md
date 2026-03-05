@@ -10,7 +10,7 @@ This project was developed as a **production-style portfolio project** to demons
 ## Developer
 
 <p align="center">
-  <img src="assets/bishwajit-1.jpg" width="180" style="border-radius:50%" />
+  <img src="/assets/bishwajit-1.jpg" width="180" style="border-radius:50%" />
 </p>
 
 <p align="center">
