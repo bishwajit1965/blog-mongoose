@@ -7,10 +7,12 @@ This project was developed as a **production-style portfolio project** to demons
 
 ---
 
-## Developer
+---
+
+## 👨‍💻 Developer
 
 <p align="center">
-  <img src="assets/bishwajit.jpg" width="180" style="border-radius:50%" />
+  <img src="./assets/bishwajit.jpg" width="180" style="border-radius:50%"/>
 </p>
 
 <p align="center">
@@ -18,16 +20,63 @@ This project was developed as a **production-style portfolio project** to demons
 Full Stack JavaScript Developer
 </p>
 
+<p align="center">
+Passionate about building scalable full-stack applications using the MERN ecosystem.
+Focused on clean architecture, performance, and real-world SaaS product development.
+</p>
+
 ---
 
-This project was designed and developed as a full-stack MERN blog platform demonstrating production-style architecture and real-world application features.
+### 🚀 Tech Stack
 
-This project was designed and developed by:
+**Frontend**
 
-**Bishwajit Paul**
-Full Stack JavaScript Developer
+- React
+- Vite
+- Tailwind CSS
+- React Router
+- Axios
 
-Specializing in building scalable web applications using the MERN stack.
+**Backend**
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT Authentication
+
+**Tools & DevOps**
+
+- Git & GitHub
+- Postman
+- Multer (File Upload)
+- Socket.IO
+- Cron Jobs
+- REST API Design
+
+---
+
+### 📫 Connect With Me
+
+<p align="center">
+
+<a href="https://github.com/bishwajit1965">
+GitHub
+</a>
+&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="https://www.linkedin.com/feed/">
+LinkedIn
+</a>
+&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="mailto:paul.bishwajit09@gmail.com">
+Email
+</a>
+
+</p>
+
+---
+
+⭐ If you like this project, consider giving it a **star** on GitHub.
 
 ---
 
