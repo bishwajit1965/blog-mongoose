@@ -20,7 +20,8 @@ import useAdminRole from "../../adminHooks/useAdminRole";
 import useAdminTag from "../../adminHooks/useAdminTag";
 import useAdminUser from "../../adminHooks/useAdminUser";
 
-// import AutoPublishNotification from "../autoPublishNotification/AutoPublishNotification";
+import AutoPublishNotification from "../autoPublishNotification/AutoPublishNotification";
+import MessagesStatisticsCard from "./MessageStatisticsCard";
 
 const SuperAdminDashboard = () => {
   const { blogs } = useAdminBlog();
@@ -68,9 +69,9 @@ const SuperAdminDashboard = () => {
       />
 
       {/* Framer Motion Auto Publish Notification */}
-      {/* <AutoPublishNotification /> */}
+      <AutoPublishNotification />
 
-      <div className="grid lg:grid-cols-12 grid-cols-1 justify-between gap-4 p-2">
+      <div className="grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-4 gap-2 p-2">
         <SuperAdminDashboardCard
           isAuthenticated={isAuthenticated}
           adminData={adminData}
@@ -103,6 +104,7 @@ const SuperAdminDashboard = () => {
         )}
 
         <BlogPostStatisticsCard />
+        <MessagesStatisticsCard />
       </div>
     </div>
   );

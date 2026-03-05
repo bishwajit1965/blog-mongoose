@@ -2,14 +2,16 @@ import { FaEye, FaEyeSlash, FaSignInAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import AdminLoader from "../adminComponent/adminLoader/AdminLoader";
 import CTAButton from "../../components/buttons/CTAButton";
 import { Helmet } from "react-helmet-async";
 import Swal from "sweetalert2";
 import useAdminAuth from "../adminHooks/useAdminAuth";
+import { Loader } from "lucide-react";
+import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
 
 const AdminLogin = () => {
-  const { loginAdmin, isAuthenticated, adminData, checkAuth } = useAdminAuth();
+  const { loginAdmin, isAuthenticated, checkAuth, authInitialized, adminData } =
+    useAdminAuth();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -21,12 +23,11 @@ const AdminLogin = () => {
     location.state?.from?.pathname || "/super-admin/super-admin-dashboard";
 
   useEffect(() => {
-    if (!isAuthenticated || !adminData?.user?.roles?.length) return;
+    if (!authInitialized) return;
+    if (!isAuthenticated) return;
 
     const userRoles =
       adminData?.user?.roles?.map((role) => role.name.toLowerCase()) || [];
-
-    console.log("✅ User Roles:", userRoles);
 
     const roleRedirects = {
       "super-admin": from || "/super-admin/super-admin-dashboard",
@@ -44,7 +45,7 @@ const AdminLogin = () => {
       console.warn("🚨 No matching role found. Redirecting to Unauthorized.");
       navigate("/unauthorized", { replace: true });
     }
-  }, [isAuthenticated, adminData, navigate, from]);
+  }, [isAuthenticated, authInitialized, adminData, navigate, from]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -83,9 +84,15 @@ const AdminLogin = () => {
 
       <div className="h-screen flex items-center">
         <div className="lg:max-w-xs w-full mx-auto">
-          {loading && <AdminLoader />}
           <div className="border border-slate-300 shadow-md bg-base-300 p-6 rounded-md dark:bg-gray-900 dark:border-gray-700">
-            <h1 className="text-xl font-bold pb-2">Admin Login</h1>
+            <h1 className="text-xl font-bold pb-2 flex items-center gap-2">
+              <LucideIcon.LogIn size={20} />
+              Admin Login{" "}
+              <span className="flex justify-center items-center">
+                {" "}
+                {loading && <Loader className="animate-spin" />}
+              </span>
+            </h1>
             {emailError && (
               <p className="text-red-500 text-xs mb-2">{emailError}</p>
             )}

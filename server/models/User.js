@@ -52,11 +52,15 @@ const userSchema = new mongoose.Schema(
     ],
     falseFlagCount: { type: Number, default: 0 },
     isBanned: { type: Boolean, default: false },
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     banExpiresAt: { type: Date, default: null },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
+    jwtToken: { type: String, default: null }, // Store last issued JWT
+    refreshToken: { type: String, default: null }, // Store refresh token
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Hash password before saving

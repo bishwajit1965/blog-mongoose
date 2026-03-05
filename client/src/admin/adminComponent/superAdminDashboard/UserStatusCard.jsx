@@ -26,13 +26,13 @@ const UserStatusCard = ({ userStats }) => {
 
       <div className="overflow-x-auto">
         <div className="p-1 flex space-x-4 bg-gray-100 dark:bg-gray-600 border-b dark:border-gray-700">
-          <p className="text-xl font-bold">
+          <p className="lg:text-xl text-xs font-bold">
             Total Users: {userStats.totalUsers}
           </p>
-          <p className="text-xl font-bold">
+          <p className="lg:text-xl text-xs font-bold">
             Active Users: {userStats.activeUsers}
           </p>
-          <p className="text-xl font-bold">
+          <p className="lg:text-xl text-xs font-bold">
             Inactive Users: {userStats.inactiveUsers}
           </p>
         </div>

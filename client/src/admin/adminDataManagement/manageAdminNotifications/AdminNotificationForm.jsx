@@ -192,8 +192,8 @@ const AdminNotificationForm = ({
                 loading
                   ? "Saving..."
                   : existingNotice
-                  ? "Update Notice"
-                  : "Create Notice"
+                    ? "Update Notice"
+                    : "Create Notice"
               }
               disabled={loading}
               className="btn btn-sm"

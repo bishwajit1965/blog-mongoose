@@ -39,11 +39,15 @@ import BookmarkButton from "../../components/bookmarkButton/BookmarkButton";
 import Button from "../../components/buttons/Button";
 import CTAButton from "../../components/buttons/CTAButton";
 import CommentCard from "../../components/comment/CommentCard";
+import FollowButton from "../../components/followButton/FollowButton";
+import RelatedBlogPosts from "../../components/relatedBlogPosts/RelatedBlogPosts";
+import ScrollProgressBar from "../../components/scrollProgressBar/ScrollProgressBar";
 import SocialMediaLinks from "../../components/socialMediaLinks/SocialMediaLinks";
 import dateFormatter from "../../utils/dateFormatter";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
 import useFlagBlogPost from "../../hooks/useFlagBlogPost";
+import useGetBookmarkedPosts from "../../hooks/useGetBookmarkedPosts";
 import { useMutation } from "@tanstack/react-query";
 import useWordCount from "../../admin/adminHooks/useWordCount";
 
@@ -73,6 +77,7 @@ const BlogDetailsPage = () => {
   const controls = useAnimation();
   const location = useLocation();
   const [reactions, setReactions] = useState({ likes: 0, dislikes: 0 });
+  const { data: bookmarkedPosts } = useGetBookmarkedPosts();
 
   const {
     _id,
@@ -94,6 +99,8 @@ const BlogDetailsPage = () => {
     email: "",
     content: "",
   });
+
+  console.log("USER DATA IN CONSOLE LOGS:", user?.email, user?.uid);
 
   // Handle mutation TanStack Query to Add Comment
   const { mutate: submitComment, isPending } = useMutation({
@@ -313,8 +320,10 @@ const BlogDetailsPage = () => {
     setFlagPostNow((prev) => !prev);
   };
 
-  if (blog.error) return <div>Error!</div>;
-  if (!blog || blog.length === 0) return <div>No blog found</div>;
+  if (blog.error)
+    return <div className="flex justify-center">{blog.error.message}</div>;
+  if (!blog || blog.length === 0)
+    return <div className="flex justify-center">No blog found</div>;
 
   console.log("Form data:", formData);
 
@@ -373,7 +382,7 @@ const BlogDetailsPage = () => {
   }
 
   return (
-    <div className="lg:py-4 p-2 dark:bg-gray-800 dark:text-gray-200 lg:shadow-lg relative">
+    <div className="lg:py-4 p-2 dark:bg-gray-800 dark:text-gray-200 lg:shadow-sm relative border border-b-1 border-gray-50 rounded-lg dark:border-gray-700 dark:border-t-0">
       {isLoading && <AdminLoader />}
 
       {/* Floating text box left top begins */}
@@ -381,28 +390,36 @@ const BlogDetailsPage = () => {
         <motion.div
           ref={leftColumnRef}
           animate={controls}
-          className="w-[14rem] bg-gray-100 p-4 absolute top-6 left-2 rounded-md invisible lg:visible shadow-md"
+          className="w-[14rem] h-80 absolute top-6 min-h-[22.5rem] bg-gray-1000 left-0 rounded-md invisible lg:visible shadow-sm space-y-4 border border-gray-100 dark:border-gray-700"
         >
-          <div className="border-b w-full border-gray-400">
-            <h1 className="text-xl font-bold">✅Hello Viewers!!</h1>
+          <div className="w-full ">
+            <img
+              src={`${apiURL}${image}`}
+              alt=""
+              className="rounded-t-md h-28 w-full"
+            />
           </div>
-          <p className="text-justify">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
-            tenetur velit excepturi voluptatem iusto, dolorum consectetur aut
-            sed, consequuntur nisi adipisci molestias distinctio pariatur vitae
-            et voluptatibus sit error. Odio.
-          </p>
+          <div className="h-72 relative p-2">
+            <FaQuoteLeft className="absolute top-0 text-xl font-bold text-gray-500 dark:text-gray-300" />
+            <p
+              className="absolute top-0 indent-7 lg:text-gray-600 text-gray-500 italic dark:text-gray-300 py-2"
+              dangerouslySetInnerHTML={{
+                __html: excerpt ? blog.excerpt : "N/A",
+              }}
+            />
+          </div>
         </motion.div>
       </div>
       {/* Floating text box left top ends */}
 
       <div className="lg:max-w-3xl mx-auto">
-        <div className="lg:space-y-3 space-y-2">
+        <ScrollProgressBar />
+        <div className="lg:space-y-4 space-y-3">
           {/* Blog content wrapper begins */}
           {/* Blog post title begins */}
           <div className="lg:mb-7">
             <Link to="/" className="m-0">
-              <h2 className="lg:text-4xl font-extrabold text-gray-900 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-5xl first-letter:text-extra-bold">
+              <h2 className="lg:text-4xl font-extrabold text-gray-900 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-5xl first-letter:text-extra-bold dark:text-gray-300">
                 {title}
               </h2>
             </Link>
@@ -410,7 +427,7 @@ const BlogDetailsPage = () => {
           {/* Blog post title ends */}
 
           {/* Author, follow, reading time, published at section begins */}
-          <div className="lg:flex items-center lg:space-y-0 space-y-2 lg:space-x-4 space-x-2">
+          <div className="lg:flex items-center lg:space-y-0 space-y-2 lg:space-x-4 space-x-0">
             <div className="hover:link">
               <div className="flex items-center lg:space-x-3 space-x-2 hover-target">
                 <div className="relative">
@@ -437,22 +454,23 @@ const BlogDetailsPage = () => {
               </div>
             </div>
 
-            <div className="">
-              <div className="w-20 h-8 rounded-full border border-1 border-gray-800 px-4 py-2 flex items-center justify-center hover:bg-gray-600 hover:text-base-200 text-gray-600">
-                Follow
+            <div className="lg:flex flex-1 items-center lg:space-x-4 space-x-0 lg:space-y-0 space-y-3">
+              <div className="">
+                <FollowButton firebaseUid={user?.uid} />
               </div>
-            </div>
-            <div className="h-8 border border-gray-300 rounded-full shadow-sm flex items-center lg:space-x-2 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 text-gray-600">
-              <span>Read in:</span>
-              <span className="italic">
-                {<BlogReadingTimeCounter content={content} />}
-              </span>
-            </div>
-            <div className="border border-gray-300 rounded-full shadow-sm h-8 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 flex items-center">
-              <p className="text-gray-600 flex items-center space-x-2 hover:text-base-200">
-                <FaClock className="" />
-                <span>{dateFormatter(publishAt)}</span>
-              </p>
+
+              <div className="h-8 border border-gray-300 rounded-full shadow-sm flex items-center lg:space-x-2 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 text-gray-600">
+                <span>Read in:</span>
+                <span className="italic">
+                  {<BlogReadingTimeCounter content={content} />}
+                </span>
+              </div>
+              <div className="border border-gray-300 rounded-full shadow-sm h-8 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 flex items-center">
+                <p className="text-gray-600 flex items-center space-x-2 hover:text-base-200">
+                  <FaClock className="" />
+                  <span>{dateFormatter(publishAt)}</span>
+                </p>
+              </div>
             </div>
           </div>
           {/* Author, follow, reading time, published at section ends */}
@@ -490,7 +508,7 @@ const BlogDetailsPage = () => {
             {/* Flagged reason display ends */}
 
             {/* Likes dislikes section begins */}
-            <div className="flex items-center lg:space-x-4">
+            <div className="flex items-center lg:space-x-4 space-x-3">
               <div className="flex items-center lg:space-x-2 space-x-1">
                 <span className="">
                   <FaThumbsUp />
@@ -511,7 +529,7 @@ const BlogDetailsPage = () => {
             {/* Likes dislikes section ends */}
 
             {/* Social media links section begins */}
-            <div className="flex justify-end">
+            <div className="flex justify-start -ml-3">
               <SocialMediaLinks />
             </div>
             {/* Social media links section ends */}
@@ -576,14 +594,14 @@ const BlogDetailsPage = () => {
 
           {/* Excerpt section begins */}
           <div className="lg:py-4 py-2">
-            {excerpt ? (
-              <div className="lg:min-h-24 min-h-40">
-                <div className="min-h-[40px] relative">
+            {blog.excerpt ? (
+              <div className="lg:min-h-24 min-h-48">
+                <div className="min-h-[44px] relative">
                   <FaQuoteLeft className="absolute top-0 text-xl font-bold text-gray-600 dark:text-gray-300" />
                   <p
-                    className="absolute top-0 indent-7 font-bold lg:text-gray-600 text-gray-500 italic lg:text-xl dark:text-gray-300 py-2"
+                    className="absolute top-0 indent-7 font-bold lg:text-gray-600 text-gray-500 italic lg:text-xl dark:text-gray-400 py-2"
                     dangerouslySetInnerHTML={{
-                      __html: excerpt ? blog.excerpt : "N/A",
+                      __html: blog.excerpt ? blog.excerpt : "N/A",
                     }}
                   />
                 </div>
@@ -609,13 +627,18 @@ const BlogDetailsPage = () => {
           {/* Blog image section ends */}
 
           {/* Blog post content section begins */}
-          <div className="lg:pt-6 pt-4">
-            <p
-              dangerouslySetInnerHTML={{
-                __html: content,
-              }}
-              className="prose max-w-none list-decimal text-gray-700 mb-4 indent-7"
-            ></p>
+          <div className="lg:pt-6 pt-4 dark:text-gray-400">
+            {blog?.content ? (
+              <p
+                style={{ fontSize: "18px" }}
+                className="prose prose-lg max-w-none list-decimal text-gray-700 mb-4 indent-7 dark:text-gray-400"
+                dangerouslySetInnerHTML={{
+                  __html: blog.content ? blog.content : "N/A",
+                }}
+              />
+            ) : (
+              <p>No blog post content is available</p>
+            )}
           </div>
 
           <div className="flex items-center lg:justify-start justify-center lg:space-x-6 space-x-2">
@@ -631,7 +654,31 @@ const BlogDetailsPage = () => {
           {/* Blog post content section ends */}
         </div>
         {/* Blog content wrapper ends */}
+      </div>
 
+      {/**===================================
+      | RELATED BLOG POSTS SECTION BEGINS
+      | =====================================*/}
+      <div className="lg:max-w-7xl w-full mx-auto">
+        <div className="lg:flex w-full flex-col lg:max-w-7xl mx-auto">
+          <div className="divider font-bold">Related Posts Section</div>
+        </div>
+        <div className="">
+          <RelatedBlogPosts
+            slug={slug}
+            user={user}
+            bookmarkedPosts={bookmarkedPosts}
+          />
+        </div>
+      </div>
+      {/**===================================
+      | RELATED BLOG POSTS SECTION ENDS
+      | =====================================*/}
+
+      {/**===================================
+      | LIKE DISLIKE SECTION BEGINS
+      | =====================================*/}
+      <div className="lg:flex w-full flex-col lg:max-w-3xl mx-auto">
         <div className="flex w-full flex-col">
           <div className="divider font-bold">Like Dislike Section</div>
         </div>
@@ -739,6 +786,9 @@ const BlogDetailsPage = () => {
         </div>
         {/* Like & dislike button ends */}
       </div>
+      {/**===================================
+      | LIKE DISLIKE SECTION ENDS
+      | =====================================*/}
 
       {/* Comments section begins */}
       <div className="lg:flex w-full flex-col lg:max-w-3xl mx-auto">
@@ -902,14 +952,9 @@ const BlogDetailsPage = () => {
 
       {/* Comments section ends */}
 
-      <div className="lg:flex justify-end items-center space-x-4 lg:px-0 px-1">
-        <Link to="/" className="m-0 flex items-center w-full">
-          <Button
-            label="Go Home Page"
-            icon={<FaHome />}
-            variant="secondary"
-            className="btn lg:text-xl text-sm lg:max-w-3xl w-full mx-auto lg:btn-md btn-sm rounded-full"
-          />
+      <div className="lg:flex justify-center items-center space-x-4 lg:px-0 px-1">
+        <Link to="/" className="m-0 flex justify-center items-center w-full">
+          <Button label="Go Home Page" icon={<FaHome />} variant="white" />
         </Link>
       </div>
     </div>

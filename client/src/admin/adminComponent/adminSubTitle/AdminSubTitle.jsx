@@ -17,10 +17,12 @@ const AdminSubTitle = ({
         )}
       </div>
       <div className="lg:col-span-4 col-span-4 lg:text-center">
-        <h2 className="text-xl font-bold space-x-2">
-          {subTitle && <span className="text-xl font-bold">{subTitle}</span>}
+        <h2 className="lg:text-xl text-sm font-bold space-x-2">
+          {subTitle && (
+            <span className="lg:text-xl text-sm font-bold">{subTitle}</span>
+          )}
           {decoratedText && (
-            <span className="text-xl font-bold text-amber-700 dark:text-amber-400">
+            <span className="lg:text-xl text-sm font-bold text-amber-700 dark:text-amber-400">
               {decoratedText}
             </span>
           )}
@@ -29,7 +31,7 @@ const AdminSubTitle = ({
       <div className="lg:col-span-4 col-span-4 flex justify-end pr-2">
         {dataLength ? (
           <>
-            <h2 className="text-xl font-bold">
+            <h2 className="lg:text-xl text-sm font-bold">
               Total Data:{" "}
               {dataLength && (
                 <span className="text-amber-700 dark:text-amber-400">

@@ -36,7 +36,7 @@ const NoticeModal = ({ notice, onClose }) => {
         margin.left,
         margin.top - 0.8,
         logoWidth,
-        logoHeight
+        logoHeight,
       );
 
       doc.setFont("helvetica", "bold");
@@ -50,12 +50,12 @@ const NoticeModal = ({ notice, onClose }) => {
       doc.text(
         "123 Developer Lane, Code City, 456789",
         margin.left + 1.2,
-        margin.top - 0.15
+        margin.top - 0.15,
       );
       doc.text(
         "Email: contact@webdevpro.org | Phone: +91 98765 43210",
         margin.left + 1.2,
-        margin.top + 0.1
+        margin.top + 0.1,
       );
 
       doc.setDrawColor(180);
@@ -64,7 +64,7 @@ const NoticeModal = ({ notice, onClose }) => {
         margin.left,
         margin.top + 0.3,
         pageWidth - margin.right,
-        margin.top + 0.3
+        margin.top + 0.3,
       );
     };
 
@@ -87,7 +87,7 @@ const NoticeModal = ({ notice, onClose }) => {
         margin.left,
         pageHeight - 0.6,
         pageWidth - margin.right,
-        pageHeight - 0.6
+        pageHeight - 0.6,
       );
 
       doc.setFontSize(10);
@@ -97,13 +97,13 @@ const NoticeModal = ({ notice, onClose }) => {
         "© 2025 WebDevPro Foundation | www.webdevpro.org",
         pageWidth / 2,
         pageHeight - 0.4,
-        { align: "center" }
+        { align: "center" },
       );
       doc.text(
         `Page ${pageNum} of ${totalPages}`,
         pageWidth - margin.right,
         pageHeight - 0.4,
-        { align: "right" }
+        { align: "right" },
       );
     };
 
@@ -223,7 +223,7 @@ const NoticeModal = ({ notice, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg w-1/2 max-h-[90vh] overflow-auto">
+      <div className="bg-white dark:bg-gray-800 dark:text-base-300 p-6 rounded-lg w-1/2 max-h-[90vh] overflow-auto">
         <h2 className="text-xl font-bold mb-4">{heading}</h2>
         <p className="text-sm mb-2">
           Date: {new Date(noticeDate).toLocaleDateString()}

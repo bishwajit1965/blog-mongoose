@@ -8,11 +8,18 @@ const AdminPagination = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageOptions[0]);
-  const totalPages = Math.ceil(items.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(items.length / itemsPerPage));
+
+  useEffect(() => {
+    const maxPage = Math.max(1, Math.ceil(items.length / itemsPerPage));
+    setCurrentPage((prevPage) => Math.min(prevPage, maxPage));
+  }, [items, itemsPerPage]);
 
   const generatePageNumbers = () => {
-    const delta = 2;
+    const delta = 1;
     const range = [];
+    let l;
+
     for (let i = 1; i <= totalPages; i++) {
       if (
         i === 1 ||
@@ -20,16 +27,19 @@ const AdminPagination = ({
         (i >= currentPage - delta && i <= currentPage + delta)
       ) {
         range.push(i);
-      } else if (range[range.length - 1] !== "...") {
+      } else if (l !== "...") {
         range.push("...");
       }
+      l = range[range.length - 1];
     }
+
     return range;
   };
 
   const handlePageChange = (page) => {
-    if (page !== "..." && page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
+    if (page !== "...") {
+      const safePage = Math.min(Math.max(1, page), totalPages);
+      setCurrentPage(safePage);
     }
   };
 

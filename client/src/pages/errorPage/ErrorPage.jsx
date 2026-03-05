@@ -1,18 +1,24 @@
 import { FaArrowAltCircleLeft, FaHome } from "react-icons/fa";
 
-import ErrorImage from "/assets/error-2129569_1280.jpg";
 import { Link } from "react-router-dom";
+import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
 
 const ErrorPage = () => {
   return (
     <>
       <div className="h-screen flex items-center justify-center dark:bg-gray-800 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 text-gray-700 rounded-md">
-        <div className="text-center max-w-md px-4">
-          <div className="mb-6">
-            <img src={ErrorImage} alt="Error 404" className="w-full" />
+        <div className="text-center max-w-4xl px-4 lg:space-y-4 space-y-2">
+          <div className="flex justify-center">
+            <LucideIcon.AlertCircle
+              size-={20}
+              className="text-red-500 lg:h-16 lg:w-16 w-6 h-6"
+            />
           </div>
 
-          <h1 className="text-6xl font-extrabold text-red-600 mb-2">404</h1>
+          <h1 className="text-4xl font-extrabold text-red-600 mb-2 flex items-center justify-center gap-2">
+            <span className="lg:text-5xl font-extrabold text-lg">404 ! </span>{" "}
+            NOT FOUND
+          </h1>
 
           <p className="text-lg font-medium mb-4 dark:text-gray-400">
             Oops! The page you are looking for does not exist.

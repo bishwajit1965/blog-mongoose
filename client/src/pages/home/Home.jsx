@@ -1,4 +1,4 @@
-import { FaBlog, FaBookmark, FaSearch } from "react-icons/fa";
+import { FaBlog, FaBookmark, FaRegListAlt, FaSearch } from "react-icons/fa";
 import { Suspense, lazy } from "react";
 
 import BlogPosts from "../blogPosts/BlogPosts";
@@ -8,7 +8,11 @@ import ComingSoonPost from "../../components/comingSoonPost/ComingSoonPost";
 import { Helmet } from "react-helmet-async";
 import Marquee from "react-fast-marquee";
 import MarqueeNotification from "../../components/marqueeNotification/MarqueeNotification";
+import OlderBlogPosts from "../blogPosts/OlderBlogPosts";
 import PageTitle from "../../components/pageTitle/PageTitle";
+import RandomBlogPosts from "../blogPosts/RandomBlogPosts";
+import ScrollProgressBar from "../../components/scrollProgressBar/ScrollProgressBar";
+import ScrollTopButton from "../../components/scrollTopButton/ScrollTopButton";
 import SectionTitle from "../../components/sectionTitle/SectionTitle";
 import SocialMediaLinks from "../../components/socialMediaLinks/SocialMediaLinks";
 import Tags from "../../components/tags/Tags";
@@ -16,9 +20,9 @@ import useAuth from "../../hooks/useAuth";
 import useGetBlogs from "../../hooks/useGetBlogs";
 import useGetBookmarkedPosts from "../../hooks/useGetBookmarkedPosts";
 import useGetCategories from "../../hooks/useGetCategories";
-import useGetComingSoonPost from "../../hooks/useGetComingSoonPost";
 import useGetTags from "../../hooks/useGetTags";
 import { useState } from "react";
+import PopularPosts from "../../components/popularPosts/PopularPosts";
 
 // import BookmarkedPage from "../bookmarkedPage/BookmarkedPage";
 
@@ -26,12 +30,16 @@ const BookmarkedPage = lazy(() => import("../bookmarkedPage/BookmarkedPage"));
 
 const Home = () => {
   const { user } = useAuth();
-  const { data: comingSoonPosts } = useGetComingSoonPost();
   const [width, setWidth] = useState(false);
   const [showBookmarks, setShowBookmarks] = useState(false);
   const [showBlogPosts, setShowBlogPosts] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedTag, setSelectedTag] = useState("");
   const { data, isLoading, error } = useGetBlogs();
   const { data: bookmarkedPosts } = useGetBookmarkedPosts();
+  const isFilterActive = selectedTag || selectedCategory;
+  console.log("Searched term", searchTerm);
   const {
     data: categories,
     isLoading: isCategoryLoading,
@@ -49,9 +57,13 @@ const Home = () => {
     setShowBlogPosts((prev) => !prev);
   };
 
-  console.log("Toggler value", showBookmarks);
   const handleSetWidth = () => {
     setWidth((prev) => !prev);
+  };
+
+  const handleClearFilter = () => {
+    setSelectedCategory("");
+    setSelectedTag("");
   };
 
   return (
@@ -99,76 +111,14 @@ const Home = () => {
       | MARQUEE NOTIFICATION SECTION ENDS
       | ================================*/}
 
-      {/**============================
-      | BLOG CONTENT AREA LEFT BEGINS
-      | ===========================*/}
-      <div className="grid lg:grid-cols-12 grid-cols-1 justify-between gap-4">
-        {/* <div className=" bg-base-100 pb-6 lg:py-8 dark:bg-gray-700"> */}
-        {/* <div
-          className="flex justify-center items-center 
-      space-y-2 lg:px-0"
-        >
-          {user ? (
-            <div className="text-center space-y-2">
-              <div className="flex justify-center">
-                <img
-                  src={user?.photoURL}
-                  alt=""
-                  className="w-28 h-28 rounded-full flex"
-                />
-              </div>
-              <h1 className="font-bold">
-                {user
-                  ? `Welcome ${user?.displayName}`
-                  : "Welcome to the Home Page"}
-              </h1>
-              <p className="">Email: {user?.email}</p>
-
-              <div className="">
-                <p>UID: {user?.uid}</p>
-              </div>
-
-              <div className="">
-                <p>Provider: {user?.providerId}</p>{" "}
-              </div>
-
-              <div className="">
-                {/* <p className="max-w-96 mx-auto">Token: {user?.refreshToken}</p> */}
-        {/* </div> */}
-        {/* <p className="">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed
-                omnis dignissimos nihil tempore ratione velit blanditiis optio
-                culpa nisi cupiditate excepturi corrupti, labore a, ad cum dolor
-                vel quasi provident.
-              </p> */}
-        {/* </div> */}
-        {/* ) : ( */}
-        {/* <div className="lg:my-10 my-2">
-              <h1 className="lg:text-3xl text-xl font-extrabold text-gray-800 justify-center items-center flex">
-                Welcome to the Blog Home Page
-              </h1>
-            </div> */}
-        {/* )} */}
-        {/* </div> */}
-        {/* Advertisement section begins */}
-        {/* <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between lg:my-10 my-2">
-          <div className="col-span-12 lg:col-span-4 p-2 bg-red-500">
-            Responsive Advertisements
-          </div>
-          <div className="col-span-12 lg:col-span-4 p-2 bg-green-500">
-            Responsive Advertisements
-          </div>
-          <div className="col-span-12 lg:col-span-4 p-2 bg-red-500">
-            Responsive Advertisements
-          </div>
-        </div> */}
-        {/* Advertisement section ends */}
-        {/* <div className="grid lg:grid-cols-3 gap-4 p-4 lg:min-h-[calc(100vh-63px)]"> */}
-
+      {/**===================================
+      | BLOG CONTENT AREA LEFT & RIGHT BEGINS
+      | =====================================*/}
+      <div className="grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-10 gap-2">
         {/**============================
         | BLOG CONTENT AREA LEFT BEGINS
         | ==============================*/}
-        <div className="col-span-12 lg:col-span-8 space-y-4 lg:py-8 py-4 shadow-lg rounded-b-lg">
+        <div className="col-span-12 lg:col-span-8 space-y-4 lg:py-8 py-4 shadow-sm rounded-b-lg border-b border-gray-200 dark:border-gray-700">
           {/* Bookmarked blog post section begins */}
           <div className="">
             {showBlogPosts ? (
@@ -176,7 +126,6 @@ const Home = () => {
                 title="Blog Posts ➡️"
                 icon={<FaBlog />}
                 dataLength={data?.length > 0 ? data.length : 0}
-                description="Latest blog posts first. Summary is added."
               />
             ) : (
               <SectionTitle
@@ -190,36 +139,96 @@ const Home = () => {
                 }
               />
             )}
-            <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 items-center justify-between px-2 py-4">
+            <div className="grid lg:grid-cols-12 grid-cols-1 gap-2 items-center justify-evenly px-2 py-4">
               <div className="col-span-12 lg:col-span-3">
                 <Button
                   onClick={() => handleToggle(!showBookmarks)}
                   label={showBookmarks ? "Blog Posts" : "My Bookmarks"}
                   icon={showBookmarks ? <FaBlog /> : <FaBookmark />}
-                  variant={showBookmarks ? "active" : "primary"}
+                  variant={showBookmarks ? "gray" : "white"}
                 />
               </div>
 
+              {/* Category search begins */}
+              {!width && (
+                <div className="col-span-12 lg:col-span-2">
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="border border-gray-300 input-sm rounded-full py- px-4 w-full"
+                  >
+                    <option value="">All Categories</option>
+                    {categories?.map((category) => (
+                      <option key={category._id} value={category.name}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              {/* Category search ends */}
+
+              {/* Tag search begins */}
+              {!width && (
+                <div className="col-span-12 lg:col-span-2">
+                  <select
+                    value={selectedTag}
+                    onChange={(e) => setSelectedTag(e.target.value)}
+                    className="border border-gray-300 input-sm rounded-full py- px-4 w-full"
+                  >
+                    <option value="">All Tags</option>
+                    {tags?.map((tag) => (
+                      <option key={tag._id} value={tag.name}>
+                        {tag.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              {/* Tag search ends */}
+
               {/* Search bar begins */}
-              <div className="col-span-12 lg:col-span-9 w-full flex justify-end relative">
+              <div
+                className={`${
+                  width ? "col-span-9" : "col-span-3"
+                } col-span-12 lg: w-full flex justify-end relative`}
+              >
                 <input
                   onClick={handleSetWidth}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   type="text"
                   placeholder="Search..."
                   className={`${
-                    width ? "w-full flex justify-end" : "lg:w-1/3 w-full"
-                  } input pl-6 input-sm input-bordered rounded-full w-full max-w-full flex justify-end`}
+                    width ? "w-full flex justify-end" : "lg:w-full w-full"
+                  } input lg:pl-6 input-sm input-bordered rounded-full w-full max-w-full flex justify-end`}
                 />
 
                 <FaSearch
                   className={`${
                     width
                       ? "absolute top-[.6rem] left-2 w-[1rem]"
-                      : "absolute lg:w-[1rem] w-full top-[.6rem] right-[11.52rem]"
+                      : "absolute lg:w-[1rem] top-[.6rem] left-2 right-[11.2rem]"
                   } text-sm lg:[1rem] text-gray-400`}
                 />
               </div>
               {/* Search bar ends */}
+
+              {/* Clear Filter */}
+              {!width && (
+                <div className="col-span-12 lg:col-span-2">
+                  <Button
+                    onClick={handleClearFilter}
+                    variant={isFilterActive ? "danger" : "white"}
+                    label="Clear Filter"
+                    className={
+                      isFilterActive
+                        ? "border-4 shadow-xl border-amber-500"
+                        : ""
+                    }
+                  />
+                </div>
+              )}
+              {/* Clear Filter Ends*/}
             </div>
 
             {showBookmarks && (
@@ -240,6 +249,9 @@ const Home = () => {
                 isLoading={isLoading}
                 error={error}
                 user={user}
+                searchTerm={searchTerm}
+                selectedCategory={selectedCategory}
+                selectedTag={selectedTag}
               />
             )}
           </div>
@@ -252,24 +264,13 @@ const Home = () => {
         {/**=======================================
       | RIGHT SIDEBAR BEGINS
       | ===========================================*/}
-        <div className="col-span-12 lg:col-span-4 rounded-xl lg:py-8 py-4 shadow-lg rounded-b-lg p-2">
+        <div className="col-span-12 lg:col-span-4 rounded-xl lg:py-8 py-4 shadow-sm rounded-b-lg border-b border-gray-200 dark:border-gray-700">
           <div className="sticky top-[5.8rem]">
-            <div className="dark:bg-gray-800 ">
+            <div className="">
               {/**=================================
               | COMING SOON POSTS SECTION BEGINS
               | ===================================*/}
-              <SectionTitle
-                title="Coming Soon Posts ➡️"
-                description="Coming amazing posts!"
-                dataLength={
-                  comingSoonPosts?.length > 0 ? (
-                    comingSoonPosts?.length
-                  ) : (
-                    <span className="text-red-500">{0}</span>
-                  )
-                }
-              />
-              <div className="lg:my-4 my-2">
+              <div className="">
                 <ComingSoonPost />
               </div>
               {/**=================================
@@ -277,66 +278,18 @@ const Home = () => {
               | ===================================*/}
 
               {/* Social media links section begins */}
-              <div className=" ">
+              <div className="bg-base-300 dark:bg-gray-800 rounded-md lg:p-4 p-2">
                 <SocialMediaLinks />
               </div>
               {/* Social media links section ends */}
 
-              {/* Popular posts section begins */}
-              <div className="lg:my-10 my-2 lg:space-y-4 space-y-2">
-                <div className="bg-gray-300 p-4 flex items-center rounded-t-md">
-                  <h2 className="text-xl font-bold">Popular Posts</h2>
-                </div>
-                <div className="grid grid-cols-12 gap-2 justify-between">
-                  <div className="col-span-12 lg:col-span-5 rounded-md shadow-md p-2">
-                    <img
-                      src="https://i.ibb.co.com/s9M9h92/programming-4.jpg"
-                      alt="Popular Posts"
-                      className="w-full h-auto rounded-md"
-                    />
-                  </div>
-                  <div className="col-span-12 lg:col-span-7 rounded-md shadow-md p-2">
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                    Recusandae amet eum, assumenda at sunt.
-                  </div>
-                </div>
-                <div className="grid grid-cols-12 gap-2 justify-between">
-                  <div className="col-span-12 lg:col-span-5 rounded-md shadow-md p-2">
-                    <img
-                      src="https://i.ibb.co.com/s9M9h92/programming-4.jpg"
-                      alt="Popular Posts"
-                      className="w-full h-auto rounded-md"
-                    />
-                  </div>
-                  <div className="col-span-12 lg:col-span-7 rounded-md shadow-md p-2">
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                    Recusandae amet eum, assumenda at sunt.
-                  </div>
-                </div>
-                <div className="grid grid-cols-12 gap-2 justify-between">
-                  <div className="col-span-12 lg:col-span-5 rounded-md shadow-md p-2">
-                    <img
-                      src="https://i.ibb.co.com/s9M9h92/programming-4.jpg"
-                      alt="Popular Posts"
-                      className="w-full h-auto rounded-md"
-                    />
-                  </div>
-                  <div className="col-span-12 lg:col-span-7 rounded-md shadow-md p-2">
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                    Recusandae amet eum, assumenda at sunt.
-                  </div>
-                </div>
-              </div>
-              {/* Popular posts section ends */}
-
               {/* Categories section begins */}
-              <div className="">
-                <div className="bg-gray-300 lg:p-4 flex items-center rounded-t-md">
-                  <h2 className="text-xl font-bold">Blog Categories </h2>
-                </div>
+              <div className="lg:my-10 my-2">
                 <Categories
                   data={categories}
                   isLoading={isCategoryLoading}
+                  onCategorySelect={setSelectedCategory}
+                  selectedCategory={selectedCategory}
                   error={isError}
                   user={user}
                 />
@@ -344,22 +297,82 @@ const Home = () => {
               {/* Categories section ends */}
 
               {/* Tags section begins */}
-              <div className="">
-                <div className="bg-gray-300 lg:p-4 p-2 flex items-center rounded-t-md">
-                  <h2 className="text-xl font-bold">Blog Tags </h2>
-                </div>
-                <Tags data={tags} isLoading={isTagLoading} error={isTagError} />
+              <div className="lg:my-10 my-2">
+                <Tags
+                  data={tags}
+                  isLoading={isTagLoading}
+                  error={isTagError}
+                  onTagSelect={setSelectedTag}
+                  selectedTag={selectedTag}
+                />
               </div>
               {/* Tags section ends */}
 
-              {/* Search bar begins */}
+              {/* Popular posts section begins */}
+              <div className="lg:my-10 my-2 lg:space-y-4 space-y-2">
+                <PopularPosts />
+              </div>
+              {/* Popular posts section ends */}
             </div>
           </div>
         </div>
-
         {/**=====================================
         | RIGHT SIDEBAR ENDS
         **=======================================*/}
+      </div>
+      {/**===================================
+      | BLOG CONTENT AREA LEFT & RIGHT ENDS
+      | =====================================*/}
+
+      {/**===================================
+      | BLOG RANDOM POSTS SECTION BEGINS
+      | =====================================*/}
+      <div className="lg:my-10 my-4">
+        {/* <SectionTitle title="Random Posts" /> */}
+        <RandomBlogPosts />
+      </div>
+      {/**===================================
+      | BLOG RANDOM POSTS SECTION ENDS
+      | =====================================*/}
+
+      {/**===================================
+      | BLOG OLDER POSTS SECTION BEGINS
+      | =====================================*/}
+      <div className="lg:my- my-4">
+        <SectionTitle
+          title="Older"
+          decoratedText="Blog Posts"
+          icon={<FaRegListAlt size={20} />}
+        />
+        <Marquee
+          speed={50}
+          pauseOnHover={true}
+          pauseOnClick={true}
+          autoFill={false}
+          style={{
+            backgroundColor: "",
+            height: "px",
+            fontWeight: "bold",
+            fontSize: "20px",
+            color: "black",
+            padding: "px",
+          }}
+        >
+          <OlderBlogPosts />
+        </Marquee>
+      </div>
+      {/**===================================
+      | BLOG OLDER POSTS SECTION ENDS
+      | =====================================*/}
+
+      {/* Scroll to top button */}
+      <div className="height-[px]">
+        <ScrollTopButton />
+      </div>
+
+      {/* Scroll progress bar begins */}
+      <div className="">
+        <ScrollProgressBar />
       </div>
     </div>
   );

@@ -45,10 +45,10 @@ router.get("/me", async (req, res) => {
     // Extract effective permissions as IDs:
     // Direct permissions (if any) plus permissions from roles
     const directPermissionIds = user.permissions.map((perm) =>
-      perm._id.toString()
+      perm._id.toString(),
     );
     const rolePermissionIds = user.roles.flatMap((role) =>
-      role.permissions.map((perm) => perm._id.toString())
+      role.permissions.map((perm) => perm._id.toString()),
     );
     const allPermissionIds = [
       ...new Set([...directPermissionIds, ...rolePermissionIds]),
@@ -72,7 +72,7 @@ router.get("/", authorizeRoles(["super-admin"]), getAllUsers);
 router.patch(
   "/:userId/assign",
   authorizeRoles(["super-admin"]),
-  assignRolesAndPermissions
+  assignRolesAndPermissions,
 );
 
 router.delete("/:id", authorizeRoles(["super-admin"]), deleteUser);

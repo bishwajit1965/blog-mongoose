@@ -32,14 +32,21 @@ const Navbar = () => {
     { id: 3, route: "/contact-me", name: "Contact" },
     { id: 4, route: "/blog-coming-soon", name: "Blog Coming Soon" },
     user ? { id: 5, route: "/bookmarked-page", name: "My Bookmarks" } : "",
-    { id: 6, route: "/rss", name: "Rss" },
+    // { id: 6, route: "/rss", name: "Rss" },
     {
-      id: 7,
+      id: 6,
+      route: "http://localhost:3000/api/blogs/rss",
+      name: "Rss",
+      external: true,
+    },
+    { id: 7, route: "/user-profile", name: "Profile" },
+    {
+      id: 8,
       route: "/notice",
       name: "Notice",
     },
     {
-      id: 8,
+      id: 9,
       isThemeToggle: true, // Differentiator key
     },
   ];
@@ -62,7 +69,7 @@ const Navbar = () => {
     <div
       className={`navbar ${
         theme === "dark" ? "bg-gray-900" : "bg-base-200"
-      } lg:px-0 lg:bg-base-200 md:py-0 shadow-lg fixed top-0 lg:max-w-7xl mx-auto z-50 lg:top-0 pt-0 mt-0`}
+      } lg:px-4 lg:bg-base-200 md:py-0 shadow-md fixed top-0 lg:max-w-full mx-auto z-50 lg:top-0 pt-0 mt-0`}
     >
       <div className="navbar dark:bg-slate-900">
         <div className="navbar-start">
@@ -101,7 +108,7 @@ const Navbar = () => {
                       <a href={item.route}>{item.name}</a>
                     </li>
                   )
-                ) : null
+                ) : null,
               )}
             </ul>
           </div>

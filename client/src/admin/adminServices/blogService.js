@@ -13,6 +13,12 @@ const getFlaggingHistory = (slug) =>
 
 const getAllBlogs = () => handleApiCall(() => api.get(API_PATHS.BLOGS));
 
+const getPopularPosts = () =>
+  handleApiCall(() => api.get(`${API_PATHS.BLOGS}/popular`));
+
+const getRelatedBlogPosts = (slug) =>
+  handleApiCall(() => api.get(`${API_PATHS.BLOGS}/related-posts/${slug}`));
+
 const updateBlogBySlug = (slug, blog) =>
   handleApiCall(() => api.patch(`${API_PATHS.BLOGS}/${slug}`, blog));
 
@@ -35,6 +41,8 @@ export {
   getBlogBySlug,
   getFlaggingHistory,
   getAllBlogs,
+  getPopularPosts,
+  getRelatedBlogPosts,
   updateBlogBySlug,
   softDeletePost,
   restoreSoftDeletedPost,

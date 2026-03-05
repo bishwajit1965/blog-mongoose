@@ -14,13 +14,19 @@ const {
 
 const router = express.Router();
 
+/*** =================================
+ *  PUBLIC ROUTES
+ * ===================================*/
+
 router.post("/login", loginAdmin);
 router.post("/logout", logoutAdmin);
+
 // Refresh token endpoint (public, but requires the refresh token cookie)
 router.post("/refresh-token", refreshAccessToken);
 
 router.use(authenticateToken);
 
+// Fetch Current User
 router.get("/me", async (req, res) => {
   try {
     if (!req.user || !req.user.id) {
@@ -46,10 +52,10 @@ router.get("/me", async (req, res) => {
     // Extract effective permissions as IDs:
     // Direct permissions (if any) plus permissions from roles
     const directPermissionIds = user.permissions.map((perm) =>
-      perm._id.toString()
+      perm._id.toString(),
     );
     const rolePermissionIds = user.roles.flatMap((role) =>
-      role.permissions.map((perm) => perm._id.toString())
+      role.permissions.map((perm) => perm._id.toString()),
     );
     const allPermissionIds = [
       ...new Set([...directPermissionIds, ...rolePermissionIds]),
@@ -72,6 +78,13 @@ router.get("/me", async (req, res) => {
   }
 });
 
+// NOTE: IMPORTANT!
+// UPDATE AND DELETE FUNCTIONALITIES ARE INCLUDED IN userManagementController.js & userManagementRoutes.js
+
+/*** =================================
+ *  ROLE BASED ROUTES
+ * ===================================*/
+
 // Super-Admin Only Routes
 router.use("/super-admin", authorizeRoles(["super-admin"]));
 
@@ -81,9 +94,6 @@ router.get("/super-admin/super-admin-dashboard", (req, res) => {
     message: "Welcome to the super-admin dashboard!",
   });
 });
-
-// NOTE: IMPORTANT!
-// UPDATE AND DELETE FUNCTIONALITIES ARE INCLUDED IN userManagementController.js & userManagementRoutes.js
 
 // Admin-only routes
 router.use("/admin", authorizeRoles(["admin", "super-admin"]));
@@ -120,7 +130,7 @@ router.get(
     res
       .status(200)
       .json({ status: "success", message: "You have access to this route." });
-  }
+  },
 );
 
 module.exports = router;

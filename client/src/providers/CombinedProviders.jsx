@@ -13,6 +13,7 @@ import AdminTagProvider from "../admin/adminProviders/AdminTagProvider";
 import AdminUserProvider from "../admin/adminProviders/AdminUserProvider";
 import ArchivedBlogProvider from "../admin/adminProviders/ArchivedBlogProvider";
 import AuthProvider from "./AuthProvider";
+import AdminMessageProviders from "../admin/adminProviders/AdminMessageProviders";
 
 const queryClient = new QueryClient();
 
@@ -25,17 +26,19 @@ const CombinedProviders = ({ children }) => (
             <QueryClientProvider client={queryClient}>
               <AdminFlaggedPostContextProvider>
                 <AdminNotificationProvider>
-                  <AdminRoleProvider>
-                    <AdminBlogProvider>
-                      <AdminPermissionProvider>
-                        <AdminCategoryProvider>
-                          <AdminUserProvider>
-                            <AdminTagProvider>{children}</AdminTagProvider>
-                          </AdminUserProvider>
-                        </AdminCategoryProvider>
-                      </AdminPermissionProvider>
-                    </AdminBlogProvider>
-                  </AdminRoleProvider>
+                  <AdminMessageProviders>
+                    <AdminRoleProvider>
+                      <AdminBlogProvider>
+                        <AdminPermissionProvider>
+                          <AdminCategoryProvider>
+                            <AdminUserProvider>
+                              <AdminTagProvider>{children}</AdminTagProvider>
+                            </AdminUserProvider>
+                          </AdminCategoryProvider>
+                        </AdminPermissionProvider>
+                      </AdminBlogProvider>
+                    </AdminRoleProvider>
+                  </AdminMessageProviders>
                 </AdminNotificationProvider>
               </AdminFlaggedPostContextProvider>
             </QueryClientProvider>

@@ -8,6 +8,7 @@ import Logo from "/assets/favicon/webDevProF.png";
 import ThemeContext from "../../../themeContext/ThemeContext";
 import adminImage from "/assets/bishwajit-1.jpg";
 import useAdminAuth from "../../adminHooks/useAdminAuth";
+import { LogIn, LogOutIcon } from "lucide-react";
 
 const AdminNavbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
@@ -35,6 +36,7 @@ const AdminNavbar = () => {
   };
 
   const handleOpen = () => {
+    // setOpen((prev) => !prev);
     setOpen(!open);
   };
   const routes = [
@@ -47,7 +49,7 @@ const AdminNavbar = () => {
   ];
 
   return (
-    <div>
+    <div className="sticky top-0 z-30">
       <div className="navbar bg-base-200 dark:bg-gray-800 border-b dark:border-b-gray-700">
         <div className="navbar-start">
           <div className="dropdown">
@@ -67,7 +69,7 @@ const AdminNavbar = () => {
               tabIndex={0}
               className={`bg-base-200 border lg:hidden md:hidden lg:ml-2 -ml-4 space-y-1 z-[1] shadow-lg w-96 absolute duration-1000 md:static rounded-b-md ${
                 open ? "top-[65px]" : "-top-72"
-              } dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 dark:shadow-lg`}
+              }  dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 dark:shadow-lg`}
             >
               {routes.map((item) =>
                 item ? (
@@ -85,7 +87,7 @@ const AdminNavbar = () => {
                       <a href={item.route}>{item.name}</a>
                     </li>
                   )
-                ) : null
+                ) : null,
               )}
             </ul>
           </div>
@@ -138,10 +140,10 @@ const AdminNavbar = () => {
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow dark:bg-gray-700"
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow dark:bg-gray-700"
             >
               <li>
-                <a className="justify-between">
+                <a className="justify-between m-0">
                   Profile
                   <span className="badge">New</span>
                 </a>
@@ -150,13 +152,17 @@ const AdminNavbar = () => {
               {adminData ? (
                 <>
                   <li>
-                    <button onClick={handleLogOut}>Log Out</button>
+                    <button onClick={handleLogOut}>
+                      <LogOutIcon size={16} /> Log Out
+                    </button>
                   </li>
                 </>
               ) : (
                 <>
                   <li>
-                    <Link to="/admin/login">Login</Link>
+                    <Link to="/admin/login">
+                      <LogIn size={16} /> Login
+                    </Link>
                   </li>
                 </>
               )}

@@ -6,6 +6,7 @@ const fs = require("fs");
 const slugify = require("slugify");
 const mongoose = require("mongoose");
 const generateSitemap = require("../utils/sitemap");
+const { create } = require("xmlbuilder2");
 
 const generateExcerpt = (content, maxLength = 500) => {
   if (!content) return ""; // Return empty if no content is provided
@@ -72,7 +73,7 @@ const createBlog = async (req, res) => {
     const formattedTags = Array.isArray(tags)
       ? tags
           .map((tag) =>
-            mongoose.Types.ObjectId.isValid(tag) ? tag.toString() : null
+            mongoose.Types.ObjectId.isValid(tag) ? tag.toString() : null,
           )
           .filter(Boolean)
       : [];
@@ -141,9 +142,10 @@ const createBlog = async (req, res) => {
 const getAllBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find({ status: "published" })
-      .populate("author", "name email")
+      .populate("author", "name email avatar")
       .populate("category", "name")
-      .populate("tags", "name");
+      .populate("tags", "name")
+      .sort({ createdAt: -1 });
     await generateSitemap(); // ✅ Regenerate sitemap after successful blog creation
     res.status(200).json(blogs);
   } catch (error) {
@@ -165,6 +167,54 @@ const getBlogBySlug = async (req, res) => {
     res.status(200).json(blog);
   } catch (error) {
     res.status(500).json({ message: "Error fetching blog", error });
+  }
+};
+
+const getRandomPost = async (req, res) => {
+  try {
+    const count = await Blog.countDocuments({ status: "published" });
+    const random = Math.floor(Math.random() * count);
+    const randomPost = await Blog.find({ status: "published" })
+      .skip(random)
+      .populate("author", "name email avatar")
+      .populate("category", "name")
+      .populate("tags", "name")
+      .limit(4);
+    if (!randomPost) {
+      return res.status(404).json({ message: "No random post found" });
+    }
+    res.status(200).json(randomPost);
+  } catch (error) {
+    console.error("Error fetching random post:", error);
+    res.status(500).json({ message: "Error fetching random post", error });
+  }
+};
+
+const getRelatedBlogPosts = async (req, res) => {
+  const { slug } = req.params;
+  try {
+    const currentPost = await Blog.findOne({ slug });
+    if (!currentPost)
+      return res.status(404).json({ message: "Blog post not found." });
+
+    const relatedPost = await Blog.find({
+      slug: { $ne: slug },
+      $or: [
+        { category: currentPost.category },
+        { tags: { $in: currentPost.tags } },
+      ],
+    })
+      .populate("author", "name email avatar")
+      .populate("category", "name")
+      .populate("tags", "name")
+      .limit(15); // Adjust limit as needed
+    res.json(relatedPost);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error in fetching related posts.",
+      error,
+    });
   }
 };
 
@@ -252,7 +302,7 @@ const updateBlogBySlug = async (req, res) => {
           __dirname,
           "..",
           "uploads",
-          path.basename(blog.image)
+          path.basename(blog.image),
         );
 
         if (fs.existsSync(oldImagePath)) {
@@ -292,7 +342,7 @@ const updateBlogBySlug = async (req, res) => {
               .toLowerCase()
               .replace(/[^\w\s]/gi, "") // Remove punctuation
               .split(/\s+/) // Split into words
-              .filter((word) => word.length > 2 && !stopWords.includes(word)) // Remove short words
+              .filter((word) => word.length > 2 && !stopWords.includes(word)), // Remove short words
           ),
         ].slice(0, 10); // Limit to 10 keywords
       };
@@ -525,7 +575,7 @@ const getFlaggingHistory = async (req, res) => {
   try {
     const blog = await Blog.findById(slug).populate(
       "flaggingHistory.userId",
-      "name"
+      "name",
     );
     if (!blog) {
       return res.status(404).json({ error: "Blog not found" });
@@ -535,6 +585,101 @@ const getFlaggingHistory = async (req, res) => {
     return res
       .status(500)
       .json({ error: "Failed to fetch flagging history.", error });
+  }
+};
+
+const getPopularPosts = async (req, res) => {
+  try {
+    const popularPosts = await Blog.aggregate([
+      {
+        $match: { status: "published" },
+      },
+      {
+        $lookup: {
+          from: "comments",
+          localField: "_id",
+          foreignField: "post",
+          as: "comments",
+        },
+      },
+      {
+        $addFields: {
+          commentCount: {
+            $size: {
+              $filter: {
+                input: "$comments",
+                as: "comment",
+                cond: { $eq: ["$$comment.status", "approved"] },
+              },
+            },
+          },
+        },
+      },
+      {
+        $sort: { commentCount: -1 },
+      },
+      {
+        $limit: 5,
+      },
+      {
+        $project: {
+          title: 1,
+          content: 1,
+          image: 1,
+          slug: 1,
+          featuredImage: 1,
+          commentCount: 1,
+          createdAt: 1,
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      popularPosts,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching popular posts",
+    });
+  }
+};
+
+const getRssFeed = async (req, res) => {
+  try {
+    const siteUrl = process.env.SITE_API_URL || "http://localhost:3000";
+
+    const posts = await Blog.find().sort({ createdAt: -1 }).limit(20);
+
+    const feed = create({
+      rss: {
+        "@version": "2.0",
+        channel: {
+          title: "Bishwajit.dev",
+          link: siteUrl,
+          description: "Latest blog posts",
+          item: posts.map((post) => ({
+            title: post.title || "Untitled",
+            link: `${siteUrl}/blog-details/${post.slug}`,
+            description: post.excerpt
+              ? post.excerpt
+              : post.content
+                ? post.content.substring(0, 200)
+                : "",
+            pubDate: post.createdAt
+              ? new Date(post.createdAt).toUTCString()
+              : new Date().toUTCString(),
+          })),
+        },
+      },
+    }).end({ prettyPrint: true });
+
+    res.set("Content-Type", "application/xml");
+    res.send(feed);
+  } catch (error) {
+    console.error("RSS ERROR:", error);
+    res.status(500).send("Failed to generate RSS feed");
   }
 };
 
@@ -577,6 +722,8 @@ const deleteBlogBySlug = async (req, res) => {
 module.exports = {
   createBlog,
   getAllBlogs,
+  getRandomPost,
+  getRelatedBlogPosts,
   getBlogBySlug,
   updateBlogBySlug,
   softDeletePost,
@@ -584,5 +731,7 @@ module.exports = {
   getAllNonDeletedBlogs,
   flagPost,
   getFlaggingHistory,
+  getPopularPosts,
+  getRssFeed,
   deleteBlogBySlug,
 };

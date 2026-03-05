@@ -2,11 +2,47 @@ import AdminPagination from "../../admin/adminComponent/adminPagination/AdminPag
 import BlogPostCard from "./BlogPostCard";
 import BlogPostSkeleton from "./BlogPostSkeleton";
 import { Helmet } from "react-helmet-async";
+import { useEffect } from "react";
 import { useState } from "react";
 
-const BlogPosts = ({ data, isLoading, error, user }) => {
-  const [paginatedData, setPaginatedData] = useState(data || []);
-  console.log(data, isLoading, error);
+const BlogPosts = ({
+  data,
+  isLoading,
+  error,
+  user,
+  searchTerm,
+  selectedCategory,
+  selectedTag,
+}) => {
+  const [filteredData, setFilteredData] = useState([]);
+  const [paginatedData, setPaginatedData] = useState([]);
+  // Determine if a search/filter operation is active
+  const isFilteringActive = !!searchTerm || !!selectedCategory || !!selectedTag;
+
+  useEffect(() => {
+    if (!data) return;
+    const newFilteredData = data.filter((post) => {
+      const searchedPosts = post.title
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      const searchedCategoryPosts = selectedCategory
+        ? post.category?.name
+            .toLowerCase()
+            .includes(selectedCategory.toLowerCase())
+        : true;
+
+      const searchedTagPosts = selectedTag
+        ? post.tags.some((tag) =>
+            tag.name.toLowerCase().includes(selectedTag.toLowerCase())
+          )
+        : true;
+
+      return searchedPosts && searchedCategoryPosts && searchedTagPosts;
+    });
+
+    setFilteredData(newFilteredData);
+  }, [paginatedData, data, searchTerm, selectedCategory, selectedTag]);
 
   if (isLoading) {
     return (
@@ -24,19 +60,19 @@ const BlogPosts = ({ data, isLoading, error, user }) => {
       <Helmet>
         <title>Blog || Blog Posts</title>
       </Helmet>
-      <div className="">
-        {paginatedData.length > 0 ? (
+      <div className="lg:space-y-6 space-y-4">
+        {paginatedData.length === 0 ? (
+          <p className="flex justify-center">No blog post is available!</p>
+        ) : (
           paginatedData.map((blog) => (
             <BlogPostCard key={blog._id} blog={blog} user={user} />
           ))
-        ) : (
-          <p className="flex justify-center">No blog post is available!</p>
         )}
       </div>
-      <div className="lg:py-2 border-t py-2 shadow-xls bg-base-3000 rounded-lg">
+      <div className="lg:pt-12 py-4 bg-base-3000 rounded-lg">
         {/* Pagination */}
         <AdminPagination
-          items={data}
+          items={isFilteringActive ? filteredData : data}
           onPaginatedDataChange={setPaginatedData}
         />
       </div>

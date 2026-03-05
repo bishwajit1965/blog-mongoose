@@ -17,7 +17,7 @@ const BookmarkedPage = () => {
     );
 
   return (
-    <div className="">
+    <div className="rounded-lg lg:space-y-4 space-y-2">
       {data?.bookmarks.length === 0 ? (
         <p className="flex justify-center transform translate-y-60">
           You have not bookmarked any post yet!

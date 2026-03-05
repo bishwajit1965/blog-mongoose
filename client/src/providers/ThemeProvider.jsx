@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import ThemeContext from "../themeContext/ThemeContext";
+import { Loader } from "lucide-react";
 
 const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState("light"); //Default theme is light
@@ -20,9 +21,7 @@ const ThemeProvider = ({ children }) => {
   }, []);
 
   if (isLoading) {
-    return (
-      <div className="loading loading-bars loading-xl flex mx-auto min-h-24"></div>
-    );
+    return <Loader className="animate-spin" size={30} />;
   }
 
   const toggleTheme = () => {

@@ -28,8 +28,8 @@ const CategoriesTable = ({ onEdit, onDelete }) => {
     }
   };
   return (
-    <>
-      <table className="table table-xs w-full">
+    <div className="overflow-x-auto">
+      <table className="table table-xs w-full table-pin-rows table-pin-cols">
         <thead>
           <tr className="dark:border-gray-700 dark:text-gray-400 font-bold">
             <th>#</th>
@@ -83,7 +83,7 @@ const CategoriesTable = ({ onEdit, onDelete }) => {
         items={categories}
         onPaginatedDataChange={setPaginatedData} // Directly update paginated data
       />
-    </>
+    </div>
   );
 };
 

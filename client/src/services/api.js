@@ -13,7 +13,7 @@ api.interceptors.request.use(
       if (config.data instanceof FormData) {
         delete config.headers["Content-type"];
       } else {
-        config.headers["Content-type"] = "application/json";
+        config.headers["Content-Type"] = "application/json";
       }
     }
     return config;
@@ -21,6 +21,6 @@ api.interceptors.request.use(
 
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 export default api;

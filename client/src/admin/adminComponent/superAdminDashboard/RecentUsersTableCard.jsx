@@ -20,8 +20,8 @@ const RecentUsersTableCard = ({ recentUsers }) => {
         dataLength={recentUsers.length}
       />
 
-      <div className="pb-2">
-        <table className="table-auto table-sm text-sm w-full">
+      <div className="overflow-x-auto pb-2">
+        <table className="table table-xs table-auto text-sm w-full">
           <thead>
             <tr className="bg-gray-100 dark:bg-gray-600">
               <th className="py-2 px-4">Name</th>
