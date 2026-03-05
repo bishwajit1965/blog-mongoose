@@ -68,10 +68,10 @@ const Navbar = () => {
   return (
     <div
       className={`navbar ${
-        theme === "dark" ? "bg-gray-900" : "bg-base-200"
+        theme === "dark" ? "bg-gray-800" : "bg-base-200"
       } lg:px-0 lg:bg-base-200 md:py-0 shadow-md fixed top-0 lg:max-w-full mx-auto z-50 lg:top-0 pt-0 mt-0`}
     >
-      <div className="navbar dark:bg-slate-900 lg:px-[7rem]">
+      <div className="navbar dark:bg-gray-800 lg:px-[7rem] px-0">
         <div className="navbar-start">
           <div className="dropdown">
             <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -88,7 +88,7 @@ const Navbar = () => {
             </label>
             <ul
               tabIndex={0}
-              className={`bg-base-200 border lg:hidden md:hidden lg:ml-2 -ml-4 space-y-1 z-[1] shadow-lg w-96 absolute duration-1000 md:static rounded-b-md ${
+              className={`bg-base-200 border lg:hidden md:hidden lg:ml-2 -ml-2 space-y-1 z-[1] shadow-lg w-96 absolute duration-1000 md:static rounded-b-md ${
                 open ? "top-[65px]" : "-top-72"
               } dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 dark:shadow-lg`}
             >
@@ -145,11 +145,11 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        <div className="navbar-end dark:bg-slate-900">
+        <div className="navbar-end dark:bg-gray-800">
           <div className="dropdown dropdown-bottom dropdown-end">
             <label
               tabIndex={0}
-              className="btn m-1 dark:bg-slate-900 border-none"
+              className="btn m-1 dark:bg-gray-800 border-none"
             >
               <div className="flex items-center lg:w- w-">
                 {user ? (
@@ -195,7 +195,7 @@ const Navbar = () => {
           <div className="flex justify-end items-center">
             {user ? (
               <button
-                className="btn btn-sm w-9 lg:w-24 capitalize dark:text-slate-300 dark:bg-slate-900 dark:border-none"
+                className="btn btn-sm w-9 lg:w-24 capitalize dark:text-slate-300 dark:bg-gray-800 dark:border-none"
                 onClick={handleLogOut}
               >
                 <FaSignOutAlt />
