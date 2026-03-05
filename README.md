@@ -57,6 +57,7 @@ This project showcases practical experience in:
 
 - Scheduled post publishing system
 - Blog filtering by categories and tags
+- Full site text based search
 - RSS feed generation
 - SEO friendly blog routing
 - Blog view tracking
@@ -337,7 +338,9 @@ Users can subscribe to the feed using RSS readers or browser extensions to autom
 
 # Scheduled Posts
 
-The platform supports **future publishing**.
+The platform supports **Coming Soon publishing**.
+
+The platform supports **Future Publishing**.
 
 Posts scheduled for the future:
 
@@ -375,7 +378,7 @@ The application includes several optimizations:
 ## Clone the Repository
 
 ```
-git clone https://github.com/yourusername/blogmongoose.git
+git clone https://github.com/bishwajit1965/blog-mongoose.git
 ```
 
 ---
@@ -418,7 +421,7 @@ CLIENT_URL=http://localhost:5173
 Start backend server
 
 ```
-npm run dev
+npm run dev  OR nodemon index.js
 ```
 
 Start frontend
