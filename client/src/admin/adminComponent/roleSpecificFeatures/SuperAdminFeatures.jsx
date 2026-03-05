@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 const FaArrowAltCircleRight = lazy(() =>
   import("react-icons/fa").then((module) => ({
     default: module.FaArrowAltCircleRight,
-  }))
+  })),
 );
 
 const SuperAdminFeatures = () => {
@@ -26,11 +26,12 @@ const SuperAdminFeatures = () => {
     { id: 14, route: "manage-users", name: "Manage Users" },
     { id: 15, route: "manage-notification", name: "Manage Notifications" },
     { id: 16, route: "manage-comments", name: "Manage Comments" },
+    { id: 16, route: "manage-messages", name: "Manage Messages" },
   ];
 
   return (
-    <div className="dark:bg-gray-800 bg-base-200 border-b border-gray-200 shadow-sm rounded-b-sm dark:border-gray-700">
-      <div className="lg:space-y-1 p-1 overflow-y-scroll h-[calc(100vh-148px)]">
+    <div className="dark:bg-gray-800 bg-base-200 border-gray-200 rounded-b-sm dark:border-gray-700">
+      <div className="lg:space-y-1 lg:p-[15px] lg:h-[calc(100vh-145px)] lg:overflow-y-scroll lg:fixed lg:top-[146px]">
         {superAdminRoutesFeatures.map((path) => (
           <NavLink
             key={path.id}

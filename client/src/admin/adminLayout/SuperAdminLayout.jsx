@@ -11,12 +11,12 @@ const SuperAdminLayout = () => {
       <AdminNavbar />
 
       <div className="grid lg:grid-cols-12 grid-cols-1 justify-between">
-        <div className="lg:col-span-2 col-span-12 bg-base-200 dark:bg-gray-800 dark:text-gray-300">
+        <div className="lg:col-span-2 col-span-12 bg-base-200 dark:bg-gray-800 dark:text-gray-300 lg:sticky">
           <AdminSideNav />
         </div>
 
         <div className="lg:col-span-10 col-span-12 border border-b-rounded-md dark:border-gray-700">
-          <div className="">
+          <div className="lg:sticky lg:top-[73px] z-20">
             <AdminPageTitle
               title="Super Admin"
               decoratedText="Panel"

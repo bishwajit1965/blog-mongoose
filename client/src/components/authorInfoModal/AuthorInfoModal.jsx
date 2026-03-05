@@ -29,14 +29,14 @@ const AuthorInfoModal = ({ user, author, title = "User", children }) => {
             )}
           </div>
           <div className="">
-            <p className="text-gray-500 lg:text-base text-sm flex items-center font-bold space-x-2">
+            <p className="text-gray-500 dark:text-base-300 lg:text-base text-sm flex items-center font-bold space-x-2">
               <span>{author.name}</span>
             </p>
           </div>
         </div>
 
         {isOpen && (
-          <div className="absolute left-0 top-10 ml-0 w-80 bg-base-100 border border-gray-200 shadow-lg p-4 rounded-xl z-50 space-y-2">
+          <div className="absolute left-0 top-10 ml-0 w-80 bg-base-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl p-4 rounded-xl z-50 space-y-2">
             <div className="flex justify-between items-center">
               <img
                 src={user?.photoURL}
@@ -44,16 +44,16 @@ const AuthorInfoModal = ({ user, author, title = "User", children }) => {
                 className="w-14 h-14 rounded-full"
               />
 
-              <div className="w-20 h-8 p-2 bg-gray-900 text-white rounded-full flex items-center justify-center">
+              <div className="w-20 h-8 p-2 bg-gray-900 dark:text-base-300  text-white rounded-full flex items-center justify-center">
                 Follow
               </div>
             </div>
             <div className="">
-              <p className="text-gray-900 lg:text-xl lg:font-bold text-sm font-semibold flex items-center space-x-2">
+              <p className="text-gray-900 dark:text-base-300 lg:text-xl lg:font-bold text-sm font-semibold flex items-center space-x-2">
                 <span>{author.name}</span>
               </p>
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-base-300">
               I am a developer. I develop websites with utmost care and keep in
               mind about modern technologies in use.
             </p>
@@ -61,7 +61,7 @@ const AuthorInfoModal = ({ user, author, title = "User", children }) => {
             {children ? (
               <>{children}</>
             ) : (
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-base-300">
                 No additional info provided.
               </p>
             )}

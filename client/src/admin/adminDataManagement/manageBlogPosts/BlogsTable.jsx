@@ -75,95 +75,97 @@ const BlogsTable = ({ blogs, onEdit, onDelete, handleBlogDetailView }) => {
     <div className="pb-4 mb-2 shadow-md pr-2">
       {/* Search input functionality */}
       <SearchInput data={blogs} onFilteredDataChange={setPaginatedData} />
-
-      <table className="table table-xs w-full">
-        <thead>
-          <tr className="dark:border-gray-700 dark:text-gray-400 font-bold">
-            <th>#</th>
-            <th>Title</th>
-            <th>Status</th>
-            <th className="lg:flex lg:justify-end lg:mr-12">Actions</th>
-          </tr>
-        </thead>
-
-        <tbody className="dark:hover:bg-gray-700 dark:hover:rounded-md">
-          {paginatedData?.map((blog, index) => (
-            <tr
-              key={blog._id}
-              className="dark:hover:bg-gray-600 hover:bg-gray-100 dark:border-gray-700"
-            >
-              <td>{index + 1}</td>
-              <td className="capitalize">{blog.title}</td>
-              <td>
-                {blog.status === "published"
-                  ? "Published"
-                  : blog.status === "draft"
-                  ? "Draft"
-                  : blog.status === "deleted"
-                  ? "Deleted"
-                  : blog.status === "scheduled"
-                  ? "Scheduled"
-                  : blog.status === "coming-soon"
-                  ? "Coming Soon"
-                  : blog.status === "archived"
-                  ? "Archived"
-                  : "N/A"}
-              </td>
-
-              <td className="flex space-x-1 justify-end pr-0">
-                {Array.isArray(adminData?.user?.roles) &&
-                adminData.user.roles.some(
-                  (role) => role.name === "super-admin" || role.name === "admin"
-                ) ? (
-                  <>
-                    <CTAButton
-                      onClick={() => onEdit(blog)}
-                      label="EDIT"
-                      icon={<FaEdit />}
-                      className="btn btn-xs text-xs"
-                      variant="primary"
-                    />
-                    <CTAButton
-                      onClick={() => handleBlogDetailView(blog)}
-                      label="VIEW"
-                      icon={<FaEye />}
-                      className="btn btn-xs text-xs"
-                      variant="primary"
-                    />
-                    {blog.status === "deleted" &&
-                    hasPermission("restore-post") ? (
-                      <CTAButton
-                        onClick={() => handleRestore(blog.slug)}
-                        label="RESTORE"
-                        icon={<FaRecycle />}
-                        className="btn btn-xs text-xs"
-                        variant="success"
-                      />
-                    ) : (
-                      <CTAButton
-                        onClick={() => handleSoftDelete(blog.slug)}
-                        label="S-DEL"
-                        icon={<FaAccessibleIcon />}
-                        className="btn btn-xs text-xs"
-                        variant="warning"
-                      />
-                    )}
-                    <CTAButton
-                      onClick={() => handlePermanentDelete(blog._id)}
-                      label="DEL"
-                      icon={<FaTrashAlt />}
-                      className="btn btn-xs text-xs"
-                      variant="danger"
-                    />
-                  </>
-                ) : (
-                  ""
-                )}
-              </td>
+      <div className="overflow-x-auto">
+        <table className="table table-xs w-full table-pin-rows table-pin-cols">
+          <thead>
+            <tr className="dark:border-gray-700 dark:text-gray-400 font-bold">
+              <th>#</th>
+              <th>Title</th>
+              <th>Status</th>
+              <th className="lg:flex lg:justify-end lg:mr-12">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody className="dark:hover:bg-gray-700 dark:hover:rounded-md">
+            {paginatedData?.map((blog, index) => (
+              <tr
+                key={blog._id}
+                className="dark:hover:bg-gray-600 hover:bg-gray-100 dark:border-gray-700"
+              >
+                <td>{index + 1}</td>
+                <td className="capitalize">{blog.title}</td>
+                <td>
+                  {blog.status === "published"
+                    ? "Published"
+                    : blog.status === "draft"
+                    ? "Draft"
+                    : blog.status === "deleted"
+                    ? "Deleted"
+                    : blog.status === "scheduled"
+                    ? "Scheduled"
+                    : blog.status === "coming-soon"
+                    ? "Coming Soon"
+                    : blog.status === "archived"
+                    ? "Archived"
+                    : "N/A"}
+                </td>
+
+                <td className="flex space-x-1 justify-end pr-0">
+                  {Array.isArray(adminData?.user?.roles) &&
+                  adminData.user.roles.some(
+                    (role) =>
+                      role.name === "super-admin" || role.name === "admin"
+                  ) ? (
+                    <>
+                      <CTAButton
+                        onClick={() => onEdit(blog)}
+                        label="EDIT"
+                        icon={<FaEdit />}
+                        className="btn btn-xs text-xs"
+                        variant="primary"
+                      />
+                      <CTAButton
+                        onClick={() => handleBlogDetailView(blog)}
+                        label="VIEW"
+                        icon={<FaEye />}
+                        className="btn btn-xs text-xs"
+                        variant="primary"
+                      />
+                      {blog.status === "deleted" &&
+                      hasPermission("restore-post") ? (
+                        <CTAButton
+                          onClick={() => handleRestore(blog.slug)}
+                          label="RESTORE"
+                          icon={<FaRecycle />}
+                          className="btn btn-xs text-xs"
+                          variant="success"
+                        />
+                      ) : (
+                        <CTAButton
+                          onClick={() => handleSoftDelete(blog.slug)}
+                          label="S-DEL"
+                          icon={<FaAccessibleIcon />}
+                          className="btn btn-xs text-xs"
+                          variant="warning"
+                        />
+                      )}
+                      <CTAButton
+                        onClick={() => handlePermanentDelete(blog._id)}
+                        label="DEL"
+                        icon={<FaTrashAlt />}
+                        className="btn btn-xs text-xs"
+                        variant="danger"
+                      />
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       {/* Pagination */}
       <AdminPagination items={blogs} onPaginatedDataChange={setPaginatedData} />
     </div>

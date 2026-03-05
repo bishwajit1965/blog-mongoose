@@ -13,7 +13,6 @@ const BookmarkButton = ({ blogId }) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  console.log("Is bookmarked", isBookmarked);
 
   const fetchBookmarks = useCallback(async () => {
     try {
@@ -69,7 +68,7 @@ const BookmarkButton = ({ blogId }) => {
             ? "Click to remove bookmark"
             : "Click to bookmark this post"
         }
-        className={`px-3 py-1 btn btn-xs rounded flex items-center gap-1 ${
+        className={`px-3 py-1 btn btn-xs rounded flex items-center gap-1 dark:bg-gray-700 dark:text-base-300 dark:border-gray-700 ${
           isBookmarked ? "bg-amber-500 text-white" : "bg-gray-200 text-gray-700"
         }`}
       >

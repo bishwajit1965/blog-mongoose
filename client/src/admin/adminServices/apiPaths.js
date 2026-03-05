@@ -5,6 +5,7 @@ const API_PATHS = {
   BLOGS: "/blogs",
   BOOKMARKED_POSTS: "/bookmark-post",
   CATEGORIES: "/categories",
+  CONTACT: "/contacts",
   COMMENTS: "/comments",
   COMMENTS_ADMIN: "/admin-only-comments",
   NOTIFICATIONS: "/notifications",

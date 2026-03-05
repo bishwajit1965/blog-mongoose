@@ -33,7 +33,7 @@ cron.schedule("* * * * *", async () => {
         // Emit notification to admin that the post has been published
         io.emit(
           "publish-alert",
-          `A post titled "${post.title}" has been published!`
+          `A post titled "${post.title}" has been published!`,
         );
         console.log(`Published post: ${post.title}`);
       }

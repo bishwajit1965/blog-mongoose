@@ -33,7 +33,7 @@ const verifyJWT = (token, secretType = "access") => {
   try {
     return jwt.verify(token, secret);
   } catch (error) {
-    console.log(`❌ JWT Verification Failed (${type}):`, err.message);
+    console.log(`❌ JWT Verification Failed (${secretType}):`, error.message);
     // console.error("JWT verification failed", error);
     return null; // Return null if verification fails
   }

@@ -23,7 +23,7 @@ const BlogPostStatisticsCard = () => {
       try {
         const res = await axios.get(
           "http://localhost:3000/api/blog/blog-status",
-          { withCredentials: true }
+          { withCredentials: true },
         );
         setBlogStats(res.data);
       } catch (error) {
@@ -75,7 +75,7 @@ const BlogPostStatisticsCard = () => {
       />
       <div className="grid lg:grid-cols-12 grid-cols-1 justify-between gap-4 rounded-md shadow-md">
         <div className="lg:col-span-6 col-span-12 border-r dark:border-gray-700">
-          <h2 className="text-xl font-bold text-center my-2">
+          <h2 className="lg:text-xl text-sm font-bold text-center my-2">
             Posts Statistics
           </h2>
           <div className="flex justify-center lg:col-span-6 col-span-12 rounded-md">
@@ -99,7 +99,7 @@ const BlogPostStatisticsCard = () => {
           </div>
         </div>
         <div className="lg:col-span-6 col-span-12 border-l dark:border-gray-700">
-          <h2 className="text-xl font-bold text-center my-2">
+          <h2 className="lg:text-xl text-sm font-bold text-center my-2">
             Category Wise Posts Statistics
           </h2>
           <div className="flex justify-center lg:col-span-6 col-span-12 rounded-md">

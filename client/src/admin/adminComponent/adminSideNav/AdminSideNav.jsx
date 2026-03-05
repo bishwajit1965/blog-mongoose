@@ -19,8 +19,8 @@ const AdminSideNav = () => {
   };
 
   return (
-    <div className="dark:bg-gray-800 bg-base-">
-      <div className="lg:py-[24.2px] bg-base-300 text-gray-800 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700 shadow-md">
+    <div className="dark:bg-gray-800 bg-base-300">
+      <div className="lg:py-[24.2px] bg-base-300 text-gray-800 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700 shadow-sm lg:fixed lg:w-64 z-50">
         {/* Role-based title display */}
         {hasRole("super-admin") && (
           <h1 className="font-bold text-md text-gray-800 text-center dark:text-gray-400">

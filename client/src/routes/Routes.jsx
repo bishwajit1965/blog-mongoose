@@ -40,6 +40,9 @@ import Unauthorized from "../admin/unauthorized/Unauthorized";
 import WriterDashboard from "../admin/adminComponent/writerDashboard/WriterDashboard";
 import WriterLayout from "../admin/adminLayout/WriterLayout";
 import { createBrowserRouter } from "react-router-dom";
+import ManageMessages from "../admin/adminDataManagement/manageMessages/ManageMessages";
+import ComingSoonPost from "../components/comingSoonPost/ComingSoonPost";
+import FeatureUnderConstructionPage from "../pages/featureUnderConstruction/FeatureUnderConstructionPage";
 
 // Common Admin Routes (Super Admin can access all)
 const superAdminRoutes = [
@@ -63,6 +66,7 @@ const superAdminRoutes = [
   { path: "manage-profile", element: <ProfileManagement /> },
   { path: "manage-notification", element: <ManageAdminNotification /> },
   { path: "manage-comments", element: <ManageComments /> },
+  { path: "manage-messages", element: <ManageMessages /> },
 ];
 
 const router = createBrowserRouter([
@@ -82,19 +86,24 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      { path: "blog-coming-soon", element: <ComingSoonPost /> },
       { path: "blog-posts", element: <BlogPosts /> },
       {
         path: "blog-details/:slug",
         element: <BlogDetailsPage />,
         loader: async ({ params }) => {
           const response = await fetch(
-            `${import.meta.env.VITE_API_BASE_URL}/blogs/${params.slug}`
+            `${import.meta.env.VITE_API_BASE_URL}/blogs/${params.slug}`,
           );
           if (!response.ok) {
             throw new Error("Blog not found");
           }
           return response.json();
         },
+      },
+      {
+        path: "user-profile",
+        element: <FeatureUnderConstructionPage />,
       },
       {
         path: "bookmarked-page",
@@ -129,7 +138,10 @@ const router = createBrowserRouter([
     path: "/super-admin/*",
     errorElement: <ErrorPage />,
     element: (
-      <RequireAdmin allowedRoles={["super-admin"]}>
+      <RequireAdmin
+        allowedRoles={["super-admin"]}
+        allowedPermissions={["edit-post"]}
+      >
         <SuperAdminLayout />
       </RequireAdmin>
     ),

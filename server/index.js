@@ -10,9 +10,9 @@ const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const morgan = require("morgan");
-const app = express();
 const onlineUsers = new Set();
 const createBackup = require("./backupService");
+const app = express();
 
 // Initializing database connection
 connectDB();
@@ -25,6 +25,7 @@ const io = new Server(server, {
     credentials: true,
   },
 });
+console.log("🔥 INDEX FILE LOADED");
 
 const port = process.env.PORT || 3000;
 
@@ -33,7 +34,7 @@ app.use(
   cors({
     origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
     credentials: true,
-  })
+  }),
 );
 
 createBackup(); // Uncomment to create a backup on server start
@@ -45,7 +46,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-// Importing routes
+/**==============================================
+ * ROUTE IMPORTS
+ * ==============================================*/
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const roleRoutes = require("./routes/roleRoutes");
@@ -68,8 +71,11 @@ const commentRoutes = require("./routes/commentRoutes");
 const adminCommentRoutes = require("./routes/adminCommentRoutes");
 const bookmarkRoutes = require("./routes/bookmarkRoutes");
 const requestRoutes = require("./routes/requestRoutes");
+const contactRoutes = require("./routes/contactRoutes");
 
-// Routes setup
+/**==============================================
+ *  ROUTE SET UP
+ * ==============================================*/
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/roles", roleRoutes);
@@ -92,6 +98,7 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/admin-only-comments", adminCommentRoutes);
 app.use("/api/bookmark-post", bookmarkRoutes);
 app.use("/api/requests", requestRoutes);
+app.use("/api/contacts", contactRoutes);
 
 // WebSocket connection for real-time presence tracking
 io.on("connection", (socket) => {
@@ -109,7 +116,7 @@ io.on("connection", (socket) => {
   const cookies = cookie.parse(socket.request.headers.cookie);
   console.log(
     "🍪 Received Cookies: ",
-    cookies.refreshToken ? "*****" : "No refreshToken"
+    cookies.refreshToken ? "*****" : "No refreshToken",
   );
   const token = cookies.refreshToken;
 

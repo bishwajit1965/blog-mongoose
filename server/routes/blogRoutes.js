@@ -5,6 +5,7 @@ const router = express.Router();
 const {
   createBlog,
   getAllBlogs,
+  getRelatedBlogPosts,
   getBlogBySlug,
   updateBlogBySlug,
   softDeletePost,
@@ -12,7 +13,10 @@ const {
   getAllNonDeletedBlogs,
   flagPost,
   getFlaggingHistory,
+  getPopularPosts,
+  getRssFeed,
   deleteBlogBySlug,
+  getRandomPost,
 } = require("../controllers/blogController");
 
 const {
@@ -23,7 +27,11 @@ const {
 
 // Public routes - No authentication required
 router.get("/", getAllBlogs); // View all blogs
+router.get("/random", getRandomPost);
+router.get("/popular", getPopularPosts); // View popular blog posts
+router.get("/rss", getRssFeed);
 router.get("/:slug", getBlogBySlug); // View single blog by slug
+router.get("/related-posts/:slug", getRelatedBlogPosts);
 
 // Authenticate all admin routes routes those follow it
 router.use(authenticateToken);
@@ -41,7 +49,7 @@ router.post(
   authorizeRoles(["super-admin", "editor", "writer"]),
   authorizePermissions(["create-post"]),
   upload.single("image"),
-  createBlog
+  createBlog,
 );
 
 // Fetch a single blog post by slug
@@ -49,7 +57,7 @@ router.get(
   "/:slug",
   authorizeRoles(["super-admin"]),
   authorizePermissions(["view-post"]),
-  getBlogBySlug
+  getBlogBySlug,
 );
 
 // Fetch flagging history
@@ -57,7 +65,7 @@ router.get(
   "/flag-history/:slug",
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["view-post"]),
-  getFlaggingHistory
+  getFlaggingHistory,
 );
 
 // Fetch all non-deleted blog posts
@@ -65,15 +73,15 @@ router.get(
   "/",
   authorizeRoles(["super-admin"]),
   authorizePermissions(["view-post"]),
-  getAllNonDeletedBlogs
+  getAllNonDeletedBlogs,
 );
 
 // Restore a soft deleted blog post
 router.patch(
   "/restore/:slug",
   authorizeRoles(["super-admin"]),
-  authorizePermissions(["restore-post"]),
-  restoreSoftDeletedPost
+  authorizePermissions(["restore-post", "edit-post", "write-post"]),
+  restoreSoftDeletedPost,
 );
 
 // Update a blog post
@@ -82,7 +90,7 @@ router.patch(
   authorizeRoles(["super-admin", "admin", "editor", "writer"]),
   authorizePermissions(["edit-post"]),
   upload.single("image"),
-  updateBlogBySlug
+  updateBlogBySlug,
 );
 
 // Soft delete a blog post
@@ -90,7 +98,7 @@ router.patch(
   "/soft-delete/:slug",
   authorizeRoles(["super-admin"]),
   authorizePermissions(["delete-post"]),
-  softDeletePost
+  softDeletePost,
 );
 
 // Flag a post
@@ -98,7 +106,7 @@ router.patch(
   "/flag/:slug",
   authorizeRoles(["super-admin"]),
   authorizePermissions(["flag-post"]),
-  flagPost
+  flagPost,
 );
 
 // Delete a blog post
@@ -106,7 +114,7 @@ router.delete(
   "/:slug",
   authorizeRoles(["super-admin"]),
   authorizePermissions(["delete-post"]),
-  deleteBlogBySlug
+  deleteBlogBySlug,
 );
 
 module.exports = router;

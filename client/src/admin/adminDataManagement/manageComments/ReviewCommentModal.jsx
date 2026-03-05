@@ -29,7 +29,6 @@ const ReviewCommentModal = ({
   useEffect(() => {
     if (!isOpen) {
       setReviewComment("");
-      setReviewComment("");
       setIsCustomMode(false);
     }
   }, [isOpen]);
@@ -127,9 +126,7 @@ const ReviewCommentModal = ({
                   )
                 ) : (
                   <>
-                    <span className="text-indigo-400">
-                     Not reviewed yet.
-                    </span>
+                    <span className="text-indigo-400">Not reviewed yet.</span>
                   </>
                 )}{" "}
                 ➡️ {reviewHistory.length} review(s).

@@ -4,6 +4,7 @@ import axios from "axios";
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
 });
+
 console.log("API:", api);
 // Add a request interceptor to set Content-Type and Authorization headers
 api.interceptors.request.use(
@@ -24,7 +25,7 @@ api.interceptors.request.use(
     return config;
   },
 
-  (error) => Promise.reject(error) // Handle request error
+  (error) => Promise.reject(error), // Handle request error
 );
 
 // Optionally, add a response interceptor to handle token expiration
@@ -38,7 +39,7 @@ api.interceptors.response.use(
       console.warn("Unauthorized access - token might be expired or invalid.");
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

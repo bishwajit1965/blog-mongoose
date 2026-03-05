@@ -11,6 +11,8 @@ import useAuth from "../../hooks/useAuth";
 import useGetComingSoonPost from "../../hooks/useGetComingSoonPost";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import SectionTitle from "../sectionTitle/SectionTitle";
+import { FaBloggerB } from "react-icons/fa";
 
 const ComingSoonPost = ({
   title = "Send Coming Soon Request!",
@@ -73,16 +75,28 @@ const ComingSoonPost = ({
     );
 
   return (
-    <div className="">
+    <div className="mb-4">
+      <SectionTitle
+        title="Coming Soon "
+        decoratedText="Posts ➡️"
+        dataLength={
+          data?.length > 0 ? (
+            data?.length
+          ) : (
+            <span className="text-red-500">{0}</span>
+          )
+        }
+        icon={<FaBloggerB />}
+      />
       {data?.length === 0 ? (
         <div className="flex items-center justify-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="rounded-md border border-gray-200 shadow-lg p-4 text-center max-w-md"
+            className="rounded-md border border-gray-200 shadow-sm p-4 text-center max-w-md"
           >
-            <CircleCheckBig size={48} className="text-blue-500 mb-2" />
+            <CircleCheckBig size={30} className="text-blue-500 mb-2" />
             <h1 className="lg:text-2xl text-xl font-semibold mb-2">{title}</h1>
             <p className="text-gray-600 mb-6">{message}</p>
             <form action="" onSubmit={handleSubmitRequest}>

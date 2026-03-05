@@ -14,6 +14,7 @@ import SocialLogIn from "../../components/socialLogin/SocialLogin";
 import Swal from "sweetalert2";
 import { sendPasswordResetEmail } from "firebase/auth";
 import useAuth from "../../hooks/useAuth";
+import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
 
 const Login = () => {
   const captchaRef = useRef(null);
@@ -122,16 +123,17 @@ const Login = () => {
       <div className="h-screen flex items-center">
         <div className="lg:max-w-xs w-full mx-auto">
           {loading && <Loader />}
-          <div className="flex flex-col justify-center border lg:p-6 p-4 bg-base-200 rounded-xs shadow-xl">
-            <h1 className="text-2xl lg:text-2xl font-bold text-indigo-800 text-center mb-4">
-              Blog User Login
+          <div className="flex flex-col justify-center border lg:p-6 p-4 bg-base-200 rounded-xs shadow-xl rounded-md">
+            <h1 className="text-lg lg:text-xl font-bold text-indigo-800 text-center mb-4 flex items-center gap-2">
+              <LucideIcon.LogIn size={25} className="font-bold" /> Blog Mongoose
+              Login
             </h1>
             {user ? (
               <p className="text-center mb-4">User email: {user?.email}</p>
             ) : (
               ""
             )}
-            <form onSubmit={handleLogIn} className="space-y-4">
+            <form onSubmit={handleLogIn} className="space-y-2">
               <input
                 type="email"
                 name="email"
@@ -157,7 +159,7 @@ const Login = () => {
                 </span>
               </div>
 
-              <div className="mt-4 space-y-2">
+              <div className="mt- space-y-2">
                 <p className="text-xs hover:link">
                   <Link
                     onClick={handleResetPassword}
@@ -184,12 +186,12 @@ const Login = () => {
                   type="text"
                   name="captcha"
                   ref={captchaRef}
-                  className="input input-bordered h-8 dark:bg-slate-700 dark:border-slate-500"
+                  className="input w-full input-bordered h-9 dark:bg-slate-700 dark:border-slate-500"
                   placeholder="Type the captcha above..."
                 />
                 <button
                   onClick={handleValidateCaptcha}
-                  className="btn btn-outline border-slate-400 btn-sm mt-6 dark:text-slate-200"
+                  className="btn btn-outline border-slate-400 btn-sm mt-4 dark:text-slate-200"
                 >
                   Validate
                 </button>
@@ -205,6 +207,7 @@ const Login = () => {
                   {success}
                 </p>
               )}
+
               <button
                 disabled={disabled}
                 className="btn btn-sm w-full btn-primary"

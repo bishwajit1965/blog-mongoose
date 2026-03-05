@@ -1,9 +1,25 @@
+import { Link } from "react-router-dom";
+import SocialMediaLinks from "../socialMediaLinks/SocialMediaLinks";
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   return (
-    <div className="p-2 text-center bg-base-300 dark:bg-gray-800 dark:text-gray-400 border-t border-base-200 dark:border-gray-700">
-      {currentYear} &copy; All rights reserved.
-    </div>
+    <footer className="bg-gray-900 text-gray-200 py-6 mt-12">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-">
+        <p>© {currentYear} Bishwajit Paul. All rights reserved.</p>
+        <div className="flex gap-4 mt-4 md:mt-0">
+          <Link to="/about-me" className="m-0">
+            About Me
+          </Link>
+          <Link to="/contact-me" className="m-0">
+            Contact Me
+          </Link>
+        </div>
+        <div className="">
+          <SocialMediaLinks />
+        </div>
+      </div>
+    </footer>
   );
 };
 

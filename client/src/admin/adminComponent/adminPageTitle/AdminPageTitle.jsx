@@ -15,26 +15,26 @@ const AdminPageTitle = ({ title, decoratedText, subtitle }) => {
   const roleBasedTitle = userRoles.includes("super-admin")
     ? title
     : userRoles.includes("admin")
-    ? "Admin"
-    : userRoles.includes("editor")
-    ? "Editor"
-    : userRoles.includes("writer")
-    ? "Writer"
-    : "User";
+      ? "Admin"
+      : userRoles.includes("editor")
+        ? "Editor"
+        : userRoles.includes("writer")
+          ? "Writer"
+          : "User";
 
   // Determine the role-based subtitle
   const roleBasedSubtitle = userRoles.includes("super-admin")
     ? subtitle
     : userRoles.includes("admin")
-    ? subtitle
-    : userRoles.includes("editor")
-    ? "Editor only page!"
-    : userRoles.includes("writer")
-    ? "Writer only page!"
-    : "Welcome to the platform!";
+      ? subtitle
+      : userRoles.includes("editor")
+        ? "Editor only page!"
+        : userRoles.includes("writer")
+          ? "Writer only page!"
+          : "Welcome to the platform!";
 
   return (
-    <div className="text-center border-b border-slate-300 dark:border-gray-700 shadow-sm bg-base-300 pb-2 dark:bg-gray-800">
+    <div className="text-center border-b border-slate-300 dark:border-gray-700 shadow-sm bg-base-300 py-1 dark:bg-gray-800">
       <h2 className="lg:text-2xl text-1xl font-extrabold dark:text-emerald-400">
         <span className="lg:text-2xl text-1zl font-extrabold text-orange-700 dark:text-amber-400">
           Welcome to{" "}

@@ -9,6 +9,7 @@ import { sendEmailVerification } from "firebase/auth";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
 
 const Register = () => {
   const {
@@ -56,7 +57,7 @@ const Register = () => {
             saveUser, // ✅ Send user data directly
             {
               headers: token ? { Authorization: `Bearer ${token}` } : {}, // ✅ Only include if token exists
-            }
+            },
           );
 
           return response.data;
@@ -84,13 +85,13 @@ const Register = () => {
     <>
       <Helmet title="Blog || Register" />
       <div className="h-screen flex items-center">
-        <div className="w-full lg:max-w-xs mx-auto">
+        <div className="w-full lg:max-w-xs mx-auto rounded-xl">
           {loading && <Loader />}
           {!loading && (
-            <div className="flex flex-col justify-center border lg:p-6 p-4 bg-base-200 rounded-xs shadow-xl">
+            <div className="flex flex-col justify-center border lg:p-6 p-4 bg-base-200 rounded-xs shadow-xl rounded-md">
               <div className="lg:space-y-4 space-y-2 w-full">
-                <h1 className="text-2xl font-bold text-indigo-800">
-                  Please Register
+                <h1 className="text-2xl font-bold text-indigo-800 flex items-center gap-2">
+                  <LucideIcon.Users size={25} /> Please Register
                 </h1>
                 <form
                   className="space-y-2"

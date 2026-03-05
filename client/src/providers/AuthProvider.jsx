@@ -33,13 +33,13 @@ const AuthProvider = ({ children }) => {
         {
           headers: { Authorization: `Bearer ${token}` }, //Send token as a bearer token
           withCredentials: true, // Allow cookie
-        }
+        },
       );
       return response.data;
     } catch (error) {
       console.error(
         "Error in sending token to backend.",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
     }
   };
@@ -62,14 +62,14 @@ const AuthProvider = ({ children }) => {
     email,
     password,
     name,
-    photoUrl
+    photoUrl,
   ) => {
     setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
 
       await handleUserAuthentication(userCredential.user);
@@ -82,7 +82,7 @@ const AuthProvider = ({ children }) => {
         name,
         password,
         photoUrl,
-        roles: ["user"], // assign default role
+        roles: ["user"], //Assign default role
       };
 
       // Save user data to MongoDB
@@ -90,7 +90,7 @@ const AuthProvider = ({ children }) => {
       const result = await response.json();
       if (!response.ok) {
         throw new Error(
-          result.message || "Failed to save user data to MongoDB."
+          result.message || "Failed to save user data to MongoDB.",
         );
       }
       console.log("User saved to MongoDB.", result.user);
@@ -109,7 +109,7 @@ const AuthProvider = ({ children }) => {
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
       await handleUserAuthentication(userCredential.user);
       return userCredential;

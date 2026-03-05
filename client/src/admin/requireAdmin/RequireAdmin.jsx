@@ -1,29 +1,33 @@
 import { Navigate, useLocation } from "react-router-dom";
-
 import AdminLoader from "../adminComponent/adminLoader/AdminLoader";
 import useAdminAuth from "../adminHooks/useAdminAuth";
 
 const RequireAdmin = ({ children, allowedRoles = [] }) => {
-  const { adminData, isAuthenticated } = useAdminAuth();
+  const { adminData, authInitialized, isAuthenticated, loading } =
+    useAdminAuth();
   const location = useLocation();
 
-  if (!adminData) {
+  // 1️⃣ Still loading auth state
+  if (!authInitialized || loading) {
     return <AdminLoader />;
   }
 
-  // Ensure roles are always an array of strings
-  const userRoles = adminData?.user?.roles?.map((role) => role.name) || []; // Extract role names as strings
-
-  // Check if the user has any of the allowed roles
-  const hasAccess = userRoles.some((role) => allowedRoles.includes(role));
-
+  // 2️⃣ Not logged in
   if (!isAuthenticated) {
-    return (
-      <Navigate to="/admin/login" state={{ from: location }} replace={true} />
-    );
+    return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 
-  return hasAccess ? children : <Navigate to="/unauthorized" replace={true} />;
+  // 3️⃣ Extract roles safely
+  const userRoles = adminData?.user?.roles?.map((role) => role.name) || [];
+
+  const hasAccess = userRoles.some((role) => allowedRoles.includes(role));
+
+  // 4️⃣ Role-based access
+  if (!hasAccess) {
+    return <Navigate to="/unauthorized" replace />;
+  }
+
+  return children;
 };
 
 export default RequireAdmin;
