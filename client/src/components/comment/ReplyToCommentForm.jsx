@@ -2,6 +2,7 @@ import { addComment } from "../../services/commentApiService";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import { FaComment } from "react-icons/fa";
 
 const ReplyToCommentForm = ({
   parentId = null,
@@ -49,9 +50,12 @@ const ReplyToCommentForm = ({
     onCancel?.();
   };
   return (
-    <div className="lg:p-4 p-2 bg-gray-200 rounded-md shadow-emerald-100 lg:my-6 my-4">
-      <div className="lg:py-">
-        <h2 className="text-xl font-extrabold">Add Reply to Comment</h2>
+    <div className="lg:p-4 p-2 bg-gray-200 dark:bg-gray-700 rounded-md shadow-emerald-100 lg:my-6 my-4">
+      <div className="lg:py-1">
+        <h2 className="lg:text-xl text-lg font-extrabold flex items-center gap-2 dark:text-base-300">
+          <FaComment />
+          Add Reply to Comment
+        </h2>
       </div>
       <form onSubmit={handleSubmit} style={{ marginTop: "8px" }}>
         <div className="w-full">
@@ -60,7 +64,7 @@ const ReplyToCommentForm = ({
             onChange={(e) => setName(e.target.value)}
             placeholder="Name"
             required
-            className="input input-sm w-full mb-2"
+            className="input input-sm w-full mb-2 dark:bg-gray-600"
           />
         </div>
         <div className="w-full">
@@ -69,7 +73,7 @@ const ReplyToCommentForm = ({
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
             required
-            className="input input-sm w-full mb-2"
+            className="input input-sm w-full mb-2 dark:bg-gray-600"
           />
         </div>
         <div className="w-full">
@@ -79,7 +83,7 @@ const ReplyToCommentForm = ({
             placeholder="Comment..."
             rows="2"
             required
-            className="w-full mb-2 rounded-md p-2"
+            className="w-full mb-2 rounded-md p-2 dark:bg-gray-600"
           />
         </div>
         <div className="w-full lg:space-x-4 space-x-2">

@@ -86,7 +86,7 @@ const Home = () => {
 
       {/**=================================
       | MARQUEE NOTIFICATION SECTION BEGINS
-      | ================================*/}
+      |**==================================*/}
       <div className="border-t border-2 border-gray-300 shadow-md">
         <Marquee
           speed={50}
@@ -109,15 +109,15 @@ const Home = () => {
       </div>
       {/**=================================
       | MARQUEE NOTIFICATION SECTION ENDS
-      | ================================*/}
+      |**==================================*/}
 
       {/**===================================
       | BLOG CONTENT AREA LEFT & RIGHT BEGINS
-      | =====================================*/}
+      |**====================================*/}
       <div className="grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-10 gap-2">
         {/**============================
         | BLOG CONTENT AREA LEFT BEGINS
-        | ==============================*/}
+        |**=============================*/}
         <div className="col-span-12 lg:col-span-8 space-y-4 lg:py-8 py-4 shadow-sm rounded-b-lg border-b border-gray-200 dark:border-gray-700">
           {/* Bookmarked blog post section begins */}
           <div className="">
@@ -258,12 +258,12 @@ const Home = () => {
           {/* Blog posts section ends */}
         </div>
         {/**================================
-      | BLOG CONTENT AREA LEFT ENDS
-      | ====================================*/}
+        | BLOG CONTENT AREA LEFT ENDS
+        |**=================================*/}
 
         {/**=======================================
-      | RIGHT SIDEBAR BEGINS
-      | ===========================================*/}
+        | RIGHT SIDEBAR BEGINS
+        |**========================================*/}
         <div className="col-span-12 lg:col-span-4 rounded-xl lg:py-8 py-4 shadow-sm rounded-b-lg border-b border-gray-200 dark:border-gray-700">
           <div className="sticky top-[5.8rem]">
             <div className="">
@@ -275,7 +275,7 @@ const Home = () => {
               </div>
               {/**=================================
               | COMING SOON POSTS SECTION ENDS
-              | ===================================*/}
+              |**==================================*/}
 
               {/* Social media links section begins */}
               <div className="bg-base-300 dark:bg-gray-800 rounded-md lg:p-4 p-2">
@@ -318,26 +318,26 @@ const Home = () => {
         </div>
         {/**=====================================
         | RIGHT SIDEBAR ENDS
-        **=======================================*/}
+        |**======================================*/}
       </div>
       {/**===================================
       | BLOG CONTENT AREA LEFT & RIGHT ENDS
-      | =====================================*/}
+      |*=====================================*/}
 
       {/**===================================
       | BLOG RANDOM POSTS SECTION BEGINS
-      | =====================================*/}
+      |**====================================*/}
       <div className="lg:my-10 my-4">
         {/* <SectionTitle title="Random Posts" /> */}
         <RandomBlogPosts />
       </div>
       {/**===================================
       | BLOG RANDOM POSTS SECTION ENDS
-      | =====================================*/}
+      |**====================================*/}
 
       {/**===================================
       | BLOG OLDER POSTS SECTION BEGINS
-      | =====================================*/}
+      |**====================================*/}
       <div className="lg:my- my-4">
         <SectionTitle
           title="Older"
@@ -363,7 +363,7 @@ const Home = () => {
       </div>
       {/**===================================
       | BLOG OLDER POSTS SECTION ENDS
-      | =====================================*/}
+      |**====================================*/}
 
       {/* Scroll to top button */}
       <div className="height-[px]">

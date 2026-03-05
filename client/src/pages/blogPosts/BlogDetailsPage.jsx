@@ -627,10 +627,10 @@ const BlogDetailsPage = () => {
           {/* Blog image section ends */}
 
           {/* Blog post content section begins */}
-          <div className="lg:pt-6 pt-4 dark:text-gray-400">
+          <div className="lg:pt-6 pt-4">
             {blog?.content ? (
               <p
-                style={{ fontSize: "18px" }}
+                style={{ fontSize: "20px" }}
                 className="prose prose-lg max-w-none list-decimal text-gray-700 mb-4 indent-7 dark:text-gray-400"
                 dangerouslySetInnerHTML={{
                   __html: blog.content ? blog.content : "N/A",
@@ -658,7 +658,7 @@ const BlogDetailsPage = () => {
 
       {/**===================================
       | RELATED BLOG POSTS SECTION BEGINS
-      | =====================================*/}
+      |**====================================*/}
       <div className="lg:max-w-7xl w-full mx-auto">
         <div className="lg:flex w-full flex-col lg:max-w-7xl mx-auto">
           <div className="divider font-bold">Related Posts Section</div>
@@ -673,11 +673,11 @@ const BlogDetailsPage = () => {
       </div>
       {/**===================================
       | RELATED BLOG POSTS SECTION ENDS
-      | =====================================*/}
+      |**====================================*/}
 
       {/**===================================
       | LIKE DISLIKE SECTION BEGINS
-      | =====================================*/}
+      |**====================================*/}
       <div className="lg:flex w-full flex-col lg:max-w-3xl mx-auto">
         <div className="flex w-full flex-col">
           <div className="divider font-bold">Like Dislike Section</div>
@@ -786,11 +786,11 @@ const BlogDetailsPage = () => {
         </div>
         {/* Like & dislike button ends */}
       </div>
-      {/**===================================
-      | LIKE DISLIKE SECTION ENDS
-      | =====================================*/}
 
-      {/* Comments section begins */}
+      {/**===================================
+      | COMMENT SECTION BEGINS
+      |**====================================*/}
+
       <div className="lg:flex w-full flex-col lg:max-w-3xl mx-auto">
         <div className="divider font-bold">Comments Section</div>
       </div>
@@ -832,10 +832,13 @@ const BlogDetailsPage = () => {
         </div>
       </div>
 
-      {/* Comments list & comment form box begins */}
+      {/**=====================================
+      | COMMENT LIST & COMMENT FORM BOX BEGINS
+      |**======================================*/}
+
       {isCommentBoxOpen && (
         <div className="my-4">
-          <div className="mx-auto lg:max-w-3xl w-full bg-gray-200 lg:p-8 p-2 rounded-lg shadow-sm">
+          <div className="mx-auto lg:max-w-3xl w-full bg-gray-200 dark:bg-gray-700 lg:p-8 p-2 rounded-lg shadow-sm">
             <div className="lg:my-4 my-2">
               <h2 className="font-bold lg:text-3xl text-xl flex items-center">
                 <FaCommentAlt className="mr-1" /> Add Comment
@@ -852,7 +855,7 @@ const BlogDetailsPage = () => {
                 name="name"
                 value={formData.name}
                 placeholder="Your Name"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full dark:bg-gray-600"
               />
               {errors.name && (
                 <p className="text-sm text-red-500">{errors.name}</p>
@@ -863,14 +866,14 @@ const BlogDetailsPage = () => {
                 value={formData.email}
                 name="email"
                 placeholder="Your Email"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full dark:bg-gray-600"
               />
               {errors.email && (
                 <p className="text-sm text-red-500">{errors.email}</p>
               )}
               <textarea
                 onChange={handleChange}
-                className="textarea w-full"
+                className="textarea w-full dark:bg-gray-600"
                 name="content"
                 value={formData.content}
                 type="text"
@@ -909,10 +912,10 @@ const BlogDetailsPage = () => {
       <div className="">
         {isViewCommentsOpen && (
           <div className="lg:px-4 px-2">
-            <div className="px-2 border-b-2">
-              <h2 className="lg:text-2xl text-xl mb-4 font-bold text-gray-600 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-5xl first-letter:text-extra-bold flex items-center">
+            <div className="px-2 border-b-2 dark:border-gray-700">
+              <h2 className="lg:text-2xl text-xl mb-4 font-bold text-gray-600 dark:text-base-200 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-5xl first-letter:text-extra-bold flex items-center">
                 <FaComment className="mr-1" /> Comments List{" "}
-                <span className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-gray-400 p-[2px] ml-2">
+                <span className="w-6 h-6 flex text-sm items-center justify-center rounded-full border-2 border-gray-400 p-[2px] ml-2">
                   {fetchedComments?.length > 0 ? fetchedComments?.length : 0}
                 </span>
               </h2>
@@ -937,7 +940,10 @@ const BlogDetailsPage = () => {
       </div>
       {/* Comments list & comment box ends */}
 
-      {/* Floating button to lead to homepage begins */}
+      {/**========================================
+      | FLOATING BUTTON TO LOAD HOME PAGE BEGINS
+      |**=========================================*/}
+
       <div className="">
         <Link to="/">
           <div

@@ -70,7 +70,10 @@ const superAdminRoutes = [
 ];
 
 const router = createBrowserRouter([
-  // Public Routes
+  /**======================================
+  |* PUBLIC/ CLIENT/ READER RELATED ROUTES
+  |**======================================*/
+
   {
     path: "/",
     errorElement: <ErrorPage />,
@@ -101,6 +104,7 @@ const router = createBrowserRouter([
           return response.json();
         },
       },
+      // Under construction
       {
         path: "user-profile",
         element: <FeatureUnderConstructionPage />,
@@ -116,7 +120,10 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Login & Register Routes
+  /**======================================
+  |* LOGIN & REGISTER RELATED ROUTES
+  |**======================================*/
+
   {
     path: "/",
     element: <LoginLayout />,
@@ -151,7 +158,10 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Admin Routes (Limited Access)
+  /**======================================
+  |* ADMIN RELATED ROUTES (Limited Access)
+  |**======================================*/
+
   {
     path: "/admin/*",
     errorElement: <ErrorPage />,
@@ -171,7 +181,10 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Editor Routes
+  /**======================================
+  |* EDITOR RELATED ROUTES
+  |**======================================*/
+
   {
     path: "/editor/*",
     errorElement: <ErrorPage />,
@@ -186,7 +199,10 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Writer Routes
+  /**======================================
+  |* WRITER RELATED ROUTES
+  |**======================================*/
+
   {
     path: "/writer/*",
     errorElement: <ErrorPage />,
