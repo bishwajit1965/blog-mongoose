@@ -156,6 +156,7 @@ Email: paul.bishwajit09@gmail.com
 - JWT Authentication
 - Multer (file upload)
 - Node Cron (scheduled tasks)
+- TanStack Query
 
 ---
 
