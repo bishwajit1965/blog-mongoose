@@ -9,6 +9,19 @@ This project was developed as a **production-style portfolio project** to demons
 
 ## Developer
 
+<p align="center">
+  <img src="assets/bishwajit-1.jpg" width="180" style="border-radius:50%" />
+</p>
+
+<p align="center">
+<b>Bishwajit Paul</b><br>
+Full Stack JavaScript Developer
+</p>
+
+---
+
+This project was designed and developed as a full-stack MERN blog platform demonstrating production-style architecture and real-world application features.
+
 This project was designed and developed by:
 
 **Bishwajit Paul**
