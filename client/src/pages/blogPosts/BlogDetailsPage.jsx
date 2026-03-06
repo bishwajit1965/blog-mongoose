@@ -382,7 +382,7 @@ const BlogDetailsPage = () => {
   }
 
   return (
-    <div className="lg:py-4 p-2 dark:bg-gray-800 dark:text-gray-200 lg:shadow-sm relative border border-b-1 border-gray-50 rounded-lg dark:border-gray-700 dark:border-t-0">
+    <div className="lg:py-4 overflow-x-hidden dark:bg-gray-800 dark:text-gray-200 lg:shadow-sm relative border border-b-1 border-gray-50 rounded-lg dark:border-gray-700 dark:border-t-0">
       {isLoading && <AdminLoader />}
 
       {/* Floating text box left top begins */}
@@ -459,13 +459,14 @@ const BlogDetailsPage = () => {
                 <FollowButton firebaseUid={user?.uid} />
               </div>
 
-              <div className="h-8 border border-gray-300 rounded-full shadow-sm flex items-center lg:space-x-2 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 text-gray-600">
+              <div className="h-8 border border-gray-300 dark:border-gray-700 rounded-full shadow-sm flex items-center lg:space-x-2 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 text-gray-600">
                 <span>Read in:</span>
                 <span className="italic">
                   {<BlogReadingTimeCounter content={content} />}
                 </span>
               </div>
-              <div className="border border-gray-300 rounded-full shadow-sm h-8 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 flex items-center">
+
+              <div className="border border-gray-300 dark:border-gray-700 rounded-full shadow-sm h-8 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 flex items-center">
                 <p className="text-gray-600 flex items-center space-x-2 hover:text-base-200">
                   <FaClock className="" />
                   <span>{dateFormatter(publishAt)}</span>
@@ -583,7 +584,7 @@ const BlogDetailsPage = () => {
             <span>
               <FaComment />
             </span>
-            <span className="w-6 h-6 p-1 flex items-center justify-center rounded-full bg-gray-200 shadow-sm font-semibold">
+            <span className="w-6 h-6 p-1 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow-sm font-semibold">
               {fetchedComments.length > 0 ? fetchedComments.length : 0}
             </span>
             <span className="">
