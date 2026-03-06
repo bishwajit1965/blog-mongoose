@@ -71,7 +71,7 @@ const Navbar = () => {
         theme === "dark" ? "bg-gray-800" : "bg-base-200"
       } lg:px-0 lg:bg-base-200 md:py-0 shadow-md fixed top-0 lg:max-w-full mx-auto z-50 lg:top-0 pt-0 mt-0`}
     >
-      <div className="navbar dark:bg-gray-800 lg:px-[7rem] px-0">
+      <div className="navbar dark:bg-gray-800 lg:px-[7rem]">
         <div className="navbar-start">
           <div className="dropdown">
             <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -135,7 +135,7 @@ const Navbar = () => {
                 </NavLink>
               </li>
             ))}
-            <li className="flex items-center lg:ml-8">
+            <li className="flex items-center lg:ml-">
               <button
                 className={`theme-toggle-btn ${theme}`}
                 onClick={toggleTheme}
@@ -145,24 +145,21 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        <div className="navbar-end dark:bg-gray-800">
+        <div className="navbar-end dark:bg-gray-800 bg-red-500s">
           <div className="dropdown dropdown-bottom dropdown-end">
-            <label
-              tabIndex={0}
-              className="btn m-1 dark:bg-gray-800 border-none"
-            >
-              <div className="flex items-center lg:w- w-">
+            <label tabIndex={0} className=" dark:bg-gray-800 border-none">
+              <div className="flex items-center gap-2 cursor-pointer">
                 {user ? (
                   user.photoURL ? (
                     <>
                       <div className="flex items-center space-x-1">
-                        <span className="text-xs capitalize">
-                          {/* {user ? user.displayName : " "} */}
+                        <span className="text-[8px] lg:text-sm capitalize hidden lg:block">
+                          {user ? user.displayName : ""}
                         </span>
                         <img
                           src={user.photoURL}
                           alt="Profile pic"
-                          className="lg:w-10 lg:h-10 w-8 h-8 p-1 border-2 border-slate-300 rounded-full shadow-md"
+                          className="lg:w-12 lg:h-12 w-8 h-8 p-0.5 border-2 border-slate-300 rounded-full object-contain shadow-sm"
                         />
                       </div>
                     </>
@@ -176,16 +173,23 @@ const Navbar = () => {
             </label>
             <ul
               tabIndex={0}
-              className="dropdown-content z-[1] p-2 mt-3 shadow bg-base-100 dark:bg-slate-900 rounded-md w-56 space-y-2"
+              className="dropdown-content z-[1] shadow-xl bg-base-200 p-2 space-y-2 dark:bg-slate-700 rounded-md w-56 cursor-pointer"
             >
               {user ? (
                 <>
-                  <li className="text-xs capitalize bg-base-200 rounded-md p-1 dark:bg-slate-900 dark:text-white">
+                  <li className="text-xs capitalize bg-base-300 rounded-md p-2 dark:bg-slate-800 dark:text-white">
                     Name: {user?.displayName}
                   </li>
-                  <li className="text-xs bg-base-200 rounded-sm p-1 dark:bg-slate-900 dark:text-white">
+                  <li className="text-xs bg-base-300 rounded-sm p-2 dark:bg-slate-800 dark:text-white">
                     Email: {user?.email}
                   </li>
+                  <button
+                    className="btn btn-sm bg-base-200 capitalize dark:text-slate-300 dark:bg-gray-800 dark:border-none"
+                    onClick={handleLogOut}
+                  >
+                    <FaSignOutAlt />
+                    <span> Logout</span>
+                  </button>
                 </>
               ) : (
                 <></>
@@ -195,7 +199,7 @@ const Navbar = () => {
           <div className="flex justify-end items-center">
             {user ? (
               <button
-                className="btn btn-sm w-9 lg:w-24 capitalize dark:text-slate-300 dark:bg-gray-800 dark:border-none"
+                className="btn btn-sm bg-base-200 capitalize dark:text-slate-300 dark:bg-gray-800 dark:border-none"
                 onClick={handleLogOut}
               >
                 <FaSignOutAlt />
