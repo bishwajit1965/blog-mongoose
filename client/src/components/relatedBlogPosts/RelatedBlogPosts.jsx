@@ -50,8 +50,8 @@ const RelatedBlogPosts = ({ slug, user }) => {
         <div className="lg:py-8 py-4">
           <div className="grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-8 gap-4">
             {paginatedData.length === 0 ? (
-              <p className="flex justify-center">
-                No related post is available now!
+              <p className="flex justify-center col-span-12">
+                No related post is available now! Try later.
               </p>
             ) : (
               paginatedData

@@ -26,7 +26,7 @@ const RichTextEditor = ({
   onSelectChange,
 }) => {
   return (
-    <div className="w-full">
+    <div className="w-full border dark:border-gray-700 p-2 rounded-md space-y-2">
       <label className="block text-lg font-medium mb-2">Blog Content</label>
       <ReactQuill
         value={content}
@@ -36,40 +36,43 @@ const RichTextEditor = ({
         modules={modules} // ✅ Pass the toolbar configuration here!
         className="mb-2"
       />
-
-      {/* Word Count & Selected Length */}
-      <div className="flex justify-between items-center mt-2 text-sm text-gray-600">
-        <p>Word Count: {wordCount}</p>
-        <p className="font-medium">{selectedLength}</p>
-      </div>
-
-      {/* Progress Bar & Percentage */}
-      <div className="mt-2">
-        <div className="w-full bg-gray-300 rounded-full h-3 relative">
-          <div
-            className={`h-3 rounded-full ${progressBarColor}`}
-            style={{ width: `${progress}%` }}
-          ></div>
+      <div className="border dark:border-gray-700 rounded-md p-2">
+        {/* Word Count & Selected Length */}
+        <div className="flex justify-between items-center text-sm text-gray-600 font-bold">
+          <p>Word Count: {wordCount}</p>
+          <p className="font-medium">{selectedLength}</p>
         </div>
-        <p className="text-right flex justify-between text-sm text-gray-600 mt-1">
-          <span className="text-sm">Progress</span>{" "}
-          <span>{progress.toFixed(0)}% </span>
-        </p>
-      </div>
 
-      {/* Word Length Selector */}
-      <div className="mt-2">
-        <label className="block text-sm font-medium">Select Word Limit:</label>
-        <select
-          value={selectedLength}
-          onChange={onSelectChange}
-          className="mt-1 p-2 border rounded w-full"
-        >
-          <option value="Medium">Medium (300-600 words)</option>
-          <option value="Large">Large (600-1200 words)</option>
-          <option value="ExtraLarge">Extra Large (1200-2000 words)</option>
-          <option value="Jumbo">Jumbo (2000-3000 words)</option>
-        </select>
+        {/* Progress Bar & Percentage */}
+        <div className="rounded-md dark:text-base-300 dark:bg-gray-700 space-y-1">
+          <div className="w-full bg-gray-200 rounded-full h-2.5 relative">
+            <div
+              className={`h-2.5 rounded-full dark:bg-green-700 ${progressBarColor}`}
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+          <p className="text-right flex justify-between text-sm text-gray-500 bg-base-200 dark:bg-gray-600 dark:text-base-300 px-2 py-1 rounded-md font-bold">
+            <span className="text-sm font-bold">Progress</span>{" "}
+            <span>{progress.toFixed(0)}% </span>
+          </p>
+        </div>
+
+        {/* Word Length Selector */}
+        <div className="">
+          <label className="block text-base-content text-sm font-medium">
+            Select Word Limit:
+          </label>
+          <select
+            value={selectedLength}
+            onChange={onSelectChange}
+            className="mt-1 p-2 border rounded w-full text-base-content dark:bg-gray-700 dark:text-base-300 dark:border-gray-700"
+          >
+            <option value="Medium">Medium (300-600 words)</option>
+            <option value="Large">Large (600-1200 words)</option>
+            <option value="ExtraLarge">Extra Large (1200-2000 words)</option>
+            <option value="Jumbo">Jumbo (2000-3000 words)</option>
+          </select>
+        </div>
       </div>
     </div>
   );

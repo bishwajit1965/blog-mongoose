@@ -5,6 +5,7 @@ const router = express.Router();
 const {
   createBlog,
   getAllBlogs,
+  getBlogsForSuperAdminDashBoard,
   getRelatedBlogPosts,
   getBlogBySlug,
   updateBlogBySlug,
@@ -27,10 +28,17 @@ const {
 
 // Public routes - No authentication required
 router.get("/", getAllBlogs); // View all blogs
+
+router.get("/super-admin", getBlogsForSuperAdminDashBoard); // View all blogs
+
 router.get("/random", getRandomPost);
+
 router.get("/popular", getPopularPosts); // View popular blog posts
+
 router.get("/rss", getRssFeed);
+
 router.get("/:slug", getBlogBySlug); // View single blog by slug
+
 router.get("/related-posts/:slug", getRelatedBlogPosts);
 
 // Authenticate all admin routes routes those follow it

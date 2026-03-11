@@ -37,7 +37,7 @@ const Button = ({
     warning:
       "bg-gradient-to-r from-yellow-500 to-yellow-600 text-black hover:from-yellow-500 hover:to-yellow-600 focus:ring-yellow-400",
     white:
-      "bg-white border border-1 border-gray-300 shadow-sm text-gray-700 hover:bg-gray-100 hover:border-gray-400 hover:text-gray-800 focus:ring-gray-300",
+      "bg-white border border-1 border-gray-300 shadow-sm text-gray-700 hover:bg-gray-800 hover:border-gray-400 hover:text-gray-100 focus:ring-gray-300",
 
     gray: "border border-1 border-gray-500 text-gray-700 bg-gray-200 rounded-full shadow-md focus:ring-2 focus:ring-offset-2 transition-transform duration-300",
 

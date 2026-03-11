@@ -45,7 +45,7 @@ const ComingSoonPostCard = ({ post }) => {
             <img
               src={`${apiURL}${image}`}
               alt=""
-              className="lg:h-80 h-80 w-full object-cover rounded-md"
+              className="lg:h-auto h-80 w-full object-cover rounded-md"
             />
           </div>
           <div className="absolute group top-[32%] left-[5%] right-[5%] bg-gray-800 opacity-70 hover:opacity-0 rounded-lg p-2 cursor-pointer">

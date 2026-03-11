@@ -21,7 +21,7 @@ const RelatedBlogPostsCard = ({ blog, user }) => {
     author,
     content,
     category,
-    tags,
+    // tags,
     publishAt,
   } = blog || {};
 
@@ -45,7 +45,7 @@ const RelatedBlogPostsCard = ({ blog, user }) => {
   }, [fetchCommentsList]);
 
   return (
-    <div className="col-span-12 lg:col-span-4 lg:space-y-2 space-y-2 rounded-t-md">
+    <div className="col-span-12 lg:col-span-4 lg:space-y-2 space-y-2 rounded-md border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md">
       <div className="">
         <Link to={`/blog-details/${slug}`} className="m-0">
           <img
@@ -76,15 +76,16 @@ const RelatedBlogPostsCard = ({ blog, user }) => {
           </div>
         </div>
       </div>
-      <div className="">
-        <Link to={`/blog-details/${slug}`} className="m-0">
-          <h2 className="lg:text-xl text-2xl font-extrabold capitalize text-gray-800 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-4xl first-letter:text-xl first-letter:text-extra-bold">
-            {title.length > 60 ? `${title.slice(0, 60)}...` : title}
-          </h2>
-        </Link>
-      </div>
 
-      <div className="lg:space-y-4 space-y-2">
+      <div className="lg:space-y-4 space-y-2 p-2">
+        <div className="">
+          <Link to={`/blog-details/${slug}`} className="m-0">
+            <h2 className="lg:text-xl text-2xl font-extrabold capitalize text-gray-800 dark:text-base-300 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-4xl first-letter:text-xl first-letter:text-extra-bold">
+              {title.length > 60 ? `${title.slice(0, 60)}...` : title}
+            </h2>
+          </Link>
+        </div>
+
         {/* Category & tags, comments & bookmark section begins */}
         <div className="lg:grid gap-2 items-center lg:space-x-0 lg:space-y-4 space-y-2">
           {/* <div className="flex items-center">
@@ -177,7 +178,7 @@ const RelatedBlogPostsCard = ({ blog, user }) => {
               __html:
                 content.length > 145 ? `${content.slice(0, 145)}...` : content,
             }}
-            className="prose indent-7 max-w-none list-decimal text-gray-700 mb-4 text-pretty"
+            className="prose indent-7 max-w-none list-decimal text-gray-700 dark:text-base-300 mb-4 text-pretty"
           />
         </div>
         {/* Blog content ends */}

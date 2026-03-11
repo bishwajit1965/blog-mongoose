@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
-
 import AdminAuthContext from "../adminContexts/AdminAuthContext";
 import api from "../../services/api";
 import { Loader } from "lucide-react";
@@ -37,6 +36,7 @@ const authReducer = (state, action) => {
 };
 
 const AdminAuthProvider = ({ children }) => {
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [authInitialized, setAuthInitialized] = useState(false);
   const [state, dispatch] = useReducer(authReducer, initialState);
   const [loading, setLoading] = useState(false);
@@ -68,6 +68,7 @@ const AdminAuthProvider = ({ children }) => {
 
   const loginAdmin = async (credentials) => {
     try {
+      setIsLoggingIn(true); // ⬅️ Prevent automatic checkAuth during login
       setLoading(true);
       setError(null);
       const response = await api.post("/admin/login", credentials);
@@ -89,6 +90,7 @@ const AdminAuthProvider = ({ children }) => {
       throw error;
     } finally {
       setLoading(false);
+      setIsLoggingIn(false); // ⬅️ Re-enable checkAuth after login
     }
   };
 
@@ -132,6 +134,7 @@ const AdminAuthProvider = ({ children }) => {
 
           // Retry fetching user info after refresh
           const retryResponse = await api.get("/admin/me");
+
           dispatch({
             type: "LOGIN_SUCCESS",
             payload: {
@@ -143,12 +146,11 @@ const AdminAuthProvider = ({ children }) => {
 
           return; // ✅ Exit after successful retry
         } catch (refreshError) {
+          // 3️⃣ Any other failure or failed refresh → log out
+          dispatch({ type: "LOGOUT" });
           console.error("Token refresh failed, logging out", refreshError);
         }
       }
-
-      // 3️⃣ Any other failure or failed refresh → log out
-      dispatch({ type: "LOGOUT" });
     } finally {
       setLoading(false);
     }
@@ -175,19 +177,21 @@ const AdminAuthProvider = ({ children }) => {
   // Run once on mount
   useEffect(() => {
     const init = async () => {
-      try {
-        await checkAuth();
-      } catch (err) {
-        console.error(err);
-      } finally {
-        console.log("Auth initialized");
-        setAuthInitialized(true);
+      if (!isLoggingIn) {
+        try {
+          await checkAuth();
+        } catch (err) {
+          console.error(err);
+        } finally {
+          console.log("Auth initialized");
+          setAuthInitialized(true);
+        }
       }
     };
 
     init();
     fetchPermissionsAndRoles();
-  }, [checkAuth, fetchPermissionsAndRoles]);
+  }, [checkAuth, fetchPermissionsAndRoles, isLoggingIn]);
 
   if (!authInitialized) {
     return (

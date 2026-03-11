@@ -15,8 +15,8 @@ const ErrorPage = () => {
             />
           </div>
 
-          <h1 className="text-4xl font-extrabold text-red-600 mb-2 flex items-center justify-center gap-2">
-            <span className="lg:text-5xl font-extrabold text-lg">404 ! </span>{" "}
+          <h1 className="lg:text-3xl text-lg font-extrabold text-red-600 mb-2 flex items-center justify-center gap-2">
+            <span className="lg:text-3xl font-extrabold text-lg">404 ! </span>{" "}
             NOT FOUND
           </h1>
 

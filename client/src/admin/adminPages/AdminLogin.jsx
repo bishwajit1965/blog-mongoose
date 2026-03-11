@@ -22,6 +22,7 @@ const AdminLogin = () => {
   const from =
     location.state?.from?.pathname || "/super-admin/super-admin-dashboard";
 
+  console.log("ADMIN DATA", adminData);
   useEffect(() => {
     if (!authInitialized) return;
     if (!isAuthenticated) return;

@@ -1,99 +1,109 @@
 const User = require("../models/User");
 
-/// Follow a user
 const followUser = async (req, res) => {
-  const loggedInUser = req.user.id;
-  const firebaseUid = req.params.firebaseUid;
-  const follower = await User.findOne({ firebaseUid });
-  const followee = await User.findById(req.body.firebaseUid);
-
-  console.log("Follower =>", follower);
-  console.log("Followee =>", followee);
-  console.log("Logged in user =>", loggedInUser);
-  console.log("Logged in user UID =>", loggedInUser.firebaseUid);
-
-  // if (follower === followee) {
-  //   return res.status(400).json({ message: "You cannot follow yourself." });
-  // }
-
   try {
-    const [loggedInUserDoc, targetUser] = await Promise.all([
-      User.findOne({ firebaseUid: follower }),
-      User.findOne({ firebaseUid: followee }),
-    ]);
+    const userId = req.user.id;
+    const user = await User.findById({ _id: userId });
+    console.log("USER DATA", user);
+    const followerId = req.user?.id; // logged-in user _id
+    const followeeId = req.params.authorId; // author _id from route
 
-    // if (!targetUser) {
-    //   return res.status(404).json({ message: "Target user not found." });
-    // }
+    console.log("Follower ID", followerId);
+    console.log("Followee ID", followeeId);
 
-    // if (!loggedInUserDoc) {
-    //   return res.status(404).json({ message: "Logged-in user not found." });
-    // }
-
-    // if (loggedInUserDoc.following.includes(followee)) {
-    //   return res.status(400).json({ message: "Already following this user." });
-    // }
-
-    loggedInUserDoc.following.push(followee);
-    targetUser.followers.push(follower);
-
-    await Promise.all([loggedInUserDoc.save(), targetUser.save()]);
-
-    return res.status(200).json({ message: "Successfully followed the user." });
-  } catch (error) {
-    console.error("Error following user:", error);
-    return res.status(500).json({ message: "Internal server error." });
-  }
-};
-
-// Unfollow a user
-const unfollowUser = async (req, res) => {
-  const follower = req.user.firebaseUid;
-  const followee = req.params.firebaseUid;
-
-  if (follower === followee) {
-    return res.status(400).json({ message: "You cannot unfollow yourself." });
-  }
-
-  try {
-    const [loggedInUserDoc, targetUser] = await Promise.all([
-      User.findOne({ firebaseUid: follower }),
-      User.findOne({ firebaseUid: followee }),
-    ]);
-
-    if (!targetUser) {
-      return res.status(404).json({ message: "Target user not found." });
-    }
-
-    if (!loggedInUserDoc) {
-      return res.status(404).json({ message: "Logged-in user not found." });
-    }
-
-    if (!loggedInUserDoc.following.includes(followee)) {
+    if (!followerId || !followeeId) {
       return res
         .status(400)
-        .json({ message: "You are not following this user." });
+        .json({ success: false, message: "Follower or followee ID missing" });
     }
 
-    loggedInUserDoc.following = loggedInUserDoc.following.filter(
-      (uid) => uid !== followee
-    );
-    targetUser.followers = targetUser.followers.filter(
-      (uid) => uid !== follower
-    );
+    if (followerId === followeeId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "You cannot follow yourself." });
+    }
 
-    await Promise.all([loggedInUserDoc.save(), targetUser.save()]);
+    const [follower, followee] = await Promise.all([
+      User.findById(followerId),
+      User.findById(followeeId),
+    ]);
 
-    return res
-      .status(200)
-      .json({ message: "Successfully unfollowed the user." });
+    if (!follower || !followee) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found." });
+    }
+
+    if (follower.following.some((id) => id.equals(followee._id))) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Already following." });
+    }
+
+    follower.following.push(followee._id);
+    followee.followers.push(follower._id);
+
+    await Promise.all([follower.save(), followee.save()]);
+
+    res.status(200).json({
+      success: true,
+      message: "Followed successfully.",
+      followersCount: followee.followers.length,
+      followingCount: follower.following.length,
+    });
   } catch (error) {
-    console.error("Error unfollowing user:", error);
-    return res.status(500).json({ message: "Internal server error." });
+    console.error("Follow error:", error);
+    res.status(500).json({ success: false, message: "Internal server error." });
   }
 };
 
-module.exports = {
-  followUser,
-  unfollowUser,
+const unfollowUser = async (req, res) => {
+  try {
+    const followerId = req.user?._id;
+    const followeeId = req.params.authorId;
+
+    if (!followerId || !followeeId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Follower or followee ID missing" });
+    }
+
+    if (followerId === followeeId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "You cannot unfollow yourself." });
+    }
+
+    const [follower, followee] = await Promise.all([
+      User.findById(followerId),
+      User.findById(followeeId),
+    ]);
+
+    if (!follower || !followee) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found." });
+    }
+
+    follower.following = follower.following.filter(
+      (id) => !id.equals(followee._id),
+    );
+    followee.followers = followee.followers.filter(
+      (id) => !id.equals(follower._id),
+    );
+
+    await Promise.all([follower.save(), followee.save()]);
+
+    res.status(200).json({
+      success: true,
+      message: "Unfollowed successfully.",
+      followersCount: followee.followers.length,
+      followingCount: follower.following.length,
+    });
+  } catch (error) {
+    console.error("Unfollow error:", error);
+    res.status(500).json({ success: false, message: "Internal server error." });
+  }
 };
+
+module.exports = { followUser, unfollowUser };

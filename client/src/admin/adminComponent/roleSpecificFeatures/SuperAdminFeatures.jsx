@@ -26,7 +26,7 @@ const SuperAdminFeatures = () => {
     { id: 14, route: "manage-users", name: "Manage Users" },
     { id: 15, route: "manage-notification", name: "Manage Notifications" },
     { id: 16, route: "manage-comments", name: "Manage Comments" },
-    { id: 16, route: "manage-messages", name: "Manage Messages" },
+    { id: 17, route: "manage-messages", name: "Manage Messages" },
   ];
 
   return (

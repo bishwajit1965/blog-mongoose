@@ -92,6 +92,9 @@ const BlogDetailsPage = () => {
     flaggedReason,
   } = blog || {};
 
+  console.log("User=>", user);
+  console.log("Blog=>", blog);
+
   // Comment form related code
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -99,8 +102,6 @@ const BlogDetailsPage = () => {
     email: "",
     content: "",
   });
-
-  console.log("USER DATA IN CONSOLE LOGS:", user?.email, user?.uid);
 
   // Handle mutation TanStack Query to Add Comment
   const { mutate: submitComment, isPending } = useMutation({
@@ -390,7 +391,7 @@ const BlogDetailsPage = () => {
         <motion.div
           ref={leftColumnRef}
           animate={controls}
-          className="w-[14rem] h-80 absolute top-6 min-h-[22.5rem] bg-gray-1000 left-0 rounded-md invisible lg:visible shadow-sm space-y-4 border border-gray-100 dark:border-gray-700"
+          className="w-[14rem] absolute top-6  bg-gray-1000 left-0 rounded-md invisible lg:visible shadow-sm space-y-4 border border-gray-100 dark:border-gray-700"
         >
           <div className="w-full ">
             <img
@@ -415,13 +416,13 @@ const BlogDetailsPage = () => {
       <div className="lg:max-w-3xl mx-auto">
         <ScrollProgressBar />
         <div className="lg:space-y-4 space-y-3">
-          {/* Blog content wrapper begins */}
+          {/* ------> Blog content wrapper begins ------> */}
           {/* Blog post title begins */}
           <div className="lg:mb-7">
             <Link to="/" className="m-0">
-              <h2 className="lg:text-4xl font-extrabold text-gray-900 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-5xl first-letter:text-extra-bold dark:text-gray-300">
+              <h1 className="lg:text-4xl text-3xl font-extrabold text-gray-900 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-5xl first-letter:text-extra-bold dark:text-gray-300">
                 {title}
-              </h2>
+              </h1>
             </Link>
           </div>
           {/* Blog post title ends */}
@@ -433,7 +434,7 @@ const BlogDetailsPage = () => {
                 <div className="relative">
                   <AuthorInfoModal
                     user={user}
-                    title="Bishwajit Paul"
+                    title={blog.author.name}
                     author={author}
                   >
                     <>
@@ -456,7 +457,12 @@ const BlogDetailsPage = () => {
 
             <div className="lg:flex flex-1 items-center lg:space-x-4 space-x-0 lg:space-y-0 space-y-3">
               <div className="">
-                <FollowButton firebaseUid={user?.uid} />
+                <FollowButton
+                  authorId={blog.author._id} // MongoDB _id
+                  isFollowingInitial={user?.following?.some((id) =>
+                    id.equals(blog.author._id),
+                  )}
+                />
               </div>
 
               <div className="h-8 border border-gray-300 dark:border-gray-700 rounded-full shadow-sm flex items-center lg:space-x-2 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 text-gray-600">
@@ -642,19 +648,19 @@ const BlogDetailsPage = () => {
             )}
           </div>
 
-          <div className="flex items-center lg:justify-start justify-center lg:space-x-6 space-x-2">
+          <div className="flex items-center lg:justify-start justify-center lg:space-x-6 space-x-2 lg:py-8 py-4">
             <p className="text-gray-500">
-              <span className="lg:text-xl text-sm text-gray-500">
+              <span className="lg:text-xl text-sm font-bold text-gray-500">
                 Words count:
               </span>{" "}
-              <span className="italic lg:text-xl text-sm text-gray-500">
+              <span className="italic lg:text-xl text-sm font-bold text-gray-500">
                 {wordCount}
               </span>{" "}
             </p>
           </div>
           {/* Blog post content section ends */}
         </div>
-        {/* Blog content wrapper ends */}
+        {/* ------> Blog content wrapper ends ------>*/}
       </div>
 
       {/**===================================
