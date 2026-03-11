@@ -13,6 +13,10 @@ const getFlaggingHistory = (slug) =>
 
 const getAllBlogs = () => handleApiCall(() => api.get(API_PATHS.BLOGS));
 
+// Get all types of blog posts for super-admin
+const getBlogsForSuperAdminDashBoard = () =>
+  handleApiCall(() => api.get(`${API_PATHS.BLOGS}/super-admin`));
+
 const getPopularPosts = () =>
   handleApiCall(() => api.get(`${API_PATHS.BLOGS}/popular`));
 
@@ -41,6 +45,7 @@ export {
   getBlogBySlug,
   getFlaggingHistory,
   getAllBlogs,
+  getBlogsForSuperAdminDashBoard,
   getPopularPosts,
   getRelatedBlogPosts,
   updateBlogBySlug,

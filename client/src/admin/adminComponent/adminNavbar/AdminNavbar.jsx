@@ -19,7 +19,7 @@ const AdminNavbar = () => {
   const from = location.state?.from?.pathname || "/admin/login";
 
   const roleName = adminData?.user?.roles?.[0]?.name || "No Role";
-
+  console.log("ADMIN DATA", adminData);
   // Logout admin
   const handleLogOut = async () => {
     try {
@@ -127,7 +127,7 @@ const AdminNavbar = () => {
 
         <div className="navbar-end">
           {/* <a className="btn">Button</a> */}
-          <span className="mr-2 capitalize">Welcome ! {roleName}</span>
+          <span className="mr-2 capitalize">{roleName}</span>
           <div className="dropdown dropdown-end dark:bg-gray-800">
             <div
               tabIndex={0}
@@ -150,13 +150,19 @@ const AdminNavbar = () => {
               </li>
 
               {adminData ? (
-                <>
+                <div className="space-y-1">
                   <li>
-                    <button onClick={handleLogOut}>
+                    <button
+                      onClick={handleLogOut}
+                      className="bg-red-600 text-base-100 hover:bg-red-700"
+                    >
                       <LogOutIcon size={16} /> Log Out
                     </button>
                   </li>
-                </>
+                  <li className="font-bold text-green-500 capitalize">Role: {adminData.user.roles[0].name}</li>
+                  <li>Email: {adminData.user.email}</li>
+                  <li>Name: {adminData.user.name}</li>
+                </div>
               ) : (
                 <>
                   <li>

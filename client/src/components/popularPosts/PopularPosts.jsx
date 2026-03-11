@@ -26,20 +26,22 @@ const PopularPosts = () => {
   useEffect(() => {
     fetchPopularPosts();
   }, [fetchPopularPosts]);
-  console.log("Popular posts", popularPosts);
+
   return (
     <div>
-      <SectionTitle
-        title="Popular Posts ➡️"
-        dataLength={
-          popularPosts?.length > 0 ? (
-            popularPosts?.length
-          ) : (
-            <span className="text-red-500">{0}</span>
-          )
-        }
-        icon={<FaBloggerB />}
-      />
+      {popularPosts && popularPosts?.length > 0 && (
+        <SectionTitle
+          title="Popular Posts ➡️"
+          dataLength={
+            popularPosts?.length > 0 ? (
+              popularPosts?.length
+            ) : (
+              <span className="text-red-500">{0}</span>
+            )
+          }
+          icon={<FaBloggerB />}
+        />
+      )}
 
       {loading && <Loader size={20} className="animate-pulse text-center" />}
 
@@ -62,7 +64,7 @@ const PopularPosts = () => {
                   />
                 </Link>
               </div>
-              <div className="lg:col-span-8 col-span-12 lg:space-y-2">
+              <div className="lg:col-span-8 col-span-12 lg:space-y-1">
                 <Link to={`/blog-details/${post.slug}`} className="m-0 p-0">
                   <h3 className="lg:text-xl text-lg font-bold">
                     {post?.title?.slice(0, 20) + " ..."}
@@ -71,30 +73,20 @@ const PopularPosts = () => {
                 <p
                   dangerouslySetInnerHTML={{
                     __html:
-                      post.content.length > 45
-                        ? `${post.content.slice(0, 45)}...`
+                      post.content.length > 80
+                        ? `${post.content.slice(0, 80)}...`
                         : post.content,
                   }}
                   className="prose max-w-none list-decimal text-gray-700 dark:text-base-300 text-sm text-pretty"
                 />
-                <div className="flex justify-end lg:mb-4 mb-3">
-                  <div className="">
-                    {/* <Link
-                      to={`/blog-details/${post.slug}`}
-                      className="m-0 flex justify-center"
-                    > */}
-                    <Button
-                      href={`/blog-details/${post.slug}`}
-                      label="Read More"
-                      icon={<FaBookReader />}
-                      variant="white"
-                      className="btn btn-sm font-bold text-[16px] text-sm rounded-lgs"
-                    />
-                    {/* <Link
-                      to={`/blog-details/${post.slug}`}
-                      className="m-0 flex justify-center"
-                    > */}
-                  </div>
+                <div className="flex justify-end lg:mb- mb-">
+                  <Button
+                    href={`/blog-details/${post.slug}`}
+                    label="Read More"
+                    icon={<FaBookReader />}
+                    variant="white"
+                    className="btn btn-sm font-bold text-[16px] text-sm"
+                  />
                 </div>
               </div>
             </div>

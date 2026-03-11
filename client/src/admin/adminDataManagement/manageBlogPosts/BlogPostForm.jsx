@@ -50,7 +50,7 @@ const BlogPostForm = ({
         value: tag._id,
         label: tag.name,
       })),
-    [tags]
+    [tags],
   );
 
   const handleCancelCreateBlog = () => {
@@ -134,7 +134,7 @@ const BlogPostForm = ({
       });
 
       setImagePreview(
-        existingBlog.image ? `${apiURL}${existingBlog.image}` : null
+        existingBlog.image ? `${apiURL}${existingBlog.image}` : null,
       );
 
       if (Array.isArray(existingBlog.tags) && existingBlog.tags.length > 0) {
@@ -144,7 +144,7 @@ const BlogPostForm = ({
             .map((tag) => ({
               value: tag._id,
               label: tag.name,
-            }))
+            })),
         );
       } else {
         setSelectedTags([]);
@@ -270,10 +270,10 @@ const BlogPostForm = ({
   };
 
   return (
-    <div className="mt-[-15px] relative mb-2">
+    <div className="relative mb-4">
       <form
         onSubmit={handleSubmit}
-        className="p-2 rounded-lg shadow-md"
+        className="p-2 rounded-lg shadow-md space-y-4"
         encType="multipart/form-data"
       >
         {/* Image Preview to be updated with the existing one*/}
@@ -284,13 +284,13 @@ const BlogPostForm = ({
               alt={formData.title}
               className={`${
                 isHidden ? "h-96" : "h-60"
-              } w-full  object-cover rounded-md shadow-sm mb-2`}
+              } w-full object-cover rounded-md shadow-sm mb-2 mt-2`}
               loading="lazy" // Lazy load the image    "w-full h-64 object-cover rounded-t-md"
             />
           )}
         </div>
 
-        <div className="mb-2">
+        <div className="">
           <label className="block text-xs font-bold text-gray-500">
             Title:
           </label>
@@ -304,7 +304,7 @@ const BlogPostForm = ({
           />
         </div>
 
-        <div className="mb-2 rounded-md shadow-md">
+        <div className="rounded-md shadow">
           <div className="mt-2">
             <RichTextEditor
               content={content}
@@ -318,38 +318,40 @@ const BlogPostForm = ({
           </div>
         </div>
 
-        <div className="mb-2">
-          <div className="mt-2">
-            <label className="block text-red-400 text-xs font-bold mb-[2px]">
-              Excerpt(Optional)
-            </label>
-            <textarea
-              name="excerpt"
-              id="excerpt"
-              rows={2}
-              value={excerpt}
-              maxLength={500}
-              onChange={(e) => {
-                handleExcerptChange(e);
-                setFormData({ ...formData, excerpt: e.target.value });
-              }}
-              className="textarea input-bordered w-full mb-1 dark:bg-gray-700"
-              placeholder="Excerpt for the blog post..."
-            />
+        <div className="border dark:border-gray-700 p-2 rounded-md shadow-sm">
+          <label className="block text-red-400 text-sm font-bold">
+            Excerpt(Optional)
+          </label>
+          <textarea
+            name="excerpt"
+            id="excerpt"
+            rows={2}
+            value={excerpt}
+            maxLength={500}
+            onChange={(e) => {
+              handleExcerptChange(e);
+              setFormData({ ...formData, excerpt: e.target.value });
+            }}
+            className="textarea input-bordered w-full mb-1 dark:bg-gray-700"
+            placeholder="Excerpt for the blog post..."
+          />
 
-            {/* Progress Bar */}
-            <div className="bg-gray-100 rounded-b shadow-sm border mt-[-6px] dark:border-gray-700 dark:bg-gray-700 dark:text-gray-200">
-              <div className="progress-bar bg-gray-200 h-2.5 w-full">
-                <div className="h-2.5 rounded" style={progressBarStyle}></div>
-              </div>
-
-              {/* Character Counter and Percentage */}
+          {/* Progress Bar */}
+          <div className="bg-base-100 p-2 rounded-md shadow-sm border dark:border-gray-700 dark:bg-gray-700 dark:text-gray-200 space-y-1">
+            <div className="progress-bar bg-base-300 w-full rounded-md">
               <div
-                className="text-rights flex justify-between items-center text-sm mt-1 h-6 dark:text-gray-200"
-                style={counterStyle}
-              >
-                <div className="">Counter:</div>
-                <div className="h-4 dark:text-gray-200 px-2">
+                className="rounded-md bg-base-300"
+                style={progressBarStyle}
+              ></div>
+            </div>
+
+            {/* Character Counter and Percentage */}
+            <div className="rounded-md" style={counterStyle}>
+              <div className="flex items-center justify-between bg-base-200 rounded-md dark:bg-gray-600">
+                <div className="px-2 dark:text-gray-200 bg-base-200 dark:bg-gray-600 rounded-md py-1">
+                  Counter:
+                </div>
+                <div className="dark:text-gray-200 dark:bg-gray-600 rounded-md py-1 bg-base-200 px-2">
                   {remaining} characters left || {progressPercent}% used
                 </div>
               </div>
@@ -357,7 +359,8 @@ const BlogPostForm = ({
           </div>
         </div>
 
-        <div className="mb-2">
+        {/* Category */}
+        <div className="">
           <label className="block text-xs font-bold text-gray-500">
             Category:
           </label>
@@ -379,19 +382,19 @@ const BlogPostForm = ({
         </div>
 
         {/* React-Select Multi-Select for Tags */}
-        <div className="mb-2">
+        <div className="">
           <label className="block text-xs font-bold text-gray-500">Tags:</label>
           <Select
             isMulti
             options={tagOptions}
             onChange={handleTagChange}
             value={selectedTags}
-            className="mb-1 p-0 dark:bg-gray-700"
+            className="mb-1 p-0"
           />
         </div>
 
         {/* Image upload */}
-        <div className="mb-2">
+        <div className="">
           <label className="block text-xs font-bold text-gray-500">
             Upload Image:
           </label>
@@ -405,7 +408,8 @@ const BlogPostForm = ({
           />
         </div>
 
-        <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between mb-2">
+        {/* Post status & author */}
+        <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between">
           {/* Post Status */}
           <div className="lg:col-span-6 col-span-12">
             {existingBlog ? (
@@ -457,7 +461,8 @@ const BlogPostForm = ({
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-12 justify-between gap-2 mb-2">
+        {/* Post status date time */}
+        <div className="grid lg:grid-cols-12 justify-between gap-2">
           <div className="lg:col-span-12 col-span-12">
             {/* Show DateTime Input Only if 'coming-soon' is Selected */}
             {formData.status === "coming-soon" && (
@@ -494,6 +499,7 @@ const BlogPostForm = ({
           </div>
         </div>
 
+        {/* Action Buttons */}
         <div className="flex items-center space-x-2">
           <div className="">
             <CTAButton
@@ -501,8 +507,8 @@ const BlogPostForm = ({
                 loading
                   ? "Saving..."
                   : existingBlog
-                  ? "Update Blog"
-                  : "Create Blog"
+                    ? "Update Blog"
+                    : "Create Blog"
               }
               disabled={loading}
               className="btn btn-sm"
@@ -546,6 +552,7 @@ const BlogPostForm = ({
         </div>
       </form>
 
+      {/* Expand Toggler Button */}
       <div className="absolute bottom-[8px] right-2">
         <CTAButton
           onClick={() => toggler()}

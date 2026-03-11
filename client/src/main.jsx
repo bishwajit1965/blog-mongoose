@@ -34,3 +34,29 @@ createRoot(document.getElementById("root")).render(
     </CombinedProviders>
   </StrictMode>,
 );
+
+// createRoot(document.getElementById("root")).render(
+//   <StrictMode>
+//     <CombinedProviders>
+//       <HelmetProvider>
+//         <ThemeProvider>
+//           <ToastContainer
+//             position="top-right"
+//             autoClose={5000}
+//             hideProgressBar={false}
+//             newestOnTop={true}
+//             closeOnClick={false}
+//             rtl={false}
+//             pauseOnFocusLoss
+//             draggable
+//             pauseOnHover
+//             theme="colored"
+//             transition={Bounce}
+//           />
+//           <RouterProvider router={router} />
+//         </ThemeProvider>
+//       </HelmetProvider>
+//     </CombinedProviders>
+//     ,
+//   </StrictMode>,
+// );

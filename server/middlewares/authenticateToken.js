@@ -1,7 +1,7 @@
 const { verifyJWT } = require("../utils/jwt");
 
 const authenticateToken = (req, res, next) => {
-  const token = req.cookies?.authToken;
+  const token = req.cookies?.authToken; // Extracting token from cookies (HTTP-only)
   console.log("Token in admin:", token);
   if (!token) {
     return res.status(401).json({
@@ -58,7 +58,7 @@ const authorizePermissions =
 
     // Check if the user has at least one of the required permissions
     const hasPermission = requiredPermissions.some((perm) =>
-      req.user.permissions.includes(perm)
+      req.user.permissions.includes(perm),
     );
 
     if (!hasPermission) {

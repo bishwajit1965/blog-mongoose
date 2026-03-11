@@ -1,44 +1,45 @@
-import Button from "../buttons/Button";
-import { toast } from "react-toastify";
-import useApiMutation from "../../hooks/useApiMutation";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import Button from "../buttons/Button";
+import { useFollowUser, useUnfollowUser } from "../../hooks/userFollowers";
 
-const FollowButton = ({ firebaseUid, isFollowingInitial }) => {
+const FollowButton = ({ authorId, isFollowingInitial }) => {
   const [isFollowing, setIsFollowing] = useState(isFollowingInitial);
 
-  const followMutation = useApiMutation({
-    url: `/users/follow/${firebaseUid}/follow`,
-    method: "put",
-    onSuccess: () => {
-      toast.success("Followed successfully");
-      setIsFollowing(true);
-    },
-    onError: () => toast.error("Failed to follow"),
-  });
-
-  const unfollowMutation = useApiMutation({
-    url: `/users/follow/${firebaseUid}/unfollow`,
-    method: "delete",
-    onSuccess: () => {
-      toast.success("Unfollowed successfully");
-      setIsFollowing(false);
-    },
-    onError: () => toast.error("Failed to unfollow"),
-  });
+  const followMutation = useFollowUser();
+  const unfollowMutation = useUnfollowUser();
 
   const handleClick = () => {
-    isFollowing ? unfollowMutation.mutate() : followMutation.mutate();
+    if (isFollowing) {
+      unfollowMutation.mutate(authorId, {
+        onSuccess: (data) => {
+          toast.success(data.message || "Unfollowed successfully");
+          setIsFollowing(false);
+        },
+        onError: (error) => {
+          toast.error(error.response?.data?.message || "Failed to unfollow");
+        },
+      });
+    } else {
+      followMutation.mutate(authorId, {
+        onSuccess: (data) => {
+          toast.success(data.message || "Followed successfully");
+          setIsFollowing(true);
+        },
+        onError: (error) => {
+          toast.error(error.response?.data?.message || "Failed to follow");
+        },
+      });
+    }
   };
 
   return (
-    <div className="flex items-center">
-      <Button
-        onClick={handleClick}
-        disabled={followMutation.isPending || unfollowMutation.isPending}
-        label={isFollowing ? "Unfollow" : "Follow"}
-        variant="white"
-      />
-    </div>
+    <Button
+      onClick={handleClick}
+      disabled={followMutation.isLoading || unfollowMutation.isLoading}
+      label={isFollowing ? "Unfollow" : "Follow"}
+      variant="white"
+    />
   );
 };
 

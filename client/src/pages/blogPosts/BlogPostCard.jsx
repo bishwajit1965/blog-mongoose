@@ -3,6 +3,7 @@ import {
   FaClock,
   FaComment,
   FaQuoteLeft,
+  FaQuoteRight,
   FaReadme,
   FaTags,
   FaThList,
@@ -247,8 +248,9 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
 
       <div className="lg:py-10 py-5 relative">
         <div className="lg:h-[1px] h-[1px] bg-gray-200 dark:bg-gray-700 rounded-md mb- absolute flex justify-center left-2 right-2 lg:-bottom- bottom- lg:w-[90%] mx-auto">
-          <p className="lg:text-base text-sm lg:visible invisible pt-1.5">
-            Thank you a lot for visiting the blog site !
+          <p className="lg:text-base text-sm lg:visible invisible pt-1.5 flex gap-2">
+            <FaQuoteLeft /> Thank you a lot for the interest on the topic !{" "}
+            <FaQuoteRight />
           </p>
         </div>
       </div>

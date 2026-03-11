@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { RefreshCcw } from "lucide-react";
 
 const SearchInput = ({ data, onFilteredDataChange, pageLimit = 5 }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,7 +14,7 @@ const SearchInput = ({ data, onFilteredDataChange, pageLimit = 5 }) => {
   useEffect(() => {
     if (searchQuery) {
       const filtered = data.filter((item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()),
       );
       setFilteredData(filtered);
     } else {
@@ -26,8 +27,12 @@ const SearchInput = ({ data, onFilteredDataChange, pageLimit = 5 }) => {
     onFilteredDataChange(filteredData.slice(0, pageLimit)); // Handle pagination inside SearchInput
   }, [filteredData, onFilteredDataChange, pageLimit]);
 
+  const handleRemoveSearchText = () => {
+    setSearchQuery("");
+  };
+
   return (
-    <div className="mb-4 shadow-sm">
+    <div className="mb-4 shadow-sm flex items-center gap-2">
       <input
         type="text"
         className="input input-sm input-bordered w-full dark:bg-gray-700"
@@ -35,6 +40,14 @@ const SearchInput = ({ data, onFilteredDataChange, pageLimit = 5 }) => {
         onChange={(e) => setSearchQuery(e.target.value)}
         placeholder="Search blog post by title..."
       />
+
+      <button
+        onClick={handleRemoveSearchText}
+        className="flex items-center gap-2 bg-success px-2 py-1 rounded-md text-base-100 shadow"
+      >
+        <RefreshCcw size={20} />
+        Reset
+      </button>
     </div>
   );
 };

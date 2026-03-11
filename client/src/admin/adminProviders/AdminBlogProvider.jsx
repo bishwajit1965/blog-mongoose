@@ -1,15 +1,20 @@
 import { useCallback, useEffect, useState } from "react";
 
 import AdminBlogContext from "../adminContexts/AdminBlogContext";
-import { getAllBlogs } from "../adminServices/blogService";
+import {
+  getAllBlogs,
+  getBlogsForSuperAdminDashBoard,
+} from "../adminServices/blogService";
 import { getAllCategories } from "../adminServices/categoryService";
 import { getAllTags } from "../adminServices/tagService";
 
 const AdminBlogProvider = ({ children }) => {
   const [blogs, setBlogs] = useState([]);
+  const [superAdminBlogsAll, setSuperAdminBlogsAll] = useState([]);
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(false);
+  console.log("CRUD BLOGS", superAdminBlogsAll);
 
   const fetchBlogsCategoriesAndTags = useCallback(async () => {
     try {
@@ -19,8 +24,23 @@ const AdminBlogProvider = ({ children }) => {
       setBlogs(blogsResponse);
       setCategories(categoriesResponse);
       setTags(tagsResponse);
-    } catch (err) {
-      console.error("Error fetching categories:", +err);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // For Crud Operations in ManageBlogPosts.jsx
+  const fetchBlogsForCrudInSuperAdminBlogManagement = useCallback(async () => {
+    try {
+      setLoading(true);
+      const [superAdminBlogResponseAll] = await Promise.all([
+        getBlogsForSuperAdminDashBoard(),
+      ]);
+      setSuperAdminBlogsAll(superAdminBlogResponseAll);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
     } finally {
       setLoading(false);
     }
@@ -30,12 +50,18 @@ const AdminBlogProvider = ({ children }) => {
     fetchBlogsCategoriesAndTags();
   }, [fetchBlogsCategoriesAndTags]);
 
+  useEffect(() => {
+    fetchBlogsForCrudInSuperAdminBlogManagement();
+  }, [fetchBlogsForCrudInSuperAdminBlogManagement]);
+
   const blogInfo = {
-    fetchBlogsCategoriesAndTags,
     blogs,
+    superAdminBlogsAll,
     categories,
     tags,
     loading,
+    fetchBlogsCategoriesAndTags,
+    fetchBlogsForCrudInSuperAdminBlogManagement,
   };
 
   return (

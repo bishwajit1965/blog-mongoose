@@ -5,7 +5,6 @@ import AdminLogin from "../admin/adminPages/AdminLogin";
 import ArchivedBlogPosts from "../admin/adminDataManagement/manageBlogPosts/ArchivedBlogPosts";
 import BlogDetailsPage from "../pages/blogPosts/BlogDetailsPage";
 import BlogPosts from "../pages/blogPosts/BlogPosts";
-import BookmarkedPage from "../pages/bookmarkedPage/BookmarkedPage";
 import ComingSoonPosts from "../admin/adminDataManagement/manageBlogPosts/ComingSoonPosts";
 import ContactMe from "../pages/contactMe/ContactMe";
 import EditorDashboard from "../admin/adminComponent/editorDashboard/EditorDashboard";
@@ -43,6 +42,7 @@ import { createBrowserRouter } from "react-router-dom";
 import ManageMessages from "../admin/adminDataManagement/manageMessages/ManageMessages";
 import ComingSoonPost from "../components/comingSoonPost/ComingSoonPost";
 import FeatureUnderConstructionPage from "../pages/featureUnderConstruction/FeatureUnderConstructionPage";
+import BookmarkedPage from "../pages/bookmarkedPage/BookmarkedPage";
 
 // Common Admin Routes (Super Admin can access all)
 const superAdminRoutes = [
@@ -104,11 +104,6 @@ const router = createBrowserRouter([
           return response.json();
         },
       },
-      // Under construction
-      {
-        path: "user-profile",
-        element: <FeatureUnderConstructionPage />,
-      },
       {
         path: "bookmarked-page",
         element: <BookmarkedPage />,
@@ -116,6 +111,11 @@ const router = createBrowserRouter([
       {
         path: "notice",
         element: <FrontendNoticeManager />,
+      },
+      // Under construction
+      {
+        path: "user-profile",
+        element: <FeatureUnderConstructionPage />,
       },
     ],
   },

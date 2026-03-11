@@ -266,7 +266,7 @@ const Home = () => {
         |**========================================*/}
         <div className="col-span-12 lg:col-span-4 rounded-xl lg:py-8 py-4 shadow-sm rounded-b-lg border-b border-gray-200 dark:border-gray-700">
           <div className="sticky top-[5.8rem]">
-            <div className="">
+            <div className="lg:space-y-8 space-y-4">
               {/**=================================
               | COMING SOON POSTS SECTION BEGINS
               | ===================================*/}
@@ -278,9 +278,11 @@ const Home = () => {
               |**==================================*/}
 
               {/* Social media links section begins */}
-              <div className="bg-base-300 dark:bg-gray-800 rounded-md lg:p-4 p-2">
-                <SocialMediaLinks />
-              </div>
+              {user && (
+                <div className="bg-base-300 dark:bg-gray-800 rounded-md lg:p-4 p-2">
+                  <SocialMediaLinks />
+                </div>
+              )}
               {/* Social media links section ends */}
 
               {/* Categories section begins */}

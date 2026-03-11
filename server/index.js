@@ -72,6 +72,7 @@ const adminCommentRoutes = require("./routes/adminCommentRoutes");
 const bookmarkRoutes = require("./routes/bookmarkRoutes");
 const requestRoutes = require("./routes/requestRoutes");
 const contactRoutes = require("./routes/contactRoutes");
+const followUserRoutes = require("./routes/followUserRoutes");
 
 /**==============================================
  *  ROUTE SET UP
@@ -99,6 +100,7 @@ app.use("/api/admin-only-comments", adminCommentRoutes);
 app.use("/api/bookmark-post", bookmarkRoutes);
 app.use("/api/requests", requestRoutes);
 app.use("/api/contacts", contactRoutes);
+app.use("/api/follow-users", followUserRoutes);
 
 // WebSocket connection for real-time presence tracking
 io.on("connection", (socket) => {

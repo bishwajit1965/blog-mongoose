@@ -5,6 +5,7 @@ import useAdminAuth from "../adminHooks/useAdminAuth";
 const RequireAdmin = ({ children, allowedRoles = [] }) => {
   const { adminData, authInitialized, isAuthenticated, loading } =
     useAdminAuth();
+
   const location = useLocation();
 
   // 1️⃣ Still loading auth state
@@ -14,7 +15,9 @@ const RequireAdmin = ({ children, allowedRoles = [] }) => {
 
   // 2️⃣ Not logged in
   if (!isAuthenticated) {
-    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+    return (
+      <Navigate to="/admin/login" state={{ from: location }} replace={true} />
+    );
   }
 
   // 3️⃣ Extract roles safely

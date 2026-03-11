@@ -32,7 +32,6 @@ const Navbar = () => {
     { id: 3, route: "/contact-me", name: "Contact" },
     { id: 4, route: "/blog-coming-soon", name: "Blog Coming Soon" },
     user ? { id: 5, route: "/bookmarked-page", name: "My Bookmarks" } : "",
-    // { id: 6, route: "/rss", name: "Rss" },
     {
       id: 6,
       route: "http://localhost:3000/api/blogs/rss",

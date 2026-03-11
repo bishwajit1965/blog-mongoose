@@ -13,8 +13,12 @@ import useToggleColumn from "../../adminHooks/useToggleColumn";
 
 const ManageBlogPosts = () => {
   const { adminData } = useAdminAuth();
-  const { blogs, categories, tags, fetchBlogsCategoriesAndTags } =
-    useAdminBlog();
+  const {
+    superAdminBlogsAll,
+    categories,
+    tags,
+    fetchBlogsForCrudInSuperAdminBlogManagement,
+  } = useAdminBlog();
   const [editingBlog, setEditingBlog] = useState(null);
   const [singleBlog, setSingleBlog] = useState(null);
   const [blogDetailDataView, setBlogDetailDataView] = useState(null);
@@ -22,16 +26,21 @@ const ManageBlogPosts = () => {
 
   useEffect(() => {
     if (
-      !blogs ||
-      blogs.length === 0 ||
+      !superAdminBlogsAll ||
+      superAdminBlogsAll.length === 0 ||
       !categories ||
       categories.length === 0 ||
       !tags ||
       tags.length === 0
     ) {
-      fetchBlogsCategoriesAndTags();
+      fetchBlogsForCrudInSuperAdminBlogManagement();
     }
-  }, [fetchBlogsCategoriesAndTags, blogs, categories, tags]);
+  }, [
+    fetchBlogsForCrudInSuperAdminBlogManagement,
+    superAdminBlogsAll,
+    categories,
+    tags,
+  ]);
 
   const handleEdit = (blog) => {
     if (editingBlog?.slug === blog.slug) return; // Prevent re-render loop
@@ -65,25 +74,29 @@ const ManageBlogPosts = () => {
       <AdminSubTitle
         subTitle="Manage"
         decoratedText="Blog Posts"
-        dataLength={blogs.length}
+        dataLength={superAdminBlogsAll.length}
       />
       <div className="">
-        {editingBlog && (
-          <CTAButton
-            label="Upload Blog"
-            onClick={() => handleUploadBlogView()}
-            icon={<FaRegPlusSquare />}
-            variant="primary"
-          />
-        )}
-        {blogDetailDataView && (
-          <CTAButton
-            label="Manage Blog"
-            onClick={() => handleUploadBlogView()}
-            icon={<FaRegPlusSquare />}
-            variant="primary"
-          />
-        )}
+        <div className="p-1">
+          {editingBlog && (
+            <CTAButton
+              label="Upload Blog"
+              onClick={() => handleUploadBlogView()}
+              icon={<FaRegPlusSquare />}
+              variant="success"
+              className="btn btn-xs text-xs"
+            />
+          )}
+          {blogDetailDataView && (
+            <CTAButton
+              label="Manage Blog"
+              onClick={() => handleUploadBlogView()}
+              icon={<FaRegPlusSquare />}
+              variant="success"
+              className="btn btn-xs text-xs"
+            />
+          )}
+        </div>
 
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-12 grid-cols-1 md:grid-cols-2 gap-2 justify-between">
@@ -130,9 +143,9 @@ const ManageBlogPosts = () => {
                 <BlogPostForm
                   onSuccess={() => {
                     handleCancelEdit();
-                    fetchBlogsCategoriesAndTags();
+                    fetchBlogsForCrudInSuperAdminBlogManagement();
                   }}
-                  blogs={blogs}
+                  blogs={superAdminBlogsAll}
                   categories={categories}
                   tags={tags}
                   existingBlog={editingBlog}
@@ -153,10 +166,10 @@ const ManageBlogPosts = () => {
                   Blog Posts
                 </h2>
                 <BlogsTable
-                  blogs={blogs}
+                  blogs={superAdminBlogsAll}
                   handleBlogDetailView={handleBlogDetailView}
                   onEdit={handleEdit}
-                  onDelete={fetchBlogsCategoriesAndTags}
+                  onDelete={fetchBlogsForCrudInSuperAdminBlogManagement}
                 />
               </div>
             )}

@@ -47,7 +47,7 @@ const createBlog = async (req, res) => {
       metaKeywords,
     } = req.body;
 
-    const userId = req.user?.id;
+    const userId = req.user.id;
 
     if (!req.user.permissions.includes("create-post")) {
       return res
@@ -55,7 +55,7 @@ const createBlog = async (req, res) => {
         .json({ message: "You do not have permission to create a blog!" });
     }
 
-    console.log("User Id:", userId);
+    // console.log("User Id:", userId);
 
     if (!excerpt) {
       excerpt = await generateExcerpt(content); // ✅ Now allowed because `excerpt` is `let`
@@ -122,7 +122,7 @@ const createBlog = async (req, res) => {
       tags: formattedTags,
       status,
       publishAt: validPublishAt,
-      author: userId,
+      author: userId, // Mongo _id
       image: imagePath,
       metaTitle: seoTitle,
       metaDescription: seoDescription,
@@ -130,6 +130,7 @@ const createBlog = async (req, res) => {
     });
 
     const blog = await newBlog.save();
+    console.log("New Blog", blog);
     await generateSitemap(); // ✅ Regenerate sitemap after successful blog creation
 
     res.status(201).json(blog);
@@ -146,10 +147,30 @@ const getAllBlogs = async (req, res) => {
       .populate("category", "name")
       .populate("tags", "name")
       .sort({ createdAt: -1 });
-    await generateSitemap(); // ✅ Regenerate sitemap after successful blog creation
     res.status(200).json(blogs);
   } catch (error) {
     res.status(500).json({ message: "Error fetching blogs", error });
+  }
+};
+
+// Super Admin Dashboard Blog posts
+const getBlogsForSuperAdminDashBoard = async (req, res) => {
+  try {
+    const blogs = await Blog.find({})
+      .populate("author", "name email avatar")
+      .populate("category", "name")
+      .populate("tags", "name")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    res.status(200).json(blogs);
+  } catch (error) {
+    console.error("Error fetching blogs:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 
@@ -728,6 +749,7 @@ const deleteBlogBySlug = async (req, res) => {
 module.exports = {
   createBlog,
   getAllBlogs,
+  getBlogsForSuperAdminDashBoard,
   getRandomPost,
   getRelatedBlogPosts,
   getBlogBySlug,

@@ -1,8 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
-
 import AdminLoader from "../../admin/adminComponent/adminLoader/AdminLoader";
 import Button from "../buttons/Button";
-import { CircleCheckBig } from "lucide-react";
 import ComingSoonPostCard from "./ComingSoonPostCard";
 import { createRequest } from "../../services/requestApiService";
 import { motion } from "framer-motion";
@@ -12,11 +10,11 @@ import useGetComingSoonPost from "../../hooks/useGetComingSoonPost";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import SectionTitle from "../sectionTitle/SectionTitle";
-import { FaBloggerB } from "react-icons/fa";
+import { FaBloggerB, FaEnvelope } from "react-icons/fa";
 
 const ComingSoonPost = ({
-  title = "Send Coming Soon Request!",
-  message = "We are working on something amazing ! Request unhesitatingly & stay tuned for updates!",
+  title = "Send Coming Soon Request !",
+  message = "We are working on something amazing ! Request unhesitatingly & stay tuned for the updates!",
   buttonLabel = "Notify Me!",
 }) => {
   const { user } = useAuth();
@@ -78,27 +76,24 @@ const ComingSoonPost = ({
     <div className="mb-4">
       <SectionTitle
         title="Coming Soon "
-        decoratedText="Posts ➡️"
+        decoratedText="Posts"
         dataLength={
-          data?.length > 0 ? (
-            data?.length
-          ) : (
-            <span className="text-red-500">{0}</span>
-          )
+          data?.length > 0 ? data?.length : <span className="">{0}</span>
         }
         icon={<FaBloggerB />}
       />
       {data?.length === 0 ? (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center mt-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="rounded-md border border-gray-200 shadow-sm p-4 text-center max-w-md"
+            className="rounded-md border border-gray-200 dark:border-gray-700 shadow-sm p-4 text-center max-w-md"
           >
-            <CircleCheckBig size={30} className="text-blue-500 mb-2" />
-            <h1 className="lg:text-2xl text-xl font-semibold mb-2">{title}</h1>
-            <p className="text-gray-600 mb-6">{message}</p>
+            <h1 className="lg:text-xl text-lg font-semibold mb-2 flex items-center gap-2">
+              <FaEnvelope size={20} className="text-blue-500" /> {title}
+            </h1>
+            <p className="text-gray-600 dark:text-base-300 mb-6">{message}</p>
             <form action="" onSubmit={handleSubmitRequest}>
               <div className="mb-2">
                 <input
@@ -106,7 +101,7 @@ const ComingSoonPost = ({
                   placeholder="Enter your name..."
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="border border-gray-300 rounded-lg py-2 px-4 w-full mb-22"
+                  className="border border-gray-300 dark:bg-gray-800   dark:border-gray-700 rounded-lg py-2 px-4 w-full mb-22"
                 />
               </div>
 
@@ -117,7 +112,7 @@ const ComingSoonPost = ({
                     placeholder="Enter your email..."
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full mb-22"
+                    className="border border-gray-300 dark:bg-gray-800 rounded-lg py-2 px-4 w-full mb-22"
                   />
                 </div>
               )}
@@ -128,7 +123,7 @@ const ComingSoonPost = ({
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
                     placeholder="Your opinion..."
-                    className="w-full rounded-md p-2"
+                    className="w-full rounded-md p-2 dark:bg-gray-800"
                     id=""
                   ></textarea>
                 </div>

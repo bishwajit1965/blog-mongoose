@@ -19,6 +19,7 @@ const router = express.Router();
  * ===================================*/
 
 router.post("/login", loginAdmin);
+
 router.post("/logout", logoutAdmin);
 
 // Refresh token endpoint (public, but requires the refresh token cookie)

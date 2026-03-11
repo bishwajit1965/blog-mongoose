@@ -72,7 +72,7 @@ const BlogsTable = ({ blogs, onEdit, onDelete, handleBlogDetailView }) => {
     }
   };
   return (
-    <div className="pb-4 mb-2 shadow-md pr-2">
+    <div className="pb-4 mb-2 shadow-md pr-2 rounded-b-lg">
       {/* Search input functionality */}
       <SearchInput data={blogs} onFilteredDataChange={setPaginatedData} />
       <div className="overflow-x-auto">
@@ -98,23 +98,23 @@ const BlogsTable = ({ blogs, onEdit, onDelete, handleBlogDetailView }) => {
                   {blog.status === "published"
                     ? "Published"
                     : blog.status === "draft"
-                    ? "Draft"
-                    : blog.status === "deleted"
-                    ? "Deleted"
-                    : blog.status === "scheduled"
-                    ? "Scheduled"
-                    : blog.status === "coming-soon"
-                    ? "Coming Soon"
-                    : blog.status === "archived"
-                    ? "Archived"
-                    : "N/A"}
+                      ? "Draft"
+                      : blog.status === "deleted"
+                        ? "Deleted"
+                        : blog.status === "scheduled"
+                          ? "Scheduled"
+                          : blog.status === "coming-soon"
+                            ? "Coming Soon"
+                            : blog.status === "archived"
+                              ? "Archived"
+                              : "N/A"}
                 </td>
 
                 <td className="flex space-x-1 justify-end pr-0">
                   {Array.isArray(adminData?.user?.roles) &&
                   adminData.user.roles.some(
                     (role) =>
-                      role.name === "super-admin" || role.name === "admin"
+                      role.name === "super-admin" || role.name === "admin",
                   ) ? (
                     <>
                       <CTAButton
