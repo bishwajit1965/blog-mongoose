@@ -15,11 +15,15 @@ const validateBlogId = (req, res, next) => {
   next();
 };
 
-const { authenticateToken } = require("../middlewares/authenticateToken");
+// const { authenticateToken } = require( "../middlewares/authenticateToken" );
+
+const authenticateUser = require("../middlewares/authenticateUser");
 
 const router = express.Router();
 
-router.use(authenticateToken);
+// router.get("/get-bookmarks", getAllBookmarkedPost);
+
+router.use(authenticateUser);
 
 router.post("/bookmark/:blogId", validateBlogId, bookMarkPost);
 

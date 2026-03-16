@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import AdminAuditLogContext from "../adminContexts/AdminAuditLogContext";
+import AdminAuditLogContext from "./data/AdminAuditLogContext";
 import { getAllAuditLogs } from "../adminServices/auditLogService";
 
 const AdminAuditLogContextProvider = ({ children }) => {

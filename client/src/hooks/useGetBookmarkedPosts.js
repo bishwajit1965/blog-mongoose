@@ -1,8 +1,18 @@
-import api from "../helperApiService/helperApiService";
+import { getAuth } from "firebase/auth";
+import api from "../publicHelperApis/helperApiService";
 import { useQuery } from "@tanstack/react-query";
 
 const fetchBookmarkedPosts = async () => {
-  const response = await api.get("/bookmark-post/get-bookmarks");
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (!user) throw new Error("User not logged in");
+
+  const token = await user.getIdToken();
+  const response = await api.get("/bookmark-post/get-bookmarks", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response?.data;
 };
 

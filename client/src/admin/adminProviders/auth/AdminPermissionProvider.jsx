@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import AdminPermissionContext from "../adminContexts/AdminPermissionContext";
-import { getAllPermissions } from "../adminServices/permissionService";
+import { getAllPermissions } from "../../adminServices/permissionService";
+import AdminPermissionContext from "./AdminPermissionContext";
 
 const AdminPermissionProvider = ({ children }) => {
   const [permissions, setPermissions] = useState([]);
@@ -33,8 +33,8 @@ const AdminPermissionProvider = ({ children }) => {
       prev.map((permission) =>
         permission._id === updatedPermission._id
           ? updatedPermission
-          : permission
-      )
+          : permission,
+      ),
     );
   };
 

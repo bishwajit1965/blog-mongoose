@@ -54,10 +54,41 @@ const getAllNotifications = async (req, res) => {
 
 const getActiveNotifications = async (req, res) => {
   try {
-    const notifications = await Notification.find({ isActive: true }).sort({
+    const notifications = await Notification.find({
+      isActive: true,
+    }).sort({
       createdAt: -1,
     });
     res.status(200).json({ success: true, notifications });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error in fetching notifications.",
+      error,
+    });
+  }
+};
+
+const getPublicNotifications = async (req, res) => {
+  console.log("🚀 Public notification controller is hit!");
+  try {
+    const notifications = await Notification.find({
+      isActive: true,
+      status: "published",
+    })
+      .sort({
+        publishedAt: -1,
+      })
+      .lean();
+    console.log("Fetched notifications:", notifications.length);
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Notifications fetched successfully!",
+        notifications,
+      });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -117,7 +148,7 @@ const updateNotification = async (req, res) => {
           "..",
           "uploads",
           "notifications",
-          path.basename(pdfUrl)
+          path.basename(pdfUrl),
         );
         if (fs.existsSync(oldPath)) {
           try {
@@ -140,7 +171,7 @@ const updateNotification = async (req, res) => {
         content: content || existingNotification.content,
         pdfUrl,
       },
-      { new: true }
+      { new: true },
     );
 
     if (!updated) {
@@ -239,6 +270,7 @@ module.exports = {
   createNotification,
   getAllNotifications,
   getActiveNotifications,
+  getPublicNotifications,
   toggleNotificationActiveStatus,
   updateNotification,
   publishNotice,

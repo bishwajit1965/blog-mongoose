@@ -1,10 +1,10 @@
 const express = require("express");
 const uploadNotice = require("../middlewares/uploadNotice");
-
 const {
   createNotification,
   getAllNotifications,
   getActiveNotifications,
+  getPublicNotifications,
   toggleNotificationActiveStatus,
   updateNotification,
   publishNotice,
@@ -21,37 +21,38 @@ const {
 
 const router = express.Router();
 
-/**=============================================
- * PUBLIC ROUTES
- * =============================================*/
+/**==========================
+ * PUBLIC ROUTES – NO AUTH
+ * =========================*/
+router.get("/public", getPublicNotifications); // ✅ truly public
+router.get("/active", getActiveNotifications); // optional: public active notices
 
+/**==========================
+ * AUTH ROUTES – ADMIN ONLY
+ * =========================*/
+// Only below routes need token
 router.use(authenticateToken);
 
-// router.get("/", getActiveNotifications);
-router.get("/active", getActiveNotifications);
-/**=============================================
- * ADMIN ONLY ROUTES
- * =============================================*/
 router.post(
   "/create",
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["create-notification"]),
   uploadNotice.single("file"),
-  createNotification
+  createNotification,
 );
 
 router.get(
   "/all",
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["view-notification"]),
-  getAllNotifications
+  getAllNotifications,
 );
 
 router.patch(
   "/toggle/:id",
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["toggle-notification-status"]),
-  toggleNotificationActiveStatus
+  toggleNotificationActiveStatus,
 );
 
 router.patch(
@@ -59,36 +60,35 @@ router.patch(
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["update-notification"]),
   uploadNotice.single("file"),
-  updateNotification
+  updateNotification,
 );
 
 router.patch(
   "/publish/:id",
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["publish-notification"]),
-  // uploadNotice.single("file"),
-  publishNotice
+  publishNotice,
 );
 
 router.patch(
   "/archive/:id",
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["archive-notification"]),
-  archiveNotice
+  archiveNotice,
 );
 
 router.patch(
   "/soft-delete/:id",
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["soft-delete-notice"]),
-  softDeleteNotice
+  softDeleteNotice,
 );
 
 router.delete(
   "/:id",
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["delete-notification"]),
-  permanentDeleteNoticeById
+  permanentDeleteNoticeById,
 );
 
 module.exports = router;

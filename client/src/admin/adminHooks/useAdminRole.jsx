@@ -1,4 +1,4 @@
-import AdminRoleContext from "../adminContexts/AdminRoleContext";
+import AdminRoleContext from "../adminProviders/auth/AdminRoleContext";
 import { useContext } from "react";
 
 const useAdminRole = () => {

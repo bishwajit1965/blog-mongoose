@@ -1,5 +1,5 @@
 import API_PATHS from "../admin/adminServices/apiPaths";
-import api from "../helperApiService/helperApiService";
+import api from "../publicHelperApis/helperApiService";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";

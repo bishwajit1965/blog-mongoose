@@ -1,4 +1,4 @@
-import AdminUserContext from "../adminContexts/AdminUserContext";
+import AdminUserContext from "../adminProviders/data/AdminUserContext";
 import { useContext } from "react";
 
 const useAdminUser = () => {

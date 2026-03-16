@@ -1,29 +1,29 @@
-import AdminLoader from "../../admin/adminComponent/adminLoader/AdminLoader";
+import { useState } from "react";
 import Button from "../../components/buttons/Button";
 import { FaEye } from "react-icons/fa";
 import NoticeModal from "./NoticeModal";
 import dateFormatter from "../../utils/dateFormatter";
-import useGetNotices from "../../hooks/useGetNotices";
-import { useState } from "react";
+import usePublicData from "../../providers/usePublicData";
+import AdminLoader from "../../admin/adminComponent/adminLoader/AdminLoader";
 
 const FrontendNoticeManager = () => {
-  const { data, isPending, isError } = useGetNotices();
+  const { notices, loading } = usePublicData();
+  console.log("Notices data", notices);
   const [selectedNotice, setSelectedNotice] = useState(null);
-  console.log("Public notices", data);
-  console.log("Selected notice", selectedNotice);
 
-  if (isPending) return <AdminLoader />;
-  if (isError)
-    return <div className="flex justify-center">{isError.message}</div>;
+  const handleSelectNotice = (notice) => {
+    setSelectedNotice(notice);
+  };
 
   return (
     <div>
-      <h1>Frontend Notice Manager: {data?.notifications?.length}</h1>
+      {loading && <AdminLoader />}
+      <h1>Frontend Notice Manager: {notices?.length}</h1>
       <div className="">
         <div className="overflow-x-auto">
-          <table className="table table-xs">
-            <thead>
-              <tr>
+          <table className="table table-xs ">
+            <thead className="">
+              <tr className="dark:border-gray-700">
                 <th>#</th>
                 <th>Title</th>
                 <th>Content</th>
@@ -32,11 +32,13 @@ const FrontendNoticeManager = () => {
               </tr>
             </thead>
             <tbody>
-              {data?.notifications?.length === 0 ? (
-                <div className="flex justify-center">No notice found!</div>
+              {notices?.length === 0 ? (
+                <tr className="text-center">
+                  <th colSpan={5}>No notice found!</th>
+                </tr>
               ) : (
-                data?.notifications.map((notice, index) => (
-                  <tr key={notice._id}>
+                notices?.map((notice, index) => (
+                  <tr key={notice._id} className="dark:border-gray-700">
                     <th>{index + 1}</th>
                     <td>{notice.title}</td>
                     <td>
@@ -51,14 +53,14 @@ const FrontendNoticeManager = () => {
                         label="View"
                         icon={<FaEye />}
                         className="btn btn-xs"
-                        onClick={() => setSelectedNotice(notice)}
+                        onClick={() => handleSelectNotice(notice)}
                       />
                     </td>
                   </tr>
                 ))
               )}
             </tbody>
-            <tfoot>
+            <tfoot className="dark:border-gray-700">
               <tr>
                 <th>#</th>
                 <th>Title</th>

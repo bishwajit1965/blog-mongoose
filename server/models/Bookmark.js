@@ -23,9 +23,10 @@ const BookmarkSchema = new mongoose.Schema(
     // Optional features for future use:
     folder: { type: String }, // e.g., "Tech", "Favorites"
     notes: { type: String },
+    category: [{ type: String }],
     tags: [{ type: String }],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Prevent duplicate bookmarks by same user on same blog

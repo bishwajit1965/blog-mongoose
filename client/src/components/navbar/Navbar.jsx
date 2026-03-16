@@ -31,7 +31,7 @@ const Navbar = () => {
     { id: 2, route: "/about-me", name: "About Me" },
     { id: 3, route: "/contact-me", name: "Contact" },
     { id: 4, route: "/blog-coming-soon", name: "Blog Coming Soon" },
-    user ? { id: 5, route: "/bookmarked-page", name: "My Bookmarks" } : "",
+    { id: 5, route: "/bookmarked-page", name: "My Bookmarks" },
     {
       id: 6,
       route: "http://localhost:3000/api/blogs/rss",
@@ -39,11 +39,7 @@ const Navbar = () => {
       external: true,
     },
     { id: 7, route: "/user-profile", name: "Profile" },
-    {
-      id: 8,
-      route: "/notice",
-      name: "Notice",
-    },
+    { id: 8, route: "/notice", name: "Notice" },
     {
       id: 9,
       isThemeToggle: true, // Differentiator key
@@ -91,10 +87,10 @@ const Navbar = () => {
                 open ? "top-[65px]" : "-top-72"
               } dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 dark:shadow-lg`}
             >
-              {routes.map((item, index) =>
+              {routes.map((item) =>
                 item ? (
                   item.isThemeToggle ? ( // Check for the theme toggle button
-                    <li key={index}>
+                    <li key={item.id}>
                       <button
                         className={`theme-toggle-btn items-center ml-3 ${theme}`}
                         onClick={toggleTheme}
@@ -103,7 +99,7 @@ const Navbar = () => {
                       </button>
                     </li>
                   ) : (
-                    <li key={item.id}>
+                    <li key={item.id || item.name}>
                       <a href={item.route}>{item.name}</a>
                     </li>
                   )

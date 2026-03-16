@@ -48,6 +48,8 @@ const createBlog = async (req, res) => {
     } = req.body;
 
     const userId = req.user.id;
+    const user = await User.findById({ _id: userId });
+    console.log("User", user);
 
     if (!req.user.permissions.includes("create-post")) {
       return res
@@ -123,6 +125,7 @@ const createBlog = async (req, res) => {
       status,
       publishAt: validPublishAt,
       author: userId, // Mongo _id
+      firebaseUid: user.firebaseUid || null,
       image: imagePath,
       metaTitle: seoTitle,
       metaDescription: seoDescription,

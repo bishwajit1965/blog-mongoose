@@ -5,7 +5,7 @@ import handleApiCall from "./handleApiCall";
 // Admin: Create new notification
 const createNotification = (notificationData) =>
   handleApiCall(() =>
-    api.post(`${API_PATHS.NOTIFICATIONS}/create`, notificationData)
+    api.post(`${API_PATHS.NOTIFICATIONS}/create`, notificationData),
   );
 
 // Get all notifications (admin-facing)
@@ -16,6 +16,10 @@ const getAllNotifications = () =>
 const getActiveNotifications = () =>
   handleApiCall(() => api.get(`${API_PATHS.NOTIFICATIONS}/active`));
 
+// Get all published notifications (user-fetching)
+const getPublicNotifications = () =>
+  handleApiCall(() => api.get(`${API_PATHS.NOTIFICATIONS}/public`));
+
 // Admin: Toggle a notification's active status
 const toggleNotificationActiveStatus = (id) =>
   handleApiCall(() => api.patch(`${API_PATHS.NOTIFICATIONS}/toggle/${id}`));
@@ -23,7 +27,7 @@ const toggleNotificationActiveStatus = (id) =>
 // Update notification
 const updateNotification = (id, updatedData) =>
   handleApiCall(() =>
-    api.patch(`${API_PATHS.NOTIFICATIONS}/${id}`, updatedData)
+    api.patch(`${API_PATHS.NOTIFICATIONS}/${id}`, updatedData),
   );
 
 // Publish notice
@@ -37,7 +41,7 @@ const archiveNotice = (id) =>
 // Soft delete notice
 const softDeleteNotice = (id) =>
   handleApiCall(() =>
-    api.patch(`${API_PATHS.NOTIFICATIONS}/soft-delete/${id}`)
+    api.patch(`${API_PATHS.NOTIFICATIONS}/soft-delete/${id}`),
   );
 
 // Delete notice permanently
@@ -48,6 +52,7 @@ export {
   createNotification,
   getAllNotifications,
   getActiveNotifications,
+  getPublicNotifications,
   toggleNotificationActiveStatus,
   updateNotification,
   publishNotice,

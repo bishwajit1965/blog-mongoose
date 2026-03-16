@@ -23,7 +23,7 @@ router.patch(
   "/:slug/archive",
   authorizeRoles(["super-admin"]),
   authorizePermissions(["archive-post"]),
-  archiveBlog
+  archiveBlog,
 );
 
 // ✅ Get a single archived blog by slug
@@ -31,7 +31,7 @@ router.get(
   "/:slug",
   authorizeRoles(["super-admin"]),
   authorizePermissions(["view-post"]),
-  getArchivedBlogBySlug
+  getArchivedBlogBySlug,
 );
 
 // ✅ Get all archived blog posts (Pagination handled inside)
@@ -39,7 +39,7 @@ router.get(
   "/",
   authorizeRoles(["super-admin"]),
   authorizePermissions(["view-post"]),
-  getAllArchivedBlogs
+  getAllArchivedBlogs,
 );
 
 // ✅ Restore an archived blog (Use `/restore` for clarity)
@@ -47,7 +47,7 @@ router.patch(
   "/:slug/restore",
   authorizeRoles(["super-admin"]),
   authorizePermissions(["restore-post"]),
-  restoreArchivedBlog
+  restoreArchivedBlog,
 );
 
 // ✅ Soft-Delete an archived blog (No permission check if only super-admin can do this)
@@ -55,7 +55,7 @@ router.patch(
   "/:slug/soft-delete",
   authorizeRoles(["super-admin"]),
   authorizePermissions(["soft-delete"]),
-  softDeleteArchivedBlog
+  softDeleteArchivedBlog,
 );
 
 module.exports = router;

@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
-import AdminAuthContext from "../adminContexts/AdminAuthContext";
-import api from "../../services/api";
+// import AdminAuthContext from "./auth/AdminAuthContext";
+import api from "../../../services/api";
 import { Loader } from "lucide-react";
+import AdminAuthContext from "../../adminContexts/AdminAuthContext";
+// import AdminAuthContext from "./auth/AdminAuthContext";
 
 const initialState = {
   isAuthenticated: false,

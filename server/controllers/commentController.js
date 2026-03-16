@@ -57,7 +57,8 @@ const addComment = async (req, res) => {
       parent,
       level,
     });
-    res.status(201).json({
+
+    return res.status(201).json({
       success: true,
       message: "The post comment is successful!",
       comment,
@@ -86,9 +87,11 @@ const nestComments = (comments, parentId = null, level = 0) => {
 
 // Get all comments for a post in front end
 const getComments = async (req, res) => {
+  console.log("🚀 Get comments method is hit");
   const { slug } = req.params;
   try {
     const blog = await Blog.findOne({ slug });
+
     if (!blog) return res.status(404).json({ message: "Blog post not found." });
 
     const flatComments = await Comment.find({
@@ -96,8 +99,11 @@ const getComments = async (req, res) => {
       status: "approved",
     })
       .populate("author", "name email avatar")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
+
     console.log("Fetched comments in frontend", flatComments);
+
     const nestedComments = nestComments(flatComments);
 
     res.status(200).json(nestedComments);
@@ -110,7 +116,6 @@ const getComments = async (req, res) => {
   }
 };
 
-// Update comment for front end users
 const updateComment = async (req, res) => {
   const { id } = req.params;
   const { content } = req.body;

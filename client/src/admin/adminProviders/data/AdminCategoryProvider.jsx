@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
-import AdminCategoryContext from "../adminContexts/AdminCategoryContext";
-import { getAllCategories } from "../adminServices/categoryService";
+import AdminCategoryContext from "./AdminCategoryContext";
+import { getAllCategories } from "../../adminServices/categoryService";
 
 const AdminCategoryProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
@@ -30,8 +30,8 @@ const AdminCategoryProvider = ({ children }) => {
   const updateCategoryInState = (updatedCategory) => {
     setCategories((prev) =>
       prev.map((category) =>
-        category._id === updatedCategory._id ? updatedCategory : category
-      )
+        category._id === updatedCategory._id ? updatedCategory : category,
+      ),
     );
   };
 

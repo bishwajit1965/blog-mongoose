@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
-import AdminUserContext from "../adminContexts/AdminUserContext";
-import { getAllUsers } from "../adminServices/userService";
+import AdminUserContext from "./AdminUserContext";
+import { getAllUsers } from "../../adminServices/userService";
 
 const AdminUserProvider = ({ children }) => {
   const [users, setUsers] = useState([]);

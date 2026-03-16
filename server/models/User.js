@@ -52,8 +52,8 @@ const userSchema = new mongoose.Schema(
     ],
     falseFlagCount: { type: Number, default: 0 },
     isBanned: { type: Boolean, default: false },
-    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    followers: [{ type: String }], // store UIDs as strings
+    following: [{ type: String }], // store UIDs as strings
     banExpiresAt: { type: Date, default: null },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },

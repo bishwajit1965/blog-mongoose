@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 
-import AdminArchivedBlogContext from "../adminContexts/AdminArchivedBlogContext";
-import { getAllBlogs } from "../adminServices/blogService";
-import { getArchivedBlogs } from "../adminServices/archivedBlogService";
+import AdminArchivedBlogContext from "../data/AdminArchivedBlogContext";
+import { getAllBlogs } from "../../adminServices/blogService";
+import { getArchivedBlogs } from "../../adminServices/archivedBlogService";
 
 const ArchivedBlogProvider = ({ children }) => {
   const [blogs, setBlogs] = useState([]);
