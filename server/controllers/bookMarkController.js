@@ -3,11 +3,14 @@ const Blog = require("../models/Blog");
 
 // ✅ Add a blog post to bookmarks
 const bookMarkPost = async (req, res) => {
+  console.log("🚀 Bookmark route is hit");
   const userId = req.user.id;
   const { blogId } = req.params;
 
   try {
-    const blog = await Blog.findById(blogId).select("slug status tags");
+    const blog = await Blog.findById(blogId).select(
+      "slug status category tags",
+    );
     if (!blog) {
       return res
         .status(404)
@@ -27,8 +30,12 @@ const bookMarkPost = async (req, res) => {
       blogId,
       slug: blog.slug,
       status: blog.status,
+      category: blog.category,
       tags: blog.tags,
     });
+
+    console.log("New Bookmark", newBookmark);
+
     await newBookmark.save();
 
     res

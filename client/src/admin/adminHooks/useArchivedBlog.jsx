@@ -1,11 +1,11 @@
-import AdminArchivedBlogContext from "../adminContexts/AdminArchivedBlogContext";
+import AdminArchivedBlogContext from "../adminProviders/data/AdminArchivedBlogContext";
 import { useContext } from "react";
 
 const useArchivedBlog = () => {
   const context = useContext(AdminArchivedBlogContext);
   if (context === undefined) {
     throw new Error(
-      "useArchivedBlog must be used within an ArchivedBlogProvider"
+      "useArchivedBlog must be used within an ArchivedBlogProvider",
     );
   }
   return context;

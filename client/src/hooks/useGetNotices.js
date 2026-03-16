@@ -1,6 +1,6 @@
 // TanStacc Query to fetch all notices to front end
 
-import api from "../helperApiService/helperApiService";
+import api from "../publicHelperApis/helperApiService";
 import { useQuery } from "@tanstack/react-query";
 
 const fetchNotices = async () => {
@@ -10,7 +10,7 @@ const fetchNotices = async () => {
 
 const useGetNotices = () => {
   return useQuery({
-    queryKey: ["notifications"],
+    queryKey: ["notifications-active"],
     queryFn: fetchNotices,
     staleTime: 1000 * 60,
   });

@@ -1,15 +1,15 @@
 import {
   getActiveNotifications,
   getAllNotifications,
-} from "../adminServices/notificationApiService";
+} from "../../adminServices/notificationApiService";
 import { useCallback, useEffect, useState } from "react";
 
-import AdminMessageNotificationContext from "../adminContexts/AdminMessageNotificationContext";
+import AdminMessageNotificationContext from "../notifications/AdminMessageNotificationContext";
 
 const AdminMessageNotificationContextProvider = ({ children }) => {
   const [allMessageNotification, setAllMessageNotification] = useState([]);
   const [activeMessageNotification, setActiveMessageNotification] = useState(
-    []
+    [],
   );
   const [loading, setLoading] = useState(false);
   console.log("All message notifications:", allMessageNotification);
@@ -22,10 +22,10 @@ const AdminMessageNotificationContextProvider = ({ children }) => {
         activeMessageNotificationResponse,
       ] = await Promise.all([getAllNotifications(), getActiveNotifications()]);
       setAllMessageNotification(
-        allMessageNotificationResponse?.notifications || []
+        allMessageNotificationResponse?.notifications || [],
       );
       setActiveMessageNotification(
-        activeMessageNotificationResponse?.notifications || []
+        activeMessageNotificationResponse?.notifications || [],
       );
     } catch (err) {
       console.error("Error fetching notifications:", err);

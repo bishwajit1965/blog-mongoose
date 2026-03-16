@@ -1,11 +1,11 @@
-import AdminCategoryContext from "../adminContexts/AdminCategoryContext";
+import AdminCategoryContext from "../adminProviders/data/AdminCategoryContext";
 import { useContext } from "react";
 
 const useAdminCategory = () => {
   const context = useContext(AdminCategoryContext);
   if (context === undefined) {
     throw new Error(
-      "useAdminCategory must be used within an AdminCategoryProvider"
+      "useAdminCategory must be used within an AdminCategoryProvider",
     );
   }
   return context;

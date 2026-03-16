@@ -11,7 +11,7 @@ api.interceptors.request.use(
     // Additional request modifications if needed
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Response Interceptor
@@ -35,21 +35,24 @@ api.interceptors.response.use(
             import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api"
           }/admin/refresh-token`,
           {},
-          { withCredentials: true }
+          { withCredentials: true },
         );
 
         // Retry the original request after a successful token refresh
         return api(originalRequest);
       } catch (refreshError) {
         console.error("Token refresh failed. Logging out user...");
-        // Redirect user to login page
-        window.location.href = "/admin/login";
+
+        // Only redirect if the request was for admin routes
+        if (originalRequest.url?.includes("/admin/")) {
+          window.location.href = "/admin/login";
+        }
         return Promise.reject(refreshError);
       }
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

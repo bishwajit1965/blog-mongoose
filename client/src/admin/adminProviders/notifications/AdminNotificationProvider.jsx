@@ -1,5 +1,5 @@
-import AdminNotificationContext from "../adminContexts/AdminNotificationContext";
-import AdminNotificationDisplay from "../adminComponent/AdminNotificationDisplay/AdminNotificationDisplay";
+import AdminNotificationContext from "./AdminNotificationContext";
+import AdminNotificationDisplay from "../../adminComponent/AdminNotificationDisplay/AdminNotificationDisplay";
 import { useState } from "react";
 
 const AdminNotificationProvider = ({ children }) => {

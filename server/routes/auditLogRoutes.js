@@ -23,7 +23,7 @@ router.get(
   "/",
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["view-audit-log"]), // Specific permission added
-  getAllAuditLogs
+  getAllAuditLogs,
 );
 
 // Get audit logs for a specific post (using slug instead of postId)
@@ -31,14 +31,14 @@ router.get(
   "/post/:slug", // Using slug as identifier
   authorizeRoles(["super-admin"]),
   authorizePermissions(["view-audit-log"]), // Specific permission added
-  getAuditLogsBySlug
+  getAuditLogsBySlug,
 );
 
 router.get(
   "/post/:postId",
   authorizeRoles(["super-admin"]),
   authorizePermissions(["view-audit-log"]), // Specific permission added
-  getAuditLogsByPostId
+  getAuditLogsByPostId,
 );
 
 // Get audit logs for a specific user (accessible by super-admin)
@@ -46,7 +46,7 @@ router.get(
   "/user/:userId",
   authorizeRoles(["super-admin"]),
   authorizePermissions(["view-audit-log"]), // Specific permission added
-  getAuditLogsByModeratorId
+  getAuditLogsByModeratorId,
 );
 
 // Create a new audit log entry (typically triggered by internal backend actions)
@@ -54,7 +54,7 @@ router.post(
   "/create",
   authorizeRoles(["super-admin"]),
   authorizePermissions(["create-audit-log"]),
-  createAuditLogEntry
+  createAuditLogEntry,
 );
 
 module.exports = router;

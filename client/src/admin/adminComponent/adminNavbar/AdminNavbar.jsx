@@ -159,9 +159,11 @@ const AdminNavbar = () => {
                       <LogOutIcon size={16} /> Log Out
                     </button>
                   </li>
-                  <li className="font-bold text-green-500 capitalize">Role: {adminData.user.roles[0].name}</li>
-                  <li>Email: {adminData.user.email}</li>
-                  <li>Name: {adminData.user.name}</li>
+                  <li className="font-bold text-green-500 capitalize">
+                    Role: {adminData?.user?.roles[0]?.name}
+                  </li>
+                  <li>Email: {adminData?.user?.email}</li>
+                  <li>Name: {adminData?.user?.name}</li>
                 </div>
               ) : (
                 <>

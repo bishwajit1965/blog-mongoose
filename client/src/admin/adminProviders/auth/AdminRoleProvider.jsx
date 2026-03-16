@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-
-import AdminRoleContext from "../adminContexts/AdminRoleContext";
-import { getAllRoles } from "../adminServices/roleService";
+import { getAllRoles } from "../../adminServices/roleService";
+import AdminRoleContext from "./AdminRoleContext";
 
 const AdminRoleProvider = ({ children }) => {
   const [roles, setRoles] = useState([]);
@@ -29,7 +28,7 @@ const AdminRoleProvider = ({ children }) => {
 
   const updateRoleInState = (updatedRole) => {
     setRoles((prev) =>
-      prev.map((role) => (role._id === updatedRole._id ? updatedRole : role))
+      prev.map((role) => (role._id === updatedRole._id ? updatedRole : role)),
     );
   };
 

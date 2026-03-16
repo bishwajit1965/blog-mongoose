@@ -4,9 +4,9 @@ import AdminBlogContext from "../adminContexts/AdminBlogContext";
 import {
   getAllBlogs,
   getBlogsForSuperAdminDashBoard,
-} from "../adminServices/blogService";
-import { getAllCategories } from "../adminServices/categoryService";
-import { getAllTags } from "../adminServices/tagService";
+} from "../../adminServices/blogService";
+import { getAllCategories } from "../../adminServices/categoryService";
+import { getAllTags } from "../../adminServices/tagService";
 
 const AdminBlogProvider = ({ children }) => {
   const [blogs, setBlogs] = useState([]);

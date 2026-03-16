@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import AdminMessageContext from "../adminContexts/adminMessageContext";
+import AdminMessageContext from "../adminProviders/notifications/AdminMessageContext";
 
 const useAdminContactMessages = () => {
   const context = useContext(AdminMessageContext);

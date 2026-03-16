@@ -1,4 +1,4 @@
-import AdminTagContext from "../adminContexts/AdminTagContext";
+import AdminTagContext from "../adminProviders/data/AdminTagContext";
 import { useContext } from "react";
 
 const useAdminTag = () => {

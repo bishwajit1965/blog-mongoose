@@ -1,4 +1,4 @@
-import AdminBlogContext from "../adminContexts/AdminBlogContext";
+import AdminBlogContext from "../adminProviders/data/AdminBlogContext";
 import { useContext } from "react";
 
 const useAdminBlog = () => {

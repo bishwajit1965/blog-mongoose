@@ -40,6 +40,7 @@ const BlogSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    firebaseUid: { type: String, required: true, unique: true, index: true },
     image: { type: String, default: null },
 
     //✅Flagged status to be saved in blogs collection

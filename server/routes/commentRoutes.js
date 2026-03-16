@@ -9,12 +9,12 @@ const {
   deleteComment,
 } = require("../controllers/commentController");
 
-const { authenticateToken } = require("../middlewares/authenticateToken");
+const authenticateUser = require("../middlewares/authenticateUser");
 
 router.get("/counts/:slug", getComments);
 
 // Verify authentication
-router.use(authenticateToken);
+router.use(authenticateUser);
 
 router.post("/comment/:slug", addComment);
 

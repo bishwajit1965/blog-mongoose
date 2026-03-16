@@ -115,6 +115,7 @@ const BlogDetailsPage = () => {
           email: "",
           content: "",
         });
+        // ✅ Let TanStack Query handle refetch
         fetchCommentsList?.();
       }
     },
@@ -323,6 +324,7 @@ const BlogDetailsPage = () => {
 
   if (blog.error)
     return <div className="flex justify-center">{blog.error.message}</div>;
+
   if (!blog || blog.length === 0)
     return <div className="flex justify-center">No blog found</div>;
 
@@ -365,6 +367,13 @@ const BlogDetailsPage = () => {
       newErrors.content = "Content field should be within 300 characters. ";
 
     setErrors(newErrors);
+
+    if (errors) {
+      setTimeout(() => {
+        setErrors({});
+      }, [3000]);
+    }
+
     if (Object.keys(newErrors).length > 0) return;
 
     // Add comment
@@ -438,6 +447,7 @@ const BlogDetailsPage = () => {
                     author={author}
                   >
                     <>
+                      <p>{user?.uid}</p>
                       <p>Email: {user?.email}</p>
                       <p>Role: Admin</p>
                       <p>
@@ -458,10 +468,12 @@ const BlogDetailsPage = () => {
             <div className="lg:flex flex-1 items-center lg:space-x-4 space-x-0 lg:space-y-0 space-y-3">
               <div className="">
                 <FollowButton
-                  authorId={blog.author._id} // MongoDB _id
-                  isFollowingInitial={user?.following?.some((id) =>
-                    id.equals(blog.author._id),
-                  )}
+                  authorId={user?.uid} // Firebase uid
+                  disabled={!user}
+                  isFollowingInitial={
+                    user?.uid !== blog.firebaseUid &&
+                    user?.following?.some((id) => id.equals(blog?._id))
+                  }
                 />
               </div>
 
@@ -520,7 +532,7 @@ const BlogDetailsPage = () => {
                 <span className="">
                   <FaThumbsUp />
                 </span>
-                <span className="flex items-center justify-between rounded-sm border border-gray-500 p-2 w-6 h-6">
+                <span className="flex items-center justify-between rounded-sm border text-gray-800 dark:text-base-300 border-gray-500 p-2 w-6 h-6">
                   {reactions.likeCount}
                 </span>
               </div>
@@ -528,7 +540,7 @@ const BlogDetailsPage = () => {
                 <span className="">
                   <FaThumbsDown />
                 </span>
-                <span className="flex items-center justify-between rounded-sm border border-gray-500 p-2 w-6 h-6">
+                <span className="flex items-center justify-between rounded-sm border text-gray-800 dark:text-base-300 border-gray-500  p-2 w-6 h-6">
                   {reactions.dislikeCount}
                 </span>
               </div>
@@ -861,7 +873,7 @@ const BlogDetailsPage = () => {
                 type="text"
                 name="name"
                 value={formData.name}
-                placeholder="Your Name"
+                placeholder="Your Name..."
                 className="input input-bordered w-full dark:bg-gray-600"
               />
               {errors.name && (
@@ -872,7 +884,7 @@ const BlogDetailsPage = () => {
                 type="email"
                 value={formData.email}
                 name="email"
-                placeholder="Your Email"
+                placeholder="Your Email..."
                 className="input input-bordered w-full dark:bg-gray-600"
               />
               {errors.email && (
@@ -887,7 +899,7 @@ const BlogDetailsPage = () => {
                 id=""
                 rows="4"
                 cols="50"
-                placeholder="Your Comment"
+                placeholder="Your Comment..."
               ></textarea>
               {errors.content && (
                 <p className="text-sm text-red-500">{errors.content}</p>

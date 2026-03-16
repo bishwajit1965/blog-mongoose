@@ -26,13 +26,13 @@ router.post("/", authorizeRoles(["super-admin", "admin"]), createCategory);
 router.get(
   "/:id",
   authorizeRoles(["super-admin", "admin", "editor"]),
-  getCategoryById
+  getCategoryById,
 );
 
 router.get(
   "/",
   authorizeRoles(["super-admin", "admin", "editor"]),
-  getAllCategories
+  getAllCategories,
 );
 
 router.patch("/:id", authorizeRoles(["super-admin", "admin"]), updateCategory);

@@ -25,21 +25,21 @@ router.patch(
   "/admin/approve-comment/:id",
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["approve-comments"]),
-  approveComment
+  approveComment,
 );
 
 router.patch(
   "/admin/reject-comment/:id",
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["reject-comments"]),
-  rejectComment
+  rejectComment,
 );
 
 router.delete(
   "/admin/delete-comment/:id",
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["delete-comments"]),
-  deleteCommentByAdmin
+  deleteCommentByAdmin,
 );
 
 module.exports = router;

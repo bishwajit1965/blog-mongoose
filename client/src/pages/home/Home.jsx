@@ -39,7 +39,10 @@ const Home = () => {
   const { data, isLoading, error } = useGetBlogs();
   const { data: bookmarkedPosts } = useGetBookmarkedPosts();
   const isFilterActive = selectedTag || selectedCategory;
+
   console.log("Searched term", searchTerm);
+  console.log("User in Home", user);
+
   const {
     data: categories,
     isLoading: isCategoryLoading,

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
-import AdminFlaggedPostContext from "../adminContexts/AdminFlaggedPostContext";
-import { getFlaggedPosts } from "../adminServices/flaggedBlogService";
+import AdminFlaggedPostContext from "./AdminFlaggedPostContext";
+import { getFlaggedPosts } from "../../adminServices/flaggedBlogService";
 
 const AdminFlaggedPostContextProvider = ({ children }) => {
   const [flaggedPosts, setFlaggedPosts] = useState([]);

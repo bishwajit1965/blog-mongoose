@@ -43,6 +43,10 @@ import ManageMessages from "../admin/adminDataManagement/manageMessages/ManageMe
 import ComingSoonPost from "../components/comingSoonPost/ComingSoonPost";
 import FeatureUnderConstructionPage from "../pages/featureUnderConstruction/FeatureUnderConstructionPage";
 import BookmarkedPage from "../pages/bookmarkedPage/BookmarkedPage";
+// import AdminDataProvider from "../admin/adminProviders/AdminDataProvider";
+// import AdminAuthProvider from "../admin/adminProviders/AdminAuthProvider";
+import AdminProviders from "../admin/adminProviders/AdminProviders";
+import AdminAuthProviders from "../admin/adminProviders/groups/AdminAuthProviders";
 
 // Common Admin Routes (Super Admin can access all)
 const superAdminRoutes = [
@@ -138,19 +142,28 @@ const router = createBrowserRouter([
   { path: "/unauthorized", element: <Unauthorized /> },
 
   // Admin Login
-  { path: "/admin/login", element: <AdminLogin /> },
+  {
+    path: "/admin/login",
+    element: (
+      <AdminAuthProviders>
+        <AdminLogin />
+      </AdminAuthProviders>
+    ),
+  },
 
   // Super Admin Routes (Full Access)
   {
     path: "/super-admin/*",
     errorElement: <ErrorPage />,
     element: (
-      <RequireAdmin
-        allowedRoles={["super-admin"]}
-        allowedPermissions={["edit-post"]}
-      >
-        <SuperAdminLayout />
-      </RequireAdmin>
+      <AdminProviders>
+        <RequireAdmin
+          allowedRoles={["super-admin"]}
+          allowedPermissions={["edit-post"]}
+        >
+          <SuperAdminLayout />
+        </RequireAdmin>
+      </AdminProviders>
     ),
     children: [
       { index: true, element: <SuperAdminDashboard /> },
@@ -166,9 +179,11 @@ const router = createBrowserRouter([
     path: "/admin/*",
     errorElement: <ErrorPage />,
     element: (
-      <RequireAdmin allowedRoles={["admin", "super-admin"]}>
-        <AdminLayout />
-      </RequireAdmin>
+      <AdminProviders>
+        <RequireAdmin allowedRoles={["admin", "super-admin"]}>
+          <AdminLayout />
+        </RequireAdmin>
+      </AdminProviders>
     ),
     children: [
       { index: true, element: <AdminDashboard /> },
@@ -189,9 +204,11 @@ const router = createBrowserRouter([
     path: "/editor/*",
     errorElement: <ErrorPage />,
     element: (
-      <RequireAdmin allowedRoles={["editor"]}>
-        <EditorLayout />
-      </RequireAdmin>
+      <AdminProviders>
+        <RequireAdmin allowedRoles={["editor"]}>
+          <EditorLayout />
+        </RequireAdmin>
+      </AdminProviders>
     ),
     children: [
       { index: true, element: <EditorDashboard /> },
@@ -207,9 +224,11 @@ const router = createBrowserRouter([
     path: "/writer/*",
     errorElement: <ErrorPage />,
     element: (
-      <RequireAdmin allowedRoles={["writer"]}>
-        <WriterLayout />
-      </RequireAdmin>
+      <AdminProviders>
+        <RequireAdmin allowedRoles={["writer"]}>
+          <WriterLayout />
+        </RequireAdmin>
+      </AdminProviders>
     ),
     children: [{ index: true, element: <WriterDashboard /> }],
   },

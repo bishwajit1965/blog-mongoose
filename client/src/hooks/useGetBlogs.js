@@ -4,7 +4,7 @@
 
 // import api from "../services/api";
 
-import api from "../helperApiService/helperApiService";
+import api from "../publicHelperApis/helperApiService";
 import { useQuery } from "@tanstack/react-query";
 
 const fetchBlogs = async () => {

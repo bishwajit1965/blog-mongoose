@@ -1,5 +1,5 @@
-import AdminTagContext from "../adminContexts/AdminTagContext";
-import { getAllTags } from "../adminServices/tagService";
+import AdminTagContext from "./AdminTagContext";
+import { getAllTags } from "../../adminServices/tagService";
 import { useEffect } from "react";
 import { useState } from "react";
 

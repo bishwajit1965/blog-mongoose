@@ -1,11 +1,11 @@
-import AdminAuditLogContext from "../adminContexts/AdminAuditLogContext";
+import AdminAuditLogContext from "../adminProviders/data/AdminAuditLogContext";
 import { useContext } from "react";
 
 const useAdminAuditLog = () => {
   const context = useContext(AdminAuditLogContext);
   if (context === undefined) {
     throw new Error(
-      "useAdminAuditLog must be used within an AdminAuditLogContextProvider"
+      "useAdminAuditLog must be used within an AdminAuditLogContextProvider",
     );
   }
   return context;

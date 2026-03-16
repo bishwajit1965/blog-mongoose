@@ -171,10 +171,13 @@ const Login = () => {
                     </span>
                   </Link>
                 </p>
-                <p className="text-xs">
+                <p className="text-xs flex items-center gap-1">
                   <Link to="/register" className="hover:link">
                     New to this site ? {""}
                     <span className="text-xs link-primary">Register here</span>
+                  </Link>{" "}
+                  <Link to="/" className="text-xs link-primary hover:underline">
+                    Home
                   </Link>
                 </p>
               </div>
