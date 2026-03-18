@@ -145,7 +145,10 @@ const createBlog = async (req, res) => {
 
 const getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find({ status: "published" })
+    const blogs = await Blog.find({
+      status: "published",
+      moderationStatus: { $nin: ["hidden", "deleted"] },
+    })
       .populate("author", "name email avatar")
       .populate("category", "name")
       .populate("tags", "name")
@@ -165,7 +168,6 @@ const getBlogsForSuperAdminDashBoard = async (req, res) => {
       .populate("tags", "name")
       .sort({ createdAt: -1 })
       .lean();
-
     res.status(200).json(blogs);
   } catch (error) {
     console.error("Error fetching blogs:", error);

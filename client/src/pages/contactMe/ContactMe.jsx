@@ -55,7 +55,7 @@ const ContactMe = () => {
   return (
     <div>
       <Helmet>
-        <title>Blog || Contact Page</title>
+        <title>Nova Blogging Platform || Contact Page</title>
       </Helmet>
 
       <section className="max-w-2xl mx-auto p-6 md:p-12 text-base-content dark:text-base-300">

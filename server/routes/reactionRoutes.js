@@ -6,9 +6,9 @@ const {
   getReactionsForPost,
 } = require("../controllers/reactionController");
 
-const { authenticateToken } = require("../middlewares/authenticateToken");
+const authenticateUser = require("../middlewares/authenticateUser");
 
-router.post("/react/:slug", authenticateToken, reactToPost);
+router.post("/react/:slug", authenticateUser, reactToPost);
 router.get("/counts/:slug", getReactionsForPost);
 
 module.exports = router;

@@ -34,7 +34,7 @@ const BlogPosts = ({
 
       const searchedTagPosts = selectedTag
         ? post.tags.some((tag) =>
-            tag.name.toLowerCase().includes(selectedTag.toLowerCase())
+            tag.name.toLowerCase().includes(selectedTag.toLowerCase()),
           )
         : true;
 
@@ -58,7 +58,7 @@ const BlogPosts = ({
   return (
     <div className="">
       <Helmet>
-        <title>Blog || Blog Posts</title>
+        <title>Nova Blogging Platform || Home</title>
       </Helmet>
       <div className="lg:space-y-6 space-y-4">
         {paginatedData.length === 0 ? (

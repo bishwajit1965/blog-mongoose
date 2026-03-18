@@ -400,7 +400,7 @@ const BlogDetailsPage = () => {
         <motion.div
           ref={leftColumnRef}
           animate={controls}
-          className="w-[14rem] absolute top-6  bg-gray-1000 left-0 rounded-md invisible lg:visible shadow-sm space-y-4 border border-gray-100 dark:border-gray-700"
+          className="w-[14rem] absolute top-6  bg-gray-1000 left-0 rounded-md invisible lg:visible shadow-md space-y-4 border border-gray-100 dark:border-gray-700"
         >
           <div className="w-full ">
             <img
@@ -412,7 +412,7 @@ const BlogDetailsPage = () => {
           <div className="h-72 relative p-2">
             <FaQuoteLeft className="absolute top-0 text-xl font-bold text-gray-500 dark:text-gray-300" />
             <p
-              className="absolute top-0 indent-7 lg:text-gray-600 text-gray-500 italic dark:text-gray-300 py-2"
+              className="absolute top-0 left-2 right-2 indent-7 lg:text-gray-600 text-gray-500s italic dark:text-gray-300 text-info-content"
               dangerouslySetInnerHTML={{
                 __html: excerpt ? blog.excerpt : "N/A",
               }}
@@ -445,6 +445,7 @@ const BlogDetailsPage = () => {
                     user={user}
                     title={blog.author.name}
                     author={author}
+                    blog={blog}
                   >
                     <>
                       <p>{user?.uid}</p>
@@ -468,11 +469,11 @@ const BlogDetailsPage = () => {
             <div className="lg:flex flex-1 items-center lg:space-x-4 space-x-0 lg:space-y-0 space-y-3">
               <div className="">
                 <FollowButton
-                  authorId={user?.uid} // Firebase uid
+                  authorId={blog.author?._id} // Mongo _id
                   disabled={!user}
                   isFollowingInitial={
-                    user?.uid !== blog.firebaseUid &&
-                    user?.following?.some((id) => id.equals(blog?._id))
+                    user?._id !== blog.author?._id &&
+                    user?.following?.some((id) => id.equals(blog.author?._id))
                   }
                 />
               </div>
@@ -494,7 +495,8 @@ const BlogDetailsPage = () => {
           </div>
           {/* Author, follow, reading time, published at section ends */}
 
-          {/* Flagging and dislikes flagged section begins */}
+          {/* Flagging and dislikes flagged section begins
+          =================================================*/}
           <div className="lg:flex items-center lg:space-x-8 lg:space-y-0 space-y-2">
             {/* Flagged reason display begins */}
             <div className="flex items-center lg:space-x-3 space-x-2">
@@ -502,19 +504,19 @@ const BlogDetailsPage = () => {
                 <FaFlag />
               </span>
               {flaggedReason.length > 0 ? (
-                flaggedReason.map((reason) => (
+                flaggedReason.slice(0, 2).map((reason) => (
                   <div
                     key={reason._id}
-                    className="flex items-center w-fit font-bold lg:text-[17px] text-xs lg:space-x-2 space-x-1"
+                    className="flex items-center w-fit font-semibold lg:text-[17px] text-xs lg:space-x-2 space-x-1"
                   >
                     <span
                       className={`${
                         reason.length > 0
-                          ? "text-red-500 bg-base-100"
+                          ? "text-gray-700 bg-base-300"
                           : "bg-amber-500"
-                      } animate-pulse px- rounded-md`}
+                      } p-2 h-5 rounded-md flex items-center justify-center border border-gray-500 shadow`}
                     >
-                      {reason}
+                      {reason === "Other" ? 0 : reason}
                     </span>
                   </div>
                 ))
@@ -532,7 +534,7 @@ const BlogDetailsPage = () => {
                 <span className="">
                   <FaThumbsUp />
                 </span>
-                <span className="flex items-center justify-between rounded-sm border text-gray-800 dark:text-base-300 border-gray-500 p-2 w-6 h-6">
+                <span className="flex items-center justify-center rounded-full border text-gray-800 dark:text-base-300 border-gray-500 p-1 w-6 h-6">
                   {reactions.likeCount}
                 </span>
               </div>
@@ -540,7 +542,7 @@ const BlogDetailsPage = () => {
                 <span className="">
                   <FaThumbsDown />
                 </span>
-                <span className="flex items-center justify-between rounded-sm border text-gray-800 dark:text-base-300 border-gray-500  p-2 w-6 h-6">
+                <span className="flex items-center justify-center rounded-full border text-gray-800 dark:text-base-300 border-gray-500 p-1 w-6 h-6">
                   {reactions.dislikeCount}
                 </span>
               </div>

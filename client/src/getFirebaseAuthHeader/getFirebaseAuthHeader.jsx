@@ -10,7 +10,6 @@ export const getFirebaseAuthHeader = async () => {
   if (!user) {
     return null; // ← DO NOT THROW
   }
-  // if (!user) throw new Error("User not logged in");
 
   const token = await user.getIdToken(false);
   return { Authorization: `Bearer ${token}` };

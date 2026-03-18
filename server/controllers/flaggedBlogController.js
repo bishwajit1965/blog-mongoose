@@ -4,6 +4,110 @@ const User = require("../models/User");
 const AuditLog = require("../models/AuditLog");
 const { createAuditLog } = require("./auditLogController");
 
+const flagBlogPost = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const { reason, comment } = req.body;
+    const userId = req.user.id;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found." });
+    }
+
+    const blog = await Blog.findOne({ slug });
+    if (!blog) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found." });
+    }
+
+    // ❌ prevent duplicate flag
+    if (blog.flaggedBy.includes(user._id)) {
+      return res.status(400).json({
+        success: false,
+        message: "You already flagged this post.",
+      });
+    }
+
+    // ✅ BLOG UPDATE
+    blog.isFlagged = true;
+    blog.flagCount += 1;
+    blog.flaggedBy.push(user._id);
+    blog.flaggedReason.push(reason || "Other");
+    blog.flaggedAt.push(new Date());
+    blog.lastFlaggedAt = new Date();
+
+    blog.flaggingHistory.push({
+      userId: user._id,
+      reason,
+      flaggedAt: new Date(),
+    });
+
+    await blog.save();
+
+    // ✅ USER UPDATE (FIXED)
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: {
+        flaggedPosts: {
+          postId: blog._id,
+          flaggedBy: user._id,
+          flaggedSlug: blog.slug,
+          flaggedReason: [reason || "Other"],
+          flaggedAt: new Date(),
+          reviewStatus: "pending",
+        },
+      },
+    });
+
+    // ✅ FLAGGED POST UPDATE
+    let flaggedPost = await FlaggedPost.findOne({ postId: blog._id });
+
+    if (!flaggedPost) {
+      flaggedPost = new FlaggedPost({
+        postId: blog._id,
+        userId: user._id,
+        flaggedTitle: blog.title,
+        flaggedSlug: blog.slug,
+        flaggedBy: [user._id],
+        flaggedReason: [reason || "Other"],
+        flaggedAt: [new Date()],
+        lastFlaggedAt: new Date(),
+        flagCount: 1,
+        flaggingHistory: [
+          {
+            userId: user._id,
+            reason,
+            comment, // ✅ HERE TOO
+            flaggedAt: new Date(),
+          },
+        ],
+      });
+    } else {
+      flaggedPost.flaggedBy.push(user._id);
+      flaggedPost.flaggedReason.push(reason || "Other");
+      flaggedPost.flaggedAt.push(new Date());
+      flaggedPost.flagCount += 1;
+      flaggedPost.lastFlaggedAt = new Date();
+    }
+
+    await flaggedPost.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Post flagged successfully.",
+    });
+  } catch (error) {
+    console.error("Error flagging blog post:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
+
 const getFlaggedPosts = async (req, res) => {
   try {
     const flaggedPosts = await FlaggedPost.find({})
@@ -87,6 +191,7 @@ const approveFlaggedBlog = async (req, res) => {
       blogPost.isFlagged = false;
       blogPost.flagCount = 0;
       blogPost.reviewStatus = "approved";
+      blogPost.moderationStatus = "deleted";
       blogPost.flaggedBy = [];
       blogPost.lastFlaggedAt = null;
       if (!Array.isArray(blogPost.reviewedAt)) {
@@ -101,6 +206,7 @@ const approveFlaggedBlog = async (req, res) => {
         reviewedBy: reviewerId,
       });
       console.log("Blog post status before save:", blogPost.reviewStatus);
+
       const updatedBlog = await blogPost.save();
       console.log("Updated blog:", updatedBlog);
 
@@ -240,7 +346,7 @@ const revertFlaggedBlogStatus = async (req, res) => {
 
     /**==============================================
      * Fetch blog post by slug
-     * ==============================================*/
+     *==============================================*/
     const blogPost = await Blog.findOne({ slug });
     console.log(" Blog post:", blogPost);
 
@@ -461,6 +567,7 @@ const getFlaggedPostAnalytics = async () => {
 };
 
 module.exports = {
+  flagBlogPost,
   getFlaggedPosts,
   getFlaggedBlogBySlug,
   approveFlaggedBlog,

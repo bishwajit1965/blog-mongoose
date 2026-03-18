@@ -30,7 +30,6 @@ const {
 router.get("/", getAllBlogs); // View all blogs
 
 router.get("/super-admin", getBlogsForSuperAdminDashBoard); // View all blogs
-
 router.get("/random", getRandomPost);
 
 router.get("/popular", getPopularPosts); // View popular blog posts
@@ -40,6 +39,10 @@ router.get("/rss", getRssFeed);
 router.get("/:slug", getBlogBySlug); // View single blog by slug
 
 router.get("/related-posts/:slug", getRelatedBlogPosts);
+
+/**======================================
+| * SUPER ADMIN CRUD ONLY ROUTES
+| =======================================*/
 
 // Authenticate all admin routes routes those follow it
 router.use(authenticateToken);

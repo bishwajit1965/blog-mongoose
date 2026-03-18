@@ -6,7 +6,10 @@ const {
   authorizePermissions,
 } = require("../middlewares/authenticateToken");
 
+const authenticateUser = require("../middlewares/authenticateUser");
+
 const {
+  flagBlogPost,
   getFlaggedPosts,
   approveFlaggedBlog,
   rejectFlaggedBlog,
@@ -18,15 +21,15 @@ const {
 
 const router = express.Router();
 
-// Authenticate all admin routes routes those follow it
-router.use(authenticateToken);
+router.patch("/flag/:slug", authenticateUser, flagBlogPost);
 
-// Create a new blog post
+// Get flagged blog post
 router.get(
   "/",
+  authenticateToken,
   authorizeRoles(["super-admin", "admin", "editor"]),
   authorizePermissions(["view-post"]),
-  getFlaggedPosts
+  getFlaggedPosts,
 );
 
 /**=========================================
@@ -35,25 +38,28 @@ router.get(
 // Fetch a flagged blog post for approval of flagged status
 router.patch(
   "/approve/:slug",
+  authenticateToken,
   authorizeRoles(["super-admin"]),
   authorizePermissions(["approve-post"]),
-  approveFlaggedBlog
+  approveFlaggedBlog,
 );
 
 // Fetch a flagged blog post for rejection
 router.patch(
   "/reject/:slug",
+  authenticateToken,
   authorizeRoles(["super-admin"]),
   authorizePermissions(["reject-post"]),
-  rejectFlaggedBlog
+  rejectFlaggedBlog,
 );
 
 // Revert review status approved/rejected
 router.patch(
   "/revert-review-status/:slug",
+  authenticateToken,
   authorizeRoles(["super-admin"]),
   authorizePermissions(["undo-reviewed-post"]),
-  revertFlaggedBlogStatus
+  revertFlaggedBlogStatus,
 );
 
 /**==================================================
@@ -62,25 +68,28 @@ router.patch(
 // Add a moderator note to a flagged post
 router.patch(
   "/:slug/moderator-note",
+  authenticateToken,
   authorizeRoles(["super-admin", "admin", "editor"]),
   authorizePermissions(["review-post"]),
-  addModeratorNote
+  addModeratorNote,
 );
 
 // Change review status manually (e.g., from under review → approved/rejected etc.)
 router.patch(
   "/:slug/review-status",
+  authenticateToken,
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["review-post"]),
-  changeReviewStatus
+  changeReviewStatus,
 );
 
 // Get flagged post analytics (e.g., for dashboard insights)
 router.get(
   "/analytics",
+  authenticateToken,
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["view-analytics"]),
-  getFlaggedPostAnalytics
+  getFlaggedPostAnalytics,
 );
 
 module.exports = router;
