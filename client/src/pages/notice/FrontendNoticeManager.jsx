@@ -5,6 +5,7 @@ import NoticeModal from "./NoticeModal";
 import dateFormatter from "../../utils/dateFormatter";
 import usePublicData from "../../providers/usePublicData";
 import AdminLoader from "../../admin/adminComponent/adminLoader/AdminLoader";
+import { Helmet } from "react-helmet-async";
 
 const FrontendNoticeManager = () => {
   const { notices, loading } = usePublicData();
@@ -17,6 +18,9 @@ const FrontendNoticeManager = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Nova Blogging Platform || Notice Page</title>
+      </Helmet>
       {loading && <AdminLoader />}
       <h1>Frontend Notice Manager: {notices?.length}</h1>
       <div className="">

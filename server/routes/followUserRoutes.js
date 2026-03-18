@@ -8,8 +8,9 @@ const {
 } = require("../controllers/followUserController");
 
 const { firebaseAuth } = require("../middlewares/firebaseAuth");
+const authenticateUser = require("../middlewares/authenticateUser");
 
-router.use(firebaseAuth);
+router.use(authenticateUser);
 
 // Now using authorId (Mongo _id) instead of Firebase UID
 router.put("/:authorId/follow", followUser);

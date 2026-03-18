@@ -1,10 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import AdminBlogContext from "./AdminBlogContext";
-import {
-  getAllBlogs,
-  getBlogsForSuperAdminDashBoard,
-} from "../../adminServices/blogService";
+import { getBlogsForSuperAdminDashBoard } from "../../adminServices/blogService";
 import { getAllCategories } from "../../adminServices/categoryService";
 import { getAllTags } from "../../adminServices/tagService";
 
@@ -20,7 +17,11 @@ const AdminBlogProvider = ({ children }) => {
     try {
       setLoading(true);
       const [blogsResponse, categoriesResponse, tagsResponse] =
-        await Promise.all([getAllBlogs(), getAllCategories(), getAllTags()]);
+        await Promise.all([
+          getBlogsForSuperAdminDashBoard(),
+          getAllCategories(),
+          getAllTags(),
+        ]);
       setBlogs(blogsResponse);
       setCategories(categoriesResponse);
       setTags(tagsResponse);

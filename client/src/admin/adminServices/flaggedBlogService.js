@@ -1,6 +1,26 @@
 import API_PATHS from "./apiPaths";
 import api from "./api";
 import handleApiCall from "./handleApiCall";
+import { getFirebaseAuthHeader } from "../../getFirebaseAuthHeader/getFirebaseAuthHeader";
+
+/***============================
+ |* USER / READER RELATED
+ |==============================*/
+
+const flagBlogPost = (slug, reason, comment) =>
+  handleApiCall(async () =>
+    api.patch(
+      `${API_PATHS.FLAGGED_BLOGS}/flag/${slug}`, // ✅ IMPORTANT: user route
+      { slug, reason, comment },
+      {
+        headers: await getFirebaseAuthHeader(), // 🔥 Firebase token
+      },
+    ),
+  );
+
+/***============================
+ |* ADMIN RELATED
+ |==============================*/
 
 // Get a flagged post for review
 const getFlaggedPosts = () =>
@@ -15,7 +35,7 @@ const approveFlaggedBlog = (slug, reviewComment) =>
   handleApiCall(() =>
     api.patch(`${API_PATHS.FLAGGED_BLOGS}/approve/${slug}`, {
       reviewComment,
-    })
+    }),
   );
 
 // Reject a flagged blog post
@@ -23,19 +43,19 @@ const rejectFlaggedBlog = (slug, reviewComment) =>
   handleApiCall(() =>
     api.patch(`${API_PATHS.FLAGGED_BLOGS}/reject/${slug}`, {
       reviewComment,
-    })
+    }),
   );
 
 // Revert a flagged blog post review status
 const revertFlaggedBlogStatus = (slug) =>
   handleApiCall(() =>
-    api.patch(`${API_PATHS.FLAGGED_BLOGS}/revert-review-status/${slug}`)
+    api.patch(`${API_PATHS.FLAGGED_BLOGS}/revert-review-status/${slug}`),
   );
 
 // Add or update a moderator note
 const addModeratorNote = (slug, note) =>
   handleApiCall(() =>
-    api.patch(`${API_PATHS.FLAGGED_BLOGS}/${slug}/moderator-note`, { note })
+    api.patch(`${API_PATHS.FLAGGED_BLOGS}/${slug}/moderator-note`, { note }),
   );
 
 // Change review status manually
@@ -44,7 +64,7 @@ const changeReviewStatus = (slug, newStatus, reviewComment) =>
     api.patch(`${API_PATHS.FLAGGED_BLOGS}/${slug}/review-status`, {
       newStatus,
       reviewComment,
-    })
+    }),
   );
 
 // Get analytics data
@@ -55,6 +75,7 @@ const permanentlyDeleteFlaggedBlogBySlug = (slug) =>
   handleApiCall(() => api.delete(`${API_PATHS.FLAGGED_BLOGS}/${slug}`));
 
 export {
+  flagBlogPost,
   getFlaggedPosts,
   getFlaggedBlogBySlug,
   approveFlaggedBlog,

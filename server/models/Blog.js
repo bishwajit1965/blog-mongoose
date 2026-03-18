@@ -113,6 +113,13 @@ const BlogSchema = new mongoose.Schema(
       default: ["Other"], // default to 'Other' if no reason is provided
     },
 
+    // Moderation Status on Flagged Post
+    moderationStatus: {
+      type: String,
+      enum: ["none", "under_review", "hidden", "deleted"],
+      default: "none",
+    },
+
     // ✅ SEO fields
     metaTitle: { type: String, default: "" },
     metaDescription: { type: String, default: "" },

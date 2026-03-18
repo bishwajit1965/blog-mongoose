@@ -5,7 +5,6 @@ import { useFollowUser, useUnfollowUser } from "../../hooks/userFollowers";
 
 const FollowButton = ({ authorId, isFollowingInitial }) => {
   const [isFollowing, setIsFollowing] = useState(isFollowingInitial);
-
   const followMutation = useFollowUser();
   const unfollowMutation = useUnfollowUser();
 

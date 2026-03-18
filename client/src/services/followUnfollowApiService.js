@@ -1,25 +1,23 @@
-import API_PATHS from "../admin/adminServices/apiPaths";
 import api from "../admin/adminServices/api";
 import handleApiCall from "../admin/adminServices/handleApiCall";
 import { getFirebaseAuthHeader } from "../getFirebaseAuthHeader/getFirebaseAuthHeader";
 
-const reactToPost = (slug, reaction) =>
+const followUser = (authorId) =>
   handleApiCall(async () =>
-    api.post(
-      `${API_PATHS.REACTIONS}/react/${slug}`,
-      reaction,
-
+    api.put(
+      `/follow/${authorId}/follow`,
+      {},
       {
         headers: await getFirebaseAuthHeader(),
       },
     ),
   );
 
-const getReactionsForPost = (slug) =>
+const unfollowUser = (authorId) =>
   handleApiCall(async () =>
-    api.get(`${API_PATHS.REACTIONS}/counts/${slug}`, {
+    api.delete(`/follow/${authorId}/unfollow`, {
       headers: await getFirebaseAuthHeader(),
     }),
   );
 
-export { reactToPost, getReactionsForPost };
+export { followUser, unfollowUser };

@@ -1,6 +1,7 @@
 import { useState } from "react";
+import FollowButton from "../followButton/FollowButton";
 
-const AuthorInfoModal = ({ user, author, title = "User", children }) => {
+const AuthorInfoModal = ({ user, blog, author, title = "User", children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const handleMouseEnter = () => setIsOpen(true);
   const handleMouseLeave = () => setIsOpen(false);
@@ -43,9 +44,15 @@ const AuthorInfoModal = ({ user, author, title = "User", children }) => {
                 alt=""
                 className="w-14 h-14 rounded-full"
               />
-
-              <div className="w-20 h-8 p-2 bg-gray-900 dark:text-base-300  text-white rounded-full flex items-center justify-center">
-                Follow
+              <div className="">
+                <FollowButton
+                  authorId={blog.author?._id} // Mongo _id
+                  disabled={!user}
+                  isFollowingInitial={
+                    user?._id !== blog.author?._id &&
+                    user?.following?.some((id) => id.equals(blog.author?._id))
+                  }
+                />
               </div>
             </div>
             <div className="">

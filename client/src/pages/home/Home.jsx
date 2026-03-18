@@ -9,7 +9,6 @@ import { Helmet } from "react-helmet-async";
 import Marquee from "react-fast-marquee";
 import MarqueeNotification from "../../components/marqueeNotification/MarqueeNotification";
 import OlderBlogPosts from "../blogPosts/OlderBlogPosts";
-import PageTitle from "../../components/pageTitle/PageTitle";
 import RandomBlogPosts from "../blogPosts/RandomBlogPosts";
 import ScrollProgressBar from "../../components/scrollProgressBar/ScrollProgressBar";
 import ScrollTopButton from "../../components/scrollTopButton/ScrollTopButton";
@@ -23,6 +22,7 @@ import useGetCategories from "../../hooks/useGetCategories";
 import useGetTags from "../../hooks/useGetTags";
 import { useState } from "react";
 import PopularPosts from "../../components/popularPosts/PopularPosts";
+import BlogHero from "../../components/blogHero/BlogHero";
 
 // import BookmarkedPage from "../bookmarkedPage/BookmarkedPage";
 
@@ -72,20 +72,10 @@ const Home = () => {
   return (
     <div className="">
       <Helmet>
-        <title>Blog || Home Page</title>
+        <title>Nova Blogging Platform || Home Page</title>
       </Helmet>
-      <PageTitle
-        title="Blog"
-        about="Posts"
-        decoratedText="Home Page"
-        subtitle="Where Stories Ignite, Ideas Thrive, and Conversations Connect."
-        slogan="Where Every Story Matters – From Thought-Provoking Insights to Everyday Inspirations, Discover a World of Perspectives, Ideas, and Conversations That Ignite Curiosity and Foster Connection."
-        dataLength={data?.length > 0 ? data?.length : "0"}
-        Blog
-        Posts
-        navigationLink="terms-conditions"
-        navigationArea="Terms & conditions"
-      />
+
+      <BlogHero data={data} />
 
       {/**=================================
       | MARQUEE NOTIFICATION SECTION BEGINS
