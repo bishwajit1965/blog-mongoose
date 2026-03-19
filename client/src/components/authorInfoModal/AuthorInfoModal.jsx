@@ -5,7 +5,7 @@ const AuthorInfoModal = ({ user, blog, author, title = "User", children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const handleMouseEnter = () => setIsOpen(true);
   const handleMouseLeave = () => setIsOpen(false);
-
+  console.log("Blog Info", blog);
   return (
     <div className="hover:link">
       <div
@@ -46,10 +46,10 @@ const AuthorInfoModal = ({ user, blog, author, title = "User", children }) => {
               />
               <div className="">
                 <FollowButton
-                  authorId={blog.author?._id} // Mongo _id
+                  authorId={blog?.author?._id} // Mongo _id
                   disabled={!user}
                   isFollowingInitial={
-                    user?._id !== blog.author?._id &&
+                    user?._id !== blog?.author?._id &&
                     user?.following?.some((id) => id.equals(blog.author?._id))
                   }
                 />

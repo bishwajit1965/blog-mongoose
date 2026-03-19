@@ -77,11 +77,12 @@ const removeBookmark = async (req, res) => {
 
 // ✅ Get all bookmarked posts of a user
 const getAllBookmarkedPost = async (req, res) => {
-  const userId = req.user.id;
-
   try {
+    const userId = req.user.id;
+
     const bookmarks = await Bookmark.find({ userId }).populate({
       path: "blogId",
+      match: { status: "published" },
       select:
         "title slug content excerpt category tags image author publishAt createdAt",
       populate: [
@@ -91,13 +92,16 @@ const getAllBookmarkedPost = async (req, res) => {
       ],
     });
 
-    const posts = bookmarks.map((b) => {
-      const blog = b.blogId?.toObject(); // convert Mongoose doc to plain object
-      if (blog) {
-        blog.bookmarkedAt = b.bookmarkedAt; // flatten it
-      }
-      return blog;
-    });
+    const posts = bookmarks
+      .map((b) => {
+        const blog = b?.blogId?.toObject(); // convert Mongoose doc to plain object
+        if (blog) {
+          blog.bookmarkedAt = b.bookmarkedAt; // flatten it
+        }
+        return blog;
+      })
+      .filter(Boolean);
+
     res.status(200).json({ success: true, bookmarks: posts });
   } catch (error) {
     console.error("Fetch bookmarks error:", error);
