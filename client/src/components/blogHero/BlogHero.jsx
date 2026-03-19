@@ -29,7 +29,7 @@ const BlogHero = ({ data = [] }) => {
   }, []);
 
   return (
-    <section className="relative w-full min-h-[50vh] flex items-center text-white overflow-hidden rounded-t-xl">
+    <section className="relative w-full min-h-[75vh] flex items-center text-white overflow-hidden rounded-t-xl">
       {/* BG IMAGE */}
       <img src={HeroImage} className="absolute w-full h-full object-cover" />
       <div className="absolute w-full h-full bg-black/40"></div>
@@ -81,7 +81,7 @@ const BlogHero = ({ data = [] }) => {
 
         {/* RIGHT PREMIUM CARDS */}
         <div className="hidden md:flex flex-col gap-5 p-4">
-          {data.slice(0, 2).map((blog) => (
+          {data?.slice(0, 2).map((blog) => (
             <Link
               to={`/blog-details/${blog.slug}`}
               key={blog._id}
@@ -92,9 +92,9 @@ const BlogHero = ({ data = [] }) => {
                 className="w-[280px] bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-xl hover:scale-105 transition duration-300"
               >
                 <img
-                  src={`${apiURL}${blog.image}`}
+                  src={`${apiURL}${blog?.image}`}
                   alt=""
-                  className="w-full h-32 object-cover rounded-t-lg"
+                  className="w-full h-32 object-fill rounded-t-lg"
                 />
                 <div className="p-2 space-y-2">
                   <h3 className="mt- font-semibold text-white line-clamp-2">
@@ -103,12 +103,12 @@ const BlogHero = ({ data = [] }) => {
 
                   <div className="flex items-center gap-2">
                     <img
-                      src={blog.author.avatar}
+                      src={blog?.author?.avatar}
                       alt=""
                       className="w-12 h-12 rounded-full"
                     />
                     <p className="text-sm text-gray-300">
-                      Author : {blog.author?.name || "Anonymous"}
+                      Author : {blog?.author?.name || "Anonymous"}
                     </p>
                   </div>
                 </div>

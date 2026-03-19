@@ -409,7 +409,7 @@ const BlogDetailsPage = () => {
               className="rounded-t-md h-28 w-full"
             />
           </div>
-          <div className="h-72 relative p-2">
+          <div className="lg:h-72 relative p-2">
             <FaQuoteLeft className="absolute top-0 text-xl font-bold text-gray-500 dark:text-gray-300" />
             <p
               className="absolute top-0 left-2 right-2 indent-7 lg:text-gray-600 text-gray-500s italic dark:text-gray-300 text-info-content"
@@ -443,7 +443,7 @@ const BlogDetailsPage = () => {
                 <div className="relative">
                   <AuthorInfoModal
                     user={user}
-                    title={blog.author.name}
+                    title={blog?.author?.name}
                     author={author}
                     blog={blog}
                   >
@@ -616,7 +616,7 @@ const BlogDetailsPage = () => {
           {/* Excerpt section begins */}
           <div className="lg:py-4 py-2">
             {blog.excerpt ? (
-              <div className="lg:min-h-24 min-h-48">
+              <div className="lg:min-h-24 min-h-36">
                 <div className="min-h-[44px] relative">
                   <FaQuoteLeft className="absolute top-0 text-xl font-bold text-gray-600 dark:text-gray-300" />
                   <p

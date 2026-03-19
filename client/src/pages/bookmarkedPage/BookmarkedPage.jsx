@@ -10,7 +10,9 @@ const BookmarkedPage = () => {
   const { data, isLoading, isError } = useGetBookmarkedPosts();
 
   console.log("Bookmarked posts", data);
+
   if (isLoading) return <AdminLoader />;
+
   if (isError)
     return (
       <div className="flex justify-center">
@@ -29,15 +31,15 @@ const BookmarkedPage = () => {
           <PageTitle
             title="All My"
             decoratedText="Book Marked Posts"
-            dataLength={data.bookmarks.length}
+            dataLength={data?.bookmarks?.length}
           />
         </div>
-        {data?.bookmarks.length === 0 ? (
+        {!data?.bookmarks || data.bookmarks.length === 0 ? (
           <p className="flex justify-center transform translate-y-60">
             You have not bookmarked any post yet!
           </p>
         ) : (
-          data?.bookmarks.map((blog) => (
+          data.bookmarks.map((blog) => (
             <BlogPostCard
               key={blog._id}
               blog={blog}

@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 const fetchBookmarkedPosts = async () => {
   const auth = getAuth();
   const user = auth.currentUser;
-  if (!user) throw new Error("User not logged in");
+  if (!user) throw new Error("Error in fetching user!");
 
   const token = await user.getIdToken();
   const response = await api.get("/bookmark-post/get-bookmarks", {

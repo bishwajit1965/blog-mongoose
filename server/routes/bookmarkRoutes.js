@@ -25,9 +25,9 @@ const router = express.Router();
 
 router.use(authenticateUser);
 
-router.post("/bookmark/:blogId", validateBlogId, bookMarkPost);
-
 router.get("/get-bookmarks", getAllBookmarkedPost);
+
+router.post("/bookmark/:blogId", validateBlogId, bookMarkPost);
 
 router.delete("/remove-bookmark/:blogId", validateBlogId, removeBookmark);
 
