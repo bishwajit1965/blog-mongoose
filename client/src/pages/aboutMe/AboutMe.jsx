@@ -14,7 +14,7 @@ const AboutMe = () => {
           <img
             src={Avatar}
             alt="Bishwajit Paul"
-            className="w-52 h-52 rounded-full object-cover shadow-lg"
+            className="lg:w-56 lg:h-56 w-36 h-36 rounded-full object-cover shadow-lg border-4"
           />
 
           {/* Bio */}
@@ -50,7 +50,7 @@ const AboutMe = () => {
               ].map((skill) => (
                 <span
                   key={skill}
-                  className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                  className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm dark:bg-slate-800 dark:text-slate-400"
                 >
                   {skill}
                 </span>

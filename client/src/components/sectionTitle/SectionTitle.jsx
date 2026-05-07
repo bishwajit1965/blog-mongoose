@@ -29,7 +29,7 @@ const SectionTitle = ({
           )}
           {dataLength && (
             <span
-              className={`lg:text-xs text-xs font-bold bg-emerald-500 dark:bg-slate-600 dark:text-base-100 ${badgeClasses} lg:w-[${badgeSize.lg}px] lg:h-[${badgeSize.lg}px] w-[${badgeSize.sm}px]  h-[${badgeSize.sm}px]`}
+              className={`lg:text-xs text-xs font-bold bg-emerald-500 dark:bg-slate-700 dark:text-slate-400 dark:border-slate-500 ${badgeClasses} lg:w-[${badgeSize.lg}px] lg:h-[${badgeSize.lg}px] w-[${badgeSize.sm}px]  h-[${badgeSize.sm}px]`}
             >
               {dataLength}
             </span>

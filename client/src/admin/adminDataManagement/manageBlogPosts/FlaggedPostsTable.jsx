@@ -289,14 +289,14 @@ const FlaggedPostsTable = ({
   return (
     <div>
       {loading && <AdminLoader />}
-      <div className="grid lg:grid-cols-12 grid-cols-1 items-center justify-between lg:gap-16 gap-4 w-full p-2 bg-gray-200 dark:bg-gray-600">
+      <div className="grid lg:grid-cols-12 grid-cols-1 items-center justify-between lg:gap-16 gap-4 w-full p-2 bg-gray-200 dark:bg-gray-800">
         <div className="lg:col-span-6 col-span-12 shadow-sm">
           <input
             type="text"
             placeholder="Search by title..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="border px-3 py-1 rounded w-full text-sm dark:bg-gray-700 dark:border-gray-600"
+            className="border px-3 py-1 rounded w-full text-sm dark:bg-gray-800 dark:border-gray-700"
           />
         </div>
 
@@ -305,7 +305,7 @@ const FlaggedPostsTable = ({
             id="filter"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="border px-3 py-1 rounded-md w-full dark:bg-gray-700 dark:border-gray-600"
+            className="border px-3 py-1 rounded-md w-full dark:bg-gray-800 dark:border-gray-700"
           >
             <option value="all">All Posts</option>
             <option value="approved">Approved</option>
@@ -316,39 +316,39 @@ const FlaggedPostsTable = ({
       </div>
       <div className="overflow-x-auto shadow-md">
         <table className="table table-xs w-full dark:border-gray-700 rounded-md table-pin-rows table-pin-cols">
-          <thead className="dark:border-gray-700 bg-gray-200 dark:text-gray-400 font-bold dark:bg-gray-900">
-            <tr className="dark:border-gray-700 dark:text-gray-400 font-bold dark:bg-gray-700">
-              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+          <thead className="dark:border-gray-700 bg-gray-200 dark:text-gray-400 font-bold dark:bg-gray-800">
+            <tr className="dark:border-gray-700 dark:text-gray-400 font-bold dark:bg-gray-800">
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300 dark:bg-gray-800">
                 #
               </th>
-              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300 dark:bg-gray-800">
                 Id
               </th>
-              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300 dark:bg-gray-800">
                 Post Title
               </th>
-              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300 dark:bg-gray-800">
                 Slug
               </th>
-              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300 dark:bg-gray-800">
                 Flagged By
               </th>
-              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300 dark:bg-gray-800">
                 Reason
               </th>
-              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300 dark:bg-gray-800">
                 Flagged At
               </th>
-              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300 dark:bg-gray-800">
                 Updated At
               </th>
-              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300 dark:bg-gray-800">
                 Review Status
               </th>
-              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300">
+              <th className="p-1 text-left py-2 text-gray-800 font-bold dark:text-gray-300 dark:bg-gray-800">
                 Flag Count
               </th>
-              <th className="p-1 text-center py-2 text-gray-800 font-bold dark:text-gray-300">
+              <th className="p-1 text-center py-2 text-gray-800 font-bold dark:text-gray-300 dark:bg-gray-800">
                 Actions
               </th>
             </tr>
@@ -402,7 +402,7 @@ const FlaggedPostsTable = ({
                     {Array.isArray(adminData?.user?.roles) &&
                     adminData.user.roles.some(
                       (role) =>
-                        role.name === "super-admin" || role.name === "admin"
+                        role.name === "super-admin" || role.name === "admin",
                     ) ? (
                       <div className="flex items-center space-x-1 justify-end">
                         <CTAButton
@@ -651,10 +651,10 @@ const FlaggedPostsTable = ({
                             modalData?.reviewStatus === "rejected"
                               ? "text-green-600 bg-red-100"
                               : modalData?.reviewStatus === "approved"
-                              ? "text-red-700 bg-red-100"
-                              : modalData?.reviewStatus === "pending"
-                              ? "text-yellow-500 bg-red-400"
-                              : "text-gray-500"
+                                ? "text-red-700 bg-red-100"
+                                : modalData?.reviewStatus === "pending"
+                                  ? "text-yellow-500 bg-red-400"
+                                  : "text-gray-500"
                           }`}
                         >
                           {modalData?.reviewStatus}
@@ -667,10 +667,10 @@ const FlaggedPostsTable = ({
                             history?.reviewStatus === "approved"
                               ? "text-red-600"
                               : history?.reviewStatus === "rejected"
-                              ? "text-green-600"
-                              : history?.reviewStatus === "pending"
-                              ? "text-yellow-500"
-                              : "text-gray-500"
+                                ? "text-green-600"
+                                : history?.reviewStatus === "pending"
+                                  ? "text-yellow-500"
+                                  : "text-gray-500"
                           }`}
                         >
                           {history?.reviewStatus}

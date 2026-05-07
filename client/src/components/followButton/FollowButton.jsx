@@ -37,7 +37,7 @@ const FollowButton = ({ authorId, isFollowingInitial }) => {
       onClick={handleClick}
       disabled={followMutation.isLoading || unfollowMutation.isLoading}
       label={isFollowing ? "Unfollow" : "Follow"}
-      variant="white"
+      variant="outline"
     />
   );
 };

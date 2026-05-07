@@ -86,7 +86,7 @@ const ProfileManagement = () => {
             <div className="lg:col-span-6 col-span-12 lg:border-r dark:border-gray-700 lg:pr-3">
               {error && <p className="text-red-500">{error}</p>}
               {!selectedProfile && !isEditing && (
-                <div className="p-2 border rounded-lg bg-gray- dark:bg-gray-700 dark:border-gray-700 mb-4 shadow-sm">
+                <div className="p-2 border rounded-lg dark:border-gray-700 mb-4 shadow-sm">
                   <h3 className="text-xl font-semibold mb-2">
                     Profile Details
                   </h3>

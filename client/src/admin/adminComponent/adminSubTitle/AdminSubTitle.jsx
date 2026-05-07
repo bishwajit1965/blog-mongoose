@@ -8,7 +8,7 @@ const AdminSubTitle = ({
   decoratedText,
 }) => {
   return (
-    <div className="lg:grid lg:grid-cols-12 grid-cols-1 flex gap-4 justify-between items-center bg-base-200 dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+    <div className="lg:grid lg:grid-cols-12 grid-cols-1 flex gap-4 justify-between items-center bg-base-200 dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 py-2 mb-2">
       <div className="lg:col-span-4 col-span-4 pl-2">
         {link && (
           <Link to={`${link}`} className="m-0 p-o">

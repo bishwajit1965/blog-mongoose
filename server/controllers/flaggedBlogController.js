@@ -142,11 +142,9 @@ const getFlaggedBlogBySlug = async (req, res) => {
 };
 
 const approveFlaggedBlog = async (req, res) => {
-  console.log("Approving flagged post...");
   const { slug } = req.params;
   const reviewerId = req.user.id; // Admin reviewing the flag
   const { reviewComment } = req.body;
-  console.log("Review Comment Received:", reviewComment);
 
   try {
     const flaggedPost = await FlaggedPost.findOne({ flaggedSlug: slug });
@@ -170,12 +168,10 @@ const approveFlaggedBlog = async (req, res) => {
 
     flaggedPost.updatedAt = now;
 
-    const flaggedBlog = await flaggedPost.save();
-    console.log("Flagging blog", flaggedBlog);
+    await flaggedPost.save();
 
     // Also update the Blog collection to reflect approval
     const blogPost = await Blog.findOne({ slug });
-    console.log("Blog post found:", blogPost);
 
     if (!blogPost)
       return res
@@ -205,10 +201,8 @@ const approveFlaggedBlog = async (req, res) => {
         reviewedAt: now,
         reviewedBy: reviewerId,
       });
-      console.log("Blog post status before save:", blogPost.reviewStatus);
 
       const updatedBlog = await blogPost.save();
-      console.log("Updated blog:", updatedBlog);
 
       // Create the audit log for the approval action
       await createAuditLog({
@@ -235,14 +229,9 @@ const approveFlaggedBlog = async (req, res) => {
 
 const rejectFlaggedBlog = async (req, res) => {
   try {
-    console.log("Reject blog route is hit!");
     const { slug } = req.params;
     const { reviewComment } = req.body;
     const reviewerId = req.user.id;
-
-    console.log("Flagged Slug:", slug);
-    console.log("Admin Id:", reviewerId);
-    console.log("Review comment:", reviewComment);
 
     const flaggedPost = await FlaggedPost.findOne({ flaggedSlug: slug });
 
@@ -250,8 +239,6 @@ const rejectFlaggedBlog = async (req, res) => {
       return res
         .status(404)
         .json({ status: "error", message: "No flagged blog is found!" });
-
-    console.log("Flagged Blog post:", flaggedPost);
 
     const now = new Date();
 
@@ -268,12 +255,9 @@ const rejectFlaggedBlog = async (req, res) => {
 
     flaggedPost.updatedAt = now;
 
-    const savedFlaggedBlog = await flaggedPost.save();
-
-    console.log("Saving flagged Blog", savedFlaggedBlog);
+    await flaggedPost.save();
 
     const blogPost = await Blog.findOne({ slug });
-    console.log("Blog found to update:", blogPost);
 
     if (!blogPost)
       return res
@@ -303,8 +287,7 @@ const rejectFlaggedBlog = async (req, res) => {
         reviewedBy: reviewerId,
       });
 
-      const rejectedPost = await blogPost.save();
-      console.log("Rejected blog:", rejectedPost);
+      await blogPost.save();
 
       // Create the audit log for the rejection action
       await createAuditLog({
@@ -338,7 +321,6 @@ const toggleStatus = (currentStatus) => {
 
 const revertFlaggedBlogStatus = async (req, res) => {
   try {
-    console.log("Reverting blog route is hit!");
     const { slug } = req.params;
     const reviewerId = req.user.id;
     const { reviewComment } = req.body;
@@ -348,7 +330,6 @@ const revertFlaggedBlogStatus = async (req, res) => {
      * Fetch blog post by slug
      *==============================================*/
     const blogPost = await Blog.findOne({ slug });
-    console.log(" Blog post:", blogPost);
 
     if (!blogPost) {
       return res.status(404).json({
@@ -483,7 +464,6 @@ const updateFlaggedPostReviewStatus = async (flaggedPostId) => {
       flaggedPost.reviewStatus = "under review";
       await flaggedPost.save();
     }
-    console.log("Post has been automatically marked for review.");
   } catch (error) {
     console.error("Error in updating review status.", error);
   }
@@ -519,7 +499,6 @@ const changeReviewStatus = async (flaggedPostId, newStatus, reviewComment) => {
     flaggedPost.reviewStatus = newStatus;
     flaggedPost.reviewComment = reviewComment;
     await flaggedPost.save();
-    console.log("Review status updated successfully.");
   } catch (error) {
     console.error("Error in updating review status.", error);
   }

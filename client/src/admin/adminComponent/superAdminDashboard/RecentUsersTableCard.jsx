@@ -23,7 +23,7 @@ const RecentUsersTableCard = ({ recentUsers }) => {
       <div className="overflow-x-auto pb-2">
         <table className="table table-xs table-auto text-sm w-full">
           <thead>
-            <tr className="bg-gray-100 dark:bg-gray-600">
+            <tr className="bg-gray-100 dark:bg-gray-600 dark:border-gray-700 dark:text-gray-400">
               <th className="py-2 px-4">Name</th>
               <th className="py-2 px-4">Email</th>
               <th className="py-2 px-4">Status</th>
@@ -32,7 +32,7 @@ const RecentUsersTableCard = ({ recentUsers }) => {
           </thead>
           <tbody>
             {paginatedData?.map((user) => (
-              <tr key={user._id}>
+              <tr key={user._id} className="dark:border-gray-700">
                 <td className="py-2 px-4">{user.name}</td>
                 <td className="py-2 px-4">{user.email}</td>
                 <td>

@@ -57,7 +57,7 @@ const RelatedBlogPostsCard = ({ blog, user }) => {
       </div>
       <div className="hover:link">
         <div className="flex items-center lg:space-x-3 space-x-2 hover-target">
-          <div className="">
+          <div className="p-2">
             <AuthorInfoModal user={user} title="Bishwajit Paul" author={author}>
               <>
                 <p>Email: {user?.email}</p>
@@ -126,11 +126,11 @@ const RelatedBlogPostsCard = ({ blog, user }) => {
           </div> */}
 
           {/* Comments & bookmarks section begins */}
-          <div className="flex items-center lg:space-x-4 space-x-3">
+          <div className="flex items-center lg:space-x-4 space-x-1">
             <div className="flex items-center">
               <span className="flex items-center w-fit mr-1 py-1 lg:text-normal text-xs lg:space-x-2">
                 <span>
-                  <FaThList className="text-xl mr-1" />
+                  <FaThList size={18} className="text-xl mr-1" />
                 </span>
               </span>
               <span className="">
@@ -143,9 +143,9 @@ const RelatedBlogPostsCard = ({ blog, user }) => {
                 )}
               </span>
             </div>
-            <div className="flex items-center lg:space-x-3 space-x-2">
+            <div className="flex items-center lg:space-x-4 space-x-2">
               <span>
-                <FaComment className="text-xl" />
+                <FaComment size={18} className="text-xl" />
               </span>
               <span className="w-6 h-6 p-1 flex items-center justify-center rounded-full border border-gray-300 bg-gray-200 shadow-sm font-semibold">
                 {fetchedComments.length > 0 ? fetchedComments.length : 0}
@@ -161,7 +161,7 @@ const RelatedBlogPostsCard = ({ blog, user }) => {
 
         {/* Author published on & bookmarked on section begins */}
         <div className="lg:flex items-center grid lg:space-x-2 space-x-0 lg:space-y-0 space-y-2">
-          <div className="text-gray-500 lg:text-normal text-sm font-bold flex items-center space-x-2">
+          <div className="text-gray-500 lg:text-normal text-sm font-bold flex items-center flex-wrap lg:space-x-2 space-x-1">
             <span className="">Published on:</span>
             <span>
               <FaClock className="text-xl" />

@@ -37,7 +37,7 @@ const ArchiveBlogPostTable = ({ blogs, loading, onSuccess }) => {
       {loading && <AdminLoader />}
       <div className="overflow-x-auto">
         <table className="table table-xs w-full dark:border-gray-700 rounded-md shadow-md">
-          <thead className="dark:border-gray-700 bg-gray-200 dark:text-gray-400 font-bold dark:bg-gray-900">
+          <thead className="dark:border-gray-700 bg-gray-200 dark:text-gray-400 font-bold dark:bg-gray-800">
             <tr className="dark:border-gray-700 dark:text-gray-400 font-bold">
               <th className="text-left py-2 text-gray-800 font-bold dark:text-gray-300">
                 #
@@ -88,7 +88,7 @@ const ArchiveBlogPostTable = ({ blogs, loading, onSuccess }) => {
                     {Array.isArray(adminData?.user?.roles) &&
                     adminData.user.roles.some(
                       (role) =>
-                        role.name === "super-admin" || role.name === "admin"
+                        role.name === "super-admin" || role.name === "admin",
                     ) ? (
                       <>
                         <CTAButton

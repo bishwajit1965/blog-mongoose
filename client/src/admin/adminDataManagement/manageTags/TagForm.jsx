@@ -78,7 +78,7 @@ const TagForm = ({ onSuccess, existingTag = null }) => {
             type="text"
             value={tagName}
             onChange={(e) => setTagName(e.target.value)}
-            className="input input-bordered input-sm w-full dark:bg-gray-700"
+            className="input input-bordered input-sm w-full dark:bg-gray-800 dark:border-gray-700"
             // required
           />
           <label className="block mb-2">Slug:</label>
@@ -86,7 +86,7 @@ const TagForm = ({ onSuccess, existingTag = null }) => {
             type="text"
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
-            className="input input-bordered input-sm w-full dark:bg-gray-700"
+            className="input input-bordered input-sm w-full dark:bg-gray-800 dark:border-gray-700"
             // required
           />
         </div>

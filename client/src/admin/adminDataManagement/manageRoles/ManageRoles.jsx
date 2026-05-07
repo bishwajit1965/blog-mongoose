@@ -6,11 +6,86 @@ import { Helmet } from "react-helmet-async";
 import RoleForm from "./RoleForm";
 import RolesTable from "./RolesTable";
 import useAdminRole from "../../adminHooks/useAdminRole";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+/**=============================================
+ * For the toggling of React Multi Select fields
+ * @param {*} isDark
+ * @returns
+ *=============================================*/
+const customStyles = (isDark) => ({
+  control: (provided) => ({
+    ...provided,
+    backgroundColor: isDark ? "#1e293b" : "#ffffff",
+    borderColor: isDark ? "#334155" : "#d1d5db",
+    color: isDark ? "#e5e7eb" : "#111827",
+  }),
+  menu: (provided) => ({
+    ...provided,
+    backgroundColor: isDark ? "#1e293b" : "#ffffff",
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isFocused
+      ? isDark
+        ? "#334155"
+        : "#e5e7eb"
+      : isDark
+        ? "#1e293b"
+        : "#ffffff",
+    color: isDark ? "#e5e7eb" : "#111827",
+    cursor: "pointer",
+  }),
+  multiValue: (provided) => ({
+    ...provided,
+    backgroundColor: isDark ? "#334155" : "#e5e7eb",
+  }),
+
+  multiValueLabel: (provided) => ({
+    ...provided,
+    color: isDark ? "#e5e7eb" : "#111827",
+  }),
+
+  multiValueRemove: (provided) => ({
+    ...provided,
+    color: isDark ? "#e5e7eb" : "#111827",
+    ":hover": {
+      backgroundColor: "#ef4444",
+      color: "white",
+    },
+  }),
+  input: (provided) => ({
+    ...provided,
+    color: isDark ? "#e5e7eb" : "#111827",
+  }),
+
+  placeholder: (provided) => ({
+    ...provided,
+    color: isDark ? "#94a3b8" : "#6b7280",
+  }),
+
+  singleValue: (provided) => ({
+    ...provided,
+    color: isDark ? "#e5e7eb" : "#111827",
+  }),
+});
 
 const ManageRoles = () => {
   const { roles, fetchRoles, loading } = useAdminRole();
   const [editingRole, setEditingRole] = useState(null);
+  const [isDark, setIsDark] = useState(
+    document.body.classList.contains("dark"),
+  );
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.body.classList.contains("dark"));
+    });
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   const handleEdit = (role) => {
     setEditingRole(role);
@@ -43,6 +118,8 @@ const ManageRoles = () => {
                   handleCancelEdit();
                 }}
                 existingRole={editingRole}
+                isDark={isDark}
+                customStyles={customStyles}
               />
 
               {editingRole && (

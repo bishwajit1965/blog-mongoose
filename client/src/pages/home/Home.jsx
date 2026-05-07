@@ -23,6 +23,7 @@ import useGetTags from "../../hooks/useGetTags";
 import { useState } from "react";
 import PopularPosts from "../../components/popularPosts/PopularPosts";
 import BlogHero from "../../components/blogHero/BlogHero";
+import { LucideRefreshCw } from "lucide-react";
 
 // import BookmarkedPage from "../bookmarkedPage/BookmarkedPage";
 
@@ -67,6 +68,7 @@ const Home = () => {
   const handleClearFilter = () => {
     setSelectedCategory("");
     setSelectedTag("");
+    setSearchTerm("");
   };
 
   return (
@@ -116,7 +118,8 @@ const Home = () => {
           <div className="">
             {showBlogPosts ? (
               <SectionTitle
-                title="Blog Posts ➡️"
+                title="Blog"
+                decoratedText="Posts"
                 icon={<FaBlog />}
                 dataLength={data?.length > 0 ? data.length : 0}
               />
@@ -139,6 +142,7 @@ const Home = () => {
                   label={showBookmarks ? "Blog Posts" : "My Bookmarks"}
                   icon={showBookmarks ? <FaBlog /> : <FaBookmark />}
                   variant={showBookmarks ? "gray" : "white"}
+                  className="dark:bg-slate-800 text-slate-400 dark:text-slate-400 dark:border-slate-700 text-sm"
                 />
               </div>
 
@@ -148,7 +152,7 @@ const Home = () => {
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="border border-gray-300 input-sm rounded-full py- px-4 w-full"
+                    className="border border-gray-300 input-sm rounded-full py- px-4 w-full dark:bg-slate-800 text-slate-400 dark:text-slate-400 dark:border-slate-700"
                   >
                     <option value="">All Categories</option>
                     {categories?.map((category) => (
@@ -167,7 +171,7 @@ const Home = () => {
                   <select
                     value={selectedTag}
                     onChange={(e) => setSelectedTag(e.target.value)}
-                    className="border border-gray-300 input-sm rounded-full py- px-4 w-full"
+                    className="border border-gray-300 input-sm rounded-full py- px-4 w-full dark:bg-slate-800 text-slate-400 dark:text-slate-400 dark:border-slate-700"
                   >
                     <option value="">All Tags</option>
                     {tags?.map((tag) => (
@@ -193,7 +197,7 @@ const Home = () => {
                   placeholder="Search..."
                   className={`${
                     width ? "w-full flex justify-end" : "lg:w-full w-full"
-                  } input lg:pl-6 input-sm input-bordered rounded-full w-full max-w-full flex justify-end`}
+                  } input lg:pl-6 input-sm input-bordered rounded-full w-full max-w-full flex justify-end dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700`}
                 />
 
                 <FaSearch
@@ -211,12 +215,22 @@ const Home = () => {
                 <div className="col-span-12 lg:col-span-2">
                   <Button
                     onClick={handleClearFilter}
-                    variant={isFilterActive ? "danger" : "white"}
-                    label="Clear Filter"
+                    icon={
+                      <LucideRefreshCw
+                        size={15}
+                        className="text-slate-500 dark:text-slate-300"
+                      />
+                    }
+                    variant={
+                      isFilterActive
+                        ? "danger"
+                        : "white dark:bg-slate-800 dark:text-slate-400 border-4 border-slate-800 dark:border-red-700 text-sm py-2"
+                    }
+                    label="Refresh"
                     className={
                       isFilterActive
                         ? "border-4 shadow-xl border-amber-500"
-                        : ""
+                        : "dark:bg-gray-800 dark:text-slate-400 dark:border-slate-600 text-sm py-2"
                     }
                   />
                 </div>

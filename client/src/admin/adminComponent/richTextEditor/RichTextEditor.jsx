@@ -28,15 +28,17 @@ const RichTextEditor = ({
   return (
     <div className="w-full border dark:border-gray-700 p-2 rounded-md space-y-2">
       <label className="block text-lg font-medium mb-2">Blog Content</label>
-      <ReactQuill
-        value={content}
-        onChange={onContentChange}
-        theme="snow"
-        placeholder="Write your blog content here..."
-        modules={modules} // ✅ Pass the toolbar configuration here!
-        className="mb-2"
-      />
-      <div className="border dark:border-gray-700 rounded-md p-2">
+      <div className="quill-dark">
+        <ReactQuill
+          value={content}
+          onChange={onContentChange}
+          theme="snow"
+          placeholder="Write your blog content here..."
+          modules={modules} // ✅ Pass the toolbar configuration here!
+          className="mb-2"
+        />
+      </div>
+      <div className="border dark:border-gray-700 rounded-md p-2 space-y-2">
         {/* Word Count & Selected Length */}
         <div className="flex justify-between items-center text-sm text-gray-600 font-bold">
           <p>Word Count: {wordCount}</p>
@@ -44,28 +46,30 @@ const RichTextEditor = ({
         </div>
 
         {/* Progress Bar & Percentage */}
-        <div className="rounded-md dark:text-base-300 dark:bg-gray-700 space-y-1">
-          <div className="w-full bg-gray-200 rounded-full h-2.5 relative">
+        <div className="rounded-md dark:text-base-300 dark:bg-gray-800 space-y-1">
+          <div className="w-full bg-base-300 dark:bg-gray-900/50 rounded-full h-2.5 relative">
             <div
               className={`h-2.5 rounded-full dark:bg-green-700 ${progressBarColor}`}
               style={{ width: `${progress}%` }}
             ></div>
           </div>
-          <p className="text-right flex justify-between text-sm text-gray-500 bg-base-200 dark:bg-gray-600 dark:text-base-300 px-2 py-1 rounded-md font-bold">
-            <span className="text-sm font-bold">Progress</span>{" "}
-            <span>{progress.toFixed(0)}% </span>
+          <p className="text-right flex justify-between text-sm text-gray-500 bg-base-200 dark:bg-gray-800 dark:text-base-300 px-2 py-1 rounded-md font-bold">
+            <span className="text-sm font-bold dark:text-gray-400">
+              Progress
+            </span>{" "}
+            <span className="dark:text-gray-400">{progress.toFixed(0)}% </span>
           </p>
         </div>
 
         {/* Word Length Selector */}
         <div className="">
-          <label className="block text-base-content text-sm font-medium">
+          <label className="block text-base-content text-sm font-medium dark:text-gray-400">
             Select Word Limit:
           </label>
           <select
             value={selectedLength}
             onChange={onSelectChange}
-            className="mt-1 p-2 border rounded w-full text-base-content dark:bg-gray-700 dark:text-base-300 dark:border-gray-700"
+            className="mt-1 p-2 border rounded w-full text-base-content dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700"
           >
             <option value="Medium">Medium (300-600 words)</option>
             <option value="Large">Large (600-1200 words)</option>

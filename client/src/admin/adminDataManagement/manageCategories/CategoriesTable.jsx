@@ -32,10 +32,12 @@ const CategoriesTable = ({ onEdit, onDelete }) => {
       <table className="table table-xs w-full table-pin-rows table-pin-cols">
         <thead>
           <tr className="dark:border-gray-700 dark:text-gray-400 font-bold">
-            <th>#</th>
-            <th>Category Name</th>
-            <th>Category Description</th>
-            <th className="lg:flex lg:justify-end lg:mr-12">Actions</th>
+            <th className="dark:bg-gray-800">#</th>
+            <th className="dark:bg-gray-800">Category Name</th>
+            <th className="dark:bg-gray-800">Category Description</th>
+            <th className="dark:bg-gray-800 lg:flex lg:justify-center flex justify-start">
+              Actions
+            </th>
           </tr>
         </thead>
 
@@ -51,7 +53,8 @@ const CategoriesTable = ({ onEdit, onDelete }) => {
               <td className="flex space-x-1 justify-end p-0">
                 {Array.isArray(adminData?.user?.roles) &&
                 adminData.user.roles.some(
-                  (role) => role.name === "super-admin" || role.name === "admin"
+                  (role) =>
+                    role.name === "super-admin" || role.name === "admin",
                 ) ? (
                   <>
                     <CTAButton

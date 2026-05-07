@@ -11,6 +11,67 @@ import useAdminAuth from "../../adminHooks/useAdminAuth";
 import useAdminBlog from "../../adminHooks/useAdminBlog";
 import useToggleColumn from "../../adminHooks/useToggleColumn";
 
+/**=============================================
+ * For the toggling of React Multi Select fields
+ * @param {*} isDark
+ * @returns
+ *=============================================*/
+const customStyles = (isDark) => ({
+  control: (provided) => ({
+    ...provided,
+    backgroundColor: isDark ? "#1e293b" : "#ffffff",
+    borderColor: isDark ? "#334155" : "#d1d5db",
+    color: isDark ? "#e5e7eb" : "#111827",
+  }),
+  menu: (provided) => ({
+    ...provided,
+    backgroundColor: isDark ? "#1e293b" : "#ffffff",
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isFocused
+      ? isDark
+        ? "#334155"
+        : "#e5e7eb"
+      : isDark
+        ? "#1e293b"
+        : "#ffffff",
+    color: isDark ? "#e5e7eb" : "#111827",
+    cursor: "pointer",
+  }),
+  multiValue: (provided) => ({
+    ...provided,
+    backgroundColor: isDark ? "#334155" : "#e5e7eb",
+  }),
+
+  multiValueLabel: (provided) => ({
+    ...provided,
+    color: isDark ? "#e5e7eb" : "#111827",
+  }),
+
+  multiValueRemove: (provided) => ({
+    ...provided,
+    color: isDark ? "#e5e7eb" : "#111827",
+    ":hover": {
+      backgroundColor: "#ef4444",
+      color: "white",
+    },
+  }),
+  input: (provided) => ({
+    ...provided,
+    color: isDark ? "#e5e7eb" : "#111827",
+  }),
+
+  placeholder: (provided) => ({
+    ...provided,
+    color: isDark ? "#94a3b8" : "#6b7280",
+  }),
+
+  singleValue: (provided) => ({
+    ...provided,
+    color: isDark ? "#e5e7eb" : "#111827",
+  }),
+});
 const ManageBlogPosts = () => {
   const { adminData } = useAdminAuth();
   const {
@@ -23,6 +84,20 @@ const ManageBlogPosts = () => {
   const [singleBlog, setSingleBlog] = useState(null);
   const [blogDetailDataView, setBlogDetailDataView] = useState(null);
   const { isColumnHidden, toggleColumnHide } = useToggleColumn();
+  const [isDark, setIsDark] = useState(
+    document.body.classList.contains("dark"),
+  );
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.body.classList.contains("dark"));
+    });
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (
@@ -151,6 +226,8 @@ const ManageBlogPosts = () => {
                   existingBlog={editingBlog}
                   isHidden={isColumnHidden}
                   toggler={toggleColumnHide}
+                  isDark={isDark}
+                  customStyles={customStyles}
                 />
               )}
             </div>
@@ -162,8 +239,8 @@ const ManageBlogPosts = () => {
                   isColumnHidden ? "lg:col-span-12" : "lg:col-span-6"
                 } lg:border-r dark:border-gray-700`}
               >
-                <h2 className="text-xl font-bold mb-4 bg-base-200 shadow-sm pl-2 rounded-md dark:bg-gray-800">
-                  Blog Posts
+                <h2 className="text-xl font-bold mb-2 bg-base-200 shadow-sm pl-2 rounded-md dark:bg-gray-800">
+                  Blog Posts Table
                 </h2>
                 <BlogsTable
                   blogs={superAdminBlogsAll}
