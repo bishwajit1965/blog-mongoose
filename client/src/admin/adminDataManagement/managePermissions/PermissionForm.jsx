@@ -14,10 +14,10 @@ import useAdminPermission from "../../adminHooks/useAdminPermission";
 
 const PermissionForm = ({ onSuccess, existingPermission = null }) => {
   const [permissionName, setPermissionName] = useState(
-    existingPermission?.name || ""
+    existingPermission?.name || "",
   );
   const [permissionDescription, setPermissionDescription] = useState(
-    existingPermission?.description || ""
+    existingPermission?.description || "",
   );
   const [loading, setLoading] = useState(false);
 
@@ -56,7 +56,7 @@ const PermissionForm = ({ onSuccess, existingPermission = null }) => {
       if (existingPermission) {
         const updatedPermission = await updatePermission(
           existingPermission._id,
-          permissionData
+          permissionData,
         );
         updatePermissionInState(updatedPermission);
         notifySuccess("Permission updated successfully!");
@@ -85,7 +85,7 @@ const PermissionForm = ({ onSuccess, existingPermission = null }) => {
             type="text"
             value={permissionName}
             onChange={(e) => setPermissionName(e.target.value)}
-            className="input input-bordered input-sm w-full dark:bg-gray-700"
+            className="input input-bordered input-sm w-full dark:bg-gray-800 dark:border-gray-700"
             // required
           />
           <label className="block mb-2">Permission Description:</label>
@@ -93,7 +93,7 @@ const PermissionForm = ({ onSuccess, existingPermission = null }) => {
             type="text"
             value={permissionDescription}
             onChange={(e) => setPermissionDescription(e.target.value)}
-            className="input input-bordered input-sm w-full dark:bg-gray-700"
+            className="input input-bordered input-sm w-full dark:bg-gray-800 dark:border-gray-700"
             // required
           />
         </div>
@@ -103,8 +103,8 @@ const PermissionForm = ({ onSuccess, existingPermission = null }) => {
             loading
               ? "Saving..."
               : existingPermission
-              ? "Update Permission"
-              : "Create Permission"
+                ? "Update Permission"
+                : "Create Permission"
           }
           disabled={loading}
           className="btn btn-sm mt-4"

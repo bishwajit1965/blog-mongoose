@@ -125,7 +125,7 @@ const AdminNotificationForm = ({
             onChange={handleChange}
             placeholder="Notice title..."
             required
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border px-3 py-2 rounded dark:bg-gray-800 dark:border-gray-700"
           />
         </div>
         <div className="mb-4">
@@ -137,7 +137,7 @@ const AdminNotificationForm = ({
             onChange={handleChange}
             placeholder="Notice heading..."
             required
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border px-3 py-2 rounded dark:bg-gray-800 dark:border-gray-700"
           />
         </div>
         <div className="mb-4">
@@ -149,7 +149,7 @@ const AdminNotificationForm = ({
             onChange={handleChange}
             placeholder="Notice subject..."
             required
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border px-3 py-2 rounded dark:bg-gray-800 dark:border-gray-700"
           />
         </div>
         <div className="mb-4">
@@ -161,7 +161,7 @@ const AdminNotificationForm = ({
             onChange={handleChange}
             placeholder="Author of notice..."
             required
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border px-3 py-2 rounded dark:bg-gray-800 dark:border-gray-700"
           />
         </div>
         <div className="mb-4">
@@ -172,7 +172,7 @@ const AdminNotificationForm = ({
             onChange={handleChange}
             placeholder="Notice content..."
             required
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border px-3 py-2 rounded dark:bg-gray-800 dark:border-gray-700"
           />
         </div>
         <div className="mb-4">
@@ -183,6 +183,7 @@ const AdminNotificationForm = ({
             accept="application/pdf"
             onChange={handlePdfChange}
             value={formData.pdfUrl}
+            className="file-input file-input-neutral dark:bg-gray-800 dark:border-gray-700 w-full"
           />
         </div>
         <div className="flex items-center space-x-4">

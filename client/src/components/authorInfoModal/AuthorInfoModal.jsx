@@ -37,7 +37,7 @@ const AuthorInfoModal = ({ user, blog, author, title = "User", children }) => {
         </div>
 
         {isOpen && (
-          <div className="absolute left-0 top-10 ml-0 w-80 bg-base-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl p-4 rounded-xl z-50 space-y-2">
+          <div className="absolute left-0 top-10 ml-0 w-80 bg-base-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl p-4 rounded-xl z-50 space-y-2 dark:text-gray-400">
             <div className="flex justify-between items-center">
               <img
                 src={user?.photoURL}

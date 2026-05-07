@@ -410,7 +410,7 @@ const BlogDetailsPage = () => {
             />
           </div>
           <div className="lg:h-72 relative p-2">
-            <FaQuoteLeft className="absolute top-0 text-xl font-bold text-gray-500 dark:text-gray-300" />
+            <FaQuoteLeft className="absolute top-0 text-xl font-bold text-gray-500 dark:text-gray-400" />
             <p
               className="absolute top-0 left-2 right-2 indent-7 lg:text-gray-600 text-gray-500s italic dark:text-gray-300 text-info-content"
               dangerouslySetInnerHTML={{
@@ -467,7 +467,7 @@ const BlogDetailsPage = () => {
             </div>
 
             <div className="lg:flex flex-1 items-center lg:space-x-4 space-x-0 lg:space-y-0 space-y-3">
-              <div className="">
+              <div className="dark:text-gray-400">
                 <FollowButton
                   authorId={blog.author?._id} // Mongo _id
                   disabled={!user}
@@ -478,7 +478,7 @@ const BlogDetailsPage = () => {
                 />
               </div>
 
-              <div className="h-8 border border-gray-300 dark:border-gray-700 rounded-full shadow-sm flex items-center lg:space-x-2 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 text-gray-600">
+              <div className="h-8 border border-gray-300 dark:border-gray-700 rounded-full shadow-sm flex items-center lg:space-x-2 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 text-gray-600 dark:text-gray-400">
                 <span>Read in:</span>
                 <span className="italic">
                   {<BlogReadingTimeCounter content={content} />}
@@ -486,7 +486,7 @@ const BlogDetailsPage = () => {
               </div>
 
               <div className="border border-gray-300 dark:border-gray-700 rounded-full shadow-sm h-8 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 flex items-center">
-                <p className="text-gray-600 flex items-center space-x-2 hover:text-base-200">
+                <p className="text-gray-600 flex items-center space-x-2 hover:text-base-200 dark:text-gray-400">
                   <FaClock className="" />
                   <span>{dateFormatter(publishAt)}</span>
                 </p>
@@ -501,7 +501,7 @@ const BlogDetailsPage = () => {
             {/* Flagged reason display begins */}
             <div className="flex items-center lg:space-x-3 space-x-2">
               <span>
-                <FaFlag />
+                <FaFlag className="dark:text-gray-400" />
               </span>
               {flaggedReason.length > 0 ? (
                 flaggedReason.slice(0, 2).map((reason) => (
@@ -512,7 +512,7 @@ const BlogDetailsPage = () => {
                     <span
                       className={`${
                         reason.length > 0
-                          ? "text-gray-700 bg-base-300"
+                          ? "text-gray-700 bg-base-300 dark:bg-gray-500 dark:text-gray-400"
                           : "bg-amber-500"
                       } p-2 h-5 rounded-md flex items-center justify-center border border-gray-500 shadow`}
                     >
@@ -532,17 +532,17 @@ const BlogDetailsPage = () => {
             <div className="flex items-center lg:space-x-4 space-x-3">
               <div className="flex items-center lg:space-x-2 space-x-1">
                 <span className="">
-                  <FaThumbsUp />
+                  <FaThumbsUp className="dark:text-gray-400" />
                 </span>
-                <span className="flex items-center justify-center rounded-full border text-gray-800 dark:text-base-300 border-gray-500 p-1 w-6 h-6">
+                <span className="flex items-center justify-center rounded-full border text-gray-800 dark:text-gray-400 border-gray-500 p-1 w-6 h-6">
                   {reactions.likeCount}
                 </span>
               </div>
               <div className="flex items-center lg:space-x-2 space-x-1">
                 <span className="">
-                  <FaThumbsDown />
+                  <FaThumbsDown className="dark:text-gray-400" />
                 </span>
-                <span className="flex items-center justify-center rounded-full border text-gray-800 dark:text-base-300 border-gray-500 p-1 w-6 h-6">
+                <span className="flex items-center justify-center rounded-full border text-gray-800 dark:text-gray-400 border-gray-500 p-1 w-6 h-6">
                   {reactions.dislikeCount}
                 </span>
               </div>
@@ -562,12 +562,12 @@ const BlogDetailsPage = () => {
             <div className="flex items-center">
               <span className="flex items-center w-fit font-bold rounded-md mr-2 py-1 lg:text-[17px] text-xs">
                 <span>
-                  <FaThList />
+                  <FaThList className="dark:text-gray-400" />
                 </span>
               </span>
               <span className="">
                 {category ? (
-                  <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600  rounded-md px-2 py-1 mr-2 lg:text-[17px] text-xs capitalize">
+                  <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600  rounded-md px-2 py-1 mr-2 lg:text-[17px] text-xs capitalize dark:bg-gray-700 dark:text-gray-400">
                     {category.name}
                   </span>
                 ) : (
@@ -580,13 +580,13 @@ const BlogDetailsPage = () => {
               <div className="flex items-center">
                 <span className="flex items-center w-fit font-bold   rounded-md mr-2 lg:text-[17px] text-xs">
                   <span>
-                    <FaTags />
+                    <FaTags className="dark:text-gray-400" />
                   </span>
                 </span>
                 {tags && tags.length > 0 ? (
                   tags.map((tag) => (
                     <span key={tag._id}>
-                      <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-1 mr-2 lg:text-[17px] text-xs">
+                      <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-1 mr-2 lg:text-[17px] text-xs dark:bg-gray-700 dark:text-gray-400">
                         {tag.name}
                       </span>
                     </span>
@@ -602,9 +602,9 @@ const BlogDetailsPage = () => {
           {/* Comments-count & bookmarks section begins */}
           <div className="flex items-center lg:space-x-2 space-x-1">
             <span>
-              <FaComment />
+              <FaComment className="dark:text-gray-400" />
             </span>
-            <span className="w-6 h-6 p-1 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow-sm font-semibold">
+            <span className="w-6 h-6 p-1 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 dark:text-gray-400 shadow-sm font-semibold">
               {fetchedComments.length > 0 ? fetchedComments.length : 0}
             </span>
             <span className="">
@@ -682,7 +682,9 @@ const BlogDetailsPage = () => {
       |**====================================*/}
       <div className="lg:max-w-7xl w-full mx-auto">
         <div className="lg:flex w-full flex-col lg:max-w-7xl mx-auto">
-          <div className="divider font-bold">Related Posts Section</div>
+          <div className="divider font-bold dark:text-gray-400">
+            Related Posts Section
+          </div>
         </div>
         <div className="">
           <RelatedBlogPosts
@@ -701,7 +703,9 @@ const BlogDetailsPage = () => {
       |**====================================*/}
       <div className="lg:flex w-full flex-col lg:max-w-3xl mx-auto">
         <div className="flex w-full flex-col">
-          <div className="divider font-bold">Like Dislike Section</div>
+          <div className="divider font-bold dark:text-gray-400">
+            Like Dislike Section
+          </div>
         </div>
 
         {/* Like & dislike button begins */}
@@ -711,12 +715,12 @@ const BlogDetailsPage = () => {
               onClick={() => handleLike(slug)}
               label={`${reactions.likeCount > 0 ? "Liked Post" : "Like Post"}`}
               icon={reactions.likeCount > 0 ? <FaThumbsUp /> : <FaThumbsDown />}
-              variant={isLiked ? "active" : "white"}
+              variant={isLiked ? "active" : "outline"}
               className="lg:min-w-44 min-w-44"
             />
             <div
               className={`${
-                reactions.likeCount > 0 ? style.active : "white"
+                reactions.likeCount > 0 ? style.active : "whitewhite"
               } absolute lg:-top-5 lg:-left-5 -top-5 -right-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
             >
               {reactions.likeCount}
@@ -732,12 +736,12 @@ const BlogDetailsPage = () => {
               icon={
                 reactions.dislikeCount > 0 ? <FaThumbsDown /> : <FaThumbsUp />
               }
-              variant={isDisliked ? "active" : "white"}
+              variant={isDisliked ? "active" : "outline"}
               className="lg:min-w-44 min-w-44"
             />
             <div
               className={`${
-                reactions.dislikeCount > 0 ? style.active : "white"
+                reactions.dislikeCount > 0 ? style.active : "whitewhite"
               } absolute lg:-top-5 lg:left-4 -top-5 -right-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
             >
               {reactions.dislikeCount}
@@ -749,7 +753,7 @@ const BlogDetailsPage = () => {
                 onClick={handleFlagToggle}
                 label="Flag Post"
                 icon={<FaFlag />}
-                variant={flag ? "active" : "white"}
+                variant={flag ? "active" : "outline"}
                 className="lg:min-w-44 min-w-44"
               />
             </div>
@@ -760,17 +764,17 @@ const BlogDetailsPage = () => {
                   onClick={handleFlagPost}
                   label="Flag Post Now"
                   icon={<FaFlag />}
-                  variant={flagPostNow ? "active" : "white"}
+                  variant={flagPostNow ? "active" : "whitewhite"}
                   disabled={isPending}
                   className="lg:min-w-44 min-w-44"
                 />
               </div>
               {isFlagOpen && (
-                <div className="">
+                <div className="lg;pt-8 pt-4">
                   <select
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
-                    className="select lg:select-sm select-sm lg:max-w-44 max-w-44 rounded-full"
+                    className="select select-bordered lg:select-sm select-sm lg:max-w-44 max-w-44 rounded-full"
                   >
                     <option disabled value="">
                       Select one reason
@@ -793,12 +797,12 @@ const BlogDetailsPage = () => {
                   )}
                 </div>
               )}
-              <div className="flex lg:justify-center justify-center flex-start">
+              <div className="flex lg:justify-center justify-center flex-start lg:pt-4 pt-2">
                 <Button
                   onClick={handleFlagToggle}
                   label="Cancel Flagging"
                   icon={<FaRegTimesCircle />}
-                  variant={cancelFlag ? "white" : "warning"}
+                  variant={cancelFlag ? "outline" : "warning"}
                   className="lg:min-w-44 min-w-44 flex justify-end"
                 />
               </div>
@@ -813,7 +817,9 @@ const BlogDetailsPage = () => {
       |**====================================*/}
 
       <div className="lg:flex w-full flex-col lg:max-w-3xl mx-auto">
-        <div className="divider font-bold">Comments Section</div>
+        <div className="divider font-bold dark:text-gray-400">
+          Comments Section
+        </div>
       </div>
 
       <div className="lg:max-w-3xl mx-auto w-full">
@@ -823,7 +829,7 @@ const BlogDetailsPage = () => {
               onClick={handleCommentBoxToggle}
               icon={!activeComment ? <FaComment /> : <FaTimesCircle />}
               label={activeComment ? "Hide Form" : "Add Comment"}
-              variant={activeComment ? "active" : "white"}
+              variant={activeComment ? "active" : "outline"}
               className="lg:text-[1rem] text-[1rem] lg:min-w-44 min-w-44"
             />
             <div
@@ -839,7 +845,7 @@ const BlogDetailsPage = () => {
               onClick={handleViewCommentsToggle}
               label={isViewCommentsOpen ? "Hide Comments" : "View Comments"}
               icon={!isViewCommentsOpen ? <FaEye /> : <FaEyeSlash />}
-              variant={isOpenComments ? "active" : "white"}
+              variant={isOpenComments ? "active" : "outline"}
               className="lg:text-[1rem] text-[1rem] lg:min-w-44 min-w-44"
             />
             <div
@@ -981,7 +987,7 @@ const BlogDetailsPage = () => {
 
       <div className="lg:flex justify-center items-center space-x-4 lg:px-0 px-1">
         <Link to="/" className="m-0 flex justify-center items-center w-full">
-          <Button label="Go Home Page" icon={<FaHome />} variant="white" />
+          <Button label="Go Home Page" icon={<FaHome />} variant="outline" />
         </Link>
       </div>
     </div>

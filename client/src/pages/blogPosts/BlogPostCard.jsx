@@ -128,7 +128,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
           <div className="flex items-center">
             <span className="flex items-center w-fit mr-1 py-1 lg:text-normal text-xs lg:space-x-2">
               <span>
-                <FaThList className="text-xl mr-1" />
+                <FaThList size={20} className="text-xl mr-1" />
               </span>
             </span>
             <span className="">
@@ -146,7 +146,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
           <div className="flex items-center">
             <span className="flex items-center w-fit mr-1 py-1 lg:text-normal text-xs lg:space-x-2">
               <span>
-                <FaTags className="text-xl mr-1" />
+                <FaTags size={20} className="text-xl mr-1" />
               </span>
             </span>
             {tags && tags.length > 0 ? (
@@ -168,7 +168,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
           <div className="flex items-center lg:space-x-4 space-x-3">
             <div className="flex items-center lg:space-x-3 space-x-2">
               <span>
-                <FaComment className="text-xl" />
+                <FaComment size={20} className="text-xl" />
               </span>
               <span className="w-6 h-6 p-1 flex items-center justify-center rounded-full border border-gray-300 bg-gray-200 dark:border-gray-700 dark:bg-gray-700 dark:text-base-300 shadow-sm font-semibold">
                 {fetchedComments.length > 0 ? fetchedComments.length : 0}
@@ -237,7 +237,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
               <Button
                 label="Read More"
                 icon={<FaBookReader />}
-                variant="white"
+                variant="outline"
                 className="btn btn-sm font-bold text-[16px] text-sm rounded-lgs"
               />
             </Link>

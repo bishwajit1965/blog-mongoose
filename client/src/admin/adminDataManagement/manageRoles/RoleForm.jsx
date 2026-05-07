@@ -11,10 +11,10 @@ import Select from "react-select";
 import useAdminPermission from "../../adminHooks/useAdminPermission";
 import useAdminRole from "../../adminHooks/useAdminRole";
 
-const RoleForm = ({ onSuccess, existingRole = null }) => {
+const RoleForm = ({ onSuccess, existingRole = null, isDark, customStyles }) => {
   const [roleName, setRoleName] = useState(existingRole?.name || "");
   const [roleDescription, setRoleDescription] = useState(
-    existingRole?.description || ""
+    existingRole?.description || "",
   );
   const [loading, setLoading] = useState(false);
   const { addRoleToState, updateRoleInState } = useAdminRole();
@@ -34,7 +34,7 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
       const existingPermissions = existingRole.permissions
         .map((permId) => {
           const matchingPermission = permissions.find(
-            (perm) => perm._id === permId
+            (perm) => perm._id === permId,
           );
           return matchingPermission
             ? {
@@ -56,7 +56,7 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
     e.preventDefault();
 
     const permissionIds = selectedPermissions.map(
-      (permission) => permission.value
+      (permission) => permission.value,
     );
 
     if (!roleName.trim()) {
@@ -107,7 +107,7 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
             value={roleName}
             onChange={(e) => setRoleName(e.target.value)}
             placeholder="Enter Role Name"
-            className="input input-bordered input-sm w-full dark:bg-gray-700 mb-2"
+            className="input input-bordered input-sm w-full dark:bg-gray-800 dark:border-gray-700 mb-2"
             // required
           />
           <label className="block mb-1">Role Description:</label>
@@ -116,7 +116,7 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
             value={roleDescription}
             onChange={(e) => setRoleDescription(e.target.value)}
             placeholder="Enter Role Description"
-            className="input input-bordered input-sm w-full dark:bg-gray-700 mb-2"
+            className="input input-bordered input-sm w-full dark:bg-gray-800 dark:border-gray-700 mb-2"
             // required
           />
 
@@ -130,6 +130,7 @@ const RoleForm = ({ onSuccess, existingRole = null }) => {
             }
             placeholder="Select permissions..."
             className="dark:bg-gray-700 mb-2"
+            styles={customStyles(isDark)}
           />
         </div>
 

@@ -49,7 +49,6 @@ const createBlog = async (req, res) => {
 
     const userId = req.user.id;
     const user = await User.findById({ _id: userId });
-    console.log("User", user);
 
     if (!req.user.permissions.includes("create-post")) {
       return res
@@ -133,7 +132,7 @@ const createBlog = async (req, res) => {
     });
 
     const blog = await newBlog.save();
-    console.log("New Blog", blog);
+
     await generateSitemap(); // ✅ Regenerate sitemap after successful blog creation
 
     res.status(201).json(blog);
@@ -262,7 +261,6 @@ const trimExcerpt = (text, maxLength = 250) => {
 };
 
 const updateBlogBySlug = async (req, res) => {
-  console.log("🚀 Update blog method is hit.");
   try {
     const {
       title,
@@ -276,9 +274,6 @@ const updateBlogBySlug = async (req, res) => {
     } = req.body;
 
     const { userId } = req.user.id;
-    console.log("Received tags:", tags);
-    console.log("Type of tags:", typeof tags);
-    console.log("🚀 User Id:", userId);
 
     const blog = await Blog.findOne({ slug: req.params.slug });
     if (!blog) {
@@ -394,9 +389,8 @@ const updateBlogBySlug = async (req, res) => {
     blog.status = status || blog.status;
     blog.publishAt = publishAt || blog.publishAt;
     blog.author = author || blog.author;
-    const updatedBlog = await blog.save();
 
-    console.log("Updated blog post:", updatedBlog);
+    const updatedBlog = await blog.save();
 
     await generateSitemap(); // ✅ Regenerate sitemap after successful blog update
     res.status(200).json(updatedBlog);

@@ -22,7 +22,7 @@ const ManageAuditLogsReview = () => {
       <div className="overflow-x-auto shadow-md rounded-b-md">
         <table className="w-full table table-xs border-collapse">
           <thead>
-            <tr className="bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-700">
+            <tr className="bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700">
               <th className="p-2 border dark:border-gray-700">#</th>
               <th className="p-2 border dark:border-gray-700">Action</th>
               <th className="p-2 border dark:border-gray-700">Post Title</th>
@@ -36,7 +36,7 @@ const ManageAuditLogsReview = () => {
             {paginatedData.map((log, index) => (
               <tr
                 key={log._id}
-                className="border-t dark:border-gray-700 hover:bg-gray-100 hover:text-gray-950"
+                className="border-t dark:border-gray-700 hover:bg-gray-800 dark:hover:text-gray-300 hover:text-gray-950"
               >
                 <td className="p-2">{index + 1}</td>
                 <td className="p-2">{log.action}</td>

@@ -84,7 +84,7 @@ const PopularPosts = () => {
                     href={`/blog-details/${post.slug}`}
                     label="Read More"
                     icon={<FaBookReader />}
-                    variant="white"
+                    variant="outline"
                     className="btn btn-sm font-bold text-[16px] text-sm"
                   />
                 </div>

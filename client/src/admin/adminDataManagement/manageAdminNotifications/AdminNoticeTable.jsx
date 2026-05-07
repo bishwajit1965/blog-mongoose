@@ -301,7 +301,7 @@ const AdminNoticeTable = ({
       <div className="overflow-x-auto">
         <table className="table table-xs">
           <thead>
-            <tr>
+            <tr className="dark:text-gray-400 dark:border-gray-700">
               <th>#</th>
               <th>title</th>
               <th>Content</th>
@@ -312,7 +312,7 @@ const AdminNoticeTable = ({
           <tbody>
             {paginatedData.length > 0 ? (
               paginatedData.map((notice, index) => (
-                <tr key={notice._id}>
+                <tr key={notice._id} className="dark:border-gray-700">
                   <th>{index + 1}</th>
                   <td>{notice.title}</td>
                   <td>{notice.content.slice(0, 20)}</td>
@@ -341,7 +341,7 @@ const AdminNoticeTable = ({
                     {Array.isArray(adminData?.user?.roles) &&
                     adminData.user.roles.some(
                       (role) =>
-                        role.name === "super-admin" || role.name === "admin"
+                        role.name === "super-admin" || role.name === "admin",
                     ) ? (
                       <div>
                         <div className="flex items-center">

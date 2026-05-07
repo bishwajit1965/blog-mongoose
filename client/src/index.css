@@ -19,6 +19,43 @@ body.dark {
   color: #ffffff95;
 }
 
+.admin-dark {
+  background-color: #121212 !important;
+  width: 100%;
+}
+
+/* React Quill Dark Mode styles */
+.dark .quill-dark .ql-toolbar {
+  background-color: #1e293b; /* slate-900 */
+  border: 1px solid #334155; /* slate-700 */
+}
+
+.dark .quill-dark .ql-container {
+  border: 1px solid #334155;
+  background-color: #1e293b;
+  color: #e2e8f0; /* slate-200 */
+}
+
+.dark .quill-dark .ql-editor {
+  color: #e2e8f0;
+}
+.dark .quill-dark .ql-editor .ql-content {
+  color: #e2e8f0;
+}
+
+.dark .quill-dark .ql-stroke {
+  stroke: #cbd5e1; /* icons */
+}
+
+.dark .quill-dark .ql-fill {
+  fill: #cbd5e1;
+}
+
+.dark .quill-dark .ql-picker {
+  color: #e2e8f0;
+}
+
+
 /* Responsive breakpoints and devices to be targeted */
 
 /* Extra small devices (phones, 320px and up) */

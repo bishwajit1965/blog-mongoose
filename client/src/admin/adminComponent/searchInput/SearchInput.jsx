@@ -35,7 +35,7 @@ const SearchInput = ({ data, onFilteredDataChange, pageLimit = 5 }) => {
     <div className="mb-4 shadow-sm flex items-center gap-2">
       <input
         type="text"
-        className="input input-sm input-bordered w-full dark:bg-gray-700"
+        className="input input-sm input-bordered w-full dark:bg-gray-800 dark:border-gray-700"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         placeholder="Search blog post by title..."
@@ -43,7 +43,7 @@ const SearchInput = ({ data, onFilteredDataChange, pageLimit = 5 }) => {
 
       <button
         onClick={handleRemoveSearchText}
-        className="flex items-center gap-2 bg-success px-2 py-1 rounded-md text-base-100 shadow"
+        className="flex items-center gap-2 bg-success dark:bg-gray-700 dark:text-gray-400 px-2 py-1 rounded-md text-base-100 shadow"
       >
         <RefreshCcw size={20} />
         Reset

@@ -57,7 +57,7 @@ const CategoryForm = ({ onSuccess, existingCategory = null }) => {
       if (existingCategory) {
         const updatedCategory = await updateCategory(
           existingCategory._id,
-          categoryData
+          categoryData,
         );
         updateCategoryInState(updatedCategory);
         notifySuccess("Category updated successfully!");
@@ -87,7 +87,7 @@ const CategoryForm = ({ onSuccess, existingCategory = null }) => {
             type="text"
             value={categoryName}
             onChange={(e) => setCategoryName(e.target.value)}
-            className="input input-bordered input-sm w-full dark:bg-gray-700"
+            className="input input-bordered input-sm w-full dark:bg-gray-800 dark:border-gray-700"
             // required
           />
 
@@ -96,7 +96,7 @@ const CategoryForm = ({ onSuccess, existingCategory = null }) => {
             type="text"
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
-            className="input input-bordered input-sm w-full dark:bg-gray-700"
+            className="input input-bordered input-sm w-full dark:bg-gray-800 dark:border-gray-700"
             // required
           />
 
@@ -105,7 +105,7 @@ const CategoryForm = ({ onSuccess, existingCategory = null }) => {
             type="text"
             value={categoryDescription}
             onChange={(e) => setCategoryDescription(e.target.value)}
-            className="input input-bordered input-sm w-full dark:bg-gray-700"
+            className="input input-bordered input-sm w-full dark:bg-gray-800 dark:border-gray-700"
             // required
           />
         </div>
@@ -115,8 +115,8 @@ const CategoryForm = ({ onSuccess, existingCategory = null }) => {
             loading
               ? "Saving..."
               : existingCategory
-              ? "Update Category"
-              : "Create Category"
+                ? "Update Category"
+                : "Create Category"
           }
           disabled={loading}
           className="btn btn-sm mt-4"

@@ -32,7 +32,7 @@ const ScheduledPosts = () => {
         prevPosts.map((post) => ({
           ...post,
           remainingTime: getTimeRemaining(post.publishAt),
-        }))
+        })),
       );
     }, 1000);
     return () => clearInterval(intervalId);
@@ -48,7 +48,7 @@ const ScheduledPosts = () => {
     }
 
     const hours = Math.floor(
-      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
     );
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
@@ -70,7 +70,7 @@ const ScheduledPosts = () => {
         <div className="container mx-auto">
           <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
             <table className="min-w-full table-auto">
-              <thead className="bg-base-300 dark:bg-gray-700 dark:text-white">
+              <thead className="bg-base-300 dark:bg-gray-800 dark:text-gray-400">
                 <tr>
                   <th className="py-3 px-4 text-left">Post Title</th>
                   <th className="py-3 px-4 text-left">Status</th>

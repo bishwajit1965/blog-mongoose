@@ -61,7 +61,7 @@ const AdminPagination = ({
 
   return (
     <div className="flex flex-col items-center space-y-2 mt-3">
-      <div className="flex items-center space-x-2 dark:bg-gray-900 border dark:border-gray-700 rounded shadow-sm">
+      <div className="flex items-center space-x-2 dark:bg-gray-700 border dark:border-gray-700 rounded shadow-sm">
         <label htmlFor="itemsPerPage" className="text-sm pl-2">
           Items per page:
         </label>

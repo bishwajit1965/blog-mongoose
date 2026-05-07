@@ -58,10 +58,10 @@ const ManageComments = () => {
         },
         onError: (error) => {
           toast.error(
-            error?.response?.data?.message || `Failed to ${status} comment`
+            error?.response?.data?.message || `Failed to ${status} comment`,
           );
         },
-      }
+      },
     );
   };
 
@@ -105,7 +105,7 @@ const ManageComments = () => {
         <div className="overflow-x-auto">
           <table className="table table-xs">
             <thead>
-              <tr>
+              <tr className="dark:text-gray-400 dark:border-gray-700">
                 <th>Comment ID</th>
                 <th>Comment Content</th>
                 <th>Email</th>
@@ -117,7 +117,7 @@ const ManageComments = () => {
             </thead>
             <tbody>
               {paginatedData?.map((comment, index) => (
-                <tr key={index}>
+                <tr key={index} className="dark:border-gray-700">
                   <td>{comment._id}</td>
                   <td>
                     {comment.content.length > 50

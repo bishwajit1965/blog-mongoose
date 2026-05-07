@@ -9,10 +9,10 @@ const FeatureUnderConstructionPage = () => {
       <Helmet>
         <title>Nova Blogging Platform || Profile Page</title>
       </Helmet>
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4 text-center">
-        <div className="bg-white rounded-2xl shadow-lg p-10 max-w-md">
+      <div className="flex flex-col items-center justify-center min-h-screen px-4 text-center">
+        <div className="bg-white dark:bg-gray-800 dark:text-gray-400 rounded-2xl shadow-lg p-10 max-w-md border dark:border-gray-700">
           <Construction className="mx-auto text-yellow-500 w-16 h-16 mb-6 animate-bounce" />
-          <h1 className="text-3xl font-bold mb-4 text-gray-800">
+          <h1 className="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-400">
             Feature Under Construction
           </h1>
           <p className="text-gray-600 mb-6">

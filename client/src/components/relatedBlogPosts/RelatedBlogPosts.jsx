@@ -34,7 +34,7 @@ const RelatedBlogPosts = ({ slug, user }) => {
             onClick={handleToggleRelatedView}
             label={isExpanded ? "Hide Related Posts" : "Show Related Posts"}
             icon={isExpanded ? <FaEyeSlash /> : <FaEye />}
-            variant={`${isExpanded ? "success" : "white"}`}
+            variant={`${isExpanded ? "success" : "outline"}`}
           />
           <div
             className={`${

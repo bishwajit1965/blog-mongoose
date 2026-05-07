@@ -89,10 +89,10 @@ const ManageMessages = () => {
         dataLength={messages ? messages.length : 0}
       />
       <div className="p-2">
-        <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+        <div className="overflow-x-auto rounded-md border border-base-content/5 dark:border-gray-700 bg-base-100 dark:bg-gray-800">
           <table className="table">
-            <thead>
-              <tr>
+            <thead className="dark:text-gray-400">
+              <tr className="dark:border-slate-700 dark:bg-gray-900">
                 <th>#</th>
                 <th>Name</th>
                 <th>Email</th>
@@ -105,7 +105,7 @@ const ManageMessages = () => {
             <tbody>
               {messages && messages.length > 0 ? (
                 messages.map((message, idx) => (
-                  <tr key={message._id}>
+                  <tr key={message._id} className="dark:border-gray-700">
                     <th>{idx + 1}</th>
                     <td>{message.name || "—"}</td>
                     <td>{message.email || "—"}</td>

@@ -26,6 +26,8 @@ const BlogPostForm = ({
   onSuccess,
   isHidden,
   toggler,
+  isDark,
+  customStyles,
 }) => {
   const [loading, setLoading] = useState(false);
   const [selectedTags, setSelectedTags] = useState([]);
@@ -300,7 +302,7 @@ const BlogPostForm = ({
             value={formData.title}
             onChange={handleChange}
             required
-            className="input input-bordered input-sm w-full max-w-full dark:bg-gray-700"
+            className="input input-bordered input-sm w-full max-w-full dark:bg-gray-800 dark:border-gray-700"
           />
         </div>
 
@@ -319,7 +321,7 @@ const BlogPostForm = ({
         </div>
 
         <div className="border dark:border-gray-700 p-2 rounded-md shadow-sm">
-          <label className="block text-red-400 text-sm font-bold">
+          <label className="block text-red-400 text-sm font-bold dark:text-gray-400">
             Excerpt(Optional)
           </label>
           <textarea
@@ -332,13 +334,13 @@ const BlogPostForm = ({
               handleExcerptChange(e);
               setFormData({ ...formData, excerpt: e.target.value });
             }}
-            className="textarea input-bordered w-full mb-1 dark:bg-gray-700"
+            className="textarea input-bordered w-full mb-1 dark:bg-gray-800 dark:border-gray-700"
             placeholder="Excerpt for the blog post..."
           />
 
           {/* Progress Bar */}
-          <div className="bg-base-100 p-2 rounded-md shadow-sm border dark:border-gray-700 dark:bg-gray-700 dark:text-gray-200 space-y-1">
-            <div className="progress-bar bg-base-300 w-full rounded-md">
+          <div className="bg-base-100 p-2 rounded-md shadow-sm border dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 space-y-1">
+            <div className="progress-bar bg-base-300 dark:bg-gray-900/50 w-full rounded-md">
               <div
                 className="rounded-md bg-base-300"
                 style={progressBarStyle}
@@ -347,11 +349,11 @@ const BlogPostForm = ({
 
             {/* Character Counter and Percentage */}
             <div className="rounded-md" style={counterStyle}>
-              <div className="flex items-center justify-between bg-base-200 rounded-md dark:bg-gray-600">
-                <div className="px-2 dark:text-gray-200 bg-base-200 dark:bg-gray-600 rounded-md py-1">
+              <div className="flex items-center justify-between bg-base-300 rounded-md dark:bg-gray-800">
+                <div className="px-2 dark:text-gray-400 bg-base-200 dark:bg-gray-800 rounded-md py-1">
                   Counter:
                 </div>
-                <div className="dark:text-gray-200 dark:bg-gray-600 rounded-md py-1 bg-base-200 px-2">
+                <div className="dark:text-gray-400 dark:bg-gray-800 rounded-md py-1 bg-base-200 px-2">
                   {remaining} characters left || {progressPercent}% used
                 </div>
               </div>
@@ -370,7 +372,7 @@ const BlogPostForm = ({
             required
             value={formData.category}
             defaultValue="Small"
-            className="select select-sm input-bordered w-full max-w-full mb-1 dark:bg-gray-700"
+            className="select select-sm input-bordered w-full max-w-full mb-1 dark:bg-gray-800 dark:border-gray-700"
           >
             <option value="">Select Category</option>
             {categories.map((category) => (
@@ -389,6 +391,7 @@ const BlogPostForm = ({
             options={tagOptions}
             onChange={handleTagChange}
             value={selectedTags}
+            styles={customStyles(isDark)}
             className="mb-1 p-0"
           />
         </div>
@@ -404,7 +407,7 @@ const BlogPostForm = ({
             name="image"
             accept="image/*"
             onChange={handleFileChange}
-            className="mb-1 file-input file-input-bordered file-input-sm w-full max-w-full dark:bg-gray-700"
+            className="mb-1 file-input file-input-bordered file-input-sm w-full max-w-full dark:bg-gray-800 dark:border-gray-700"
           />
         </div>
 
@@ -422,7 +425,7 @@ const BlogPostForm = ({
                   placeholder="Author..."
                   value={authorName}
                   readOnly
-                  className="mb-1 input input-bordered input-sm w-full max-w-full dark:bg-gray-700"
+                  className="mb-1 input input-bordered input-sm w-full max-w-full dark:bg-gray-800 dark:border-gray-700"
                 />
               </div>
             ) : (
@@ -437,7 +440,7 @@ const BlogPostForm = ({
                   onChange={handleChange}
                   readOnly
                   required
-                  className="mb-1 input input-bordered input-sm w-full max-w-full dark:bg-gray-700"
+                  className="mb-1 input input-bordered input-sm w-full max-w-full dark:bg-gray-800 dark:border-gray-700"
                 />
               </div>
             )}
@@ -451,7 +454,7 @@ const BlogPostForm = ({
               onChange={handleChange}
               value={formData.status}
               defaultValue="Small"
-              className="select select-sm input-bordered w-full max-w-full dark:bg-gray-700"
+              className="select select-sm input-bordered w-full max-w-full dark:bg-gray-800 dark:border-gray-700"
             >
               <option value="draft">Draft</option>
               <option value="published">Published</option>

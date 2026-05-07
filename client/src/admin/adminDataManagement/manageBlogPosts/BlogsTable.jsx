@@ -77,12 +77,14 @@ const BlogsTable = ({ blogs, onEdit, onDelete, handleBlogDetailView }) => {
       <SearchInput data={blogs} onFilteredDataChange={setPaginatedData} />
       <div className="overflow-x-auto">
         <table className="table table-xs w-full table-pin-rows table-pin-cols">
-          <thead>
-            <tr className="dark:border-gray-700 dark:text-gray-400 font-bold">
-              <th>#</th>
-              <th>Title</th>
-              <th>Status</th>
-              <th className="lg:flex lg:justify-end lg:mr-12">Actions</th>
+          <thead className="dark:bg-gray-700">
+            <tr className="dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800 font-bold">
+              <th className="dark:bg-gray-800">#</th>
+              <th className="dark:bg-gray-800">Title</th>
+              <th className="dark:bg-gray-800">Status</th>
+              <th className="dark:bg-gray-800 lg:flex lg:justify-end lg:mr-12">
+                Actions
+              </th>
             </tr>
           </thead>
 

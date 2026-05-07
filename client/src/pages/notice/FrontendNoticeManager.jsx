@@ -56,6 +56,7 @@ const FrontendNoticeManager = () => {
                       <Button
                         label="View"
                         icon={<FaEye />}
+                        variant="outline"
                         className="btn btn-xs"
                         onClick={() => handleSelectNotice(notice)}
                       />

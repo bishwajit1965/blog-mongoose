@@ -58,7 +58,7 @@ const ContactMe = () => {
         <title>Nova Blogging Platform || Contact Page</title>
       </Helmet>
 
-      <section className="max-w-2xl mx-auto p-6 md:p-12 text-base-content dark:text-base-300">
+      <section className="max-w-2xl mx-auto p-6 md:p-12 text-base-content dark:text-base-300 border dark:border-gray-700 rounded-md">
         <h2 className="text-3xl font-bold mb-6 text-center flex items-center gap-2">
           <LucideIcon.Rocket />
           Contact Me
