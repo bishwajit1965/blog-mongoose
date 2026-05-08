@@ -16,7 +16,7 @@ const ArchivedBlogPosts = () => {
     <div>
       <AdminSubTitle
         subTitle="Manage"
-        decoratedText="Archived Blog Posts"
+        decoratedText="Archiving Blog Posts"
         dataLength={blogs?.length ? blogs.length : "0"}
       />
       <div className="p-">

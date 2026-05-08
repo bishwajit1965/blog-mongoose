@@ -503,7 +503,7 @@ const FlaggedPostsTable = ({
       {/* Modal Section */}
       {isOpen && modalData && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
-          <div className="bg-white p-4 rounded shadow-lg max-w-2xl w-full">
+          <div className="bg-white p-4 rounded shadow-lg max-w-2xl w-full dark:bg-gray-800 dark:text-gray-400">
             {/* Flagged post header begins */}
             <div className="">
               <div className="h-60">
@@ -513,12 +513,12 @@ const FlaggedPostsTable = ({
                   className="rounded-md w-full h-60 shadow-md"
                 />
               </div>
-              <div className="border-b border-gray-300 mb-2 flex items-center justify-between">
+              <div className="border-b border-gray-300 dark:border-gray-700 mb-2 flex items-center justify-between">
                 <h1 className="text-2xl font-bold my-2">Flagged Post Review</h1>
               </div>
               <div className="my-2">
                 <div className="">
-                  <h2 className="text-xl font-bold text-gray-600">
+                  <h2 className="text-xl font-bold text-gray-600 dark:text-gray-400">
                     {modalData?.postId?.title.slice(0, 50)}...
                   </h2>
                 </div>
@@ -533,19 +533,21 @@ const FlaggedPostsTable = ({
             </div>
             {/* Flagged post header ends */}
 
-            <div className="my-2 mt-2 max-h-60 overflow-y-auto p-2 border rounded">
-              <div className="bg-gray-100 p-2 rounded-md space-y-3 text-sm">
+            <div className="my-2 mt-2 max-h-60 overflow-y-auto p-2 border rounded dark:border-gray-700 ">
+              <div className="bg-gray-100 p-2 rounded-md space-y-3 text-sm dark:bg-gray-800 dark:text-gray-400">
                 {/* Flagged post details begins */}
                 <div className="">
-                  <div className="font-bold text-gray-900 border-b border-dashed border-gray-300 mb-1 flex items-center text-xl">
+                  <div className="font-bold text-gray-900 border-b border-dashed border-gray-300 dark:border-gray-600 mb-1 flex items-center text-xl dark:text-gray-400">
                     <FaFlag className="mr-1" />
-                    <h2 className="text-xl">Flagged Post Details:</h2>
+                    <h2 className="text-xl dark:text-gray-400">
+                      Flagged Post Details:
+                    </h2>
                   </div>
                   {modalData.flaggedBy.length > 0 ? (
                     modalData?.flaggedBy.map((user) => (
                       <div
                         key={user._id}
-                        className="lg:flex flex-1 items-center justify-between"
+                        className="lg:flex flex-1 items-center justify-between dark:text-gray-400"
                       >
                         <span className="font-bold text-gray-900 flex items-center space-x-2">
                           <img
@@ -554,7 +556,10 @@ const FlaggedPostsTable = ({
                             className="w-8 rounded-full"
                           />
 
-                          <span> {user.name}</span>
+                          <span className="dark:text-gray-400">
+                            {" "}
+                            {user.name}
+                          </span>
                         </span>
                         <span>Email: {user.email}</span>
                         <span>
@@ -577,7 +582,7 @@ const FlaggedPostsTable = ({
 
                 {/* Flagged post review status history begins */}
                 <div className="space-y-2">
-                  <div className="font-bold text-gray-900 border-b border-dashed border-gray-300 mb-1 flex items-center text-xl">
+                  <div className="font-bold text-gray-900 border-b border-dashed border-gray-300 dark:border-gray-600 mb-1 flex items-center text-xl dark:text-gray-400">
                     <FaHistory className="mr-1" />
                     <h2 className="text-xl">Post Review Status History:</h2>
                   </div>
@@ -693,7 +698,7 @@ const FlaggedPostsTable = ({
                 {/* Flagged post status history begins */}
                 <div className="grid lg:grid-cols-2 grid-cols-1">
                   {modalData.statusHistory.map((entry, i) => (
-                    <div key={i} className="border-b py-2">
+                    <div key={i} className="border-b py-2 dark:border-gray-600">
                       <p>
                         <strong>Status:</strong> {entry.status}
                       </p>

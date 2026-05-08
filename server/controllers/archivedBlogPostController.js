@@ -58,7 +58,7 @@ const getArchivedBlogBySlug = async (req, res) => {
   try {
     const blog = await ArchivedBlog.findOne({ slug }).populate(
       "author",
-      "name email"
+      "name email",
     );
     if (!blog)
       return res.status(404).json({ message: "Archived blog not found." });
@@ -90,9 +90,14 @@ const getAllArchivedBlogs = async (req, res) => {
 // Restore archived blog
 // ==============================
 const restoreArchivedBlog = async (req, res) => {
-  const { slug } = req.params;
   try {
+    console.log("✅ Archived Blog route is hit");
+    const { slug } = req.params;
+    console.log("Slug Blog", slug);
     const archivedBlog = await ArchivedBlog.findOne({ slug });
+    console.log("firebaseUid:", archivedBlog?.firebaseUid);
+    console.log("originalId:", archivedBlog?.originalId);
+    console.log("Archived Blog", archivedBlog);
     if (!archivedBlog)
       return res.status(404).json({ message: "Archived blog not found" });
 
@@ -131,9 +136,18 @@ const restoreArchivedBlog = async (req, res) => {
         .status(500)
         .json({ message: "Error restoring blog", error: err.message });
     }
-  } catch (error) {
-    console.error("Error in restoreArchivedBlog:", error); // Detailed error log
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+
+    console.error("RESTORE TRANSACTION ERROR:", err);
+
+    return res.status(500).json({
+      message: "Error restoring blog",
+      error: err.message,
+      errors: err.errors,
+      code: err.code,
+    });
   }
 };
 
