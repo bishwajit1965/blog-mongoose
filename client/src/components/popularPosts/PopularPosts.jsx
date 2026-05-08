@@ -66,7 +66,7 @@ const PopularPosts = () => {
               </div>
               <div className="lg:col-span-8 col-span-12 lg:space-y-1">
                 <Link to={`/blog-details/${post.slug}`} className="m-0 p-0">
-                  <h3 className="lg:text-xl text-lg font-bold">
+                  <h3 className="lg:text-xl text-lg font-bold dark:text-gray-200">
                     {post?.title?.slice(0, 20) + " ..."}
                   </h3>
                 </Link>

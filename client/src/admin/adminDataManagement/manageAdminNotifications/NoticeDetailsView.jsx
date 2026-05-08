@@ -56,7 +56,7 @@ const NoticeDetailsView = ({ notice, toggler, isHidden, manageNotice }) => {
         margin.left,
         margin.top - 0.8,
         logoWidth,
-        logoHeight
+        logoHeight,
       );
 
       doc.setFont("helvetica", "bold");
@@ -70,12 +70,12 @@ const NoticeDetailsView = ({ notice, toggler, isHidden, manageNotice }) => {
       doc.text(
         "123 Developer Lane, Code City, 456789",
         margin.left + 1.2,
-        margin.top - 0.15
+        margin.top - 0.15,
       );
       doc.text(
         "Email: contact@webdevpro.org | Phone: +91 98765 43210",
         margin.left + 1.2,
-        margin.top + 0.1
+        margin.top + 0.1,
       );
 
       doc.setDrawColor(180);
@@ -84,7 +84,7 @@ const NoticeDetailsView = ({ notice, toggler, isHidden, manageNotice }) => {
         margin.left,
         margin.top + 0.3,
         pageWidth - margin.right,
-        margin.top + 0.3
+        margin.top + 0.3,
       );
     };
 
@@ -107,7 +107,7 @@ const NoticeDetailsView = ({ notice, toggler, isHidden, manageNotice }) => {
         margin.left,
         pageHeight - 0.6,
         pageWidth - margin.right,
-        pageHeight - 0.6
+        pageHeight - 0.6,
       );
 
       doc.setFontSize(10);
@@ -117,13 +117,13 @@ const NoticeDetailsView = ({ notice, toggler, isHidden, manageNotice }) => {
         "© 2025 WebDevPro Foundation | www.webdevpro.org",
         pageWidth / 2,
         pageHeight - 0.4,
-        { align: "center" }
+        { align: "center" },
       );
       doc.text(
         `Page ${pageNum} of ${totalPages}`,
         pageWidth - margin.right,
         pageHeight - 0.4,
-        { align: "right" }
+        { align: "right" },
       );
     };
 
@@ -231,7 +231,7 @@ const NoticeDetailsView = ({ notice, toggler, isHidden, manageNotice }) => {
         </p>
       </div>
 
-      <div className="overflow-y-auto h-60 p-2 bg-gray-100">
+      <div className="overflow-y-auto h-60 p-2 bg-gray-100 dark:bg-gray-800">
         <p>{content}</p>
       </div>
 

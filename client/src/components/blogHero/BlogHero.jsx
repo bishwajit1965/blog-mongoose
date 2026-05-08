@@ -29,10 +29,10 @@ const BlogHero = ({ data = [] }) => {
   }, []);
 
   return (
-    <section className="relative w-full min-h-[75vh] flex items-center text-white overflow-hidden rounded-t-xl">
+    <section className="relative w-full min-h-[75vh] flex items-center text-white overflow-hidden rounded-t-xl border dark:border-gray-700">
       {/* BG IMAGE */}
       <img src={HeroImage} className="absolute w-full h-full object-cover" />
-      <div className="absolute w-full h-full bg-black/40"></div>
+      <div className="absolute w-full h-full bg-black/60"></div>
 
       <div className="relative w-full flex flex-col md:flex-row items-center justify-between gap-10">
         {/* LEFT CONTENT */}
@@ -89,15 +89,15 @@ const BlogHero = ({ data = [] }) => {
             >
               <div
                 key={blog._id}
-                className="w-[280px] bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-xl hover:scale-105 transition duration-300"
+                className="w-[280px] bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-xl hover:scale-105 transition duration-300 rounded-t-xl"
               >
                 <img
                   src={`${apiURL}${blog?.image}`}
                   alt=""
-                  className="w-full h-32 object-fill rounded-t-lg"
+                  className="w-full h-32 object-fill rounded-t-xl"
                 />
-                <div className="p-2 space-y-2">
-                  <h3 className="mt- font-semibold text-white line-clamp-2">
+                <div className="p-2 space-y-2 rounded-b-lg">
+                  <h3 className="font-semibold text-white line-clamp-2">
                     {blog.title}
                   </h3>
 
@@ -107,7 +107,7 @@ const BlogHero = ({ data = [] }) => {
                       alt=""
                       className="w-12 h-12 rounded-full"
                     />
-                    <p className="text-sm text-gray-300">
+                    <p className="text-sm text-white">
                       Author : {blog?.author?.name || "Anonymous"}
                     </p>
                   </div>

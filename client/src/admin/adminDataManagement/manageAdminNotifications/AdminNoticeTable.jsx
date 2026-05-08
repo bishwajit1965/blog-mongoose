@@ -32,7 +32,7 @@ const AdminNoticeTable = ({
   console.log("Notices in table page:", notices);
 
   /**===============================================
-   * || HELPERS TO REFACTOR AND IMPLEMENT DRY BEGINS
+   * HELPERS TO REFACTOR AND IMPLEMENT DRY BEGINS
    * ===============================================*/
 
   // Dynamic button size for DRY

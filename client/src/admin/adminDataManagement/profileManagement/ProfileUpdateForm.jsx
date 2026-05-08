@@ -20,7 +20,7 @@ const ProfileUpdateForm = ({ profile, isEditing, onUpdate, onCancel }) => {
   };
 
   return (
-    <div className="p-4 border rounded-lg mb-4 shadow-md dark:bg-gray-700 dark:border-gray-700">
+    <div className="p-4 border rounded-lg mb-4 shadow-md dark:bg-gray-800 dark:border-gray-700">
       <h3 className="text-xl font-semibold mb-2">
         {isEditing ? "Edit Profile" : "Profile Details"}
       </h3>

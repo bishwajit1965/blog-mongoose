@@ -46,9 +46,9 @@ const ReviewCommentModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-xl max-w-md w-full shadow-lg">
+      <div className="bg-white dark:bg-gray-800 rounded-xl max-w-md w-full shadow-lg">
         <div className="rounded-t-lg">
-          <h2 className="text-lg font-semibold mb-4 bg-gray-200 rounded-t-lg p-4">
+          <h2 className="text-lg font-semibold mb-4 bg-gray-200 dark:bg-gray-800 dark:text-gray-400 rounded-t-lg p-4">
             {actionType === "approve"
               ? "✅ Approve Comment"
               : "❌ Reject Comment"}
@@ -78,20 +78,26 @@ const ReviewCommentModal = ({
             <>
               {/* Dropdown */}
               <select
-                className="w-full border p-2 rounded-md mb-3"
+                className="w-full border p-2 rounded-md mb-3 dark:bg-gray-800 dark:border-gray-700"
                 value={selectedOption}
                 onChange={(e) => setSelectedOption(e.target.value)}
               >
-                <option value="">Select a reason (optional)</option>
+                <option value="" className="text-gray-400 dark:border-gray-700">
+                  Select a reason (optional)
+                </option>
                 {predefinedComments.map((comment, idx) => (
-                  <option key={idx} value={comment}>
+                  <option
+                    key={idx}
+                    value={comment}
+                    className="dark:text-gray-400 dark:border-gray-700"
+                  >
                     {comment}
                   </option>
                 ))}
               </select>
               <div className="">
                 <button
-                  className="text-blue-600 text-sm underline mb-3"
+                  className="text-blue-600 dark:text-gray-400 text-sm underline mb-3"
                   onClick={() => {
                     setIsCustomMode(true);
                     setSelectedOption("");
@@ -106,7 +112,7 @@ const ReviewCommentModal = ({
           <div className="">
             {/* Review History Section */}
             <div className="mt-6">
-              <h3 className="text-sm font-semibold mb-2 text-gray-600">
+              <h3 className="text-sm font-semibold mb-2 text-gray-600 dark:bg-gray-800 dark:text-gary-400">
                 Review History ➡️{" "}
                 {reviewHistory.length > 0 ? (
                   reviewHistory.length === 1 ? (
@@ -132,7 +138,7 @@ const ReviewCommentModal = ({
                 ➡️ {reviewHistory.length} review(s).
               </h3>
               {reviewHistory.length > 0 ? (
-                <div className="space-y-2 max-h-40 overflow-y-auto border p-2 rounded-md bg-gray-50">
+                <div className="space-y-2 max-h-40 overflow-y-auto border p-2 rounded-md bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700">
                   <div className=""></div>
                   {reviewHistory.map((entry, idx) => (
                     <div

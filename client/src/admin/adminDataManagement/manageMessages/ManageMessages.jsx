@@ -10,6 +10,8 @@ import {
   notifySuccess,
 } from "../../adminComponent/adminToastNotification/AdminToastNotification";
 import { Eye, Check, RefreshCcw } from "lucide-react";
+import CTAButton from "../../../components/buttons/CTAButton";
+import { FaTimes } from "react-icons/fa";
 
 // Modal component
 const MessageModal = ({ isOpen, onClose, message }) => {
@@ -17,7 +19,7 @@ const MessageModal = ({ isOpen, onClose, message }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-xl max-w-lg w-full shadow-lg p-6">
+      <div className="bg-white dark:bg-gray-800 dark:text-gray-400 rounded-xl max-w-lg w-full shadow-lg p-6">
         <h2 className="text-lg font-semibold mb-4">Message Details</h2>
         <p>
           <strong>Name:</strong> {message.name || "—"}
@@ -36,12 +38,13 @@ const MessageModal = ({ isOpen, onClose, message }) => {
           <strong>Message:</strong> {message.message}
         </p>
         <div className="flex justify-end mt-4">
-          <button
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          <CTAButton
+            variant="danger"
+            icon={<FaTimes />}
+            label="Close"
+            // className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 btn-sm"
             onClick={onClose}
-          >
-            Close
-          </button>
+          />
         </div>
       </div>
     </div>

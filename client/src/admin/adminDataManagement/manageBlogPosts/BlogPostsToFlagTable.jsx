@@ -75,7 +75,7 @@ const BlogPostsToFlagTable = ({
         <div className="overflow-x-auto shadow-md">
           <table className="table table-xs w-full dark:border-gray-700 rounded-md shadow-md">
             <thead className="dark:border-gray-700 bg-gray-200 dark:text-gray-400 font-bold dark:bg-gray-900">
-              <tr className="dark:border-gray-700 dark:text-gray-400 font-bold dark:bg-gray-700">
+              <tr className="dark:border-gray-700 dark:text-gray-400 font-bold dark:bg-gray-800">
                 <th className="text-left py-2 text-gray-800 font-bold dark:text-gray-300">
                   #
                 </th>
@@ -139,7 +139,7 @@ const BlogPostsToFlagTable = ({
                       {Array.isArray(adminData?.user?.roles) &&
                       adminData.user.roles.some(
                         (role) =>
-                          role.name === "super-admin" || role.name === "admin"
+                          role.name === "super-admin" || role.name === "admin",
                       ) ? (
                         <>
                           <CTAButton
@@ -197,7 +197,7 @@ const BlogPostsToFlagTable = ({
         {/* Modal Section */}
         {isOpen && modalData && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
-            <div className="bg-white p-4 rounded shadow-lg max-w-xl w-full">
+            <div className="bg-white dark:bg-gray-800 dark:text-gray-300 p-4 rounded shadow-lg max-w-xl w-full lg:space-y-4 space-y-2">
               <div className="h-">
                 <img
                   src={`${apiURL}${modalData.image}`}
@@ -205,19 +205,19 @@ const BlogPostsToFlagTable = ({
                   className="rounded-md w-full h-64 shadow-md"
                 />
               </div>
-              <h2 className="text-xl font-bold text-gray-600">
+              <h2 className="text-xl font-bold text-gray-600 dark:text-gray-400">
                 {modalData.title}
               </h2>
-              <div className="my-2 mt-2 max-h-60 overflow-y-auto p-2 border rounded">
+              <div className="my-2 mt-2 max-h-60 overflow-y-auto p-2 border rounded dark:border-gray-700">
                 <p
                   dangerouslySetInnerHTML={{ __html: modalData.content }}
-                  className="prose max-w-none list-decimal text-gray-600"
+                  className="prose max-w-none list-decimal text-gray-600 dark:text-gray-400"
                 ></p>
               </div>
               <div className="flex justify-end">
                 <button
                   onClick={closeModal}
-                  className="mt-1 bg-red-500 text-white px-4 py-2 rounded flex items-center shadow-md"
+                  className="mt-1 bg-red-500 text-white px-4 py-2 rounded flex items-center shadow-md btn-sm"
                 >
                   <FaTimes className="mr-1" /> Close
                 </button>
