@@ -33,7 +33,7 @@ const CTAButton = ({
   const navigate = useNavigate();
   // Define base styles
   const baseStyle =
-    "px-2 py-0.5 font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-lg transform transition-transform duration-300 inline-block lg:block outline-none border-none my-0.5";
+    "px-4 py-0.5 my-1 mx-1 font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-lg transform transition-transform duration-300 inline-block lg:block outline-none border-none my-0.5";
 
   // Define variant-specific styles
   const variantStyles = {

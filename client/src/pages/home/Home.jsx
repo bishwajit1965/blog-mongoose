@@ -197,7 +197,7 @@ const Home = () => {
                   placeholder="Search..."
                   className={`${
                     width ? "w-full flex justify-end" : "lg:w-full w-full"
-                  } input lg:pl-6 input-sm input-bordered rounded-full w-full max-w-full flex justify-end dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700`}
+                  } input lg:pl-6 pl-6 input-sm input-bordered rounded-full w-full max-w-full flex justify-end dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700`}
                 />
 
                 <FaSearch

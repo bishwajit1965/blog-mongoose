@@ -82,7 +82,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
           {/* Blog title begins */}
           <div className="">
             <Link to={`/blog-details/${slug}`} className="m-0">
-              <h2 className="lg:text-2xl text-xl font-extrabold capitalize text-gray-800 dark:text-base-300 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-4xl first-letter:text-2xl first-letter:text-extra-bold">
+              <h2 className="lg:text-3xl text-lg font-extrabold capitalize text-gray-800 dark:text-gray-400 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-4xl first-letter:text-2xl first-letter:text-extra-bold">
                 {title.length > 60 ? `${title.slice(0, 60)}...` : title}
               </h2>
             </Link>
@@ -92,11 +92,11 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
           {/* Blog excerpt begins */}
           <div className="">
             {excerpt ? (
-              <div className="lg:min-h-[5.6rem] min-h-36">
+              <div className="lg:min-h-[5.6rem] min-h-44">
                 <div className="min-h-[44px] relative">
                   <FaQuoteLeft className="absolute top-0 text-xl text-gray-600 dark:text-gray-300" />
                   <p
-                    className="absolute top-0 indent-7"
+                    className="absolute top-0 indent-7 dark:text-gray-400"
                     dangerouslySetInnerHTML={{
                       __html: excerpt ? blog.excerpt : "N/A",
                     }}
@@ -117,7 +117,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
             <img
               src={`${apiURL}${image}`}
               alt={title.slice(0, 10)}
-              className="w-full object-fill min-h-[13.5rem] rounded-lg shadow-md"
+              className="w-full lg:object-cover h-auto rounded-lg shadow-md border border-gray-700 dark:border-gray-700"
             />
           </Link>
         </div>
@@ -133,7 +133,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
             </span>
             <span className="">
               {category ? (
-                <span className="bg-gray-200 dark:bg-gray-700 dark:text-base-300 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-[2px] mr-1 lg:text-normal text-sm capitalize">
+                <span className="bg-gray-200 dark:bg-gray-800 dark:text-gray-400 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-[2px] mr-1 lg:text-normal text-sm capitalize">
                   {category.name}
                 </span>
               ) : (
@@ -152,13 +152,13 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
             {tags && tags.length > 0 ? (
               tags.map((tag) => (
                 <span key={tag._id}>
-                  <span className="bg-gray-200 dark:bg-gray-700 dark:text-base-300 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-[2px] mr-1 lg:text-normal text-sm capitalize">
+                  <span className="bg-gray-200 dark:bg-gray-800 dark:text-gray-400 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-[2px] mr-1 lg:text-normal text-sm capitalize">
                     {tag.name}
                   </span>
                 </span>
               ))
             ) : (
-              <span className="text-gray-400 dark:bg-gray-700 dark:text-base-300">
+              <span className="text-gray-400 dark:bg-gray-800 dark:text-gray-400">
                 No tags available
               </span>
             )}
@@ -170,7 +170,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
               <span>
                 <FaComment size={20} className="text-xl" />
               </span>
-              <span className="w-6 h-6 p-1 flex items-center justify-center rounded-full border border-gray-300 bg-gray-200 dark:border-gray-700 dark:bg-gray-700 dark:text-base-300 shadow-sm font-semibold">
+              <span className="w-6 h-6 p-1 flex items-center justify-center rounded-full border border-gray-300 bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 shadow-sm font-semibold">
                 {fetchedComments.length > 0 ? fetchedComments.length : 0}
               </span>
             </div>
@@ -184,7 +184,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
 
         {/* Author published on & bookmarked on section begins */}
         <div className="lg:flex items-center grid lg:space-x-2 space-x-0 lg:space-y-0 space-y-2">
-          <div className="text-gray-500 dark:text-base-300 lg:text-normal text-sm font-bold flex items-center space-x-2">
+          <div className="text-gray-500 dark:text-gray-400 lg:text-normal text-sm font-bold flex items-center space-x-2">
             <span>
               <FaClock className="text-xl" />
             </span>
@@ -212,14 +212,14 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
               __html:
                 content.length > 345 ? `${content.slice(0, 345)}...` : content,
             }}
-            className="prose max-w-none list-decimal text-gray-700 dark:text-base-300 mb-4 text-pretty"
+            className="prose max-w-none list-decimal text-gray-700 dark:text-gray-400 mb-4 text-pretty"
           />
         </div>
         {/* Blog content ends */}
 
         {/* Read more button begins */}
         <div className="flex items-center justify-between">
-          <div className="lg:text-[16px] text-sm text-gray-500 font-bold italic border border-gray-400 dark:border-gray-700 dark:text-base-300 dark:bg-gray-700 rounded-full shadow-sm lg:py-1 py-[4px] lg:px-2.5 px-1 flex items-center lg:space-x-2 space-x-1">
+          <div className="lg:text-[16px] text-sm text-gray-500 font-bold italic border border-gray-400 dark:border-gray-700 dark:text-gray-300 dark:bg-gray-800 rounded-full shadow-sm lg:py-1 py-[4px] lg:px-2.5 px-1 flex items-center lg:space-x-2 space-x-1">
             <span>
               <FaReadme />
             </span>

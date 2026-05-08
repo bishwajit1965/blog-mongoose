@@ -200,8 +200,11 @@ const BlogsArchivedTable = ({ archivedBlogs, loading, onSuccess }) => {
                 </tr>
               ))
             ) : (
-              <tr>
-                <td colSpan="7" className="text-center p-4 text-gray-500">
+              <tr className="dark:border-gray-700">
+                <td
+                  colSpan="7"
+                  className="text-center p-4 text-gray-500 dark:border-gray-700"
+                >
                   No archived blogs found.
                 </td>
               </tr>

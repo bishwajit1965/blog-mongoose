@@ -68,16 +68,16 @@ const BookmarkButton = ({ blogId }) => {
             ? "Click to remove bookmark"
             : "Click to bookmark this post"
         }
-        className={`px-2 py-0.5 btn btn-xs rounded flex items-center gap-1 dark:bg-gray-700 dark:text-base-300 dark:border-gray-700 ${
+        className={`px-2 py-0.5 btn btn-xs rounded flex items-center gap-1 dark:bg-gray-700 dark:text-gray-400 dark:border-gray-700 ${
           isBookmarked
             ? "bg-amber-500 text-white dark:bg-amber-500"
-            : "bg-base-100 text-gray-700"
+            : "bg-base-100 text-gray-700 dark:text-gray-400"
         }`}
       >
         {isBookmarked ? (
-          <FaBookmark className="lg:h-3 lg:w-3 w-2.5 h-2.5 dark:text-gray-200" />
+          <FaBookmark className="lg:h-3 lg:w-3 w-2.5 h-2.5 dark:text-gray-400" />
         ) : (
-          <FaRegBookmark className="lg:h-3 lg:w-3 w-2.5 h-2.5 dark:text-gray-200" />
+          <FaRegBookmark className="lg:h-3 lg:w-3 w-2.5 h-2.5 dark:text-gray-400" />
         )}
         {isBookmarked ? "Remove Bookmark" : "Add Bookmark"}
       </button>

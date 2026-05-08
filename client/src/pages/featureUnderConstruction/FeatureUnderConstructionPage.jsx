@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Construction } from "lucide-react";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaTools } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 
 const FeatureUnderConstructionPage = () => {
@@ -9,21 +9,21 @@ const FeatureUnderConstructionPage = () => {
       <Helmet>
         <title>Nova Blogging Platform || Profile Page</title>
       </Helmet>
-      <div className="flex flex-col items-center justify-center min-h-screen px-4 text-center">
-        <div className="bg-white dark:bg-gray-800 dark:text-gray-400 rounded-2xl shadow-lg p-10 max-w-md border dark:border-gray-700">
+      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-300px)] px-4 text-center">
+        <div className="bg-white dark:bg-gray-800 dark:text-gray-400 rounded-2xl shadow-lg p-10 max-w-xl border dark:border-gray-700">
           <Construction className="mx-auto text-yellow-500 w-16 h-16 mb-6 animate-bounce" />
-          <h1 className="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-400">
-            Feature Under Construction
+          <h1 className="lg:text-3xl text-lg font-bold mb-4 text-gray-800 dark:text-gray-400 flex items-center gap-3">
+            <FaTools /> Feature Under Construction
           </h1>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 mb-6 dark:text-gray-400">
             This section is coming soon! 🚀 We’re working hard to make it
             available for you.
           </p>
           <Link
             to="/"
-            className="btn btn-md flex bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition items-center gap-2 text-center"
+            className="btn btn-md flex bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition items-center gap-2 text-center border-none"
           >
-            <FaHome /> Back to Home
+            <FaHome size={25} /> Back to Home
           </Link>
         </div>
       </div>
