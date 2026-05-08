@@ -392,7 +392,7 @@ const BlogDetailsPage = () => {
   }
 
   return (
-    <div className="lg:py-4 overflow-x-hidden dark:bg-gray-800 dark:text-gray-200 lg:shadow-sm relative border border-b-1 border-gray-50 rounded-lg dark:border-gray-700 dark:border-t-0">
+    <div className="overflow-x-hidden dark:text-gray-200 lg:shadow-sm relative rounded-lg">
       {isLoading && <AdminLoader />}
 
       {/* Floating text box left top begins */}
@@ -400,9 +400,9 @@ const BlogDetailsPage = () => {
         <motion.div
           ref={leftColumnRef}
           animate={controls}
-          className="w-[14rem] absolute top-6  bg-gray-1000 left-0 rounded-md invisible lg:visible shadow-md space-y-4 border border-gray-100 dark:border-gray-700"
+          className="w-[14rem] absolute top-  bg-gray-1000 left-0 rounded-md invisible lg:visible shadow-md space-y-4 border border-gray-100 dark:border-gray-700"
         >
-          <div className="w-full ">
+          <div className="w-full">
             <img
               src={`${apiURL}${image}`}
               alt=""

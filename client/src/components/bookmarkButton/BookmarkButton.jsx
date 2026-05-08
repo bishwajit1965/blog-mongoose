@@ -71,7 +71,7 @@ const BookmarkButton = ({ blogId }) => {
         className={`px-2 py-0.5 btn btn-xs rounded flex items-center gap-1 dark:bg-gray-700 dark:text-base-300 dark:border-gray-700 ${
           isBookmarked
             ? "bg-amber-500 text-white dark:bg-amber-500"
-            : "bg-gray-200 text-gray-700"
+            : "bg-base-100 text-gray-700"
         }`}
       >
         {isBookmarked ? (

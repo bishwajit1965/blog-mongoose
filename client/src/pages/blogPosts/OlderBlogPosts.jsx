@@ -17,7 +17,7 @@ const OlderBlogPosts = () => {
 
   return (
     <div
-      className="lg:grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-4 gap-2 lg:pt-10 lg:pb-4"
+      className="lg:grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-4 gap-2 lg:pt-6 lg:pb-"
       onMouseEnter={handleViewBlogDetails}
       onMouseLeave={handleHideBlogDetails}
     >

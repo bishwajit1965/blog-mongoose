@@ -139,7 +139,7 @@ const ArchiveBlogPostTable = ({ blogs, loading, onSuccess }) => {
         {/* Modal Section */}
         {isOpen && modalData && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
-            <div className="bg-white p-4 rounded shadow-lg max-w-xl w-full">
+            <div className="bg-white p-4 rounded shadow-lg max-w-xl w-full dark:bg-gray-800 dark:text-gray-400">
               <div className="h-">
                 <img
                   src={`${apiURL}${modalData.image}`}
@@ -148,7 +148,7 @@ const ArchiveBlogPostTable = ({ blogs, loading, onSuccess }) => {
                 />
               </div>
               <h2 className="text-xl font-bold">{modalData.title}</h2>
-              <div className="my-2 mt-2 max-h-60 overflow-y-auto p-2 border rounded">
+              <div className="my-2 mt-2 max-h-60 overflow-y-auto p-2 border rounded dark:border-gray-700">
                 {/* <p className="mt-2">{modalData.content}</p> */}
                 <p
                   className="indent-7"

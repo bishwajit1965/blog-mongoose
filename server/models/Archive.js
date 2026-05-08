@@ -48,7 +48,7 @@ const BlogSchema = new mongoose.Schema(
     metaKeywords: { type: [String], default: [] },
     deletedAt: { type: Date, default: null },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // =============================
@@ -64,6 +64,7 @@ const ArchivedBlogSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
+
     content: { type: String, required: true },
     category: {
       type: mongoose.Schema.Types.ObjectId,
@@ -78,6 +79,12 @@ const ArchivedBlogSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+    },
+    firebaseUid: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
     },
     status: {
       type: String,
@@ -108,7 +115,7 @@ const ArchivedBlogSchema = new mongoose.Schema(
       unique: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // =============================
