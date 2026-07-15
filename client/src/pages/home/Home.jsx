@@ -74,7 +74,7 @@ const Home = () => {
   return (
     <div className="">
       <Helmet>
-        <title>Nova Blogging Platform || Home Page</title>
+        <title>Nova Journal || Home Page</title>
       </Helmet>
 
       <BlogHero data={data} />
@@ -82,21 +82,22 @@ const Home = () => {
       {/**=================================
       | MARQUEE NOTIFICATION SECTION BEGINS
       |**==================================*/}
-      <div className="border-t border-2 border-gray-300 shadow-md">
+      <div className="border-t-8 border-base-content/25 rounded-xs">
         <Marquee
           speed={50}
           pauseOnHover={true}
           pauseOnClick={true}
           gradient={true}
-          gradientColor="#888"
+          gradientColor="#333"
           gradientWidth={400}
           autoFill={false}
           style={{
-            backgroundColor: "#fff",
+            backgroundColor: "#222",
             height: "50px",
             fontWeight: "bold",
-            fontSize: "20px",
-            color: "black",
+            fontSize: "25px",
+            color: "white",
+            borderRadius: "0px 0px 5px 5px",
           }}
         >
           <MarqueeNotification />
@@ -109,7 +110,7 @@ const Home = () => {
       {/**===================================
       | BLOG CONTENT AREA LEFT & RIGHT BEGINS
       |**====================================*/}
-      <div className="grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-10 gap-2">
+      <div className="grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-16 gap-2">
         {/**============================
         | BLOG CONTENT AREA LEFT BEGINS
         |**=============================*/}

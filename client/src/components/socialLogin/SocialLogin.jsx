@@ -87,15 +87,15 @@ const SocialLogIn = () => {
     <div className="text-center w-full flex justify-center space-x-4">
       <button
         onClick={handleGoogleSignIn}
-        className="btn btn-sm btn-circle dark:btn-info border-slate-400 dark:border-slate-600 btn-outline dark:bg-cyan-400 dark:text-base-100 my-1"
+        className="btn btn-sm btn-circle dark:btn-outline border-slate-400 dark:border-slate-600 btn-outline dark:bg-gray-800 dark:text-base-100 my-1"
       >
-        <FaGoogle className="dark:text-red-700 text-xl" />
+        <FaGoogle className="dark:text-gray-400 text-xl" />
       </button>
       <button
         onClick={handleGitHubSignIn}
-        className="btn btn-sm btn-circle dark:btn-info border-slate-400 dark:border-slate-600 btn-outline dark:bg-cyan-400 dark:text-base-100 my-1"
+        className="btn btn-sm btn-circle dark:btn-outline border-slate-400 dark:border-slate-600 btn-outline dark:bg-gray-800 dark:text-base-100 my-1"
       >
-        <FaGithub className="dark:text-red-700 text-xl" />
+        <FaGithub className="dark:text-gray-400 text-xl" />
       </button>
     </div>
   );

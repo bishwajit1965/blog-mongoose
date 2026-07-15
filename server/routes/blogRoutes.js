@@ -30,6 +30,7 @@ const {
 router.get("/", getAllBlogs); // View all blogs
 
 router.get("/super-admin", getBlogsForSuperAdminDashBoard); // View all blogs
+
 router.get("/random", getRandomPost);
 
 router.get("/popular", getPopularPosts); // View popular blog posts
@@ -106,7 +107,7 @@ router.patch(
 
 // Soft delete a blog post
 router.patch(
-  "/soft-delete/:slug",
+  "/soft-delete-blog-post/:slug",
   authorizeRoles(["super-admin"]),
   authorizePermissions(["delete-post"]),
   softDeletePost,

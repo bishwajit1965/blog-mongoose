@@ -404,7 +404,8 @@ const BlogDetailsPage = () => {
         >
           <div className="w-full">
             <img
-              src={`${apiURL}${image}`}
+              src={image?.url ? image.url : `${apiURL}${image}`}
+              // src={`${apiURL}${image}`}
               alt=""
               className="rounded-t-md h-28 w-full"
             />
@@ -639,7 +640,7 @@ const BlogDetailsPage = () => {
           <div className="lg:my-10 my-4">
             <Link to="/" className="m-0">
               <img
-                src={`${apiURL}${image}`}
+                src={image?.url ? image.url : `${apiURL}${image}`}
                 alt={title.slice(0, 15)}
                 className="w-full min-h-48 object-cover shadow-md rounded-lg"
               />

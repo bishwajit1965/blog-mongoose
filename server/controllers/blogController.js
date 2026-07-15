@@ -7,6 +7,11 @@ const slugify = require("slugify");
 const mongoose = require("mongoose");
 const generateSitemap = require("../utils/sitemap");
 const { create } = require("xmlbuilder2");
+const {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+} = require("../utils/uploadToCloudinary");
+// const deleteFromCloudinary = require("../utils/uploadToCloudinary");
 
 const generateExcerpt = (content, maxLength = 500) => {
   if (!content) return ""; // Return empty if no content is provided
@@ -33,6 +38,7 @@ const generateExcerpt = (content, maxLength = 500) => {
 };
 
 const createBlog = async (req, res) => {
+  console.log("📌Create blog post controller is hit");
   try {
     let {
       title,
@@ -48,7 +54,10 @@ const createBlog = async (req, res) => {
     } = req.body;
 
     const userId = req.user.id;
+    console.log("User Id", userId);
+
     const user = await User.findById({ _id: userId });
+    console.log("User", user);
 
     if (!req.user.permissions.includes("create-post")) {
       return res
@@ -86,12 +95,33 @@ const createBlog = async (req, res) => {
     if (slugExists) {
       slug = `${slug}-${Date.now()}`;
     }
-    let imagePath = null;
+    // let imagePath = null;
+
+    let image = {
+      url: null,
+      publicId: null,
+    };
+
     if (req.file) {
-      imagePath = `/uploads/${req.file.filename}`;
+      try {
+        const uploadedImage = await uploadToCloudinary(
+          req.file.buffer,
+          "developer-diary/blogs",
+        );
+        image = {
+          url: uploadedImage.secure_url,
+          publicId: uploadedImage.public_id,
+        };
+
+        // imagePath = uploadedImage.secure_url;
+      } catch (error) {
+        return res.status(500).json({
+          message: "Image upload failed",
+          error: error.message,
+        });
+      }
     }
 
-    // ✅ Validate `publishAt` conditionally for "scheduled" and "coming-soon"
     let validPublishAt = null;
     if (["scheduled", "coming-soon"].includes(status)) {
       if (!publishAt || isNaN(new Date(publishAt).getTime())) {
@@ -125,20 +155,31 @@ const createBlog = async (req, res) => {
       publishAt: validPublishAt,
       author: userId, // Mongo _id
       firebaseUid: user.firebaseUid || null,
-      image: imagePath,
+      image,
       metaTitle: seoTitle,
       metaDescription: seoDescription,
       metaKeywords: seoKeywords,
     });
-
+    console.log("✅ NEW BLOG POST", newBlog);
     const blog = await newBlog.save();
 
     await generateSitemap(); // ✅ Regenerate sitemap after successful blog creation
 
     res.status(201).json(blog);
   } catch (error) {
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern)[0];
+
+      return res.status(409).json({
+        message: `${field.charAt(0).toUpperCase() + field.slice(1)} already exists.`,
+      });
+    }
+
     console.error("Error creating blog:", error);
-    res.status(500).json({ message: "Error creating blog", error });
+
+    res.status(500).json({
+      message: "Something went wrong while creating the blog.",
+    });
   }
 };
 
@@ -273,7 +314,7 @@ const updateBlogBySlug = async (req, res) => {
       author,
     } = req.body;
 
-    const { userId } = req.user.id;
+    const userId = req.user.id;
 
     const blog = await Blog.findOne({ slug: req.params.slug });
     if (!blog) {
@@ -324,24 +365,26 @@ const updateBlogBySlug = async (req, res) => {
     }
 
     if (req.file) {
-      if (blog.image) {
-        const oldImagePath = path.join(
-          __dirname,
-          "..",
-          "uploads",
-          path.basename(blog.image),
-        );
+      const oldPublicId = blog.image?.publicId;
 
-        if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath);
-        }
+      const uploadedImage = await uploadToCloudinary(
+        req.file.buffer,
+        "developer-diary/blogs",
+      );
+
+      blog.image = {
+        url: uploadedImage.secure_url,
+        publicId: uploadedImage.public_id,
+      };
+
+      if (oldPublicId) {
+        await deleteFromCloudinary(oldPublicId);
       }
-      blog.image = `/uploads/${req.file.filename}`;
     }
 
     // ✅generate metaKeywords from title and content
     if (title !== blog.title || content !== blog.content) {
-      blog.metaTitle = `${title} | ${process.env.SITE_NAME || "My Blog"}`;
+      blog.metaTitle = `${title} | ${process.env.SITE_NAME || "Nova Journal"}`;
       blog.metaDescription = content.substring(0, 160) + "..."; //First 150 characters of content
       // ✅Generate metaKeywords from title and content
       const stopWords = [
@@ -404,7 +447,7 @@ const updateBlogBySlug = async (req, res) => {
 const softDeletePost = async (req, res) => {
   try {
     const { slug } = req.params;
-    if (!req.user.permissions.includes("delete-post")) {
+    if (!req.user.permissions.includes("soft-delete-blog-post")) {
       return res
         .status(403)
         .json({ message: "Unauthorized to soft delete blog post." });
@@ -712,38 +755,92 @@ const getRssFeed = async (req, res) => {
 const deleteBlogBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
+
     if (!req.user.permissions.includes("delete-post")) {
-      return res.status(403).json({ message: "Unauthorized to delete blog" });
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized to permanently delete blog.",
+      });
     }
 
-    let blog;
-    if (mongoose.Types.ObjectId.isValid(slug)) {
-      blog = await Blog.findById(slug);
-    } else {
-      blog = await Blog.findOne({ slug });
-    }
+    const blog = mongoose.Types.ObjectId.isValid(slug)
+      ? await Blog.findById(slug)
+      : await Blog.findOne({ slug });
+
     if (!blog) {
-      return res.status(404).json({ message: "Blog not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found.",
+      });
     }
 
-    if (blog.image) {
-      const imagePath = path.resolve("uploads", path.basename(blog.image));
-
+    // Remove Cloudinary image
+    if (blog.image?.publicId) {
       try {
-        await fs.promises.unlink(imagePath);
-      } catch (err) {
-        console.warn("Error deleting blog image:", err.message);
+        await deleteFromCloudinary(blog.image.publicId);
+      } catch (error) {
+        console.warn("Cloudinary image deletion failed:", error.message);
       }
     }
-    await Blog.deleteOne({ _id: blog._id });
-    await generateSitemap(); // ✅ Regenerate sitemap after successful blog deletion
-    res.status(200).json({ message: "Blog deleted successfully" });
+
+    // Remove database document
+    await Blog.deleteOne({
+      _id: blog._id,
+    });
+
+    // Update sitemap
+    await generateSitemap();
+
+    res.status(200).json({
+      success: true,
+      message: "Blog permanently deleted successfully.",
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error deleting blog", error: error.message });
+    console.error("Permanent delete error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Error permanently deleting blog.",
+      error: error.message,
+    });
   }
 };
+
+// const deleteBlogBySlug = async (req, res) => {
+//   try {
+//     const { slug } = req.params;
+//     if (!req.user.permissions.includes("delete-post")) {
+//       return res.status(403).json({ message: "Unauthorized to delete blog" });
+//     }
+
+//     let blog;
+//     if (mongoose.Types.ObjectId.isValid(slug)) {
+//       blog = await Blog.findById(slug);
+//     } else {
+//       blog = await Blog.findOne({ slug });
+//     }
+//     if (!blog) {
+//       return res.status(404).json({ message: "Blog not found" });
+//     }
+
+//     if (blog.image) {
+//       const imagePath = path.resolve("uploads", path.basename(blog.image));
+
+//       try {
+//         await fs.promises.unlink(imagePath);
+//       } catch (err) {
+//         console.warn("Error deleting blog image:", err.message);
+//       }
+//     }
+//     await Blog.deleteOne({ _id: blog._id });
+//     await generateSitemap(); // ✅ Regenerate sitemap after successful blog deletion
+//     res.status(200).json({ message: "Blog deleted successfully" });
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ message: "Error deleting blog", error: error.message });
+//   }
+// };
 
 module.exports = {
   createBlog,

@@ -14,7 +14,7 @@ import { FaBloggerB, FaEnvelope } from "react-icons/fa";
 
 const ComingSoonPost = ({
   title = "Send Coming Soon Request !",
-  message = "We are working on something amazing ! Request unhesitatingly & stay tuned for the updates!",
+  message = "We are working on something amazing ! Request your topic unhesitatingly & stay tuned for the updates!",
   buttonLabel = "Notify Me!",
 }) => {
   const { user } = useAuth();

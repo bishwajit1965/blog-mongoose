@@ -41,7 +41,21 @@ const BlogSchema = new mongoose.Schema(
       required: true,
     },
     firebaseUid: { type: String, required: true, unique: true, index: true },
-    image: { type: String, default: null },
+    image: {
+      url: {
+        type: String,
+        default: null,
+      },
+      publicId: {
+        type: String,
+        default: null,
+      },
+    },
+    // image: {
+    //   type: String,
+    //   default: null,
+    //   publicId: { type: String, default: null },
+    // },
 
     //✅Flagged status to be saved in blogs collection
     isFlagged: { type: Boolean, default: false },
