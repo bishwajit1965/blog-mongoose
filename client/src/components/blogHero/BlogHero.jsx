@@ -34,15 +34,17 @@ const BlogHero = ({ data = [] }) => {
       <img src={HeroImage} className="absolute w-full h-full object-cover" />
       <div className="absolute w-full h-full bg-black/60"></div>
 
-      <div className="relative w-full flex flex-col md:flex-row items-center justify-between gap-10">
+      <div className="relative w-full flex flex-col md:flex-row items-center justify-between gap-10 lg:p-6 p-2">
         {/* LEFT CONTENT */}
         <div className="max-w-4xl p-4 space-y-6">
           {/* Heading / Title */}
-          <h1 className="lg:text-6xl font-extrabold">Nova Blogging Platform</h1>
+          <h1 className="lg:text-6xl text-xl font-extrabold uppercase">
+            Nova Journal
+          </h1>
           {/* Sub-heading */}
           <div className="lg:max-w-lg">
             <h3 className="lg:text-xl font-bold">
-              Full-Stack Admin Dashboard with Moderation & Role-Based Access
+              Software Engineering, Architecture & Building Better Systems
             </h3>
           </div>
           <h1 className="lg:text-4xl text-lg md:text-4xl font-extrabold leading-tight drop-shadow-lg">
@@ -92,8 +94,12 @@ const BlogHero = ({ data = [] }) => {
                 className="w-[280px] bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-xl hover:scale-105 transition duration-300 rounded-t-xl"
               >
                 <img
-                  src={`${apiURL}${blog?.image}`}
-                  alt=""
+                  src={
+                    blog?.image?.url
+                      ? blog?.image.url
+                      : `${apiURL}${blog?.image}`
+                  }
+                  alt={blog?.slug}
                   className="w-full h-32 object-fill rounded-t-xl"
                 />
                 <div className="p-2 space-y-2 rounded-b-lg">

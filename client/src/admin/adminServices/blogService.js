@@ -28,7 +28,9 @@ const updateBlogBySlug = (slug, blog) =>
 
 // Soft delete a blog post
 const softDeletePost = (slug) =>
-  handleApiCall(() => api.patch(`${API_PATHS.BLOGS}/soft-delete/${slug}`));
+  handleApiCall(() =>
+    api.patch(`${API_PATHS.BLOGS}/soft-delete-blog-post/${slug}`),
+  );
 
 // Restore a soft deleted blog post
 const restoreSoftDeletedPost = (slug) =>

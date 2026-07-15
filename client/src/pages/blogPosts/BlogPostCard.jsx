@@ -115,9 +115,9 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
         <div className="col-span-12 lg:col-span-5 min-h-[13.5rem]">
           <Link to={`/blog-details/${slug}`} className="m-0">
             <img
-              src={`${apiURL}${image}`}
+              src={image?.url ? image.url : `${apiURL}${image}`}
               alt={title.slice(0, 10)}
-              className="w-full lg:object-cover h-auto rounded-lg shadow-md border border-gray-700 dark:border-gray-700"
+              className="w-full lg:object-cover h-auto rounded-lg shadow-md border border-base-content/15 dark:border-gray-700"
             />
           </Link>
         </div>

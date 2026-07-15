@@ -120,11 +120,11 @@ const Login = () => {
   return (
     <>
       <Helmet title="Blog || Login" />
-      <div className="h-screen flex items-center">
-        <div className="lg:max-w-xs w-full mx-auto">
+      <div className="h-screen flex items-center dark:bg-gray-800">
+        <div className="lg:max-w-xs w-full mx-auto dark:bg-gray-800">
           {loading && <Loader />}
-          <div className="flex flex-col justify-center border lg:p-6 p-4 bg-base-200 rounded-xs shadow-xl rounded-md">
-            <h1 className="text-lg lg:text-xl font-bold text-indigo-800 text-center mb-4 flex items-center gap-2">
+          <div className="flex flex-col justify-center border dark:border-gray-700 lg:p-6 p-4 bg-base-200 dark:bg-gray-800 rounded-xs shadow-xl rounded-md">
+            <h1 className="text-lg lg:text-xl font-bold text-indigo-800 dark:text-gray-400 text-center mb-4 flex items-center gap-2">
               <LucideIcon.LogIn size={25} className="font-bold" /> Blog Mongoose
               Login
             </h1>
@@ -140,7 +140,7 @@ const Login = () => {
                 ref={emailRef}
                 id="email"
                 placeholder="Email for login & reset password..."
-                className="input input-bordered input-sm w-full"
+                className="input input-bordered input-sm w-full dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400"
               />
               <div className="password-container relative w-full">
                 <input
@@ -148,7 +148,7 @@ const Login = () => {
                   name="password"
                   id="password"
                   placeholder="Password..."
-                  className="input input-bordered input-sm w-full"
+                  className="input input-bordered input-sm w-full dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400"
                   required
                 />
                 <span
@@ -163,20 +163,20 @@ const Login = () => {
                 <p className="text-xs hover:link">
                   <Link
                     onClick={handleResetPassword}
-                    className="hover:link-primary"
+                    className="hover:link dark:hover:text-gray-400 dark:text-gray-400"
                   >
                     Forgot password ? {""}
-                    <span className="text-xs link-primary">
+                    <span className="text-xs link-primary dark:text-gray-400">
                       Reset password here
                     </span>
                   </Link>
                 </p>
                 <p className="text-xs flex items-center gap-1">
-                  <Link to="/register" className="hover:link">
+                  <Link to="/register" className="hover:link dark:text-gray-400">
                     New to this site ? {""}
-                    <span className="text-xs link-primary">Register here</span>
+                    <span className="text-xs link-primary dark:text-gray-400">Register here</span>
                   </Link>{" "}
-                  <Link to="/" className="text-xs link-primary hover:underline">
+                  <Link to="/" className="text-xs link-primary hover:underline dark:text-gray-400">
                     Home
                   </Link>
                 </p>

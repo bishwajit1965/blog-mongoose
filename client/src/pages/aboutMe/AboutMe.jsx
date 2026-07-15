@@ -6,55 +6,76 @@ const AboutMe = () => {
   return (
     <>
       <Helmet>
-        <title>Nova Blogging Platform ||About Me Page</title>
+        <title>Nova Journal ||About Me Page</title>
       </Helmet>
       <section className="max-w-6xl mx-auto p-6 md:p-12 text-base-content dark:text-base-300">
-        <div className="flex flex-col md:flex-row items-center gap-8">
-          {/* Profile Photo */}
+        <div className="flex flex-col md:flex-row items-center gap-10">
+          {/* Profile Image */}
           <img
             src={Avatar}
             alt="Bishwajit Paul"
             className="lg:w-56 lg:h-56 w-36 h-36 rounded-full object-cover shadow-lg border-4"
           />
 
-          {/* Bio */}
-          <div className="">
-            <h2 className="lg:text-3xl text-lg font-extrabold mb-2 flex flex-wrap items-center gap-2">
-              <span>Bishwajit Paul</span>
+          {/* Content */}
+          <div className="space-y-4">
+            <h1 className="text-3xl md:text-4xl font-extrabold">
+              Bishwajit Paul
+            </h1>
+
+            <h2 className="text-xl md:text-2xl font-bold">
+              MERN Full Stack Developer
             </h2>
-            <h2 className="lg:text-xl text-lg font-bold mb-2 flex flex-wrap items-center gap-2">
-              <span className="text-amber-500 lg:text-2xl text-xl font-extrabold">
-                MERN
-              </span>{" "}
-              <span>Full Stack Developer</span>
-            </h2>
-            <p className="mb-4">
-              Full-stack developer passionate about building clean, efficient,
-              and scalable web applications. Experienced in React, Node.js,
-              MongoDB, and Tailwind CSS. Always learning, always coding.
+
+            <p className="leading-relaxed">
+              Welcome to my developer diary — a place where I document my
+              journey of learning, building, debugging, and improving as a
+              software developer.
             </p>
-            <p className="mb-4 italic text-gray-600 dark:text-gray-500">
-              “Turning coffee into code, one project at a time ☕💻”
+
+            <p className="leading-relaxed">
+              I enjoy creating modern web applications, exploring software
+              architecture, solving real-world development problems, and sharing
+              practical lessons from my experiences.
+            </p>
+
+            <p className="leading-relaxed">
+              Through this platform, I share technical articles about
+              programming, software engineering practices, project development,
+              and the continuous process of becoming a better developer.
+            </p>
+
+            <p className="italic text-gray-600 dark:text-gray-400">
+              Building software is not only about writing code; it is about
+              understanding problems, making decisions, and creating solutions
+              that last.
             </p>
 
             {/* Skills */}
-            <h3 className="text-xl font-semibold mb-2">Tech Stack:</h3>
-            <div className="flex flex-wrap gap-2">
-              {[
-                "React",
-                "Node.js",
-                "Express",
-                "MongoDB",
-                "Tailwind CSS",
-                "Vite",
-              ].map((skill) => (
-                <span
-                  key={skill}
-                  className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm dark:bg-slate-800 dark:text-slate-400"
-                >
-                  {skill}
-                </span>
-              ))}
+            <div>
+              <h3 className="text-xl font-semibold mb-3">
+                Technologies & Tools
+              </h3>
+
+              <div className="flex flex-wrap gap-2">
+                {[
+                  "React",
+                  "Node.js",
+                  "Express",
+                  "MongoDB",
+                  "Mongoose",
+                  "Tailwind CSS",
+                  "Vite",
+                  "JavaScript",
+                ].map((skill) => (
+                  <span
+                    key={skill}
+                    className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm dark:bg-slate-800 dark:text-slate-300"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>

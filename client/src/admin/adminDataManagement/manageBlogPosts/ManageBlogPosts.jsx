@@ -10,6 +10,17 @@ import { Helmet } from "react-helmet-async";
 import useAdminAuth from "../../adminHooks/useAdminAuth";
 import useAdminBlog from "../../adminHooks/useAdminBlog";
 import useToggleColumn from "../../adminHooks/useToggleColumn";
+import ConfirmDialogue from "../../ui/ConfirmDialogue";
+import {
+  restoreSoftDeletedPost,
+  softDeletePost,
+  permanentDeleteBlogBySlug,
+} from "../../adminServices/blogService";
+import {
+  notifyError,
+  notifySuccess,
+} from "../../adminComponent/adminToastNotification/AdminToastNotification";
+import { LucideIcon } from "../../lib/LucideIcons";
 
 /**=============================================
  * For the toggling of React Multi Select fields
@@ -73,16 +84,23 @@ const customStyles = (isDark) => ({
   }),
 });
 const ManageBlogPosts = () => {
-  const { adminData } = useAdminAuth();
+  const { adminData, hasPermission } = useAdminAuth();
   const {
     superAdminBlogsAll,
     categories,
     tags,
     fetchBlogsForCrudInSuperAdminBlogManagement,
   } = useAdminBlog();
+
+  const [loading, setLoading] = useState(false);
   const [editingBlog, setEditingBlog] = useState(null);
   const [singleBlog, setSingleBlog] = useState(null);
   const [blogDetailDataView, setBlogDetailDataView] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(null);
+  const [isSoftDeletedModalOpen, setIsSoftDeletedModalOpen] = useState(null);
+  const [isPermanentDeleteModalOpen, setIsPermanentlyDeleteModalOpen] =
+    useState(null);
+
   const { isColumnHidden, toggleColumnHide } = useToggleColumn();
   const [isDark, setIsDark] = useState(
     document.body.classList.contains("dark"),
@@ -141,10 +159,93 @@ const ManageBlogPosts = () => {
     setBlogDetailDataView(null);
   };
 
+  // Handle select blog post for soft delete
+  const handleSelectSoftDeleteBlogPost = (blog) => {
+    setIsModalOpen(blog);
+  };
+
+  // Handle soft delete blog post
+  const handleSoftDeletePost = async (slug) => {
+    try {
+      if (hasPermission("soft-delete-blog-post")) {
+        setLoading(true);
+        const response = await softDeletePost(slug);
+        notifySuccess(response?.message);
+        setTimeout(() => {
+          null;
+          setIsModalOpen(null);
+        }, 500);
+        // alert("Blog soft deleted successfully!");
+        await fetchBlogsForCrudInSuperAdminBlogManagement();
+      }
+    } catch (error) {
+      notifyError(error.response.message);
+      console.error("Error in deleting blog:", error);
+      // alert("Failed to delete blog.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle select soft deleted blog post to restore
+  const handleSelectRestoreSoftDeleteBlogPost = (blog) => {
+    setIsSoftDeletedModalOpen(blog);
+  };
+
+  // Handle restore soft deleted blog post
+  const handleRestore = async (slug) => {
+    try {
+      if (hasPermission("restore-post")) {
+        setLoading(true);
+        const response = await restoreSoftDeletedPost(slug);
+        notifySuccess(response?.message);
+        setTimeout(() => {
+          null;
+          setIsSoftDeletedModalOpen(null);
+        }, 500);
+
+        await fetchBlogsForCrudInSuperAdminBlogManagement();
+      }
+    } catch (error) {
+      notifyError(error.response.message);
+      console.error("Error restoring blog:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle select to deleted permanently
+  const handleSelectDeleteBlogPost = (blog) => {
+    setIsPermanentlyDeleteModalOpen(blog);
+  };
+
+  // Handle permanent delete blog post
+  const handlePermanentDeletePost = async (slug) => {
+    try {
+      if (hasPermission("delete-post")) {
+        setLoading(true);
+        const response = await permanentDeleteBlogBySlug(slug);
+
+        notifySuccess(response?.message);
+        setTimeout(() => {
+          null;
+          setIsPermanentlyDeleteModalOpen(null);
+        }, 500);
+
+        await fetchBlogsForCrudInSuperAdminBlogManagement();
+      }
+    } catch (error) {
+      notifyError(error.response.message);
+      console.error("Error deleting blog:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       <Helmet>
-        <title>Blog || Manage Blog Posts</title>
+        <title>Nova Journal || Manage Blog Posts</title>
       </Helmet>
       <AdminSubTitle
         subTitle="Manage"
@@ -247,8 +348,57 @@ const ManageBlogPosts = () => {
                   handleBlogDetailView={handleBlogDetailView}
                   onEdit={handleEdit}
                   onDelete={fetchBlogsForCrudInSuperAdminBlogManagement}
+                  onSelectSoftDeleteBlog={handleSelectSoftDeleteBlogPost}
+                  onSelectRestorePost={handleSelectRestoreSoftDeleteBlogPost}
+                  onSelectPermanentDelete={handleSelectDeleteBlogPost}
                 />
               </div>
+            )}
+
+            {/* Soft Delete Modal Toggler */}
+            {isModalOpen && (
+              <ConfirmDialogue
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(null)}
+                onDelete={loading}
+                onConfirm={() => handleSoftDeletePost(isModalOpen?.slug)}
+                title="Confirm soft delete blog post"
+                confirmText="Soft delete"
+                action="soft delete"
+                warning="The action can also be undone later!"
+              />
+            )}
+
+            {/* Restore Soft Deleted Modal Toggler */}
+            {isSoftDeletedModalOpen && (
+              <ConfirmDialogue
+                isOpen={isSoftDeletedModalOpen}
+                onClose={() => setIsSoftDeletedModalOpen(null)}
+                onRestore={loading}
+                onConfirm={() => handleRestore(isSoftDeletedModalOpen?.slug)}
+                title="Confirm restore soft deleted blog post"
+                confirmText="Restore Soft Deleted"
+                action="restore delete"
+                warning="The action can also be reversed later!"
+                variant="success"
+                icon={<LucideIcon.CheckCircle />}
+              />
+            )}
+
+            {/* Permanent delete Modal toggler */}
+            {isPermanentDeleteModalOpen && (
+              <ConfirmDialogue
+                isOpen={isPermanentDeleteModalOpen}
+                onClose={() => setIsPermanentlyDeleteModalOpen(null)}
+                onRestore={loading}
+                onConfirm={() =>
+                  handlePermanentDeletePost(isPermanentDeleteModalOpen?.slug)
+                }
+                title="Confirm permanently delete blog post"
+                confirmText="Permanently Delete"
+                action="permanent delete"
+                variant="danger"
+              />
             )}
           </div>
         </div>

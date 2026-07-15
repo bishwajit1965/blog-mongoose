@@ -5,11 +5,6 @@ import {
   FaRecycle,
   FaTrashAlt,
 } from "react-icons/fa";
-import {
-  permanentDeleteBlogBySlug,
-  restoreSoftDeletedPost,
-  softDeletePost,
-} from "../../adminServices/blogService";
 
 import AdminPagination from "../../adminComponent/adminPagination/AdminPagination";
 import CTAButton from "../../../components/buttons/CTAButton";
@@ -17,60 +12,18 @@ import SearchInput from "../../adminComponent/searchInput/SearchInput";
 import useAdminAuth from "../../adminHooks/useAdminAuth";
 import { useState } from "react";
 
-const BlogsTable = ({ blogs, onEdit, onDelete, handleBlogDetailView }) => {
+const BlogsTable = ({
+  blogs,
+  onEdit,
+  handleBlogDetailView,
+  onSelectSoftDeleteBlog,
+  onSelectRestorePost, // Restores soft deleted select handler
+  onSelectPermanentDelete, // Permanent delete select handler
+}) => {
   const { adminData, hasPermission } = useAdminAuth();
 
   const [paginatedData, setPaginatedData] = useState(blogs || []);
 
-  // Restore soft deleted blog post
-  const handleRestore = async (slug) => {
-    if (window.confirm("Are you sure you want to restore this blog?")) {
-      try {
-        if (hasPermission("restore-post")) {
-          await restoreSoftDeletedPost(slug);
-          alert("Blog restored successfully!");
-          await onDelete();
-        }
-      } catch (error) {
-        console.error("Error restoring blog:", error);
-        alert("Failed to restore blog.");
-      }
-    }
-  };
-
-  //Handle soft delete blog post
-  const handleSoftDelete = async (slug) => {
-    if (window.confirm("Are you sure you want to soft delete this blog?")) {
-      try {
-        if (hasPermission("delete-post")) {
-          await softDeletePost(slug);
-          alert("Blog soft deleted successfully!");
-          await onDelete();
-        }
-      } catch (error) {
-        console.error("Error in deleting blog:", error);
-        alert("Failed to delete blog.");
-      }
-    }
-  };
-
-  // Handle permanent delete blog post
-  const handlePermanentDelete = async (slug) => {
-    if (
-      window.confirm("Are you sure you want to permanently delete this blog?")
-    ) {
-      try {
-        if (hasPermission("delete-post")) {
-          await permanentDeleteBlogBySlug(slug);
-          alert("Blog deleted successfully!");
-          await onDelete();
-        }
-      } catch (error) {
-        console.error("Error deleting blog:", error);
-        alert("Failed to delete blog.");
-      }
-    }
-  };
   return (
     <div className="pb-4 mb-2 shadow-md pr-2 rounded-b-lg">
       {/* Search input functionality */}
@@ -126,6 +79,7 @@ const BlogsTable = ({ blogs, onEdit, onDelete, handleBlogDetailView }) => {
                         className="btn btn-xs text-xs"
                         variant="primary"
                       />
+
                       <CTAButton
                         onClick={() => handleBlogDetailView(blog)}
                         label="VIEW"
@@ -133,10 +87,11 @@ const BlogsTable = ({ blogs, onEdit, onDelete, handleBlogDetailView }) => {
                         className="btn btn-xs text-xs"
                         variant="primary"
                       />
+
                       {blog.status === "deleted" &&
                       hasPermission("restore-post") ? (
                         <CTAButton
-                          onClick={() => handleRestore(blog.slug)}
+                          onClick={() => onSelectRestorePost(blog)}
                           label="RESTORE"
                           icon={<FaRecycle />}
                           className="btn btn-xs text-xs"
@@ -144,15 +99,16 @@ const BlogsTable = ({ blogs, onEdit, onDelete, handleBlogDetailView }) => {
                         />
                       ) : (
                         <CTAButton
-                          onClick={() => handleSoftDelete(blog.slug)}
+                          onClick={() => onSelectSoftDeleteBlog(blog)}
                           label="S-DEL"
                           icon={<FaAccessibleIcon />}
                           className="btn btn-xs text-xs"
                           variant="warning"
                         />
                       )}
+
                       <CTAButton
-                        onClick={() => handlePermanentDelete(blog._id)}
+                        onClick={() => onSelectPermanentDelete(blog)}
                         label="DEL"
                         icon={<FaTrashAlt />}
                         className="btn btn-xs text-xs"

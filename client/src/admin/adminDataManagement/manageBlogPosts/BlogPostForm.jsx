@@ -127,16 +127,22 @@ const BlogPostForm = ({
         author: adminData.user?._id || "",
         category: existingBlog.category._id || "",
         tags: existingBlog.tags?.map((tag) => tag._id) || [],
-        image: existingBlog.image || "",
+        // image: existingBlog.image || "",
+        image: existingBlog.image || {
+          url: "",
+          publicId: "",
+        },
         status: existingBlog.status || "draft",
         imageFile: null,
         publishAt: existingBlog.publishAt || null,
         wordCount: blogWordCount, // ✅ Fix: Use calculated word count
         selectedLength: detectedRange, // ✅ Fix: Select range dynamically
       });
-
+      // src={image?.url ? image.url : `${apiURL}${image}`}
       setImagePreview(
-        existingBlog.image ? `${apiURL}${existingBlog.image}` : null,
+        existingBlog?.image?.url
+          ? existingBlog?.image?.url
+          : `${apiURL}${existingBlog.image}`,
       );
 
       if (Array.isArray(existingBlog.tags) && existingBlog.tags.length > 0) {
@@ -161,7 +167,11 @@ const BlogPostForm = ({
         author: "",
         category: "",
         tags: [],
-        image: "",
+        // image: "",
+        image: {
+          url: "",
+          publicId: "",
+        },
         status: "draft",
         imageFile: null,
         publishAt: null,
@@ -221,10 +231,11 @@ const BlogPostForm = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Send form data to the server
     try {
       setLoading(true);
+
       const formDataToSend = new FormData();
+
       formDataToSend.append("title", formData.title);
       formDataToSend.append("content", content);
       formDataToSend.append("wordCount", wordCount);
@@ -232,44 +243,126 @@ const BlogPostForm = ({
       formDataToSend.append("excerpt", formData.excerpt);
       formDataToSend.append("author", formData.author);
       formDataToSend.append("category", formData.category);
-      formData.tags.forEach((tag) => formDataToSend.append("tags", tag));
       formDataToSend.append("status", formData.status);
+
+      formData.tags.forEach((tag) => {
+        formDataToSend.append("tags", tag);
+      });
 
       if (formData.imageFile) {
         formDataToSend.append("image", formData.imageFile);
       }
 
       if (
-        formData.status === "scheduled" ||
-        (formData.status === "coming-soon" && formData.publishAt)
+        (formData.status === "scheduled" ||
+          formData.status === "coming-soon") &&
+        formData.publishAt
       ) {
         formDataToSend.append("publishAt", formData.publishAt);
       }
 
+      let response;
+
       if (existingBlog) {
-        if (hasPermission("edit-post")) {
-          await updateBlogBySlug(existingBlog.slug, formDataToSend);
-          console.log("Sent data to update:", formData.content);
-          notifySuccess("Blog post updated successfully!");
-        } else {
+        if (!hasPermission("edit-post")) {
           notifyError("You do not have permission to edit a blog post.");
+          return;
         }
+
+        response = await updateBlogBySlug(existingBlog.slug, formDataToSend);
       } else {
-        if (hasPermission("create-post")) {
-          await createBlog(formDataToSend);
-          notifySuccess("Blog post created successfully!");
-        } else {
-          notifyError("Error in creating blog post.");
+        if (!hasPermission("create-post")) {
+          notifyError("You do not have permission to create a blog post.");
+          return;
         }
+
+        response = await createBlog(formDataToSend);
       }
+
+      // Backend response message
+      notifySuccess(
+        response?.message ||
+          (existingBlog
+            ? "Blog post updated successfully!"
+            : "Blog post created successfully!"),
+      );
+
       onSuccess();
     } catch (error) {
-      console.error("Error in creating/updating permission.", error);
-      notifyError("Error in creating/updating permission.");
+      console.error("Blog save error:", error);
+
+      notifyError(
+        error.response?.data?.message ||
+          error.message ||
+          "Something went wrong while saving the blog.",
+      );
     } finally {
       setLoading(false);
     }
   };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   // Send form data to the server
+  //   try {
+  //     setLoading(true);
+  //     const formDataToSend = new FormData();
+  //     formDataToSend.append("title", formData.title);
+  //     formDataToSend.append("content", content);
+  //     formDataToSend.append("wordCount", wordCount);
+  //     formDataToSend.append("selectedLength", selectedLength);
+  //     formDataToSend.append("excerpt", formData.excerpt);
+  //     formDataToSend.append("author", formData.author);
+  //     formDataToSend.append("category", formData.category);
+  //     formData.tags.forEach((tag) => formDataToSend.append("tags", tag));
+  //     formDataToSend.append("status", formData.status);
+
+  //     if (formData.imageFile) {
+  //       formDataToSend.append("image", formData.imageFile);
+  //     }
+
+  //     if (
+  //       formData.status === "scheduled" ||
+  //       (formData.status === "coming-soon" && formData.publishAt)
+  //     ) {
+  //       formDataToSend.append("publishAt", formData.publishAt);
+  //     }
+
+  //     if (existingBlog) {
+  //       if (hasPermission("edit-post")) {
+  //         const response = await updateBlogBySlug(
+  //           existingBlog.slug,
+  //           formDataToSend,
+  //         );
+  //         notifySuccess(response?.message);
+  //         // console.log("Sent data to update:", formData.content);
+  //         // notifySuccess("Blog post updated successfully!");
+  //       } else {
+  //         notifyError(response.error);
+  //         // notifyError("You do not have permission to edit a blog post.");
+  //       }
+  //     } else {
+  //       if (hasPermission("create-post")) {
+  //        const response = await createBlog(formDataToSend);
+  //         notifySuccess(response?.message);
+  //         // notifySuccess("Blog post created successfully!");
+  //       } else {
+  //         notifyError(blogMessages.permissionError);
+  //         // notifyError("Error in creating blog post.");
+  //       }
+  //     }
+  //     onSuccess();
+  //   } catch (error) {
+  //     console.error("Error in creating/updating permission.", error);
+  //     notifyError(
+  //       error.response?.data?.message ||
+  //         "Something went wrong while saving the blog.",
+  //     );
+  //     notifyError("Error in creating/updating permission.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="relative mb-4">

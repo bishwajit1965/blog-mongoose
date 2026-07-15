@@ -43,7 +43,7 @@ const ComingSoonPostCard = ({ post }) => {
         <div className="relative inset-0 group rounded-md">
           <div className="rounded-md shadow-lg bg-white p-2">
             <img
-              src={`${apiURL}${image}`}
+              src={post?.image?.url ? post?.image?.url : `${apiURL}${image}`}
               alt=""
               className="lg:h-auto h-80 w-full object-cover rounded-md"
             />

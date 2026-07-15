@@ -13,7 +13,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 
 import AuthContext from "../../authContext/AuthContext";
-import Logo from "/assets/favicon/webDevProF.png";
+import Logo from "/assets/Nova_Journal_Logo_F.png";
 import ThemeContext from "../../themeContext/ThemeContext";
 
 const Navbar = () => {
@@ -111,8 +111,8 @@ const Navbar = () => {
           <img src={Logo} alt="Logo" className="lg:w-14 lg:h-14 h-8 w-8" />
 
           <Link to="/" className="ml-0">
-            <span className="xl:text-xl xl:w-48 md:w-32 lg:block xl:block lg:text-xs md:hidden md:ml-0 hidden lg:font-bold text-emerald-500">
-              Blog
+            <span className="xl:text-2xl xl:w-48 md:w-32 lg:block xl:block lg:text-xs md:hidden md:ml-0 hidden lg:font-extrabold text-base-content/80 dark:text-base-300 hover:link">
+              Nova Journal
             </span>
           </Link>
         </div>

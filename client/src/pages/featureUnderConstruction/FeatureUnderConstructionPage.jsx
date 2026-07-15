@@ -7,7 +7,7 @@ const FeatureUnderConstructionPage = () => {
   return (
     <>
       <Helmet>
-        <title>Nova Blogging Platform || Profile Page</title>
+        <title>Nova Journal || Profile Page</title>
       </Helmet>
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-300px)] px-4 text-center">
         <div className="bg-white dark:bg-gray-800 dark:text-gray-400 rounded-2xl shadow-lg p-10 max-w-xl border dark:border-gray-700">
