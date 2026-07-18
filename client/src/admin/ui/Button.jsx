@@ -1,3 +1,4 @@
+import { Loader } from "lucide-react";
 import { cn } from "../../utils/cn.js";
 
 const Button = ({
@@ -54,9 +55,13 @@ const Button = ({
   // RADIUS
   const radius = rounded ? "rounded-full" : "rounded-md";
 
-  const loadingSpinner = (
-    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-  );
+  const loadingSpinner = <Loader size={16} className="animate-spin" />;
+
+  // Alternative Icon
+
+  // const loadingSpinner = (
+  //   <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+  // );
 
   const handleClick = (e) => {
     if (isDisabled) {
@@ -77,11 +82,22 @@ const Button = ({
       {...(Component === "button" ? { disabled: isDisabled } : {})}
       {...props}
     >
-      {loading && loadingSpinner}
+      {loading ? (
+        <>
+          {loadingSpinner}
+          <span>{children}</span>
+        </>
+      ) : (
+        <>
+          {Icon && <Icon className="w-4 h-4" />}
+          {children}
+        </>
+      )}
+      {/* {loading && loadingSpinner}
 
       {!loading && Icon && <Icon className="w-4 h-4" />}
 
-      {!loading && children}
+      {!loading && children} */}
     </Component>
   );
 };

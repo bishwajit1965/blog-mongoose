@@ -31,34 +31,34 @@ const CTAButton = ({
   rel = "noopener noreferrer",
 }) => {
   const navigate = useNavigate();
-  // Define base styles
+  // Defined base styles
   const baseStyle =
-    "px-4 py-0.5 my-1 mx-1 font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-lg transform transition-transform duration-300 inline-block lg:block outline-none border-none my-0.5";
+    "px-1.5 py-0.25 my-1 mx-1 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 inline-flex items-center justify-center gap-2 border";
 
-  // Define variant-specific styles
+  // Defined Variant Styles
   const variantStyles = {
     primary:
-      "bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 focus:ring-blue-400 border-none outline-none",
-
-    light:
-      "bg-gradient-to-r from-gray-400 to-gray-600 text-white hover:from-gray-600 hover:to-gray-800 focus:ring-gray-400",
+      "bg-blue-600 text-white border-blue-600 hover:bg-blue-700 focus:ring-blue-500",
 
     secondary:
-      "bg-gradient-to-r from-gray-500 to-gray-700 text-white hover:from-gray-600 hover:to-gray-800 focus:ring-gray-400",
-
-    danger:
-      "bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 focus:ring-red-400",
+      "bg-gray-600 text-white border-gray-600 hover:bg-gray-700 focus:ring-gray-500",
 
     success:
-      "bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 focus:ring-green-400 border-none outline-none",
+      "bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-700 focus:ring-emerald-500",
 
-    info: "bg-gradient-to-r from-teal-500 to-cyan-600 text-white hover:from-teal-600 hover:to-cyan-700 focus:ring-cyan-400",
+    danger:
+      "bg-red-600 text-white border-red-600 hover:bg-red-700 focus:ring-red-500",
 
     warning:
-      "bg-gradient-to-r from-yellow-500 to-yellow-600 text-black hover:from-yellow-500 hover:to-yellow-600 focus:ring-yellow-400",
+      "bg-amber-500 text-white border-amber-500 hover:bg-amber-600 focus:ring-amber-400",
+
+    info: "bg-cyan-600 text-white border-cyan-600 hover:bg-cyan-700 focus:ring-cyan-500",
+
+    light:
+      "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200 focus:ring-gray-300",
 
     white:
-      "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 hover:border-gray-400 hover:text-gray-800 focus:ring-gray-300",
+      "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 focus:ring-gray-300",
   };
 
   // Combine all styles

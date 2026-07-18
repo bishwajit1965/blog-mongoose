@@ -2,10 +2,9 @@ import {
   AlertCircleIcon,
   CircleCheckBig,
   LucideCheckCircle,
-  LucideLoader,
-  LucideTrash2,
   XCircle,
 } from "lucide-react";
+
 import Button from "./Button";
 import Modal from "./Modal";
 import { LucideIcon } from "../lib/LucideIcons";
@@ -14,49 +13,56 @@ const ConfirmDialogue = ({
   isOpen,
   onClose,
   onConfirm,
+
+  // Header
   icon = <CircleCheckBig size={20} className="text-blue-500" />,
   title = "Confirm Action",
   message = "Are you sure you want to continue?",
-  confirmText = "Delete",
-  cancelText = "Cancel",
-  loading = false,
-  onDelete,
-  onRestore,
-  action = "deletion",
+
+  // Warning
+  actionName = "this action",
   warning = "This action cannot be undone!",
-  variant = "danger",
+
+  // Confirm button
+  confirmIcon = LucideCheckCircle,
+  confirmText = "Confirm",
+  confirmLoadingText = "Processing...",
+  variant = "primary",
+
+  // Cancel button
+  cancelText = "Cancel",
+
+  // Loading
+  loading = false,
 }) => {
+  const ConfirmIcon = confirmIcon;
+
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={title}
-      warning={warning}
-      confirmText={confirmText}
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title={title}>
       <div className="space-y-4">
         {/* Message */}
         <div className="flex items-center gap-3">
-          <span className="">{icon}</span>
-
+          {icon}
           <p className="text-sm text-gray-700">{message}</p>
         </div>
 
-        {/* Warning */}
-        <div className="flex items-center gap-2 ">
-          <AlertCircleIcon size={20} className="mt-0.5 text-red-500" />
+        {/* Action warning */}
+        <div className="flex items-center gap-2">
+          <AlertCircleIcon size={20} className="text-red-500" />
 
           <p className="text-sm text-red-500">
-            {`Once ${action} is completed the post will be invisible.`}
+            Once {actionName} is completed, the post will be invisible.
           </p>
         </div>
 
-        <p className="text-sm flex items-center gap-1.5">
-          <LucideIcon.CheckCircle size={20} className="text-blue-500" />{" "}
-          {warning}
-        </p>
+        {/* Additional warning */}
+        <div className="flex items-center gap-2">
+          <LucideIcon.CheckCircle size={20} className="text-blue-500" />
 
-        {/* Actions */}
+          <p className="text-sm">{warning}</p>
+        </div>
+
+        {/* Buttons */}
         <div className="flex justify-end gap-3">
           <Button variant="warning" size="xs" onClick={onClose} icon={XCircle}>
             {cancelText}
@@ -65,25 +71,11 @@ const ConfirmDialogue = ({
           <Button
             variant={variant}
             size="xs"
-            disabled={loading}
-            onClick={onConfirm}
             loading={loading}
+            onClick={onConfirm}
+            icon={ConfirmIcon}
           >
-            {onDelete ? (
-              <LucideLoader size={14} className="animate-spin" />
-            ) : onRestore ? (
-              <LucideLoader size={14} className="animate-spin" />
-            ) : !onDelete ? (
-              <LucideCheckCircle size={14} />
-            ) : (
-              <LucideTrash2 size={14} />
-            )}
-
-            {onDelete
-              ? "Deleting..."
-              : onRestore
-                ? "Restoring..."
-                : confirmText}
+            {loading ? confirmLoadingText : confirmText}
           </Button>
         </div>
       </div>

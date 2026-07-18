@@ -9,13 +9,18 @@ import {
   notifySuccess,
 } from "../../admin/adminComponent/adminToastNotification/AdminToastNotification";
 import Button from "../../components/buttons/Button";
+import { motion } from "framer-motion";
+import PageTitle from "../../components/pageTitle/PageTitle";
+import { Input } from "../../admin/ui/Input";
+import Textarea from "../../admin/ui/Textarea";
+import { Link } from "react-router-dom";
 
 const ContactMe = () => {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
   const { user } = useAuth();
-  console.log("User", user);
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -55,71 +60,96 @@ const ContactMe = () => {
   return (
     <div>
       <Helmet>
-        <title>Nova Blogging Platform || Contact Page</title>
+        <title>Nova Journal || Contact Page</title>
       </Helmet>
 
-      <section className="max-w-2xl mx-auto p-6 md:p-12 text-base-content dark:text-base-300 border dark:border-gray-700 rounded-md">
-        <h2 className="text-3xl font-bold mb-6 text-center flex items-center gap-2">
-          <LucideIcon.Rocket />
-          Contact Me
-        </h2>
+      <motion.section
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className=""
+      >
+        <PageTitle
+          title="Contact"
+          decoratedText="Me"
+          icon={<LucideIcon.Rocket />}
+        />
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <input
-            type="text"
-            name="name"
-            value={user?.displayName || "N/A/GitHubUser"}
-            readOnly="readOnly"
-            onChange={handleChange}
-            placeholder="Your Name"
-            className="border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-base-300"
-          />
-          <input
-            type="email"
-            name="email"
-            value={user?.email || "N/A/GithubEmail"}
-            readOnly="readOnly"
-            onChange={handleChange}
-            placeholder="Your Email"
-            className="border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-base-300"
-          />
-          <textarea
-            name="message"
-            value={form?.message}
-            onChange={handleChange}
-            placeholder="Your Message..."
-            className="border rounded px-4 py-2 h-32 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400 dark:border-gray-700 dark:bg-gray-800 dark:text-base-300"
-          ></textarea>
-          <Button
-            type="submit"
-            variant="indigo"
-            disabled={loading}
-            icon={
-              loading ? (
-                <LucideIcon.Loader className="animate-spin" />
-              ) : (
-                <LucideIcon.MailPlus />
-              )
-            }
-            label={loading ? "Sending Message..." : "Send Message"}
-            className="w-full py-2"
-          />
-        </form>
+        <div className="max-w-2xl mx-auto text-base-content dark:text-base-300 border dark:border-gray-700 rounded-xl lg:p-6 p-4 shadow hover:shadow-lg">
+          <form onSubmit={handleSubmit} className="space-y-4 ">
+            <h1 className="lg:text-xl text-sm font-extrabold text-gray-700 dark:text-gray-400 flex items-center gap-2">
+              <LucideIcon.UserCircle /> Contact with the Nova Journal Super
+              Admin
+            </h1>
+            <Input
+              type="text"
+              name="name"
+              value={user?.displayName || "N/A/GitHubUser"}
+              readOnly="readOnly"
+              onChange={handleChange}
+              placeholder="Your Name"
+              className="dark:bg-gray-700 dark:text-gray-400"
+              icon={LucideIcon.User}
+            />
+            <Input
+              type="email"
+              name="email"
+              value={user?.email || "N/A/GithubEmail"}
+              readOnly="readOnly"
+              onChange={handleChange}
+              placeholder="Your Email"
+              className="dark:bg-gray-700 dark:text-gray-400"
+              icon={LucideIcon.Mail}
+            />
 
-        <div className="mt-6 text-center text-gray-600">
-          <p>
-            Email:{" "}
-            <a href="mailto:minu@gmail.com" className="underline">
-              minusupadmin@gmail.com
-            </a>
-          </p>
-          <p>Phone: +880 1234 567890</p>
-          <p>Follow me on: </p>
+            <Textarea
+              name="message"
+              value={form?.message}
+              onChange={handleChange}
+              placeholder="Your Message..."
+              className="dark:bg-gray-700 dark:text-gray-400"
+            ></Textarea>
+            <Button
+              type="submit"
+              variant="indigo"
+              disabled={loading}
+              icon={
+                loading ? (
+                  <LucideIcon.Loader className="animate-spin" />
+                ) : (
+                  <LucideIcon.MailPlus />
+                )
+              }
+              label={loading ? "Sending Message..." : "Send Message"}
+              className="w-full py-2"
+            />
+          </form>
+
+          <div className="text-center text-gray-600 pt-4">
+            <p className="flex items-center justify-center">
+              <LucideIcon.Mail size={16} />
+              <a href="mailto:minu@gmail.com" className="hover:underline">
+                paul.bishwajit09@gmail.com
+              </a>
+            </p>
+
+            <Link
+              target="__blank"
+              to="https://portfolio-h5k5.vercel.app"
+              className="link text-blue-500 text-sm m-0 flex items-center  justify-center gap-2"
+            >
+              <LucideIcon.Briefcase size={16} /> My Portfolio Link
+            </Link>
+            <div className="divider m-2 dark:divider-neutral"></div>
+            <div className="space-y-2">
+              <p>Follow me on: </p>
+              <div className="flex justify-center">
+                <SocialMediaLinks />
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="flex justify-center">
-          <SocialMediaLinks />
-        </div>
-      </section>
+      </motion.section>
     </div>
   );
 };

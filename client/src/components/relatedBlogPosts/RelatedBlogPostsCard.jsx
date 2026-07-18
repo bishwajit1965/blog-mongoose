@@ -11,6 +11,7 @@ import { useCallback } from "react";
 import useDateFormatter from "../../hooks/useDateFormatter";
 import { useEffect } from "react";
 import { useState } from "react";
+import { LucideIcon } from "../lucideIcon/LucideIcons";
 
 const RelatedBlogPostsCard = ({ blog, user }) => {
   const {
@@ -49,7 +50,7 @@ const RelatedBlogPostsCard = ({ blog, user }) => {
       <div className="">
         <Link to={`/blog-details/${slug}`} className="m-0">
           <img
-            src={`${apiURL}${image}`}
+            src={image?.url ? image?.url : `${apiURL}${image}`}
             alt=""
             className="lg:h-56 h-52 w-full rounded-t-md"
           />
@@ -58,20 +59,31 @@ const RelatedBlogPostsCard = ({ blog, user }) => {
       <div className="hover:link">
         <div className="flex items-center lg:space-x-3 space-x-2 hover-target">
           <div className="p-2">
-            <AuthorInfoModal user={user} title="Bishwajit Paul" author={author}>
-              <>
-                <p>Email: {user?.email}</p>
-                <p>Role: Admin</p>
-                <p>
-                  <Link
-                    to="https://www.test.com"
-                    className="link underline m-0"
-                  >
-                    I teach everything I know at
-                  </Link>
+            <AuthorInfoModal
+              user={user}
+              title={title}
+              author={author}
+              blog={blog}
+            >
+              <div className="space-y-2">
+                <p className="flex items-center gap-1.5 font-bold">
+                  <LucideIcon.CreditCard size={18} /> Super Admin
                 </p>
+
+                <p className="flex items-center gap-1.5">
+                  <LucideIcon.Mail size={18} /> {author?.email}
+                </p>
+
+                <Link
+                  target="_blank"
+                  to="https://portfolio-h5k5.vercel.app"
+                  className="m-0 hover:link text-blue-400 flex items-center gap-1.5"
+                >
+                  <LucideIcon.Briefcase size={16} /> My Portfolio Link
+                </Link>
+
                 <SocialMediaLinks />
-              </>
+              </div>
             </AuthorInfoModal>
           </div>
         </div>

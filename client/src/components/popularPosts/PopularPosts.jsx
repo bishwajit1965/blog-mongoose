@@ -45,41 +45,48 @@ const PopularPosts = () => {
 
       {loading && <Loader size={20} className="animate-pulse text-center" />}
 
-      <div className="">
+      <div className="mt-4">
         {popularPosts && popularPosts.length > 0 ? (
           popularPosts?.map((post) => (
             <div
               key={post._id}
-              className="grid lg:grid-cols-12 grid-cols-1 items-center justify-between lg:gap-4 gap-2 lg:space-y-4 space-y-2"
+              className="dark:border dark:border-base-content/40 mb-4"
             >
-              <div className="lg:col-span-4 col-span-12">
+              <div className=" ">
                 <Link
                   to={`/blog-details/${post.slug}`}
                   className="m-0 p-0 flex justify-center"
                 >
                   <img
-                    src={`${apiURL}${post?.image}`}
+                    src={
+                      post?.image?.url
+                        ? post?.image?.url
+                        : `${apiURL}${post?.image}`
+                    }
                     alt={post.title}
-                    className="rounded-lg w-full lg:h-24 h-44 object-cover border-4 border-base-300 shadow-md hover:shadow-xl cursor-pointer"
+                    className="rounded-t-lg w-full h-auto lg:h-36 object-cover shadow-md hover:shadow-xl cursor-pointer"
                   />
                 </Link>
               </div>
-              <div className="lg:col-span-8 col-span-12 lg:space-y-1">
+
+              <div className="p-2 space-y-2">
                 <Link to={`/blog-details/${post.slug}`} className="m-0 p-0">
-                  <h3 className="lg:text-xl text-lg font-bold dark:text-gray-200">
-                    {post?.title?.slice(0, 20) + " ..."}
+                  <h3 className="lg:text-lg text-lg font-bold dark:text-gray-200">
+                    {post?.title?.length > 34
+                      ? post?.title?.slice(0, 34) + " ..."
+                      : post?.title}
                   </h3>
                 </Link>
                 <p
                   dangerouslySetInnerHTML={{
                     __html:
                       post.content.length > 80
-                        ? `${post.content.slice(0, 80)}...`
+                        ? `${post.content.slice(0, 80)}` + "..."
                         : post.content,
                   }}
-                  className="prose max-w-none list-decimal text-gray-700 dark:text-base-300 text-sm text-pretty"
+                  className="prose max-w-none list-decimal text-gray-700 dark:text-gray-400 text-sm text-pretty"
                 />
-                <div className="flex justify-end lg:mb- mb-">
+                <div className="flex justify-end py8">
                   <Button
                     href={`/blog-details/${post.slug}`}
                     label="Read More"

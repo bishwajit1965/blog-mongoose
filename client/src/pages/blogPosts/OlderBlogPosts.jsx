@@ -17,7 +17,7 @@ const OlderBlogPosts = () => {
 
   return (
     <div
-      className="lg:grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-4 gap-2 lg:pt-6 lg:pb-"
+      className="lg:grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-4 gap-4 lg:pt-6 pt-4 lg:space-x-0 space-x-2 hover:mt-"
       onMouseEnter={handleViewBlogDetails}
       onMouseLeave={handleHideBlogDetails}
     >
@@ -32,26 +32,30 @@ const OlderBlogPosts = () => {
                 : blog?.title
             }
           >
-            <Link to={`/blog-details/${blog.slug}`} className="m-0">
+            <Link to={`/blog-details/${blog?.slug}`} className="m-0">
               {" "}
               <img
-                src={`${apiURL}${blog.image}`}
-                alt=""
-                className="lg:w-[19rem] w-[15rem] lg:h-52 h-40 rounded-md shadow-md bg-gray-200 p-2 z-50"
+                src={
+                  blog?.image?.url ? blog?.image?.url : `${apiURL}${blog.image}`
+                }
+                alt={blog?.slug}
+                className="lg:w-[18.5rem] w-[10.5rem] lg:h-52 h-36 rounded-md shadow-md bg-gray-200 p-2"
               />
               {blogInfo && (
-                <div className="absolute top-0 left-0 bottom-0 right-0 bg-gray-700 opacity-75 p-4 rounded-md text-white lg:space-y-2">
-                  <h2 className="font-bold text-sm text-white">
-                    {blog?.title}
-                  </h2>
-                  <p className="flex items-center capitalize">
-                    <FaListAlt className="mr-2" />
-                    {blog?.category?.name}
-                  </p>
-                  <p className="flex items-center">
-                    <FaClock className="mr-2" />
-                    {new Date(blog?.publishAt).toLocaleDateString()}
-                  </p>
+                <div className="absolute top-0 left-0 bottom-0 right-0 bg-gray-700 opacity-75 p-4 rounded-md text-white lg:space-y-2 hover:opacity-100">
+                  <div className="text-start pt-10 space-y-2">
+                    <h2 className="font-bold text-sm text-white flex justify-start">
+                      {blog?.title}
+                    </h2>
+                    <p className="flex items-center capitalize">
+                      <FaListAlt className="mr-2" />
+                      {blog?.category?.name}
+                    </p>
+                    <p className="flex items-center">
+                      <FaClock className="mr-2" />
+                      {new Date(blog?.publishAt).toLocaleDateString()}
+                    </p>
+                  </div>
                 </div>
               )}
             </Link>

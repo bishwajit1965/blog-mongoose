@@ -12,6 +12,7 @@ import {
 import { Eye, Check, RefreshCcw } from "lucide-react";
 import CTAButton from "../../../components/buttons/CTAButton";
 import { FaTimes } from "react-icons/fa";
+import AdminPagination from "../../adminComponent/adminPagination/AdminPagination";
 
 // Modal component
 const MessageModal = ({ isOpen, onClose, message }) => {
@@ -55,6 +56,8 @@ const ManageMessages = () => {
   const { messages, setMessages } = useAdminContactMessages();
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // Pagination state
+  const [paginatedData, setPaginatedData] = useState(messages || []);
 
   const handleUpdateStatus = async (id, newStatus) => {
     try {
@@ -106,8 +109,8 @@ const ManageMessages = () => {
               </tr>
             </thead>
             <tbody>
-              {messages && messages.length > 0 ? (
-                messages.map((message, idx) => (
+              {paginatedData && paginatedData.length > 0 ? (
+                paginatedData.map((message, idx) => (
                   <tr key={message._id} className="dark:border-gray-700">
                     <th>{idx + 1}</th>
                     <td>{message.name || "—"}</td>
@@ -185,6 +188,11 @@ const ManageMessages = () => {
               )}
             </tbody>
           </table>
+          {/* Pagination */}
+          <AdminPagination
+            items={messages}
+            onPaginatedDataChange={setPaginatedData} // Directly update paginated data
+          />
         </div>
       </div>
 

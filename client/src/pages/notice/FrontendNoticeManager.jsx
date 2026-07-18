@@ -6,6 +6,8 @@ import dateFormatter from "../../utils/dateFormatter";
 import usePublicData from "../../providers/usePublicData";
 import AdminLoader from "../../admin/adminComponent/adminLoader/AdminLoader";
 import { Helmet } from "react-helmet-async";
+import { motion } from "framer-motion";
+import PageTitle from "../../components/pageTitle/PageTitle";
 
 const FrontendNoticeManager = () => {
   const { notices, loading } = usePublicData();
@@ -22,10 +24,21 @@ const FrontendNoticeManager = () => {
         <title>Nova Blogging Platform || Notice Page</title>
       </Helmet>
       {loading && <AdminLoader />}
-      <h1>Frontend Notice Manager: {notices?.length}</h1>
-      <div className="">
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className=""
+      >
+        <PageTitle
+          title="Notice"
+          decoratedText="Management"
+          dataLength={notices?.length > 0 ? notices?.length : 0}
+        />
+
         <div className="overflow-x-auto">
-          <table className="table table-xs ">
+          <table className="table table-sm">
             <thead className="">
               <tr className="dark:border-gray-700">
                 <th>#</th>
@@ -82,7 +95,7 @@ const FrontendNoticeManager = () => {
             />
           )}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

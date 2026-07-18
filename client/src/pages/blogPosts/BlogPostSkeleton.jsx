@@ -10,24 +10,24 @@ const skeletonVariants = {
 
 const BlogPostSkeleton = () => {
   return (
-    <div className="lg:mb-14 mb-10 rounded-lg pb-4 relative bg-gray-200 p-4 animate-pulse">
-      <div className="h-6 w-32 bg-gray-300 mb-4 rounded"></div>
-      <div className="grid lg:grid-cols-12 grid-cols-1 gap-2 justify-between items-center">
+    <div className="lg:mb-14 mb-10 rounded-lg pb-4 relative bg-gray-200 dark:bg-gray-800 p-4 animate-pulse">
+      <div className="h-6 w-32 bg-gray-300 dark:bg-gray-700 mb-4 rounded"></div>
+      <div className="grid lg:grid-cols-12 grid-cols-1 lg:gap-4 gap-2 justify-between items-center">
         <motion.div
           className="col-span-12 lg:col-span-8 space-y-4"
           variants={skeletonVariants}
           initial="initial"
           animate="animate"
         >
-          <div className="h-6 w-3/4 bg-gray-300 rounded mb-2"></div>
-          <div className="h-6 w-1/2 bg-gray-300 rounded mb-2"></div>
-          <div className="h-4 w-full bg-gray-300 rounded"></div>
-          <div className="h-4 w-full bg-gray-300 rounded"></div>
-          <div className="h-4 w-full bg-gray-300 rounded"></div>
+          <div className="h-6 w-3/4 bg-gray-300 dark:bg-gray-700 rounded mb-2"></div>
+          <div className="h-6 w-1/2 bg-gray-300 dark:bg-gray-700 rounded mb-2"></div>
+          <div className="h-4 w-full bg-gray-300 dark:bg-gray-700 rounded"></div>
+          <div className="h-4 w-full bg-gray-300 dark:bg-gray-700 rounded"></div>
+          <div className="h-4 w-full bg-gray-300 dark:bg-gray-700 rounded"></div>
         </motion.div>
 
         <motion.div
-          className="col-span-12 lg:col-span-4 h-48 bg-gray-300 rounded"
+          className="col-span-12 lg:col-span-4 h-48 bg-gray-300 dark:bg-gray-700 rounded"
           variants={skeletonVariants}
           initial="initial"
           animate="animate"

@@ -25,21 +25,25 @@ const RandomBlogPosts = () => {
           {data.map((blog) => (
             <div
               key={blog._id}
-              className="col-span-12 lg:col-span-3 lg:space-y-4 space-y-2 shadow-sm rounded-md border border-base-300 dark:border-gray-700 p-2 tooltip"
+              className="col-span-12 lg:col-span-3 lg:space-y-2 space-y-2 shadow-sm rounded-md border border-base-300 dark:border-gray-700 tooltip"
               data-tip={blog?.title}
             >
               <div className="lg:h-44 h-38 w-full">
                 <Link to={`/blog-details/${blog.slug}`} className="m-0">
                   <img
-                    src={`${apiURL}${blog.image}`}
+                    src={
+                      blog?.image?.url
+                        ? blog?.image?.url
+                        : ` ${apiURL}${blog.image}`
+                    }
                     alt=""
-                    className="lg:h-44 h-38 w-full"
+                    className="lg:h-44 h-38 w-full rounded-t-lg"
                   />
                 </Link>
               </div>
-              <div className="">
+              <div className="p-2">
                 <Link to={`/blog-details/${blog.slug}`} className="m-0">
-                  <h2 className="text-xl font-bold">
+                  <h2 className="text-xl font-extrabold">
                     {blog.title.length > 60
                       ? blog.title.slice(0, 60) + "..."
                       : blog.title}
@@ -51,7 +55,7 @@ const RandomBlogPosts = () => {
                   {blog?.content ? (
                     <p
                       style={{ fontSize: "16px" }}
-                      className="prose prose-lg max-w-none list-decimal text-gray-700 mb-4 dark:text-gray-400"
+                      className="prose prose-lg max-w-none list-decimal text-gray-700 mb-4 dark:text-gray-400 p-2"
                       dangerouslySetInnerHTML={{
                         __html:
                           blog.content.length > 120

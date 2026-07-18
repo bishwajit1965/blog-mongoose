@@ -51,11 +51,6 @@ const BlogSchema = new mongoose.Schema(
         default: null,
       },
     },
-    // image: {
-    //   type: String,
-    //   default: null,
-    //   publicId: { type: String, default: null },
-    // },
 
     //✅Flagged status to be saved in blogs collection
     isFlagged: { type: Boolean, default: false },

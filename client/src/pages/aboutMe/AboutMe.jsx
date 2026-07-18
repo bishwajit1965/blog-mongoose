@@ -1,6 +1,11 @@
 // src/client/components/AboutMe.jsx
 import { Helmet } from "react-helmet-async";
 import Avatar from "/assets/bishwajit-1.jpg";
+import { motion } from "framer-motion";
+import PageTitle from "../../components/pageTitle/PageTitle";
+import { Link } from "react-router-dom";
+import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
+import SocialMediaLinks from "../../components/socialMediaLinks/SocialMediaLinks";
 
 const AboutMe = () => {
   return (
@@ -8,14 +13,47 @@ const AboutMe = () => {
       <Helmet>
         <title>Nova Journal ||About Me Page</title>
       </Helmet>
-      <section className="max-w-6xl mx-auto p-6 md:p-12 text-base-content dark:text-base-300">
-        <div className="flex flex-col md:flex-row items-center gap-10">
+      <motion.section
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="max-w-6xl mx-auto text-base-content dark:text-gray-400"
+      >
+        <PageTitle title="About" decoratedText="Me" />
+
+        <div className="flex flex-col md:flex-row items-center gap-10 dark:text-gray-400">
           {/* Profile Image */}
-          <img
-            src={Avatar}
-            alt="Bishwajit Paul"
-            className="lg:w-56 lg:h-56 w-36 h-36 rounded-full object-cover shadow-lg border-4"
-          />
+          <div className="">
+            <img
+              src={Avatar}
+              alt="Bishwajit Paul"
+              className="lg:w-56 lg:h-56 w-36 h-36 rounded-full object-cover shadow-lg border-4"
+            />
+
+            <div className="text-center text-gray-600 pt-4">
+              <p className="flex items-center justify-center">
+                <LucideIcon.Mail size={16} />
+                <a href="mailto:minu@gmail.com" className="hover:underline">
+                  paul.bishwajit09@gmail.com
+                </a>
+              </p>
+
+              <Link
+                target="__blank"
+                to="https://portfolio-h5k5.vercel.app"
+                className="link text-blue-500 text-sm m-0 flex items-center  justify-center gap-2"
+              >
+                <LucideIcon.Briefcase size={16} /> My Portfolio Link
+              </Link>
+              <div className="divider m-2 dark:divider-neutral"></div>
+              <div className="space-y-2">
+                <p>Follow me on: </p>
+                <div className="flex justify-center">
+                  <SocialMediaLinks />
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Content */}
           <div className="space-y-4">
@@ -79,7 +117,7 @@ const AboutMe = () => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
     </>
   );
 };

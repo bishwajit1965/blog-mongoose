@@ -9,8 +9,7 @@ import useAuth from "../../hooks/useAuth";
 import useGetComingSoonPost from "../../hooks/useGetComingSoonPost";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import SectionTitle from "../sectionTitle/SectionTitle";
-import { FaBloggerB, FaEnvelope } from "react-icons/fa";
+import { FaEnvelope } from "react-icons/fa";
 
 const ComingSoonPost = ({
   title = "Send Coming Soon Request !",
@@ -73,28 +72,21 @@ const ComingSoonPost = ({
     );
 
   return (
-    <div className="mb-4">
-      <SectionTitle
-        title="Coming Soon "
-        decoratedText="Posts"
-        dataLength={
-          data?.length > 0 ? data?.length : <span className="">{0}</span>
-        }
-        icon={<FaBloggerB />}
-      />
-
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className=""
+    >
       {data?.length === 0 ? (
         <div className="flex items-center justify-center mt-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="rounded-md border border-gray-200 dark:border-gray-700 shadow-sm p-4 text-center max-w-md"
-          >
-            <h1 className="lg:text-xl text-lg font-semibold mb-2 flex items-center gap-2">
+          <div className="rounded-xl border border-base-content/15 dark:border-gray-700 shadow-sm hover:shadow-lg p-4 text-center max-w-md">
+            <h1 className="lg:text-xl text-sm font-semibold mb-2 flex items-center gap-2">
               <FaEnvelope size={20} className="text-blue-500" /> {title}
             </h1>
-            <p className="text-gray-600 dark:text-base-300 mb-6">{message}</p>
+            <p className="lg:text-gray-600  dark:text-gray-400 mb-6">
+              {message}
+            </p>
             <form action="" onSubmit={handleSubmitRequest}>
               <div className="mb-2">
                 <input
@@ -140,7 +132,7 @@ const ComingSoonPost = ({
                 {isLoading ? "Submitting..." : buttonLabel}
               </Button>
             </form>
-          </motion.div>
+          </div>
         </div>
       ) : (
         <div className="grid lg:grid-cols-12 grid-cols-1 gap-2 justify-between">
@@ -149,7 +141,7 @@ const ComingSoonPost = ({
           ))}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

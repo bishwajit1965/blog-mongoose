@@ -20,7 +20,7 @@ import {
   notifyError,
   notifySuccess,
 } from "../../adminComponent/adminToastNotification/AdminToastNotification";
-import { LucideIcon } from "../../lib/LucideIcons";
+import { LucideArchiveX, LucideTrash2, LucideUndo2 } from "lucide-react";
 
 /**=============================================
  * For the toggling of React Multi Select fields
@@ -172,9 +172,9 @@ const ManageBlogPosts = () => {
         const response = await softDeletePost(slug);
         notifySuccess(response?.message);
         setTimeout(() => {
-          null;
           setIsModalOpen(null);
         }, 500);
+
         // alert("Blog soft deleted successfully!");
         await fetchBlogsForCrudInSuperAdminBlogManagement();
       }
@@ -200,7 +200,6 @@ const ManageBlogPosts = () => {
         const response = await restoreSoftDeletedPost(slug);
         notifySuccess(response?.message);
         setTimeout(() => {
-          null;
           setIsSoftDeletedModalOpen(null);
         }, 500);
 
@@ -228,7 +227,6 @@ const ManageBlogPosts = () => {
 
         notifySuccess(response?.message);
         setTimeout(() => {
-          null;
           setIsPermanentlyDeleteModalOpen(null);
         }, 500);
 
@@ -360,12 +358,14 @@ const ManageBlogPosts = () => {
               <ConfirmDialogue
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(null)}
-                onDelete={loading}
+                loading={loading}
                 onConfirm={() => handleSoftDeletePost(isModalOpen?.slug)}
-                title="Confirm soft delete blog post"
-                confirmText="Soft delete"
-                action="soft delete"
-                warning="The action can also be undone later!"
+                title="Soft Delete Blog"
+                message="Soft delete this blog?"
+                confirmIcon={LucideArchiveX}
+                confirmText="Soft Delete"
+                confirmLoadingText="Soft deleting..."
+                variant="success"
               />
             )}
 
@@ -374,14 +374,14 @@ const ManageBlogPosts = () => {
               <ConfirmDialogue
                 isOpen={isSoftDeletedModalOpen}
                 onClose={() => setIsSoftDeletedModalOpen(null)}
-                onRestore={loading}
+                loading={loading}
                 onConfirm={() => handleRestore(isSoftDeletedModalOpen?.slug)}
-                title="Confirm restore soft deleted blog post"
-                confirmText="Restore Soft Deleted"
-                action="restore delete"
-                warning="The action can also be reversed later!"
+                title="Restore Blog"
+                message="Restore this blog?"
+                confirmIcon={LucideUndo2}
+                confirmText="Restore"
+                confirmLoadingText="Restoring..."
                 variant="success"
-                icon={<LucideIcon.CheckCircle />}
               />
             )}
 
@@ -390,13 +390,15 @@ const ManageBlogPosts = () => {
               <ConfirmDialogue
                 isOpen={isPermanentDeleteModalOpen}
                 onClose={() => setIsPermanentlyDeleteModalOpen(null)}
-                onRestore={loading}
+                loading={loading}
                 onConfirm={() =>
                   handlePermanentDeletePost(isPermanentDeleteModalOpen?.slug)
                 }
-                title="Confirm permanently delete blog post"
-                confirmText="Permanently Delete"
-                action="permanent delete"
+                title="Delete Blog"
+                message="Are you sure you want to permanently delete this blog?"
+                confirmIcon={LucideTrash2}
+                confirmText="Delete"
+                confirmLoadingText="Deleting..."
                 variant="danger"
               />
             )}

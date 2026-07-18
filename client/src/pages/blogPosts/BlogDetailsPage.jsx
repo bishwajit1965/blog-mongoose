@@ -39,7 +39,6 @@ import BookmarkButton from "../../components/bookmarkButton/BookmarkButton";
 import Button from "../../components/buttons/Button";
 import CTAButton from "../../components/buttons/CTAButton";
 import CommentCard from "../../components/comment/CommentCard";
-import FollowButton from "../../components/followButton/FollowButton";
 import RelatedBlogPosts from "../../components/relatedBlogPosts/RelatedBlogPosts";
 import ScrollProgressBar from "../../components/scrollProgressBar/ScrollProgressBar";
 import SocialMediaLinks from "../../components/socialMediaLinks/SocialMediaLinks";
@@ -50,6 +49,8 @@ import useFlagBlogPost from "../../hooks/useFlagBlogPost";
 import useGetBookmarkedPosts from "../../hooks/useGetBookmarkedPosts";
 import { useMutation } from "@tanstack/react-query";
 import useWordCount from "../../admin/adminHooks/useWordCount";
+import Seo from "../../components/seo/Seo";
+import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
 
 // Button active state style
 const style = {
@@ -91,9 +92,6 @@ const BlogDetailsPage = () => {
     publishAt,
     flaggedReason,
   } = blog || {};
-
-  console.log("User=>", user);
-  console.log("Blog=>", blog);
 
   // Comment form related code
   const [errors, setErrors] = useState({});
@@ -392,606 +390,607 @@ const BlogDetailsPage = () => {
   }
 
   return (
-    <div className="overflow-x-hidden dark:text-gray-200 lg:shadow-sm relative rounded-lg">
-      {isLoading && <AdminLoader />}
+    <>
+      <Seo
+        title={title}
+        description={excerpt}
+        image={image?.url}
+        url={`blog-details/${slug}`}
+        author={author?.name}
+        category={category?.name}
+        tags={tags?.map((tag) => tag?.name)}
+        publishDate={publishAt}
+      />
 
-      {/* Floating text box left top begins */}
-      <div>
-        <motion.div
-          ref={leftColumnRef}
-          animate={controls}
-          className="w-[14rem] absolute top-  bg-gray-1000 left-0 rounded-md invisible lg:visible shadow-md space-y-4 border border-gray-100 dark:border-gray-700"
-        >
-          <div className="w-full">
-            <img
-              src={image?.url ? image.url : `${apiURL}${image}`}
-              // src={`${apiURL}${image}`}
-              alt=""
-              className="rounded-t-md h-28 w-full"
-            />
-          </div>
-          <div className="lg:h-72 relative p-2">
-            <FaQuoteLeft className="absolute top-0 text-xl font-bold text-gray-500 dark:text-gray-400" />
-            <p
-              className="absolute top-0 left-2 right-2 indent-7 lg:text-gray-600 text-gray-500s italic dark:text-gray-300 text-info-content"
-              dangerouslySetInnerHTML={{
-                __html: excerpt ? blog.excerpt : "N/A",
-              }}
-            />
-          </div>
-        </motion.div>
-      </div>
-      {/* Floating text box left top ends */}
+      <div className="overflow-x-hidden dark:text-gray-200 lg:shadow-sm relative rounded-lg">
+        {isLoading && <AdminLoader />}
 
-      <div className="lg:max-w-3xl mx-auto">
-        <ScrollProgressBar />
-        <div className="lg:space-y-4 space-y-3">
-          {/* ------> Blog content wrapper begins ------> */}
-          {/* Blog post title begins */}
-          <div className="lg:mb-7">
-            <Link to="/" className="m-0">
-              <h1 className="lg:text-4xl text-3xl font-extrabold text-gray-900 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-5xl first-letter:text-extra-bold dark:text-gray-300">
-                {title}
-              </h1>
-            </Link>
-          </div>
-          {/* Blog post title ends */}
-
-          {/* Author, follow, reading time, published at section begins */}
-          <div className="lg:flex items-center lg:space-y-0 space-y-2 lg:space-x-4 space-x-0">
-            <div className="hover:link">
-              <div className="flex items-center lg:space-x-3 space-x-2 hover-target">
-                <div className="relative">
-                  <AuthorInfoModal
-                    user={user}
-                    title={blog?.author?.name}
-                    author={author}
-                    blog={blog}
-                  >
-                    <>
-                      <p>{user?.uid}</p>
-                      <p>Email: {user?.email}</p>
-                      <p>Role: Admin</p>
-                      <p>
-                        <Link
-                          to="https://www.test.com"
-                          className="link underline m-0"
-                        >
-                          I teach everything I know at
-                        </Link>
-                      </p>
-                      <SocialMediaLinks />
-                    </>
-                  </AuthorInfoModal>
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:flex flex-1 items-center lg:space-x-4 space-x-0 lg:space-y-0 space-y-3">
-              <div className="dark:text-gray-400">
-                <FollowButton
-                  authorId={blog.author?._id} // Mongo _id
-                  disabled={!user}
-                  isFollowingInitial={
-                    user?._id !== blog.author?._id &&
-                    user?.following?.some((id) => id.equals(blog.author?._id))
-                  }
-                />
-              </div>
-
-              <div className="h-8 border border-gray-300 dark:border-gray-700 rounded-full shadow-sm flex items-center lg:space-x-2 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 text-gray-600 dark:text-gray-400">
-                <span>Read in:</span>
-                <span className="italic">
-                  {<BlogReadingTimeCounter content={content} />}
-                </span>
-              </div>
-
-              <div className="border border-gray-300 dark:border-gray-700 rounded-full shadow-sm h-8 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 flex items-center">
-                <p className="text-gray-600 flex items-center space-x-2 hover:text-base-200 dark:text-gray-400">
-                  <FaClock className="" />
-                  <span>{dateFormatter(publishAt)}</span>
-                </p>
-              </div>
-            </div>
-          </div>
-          {/* Author, follow, reading time, published at section ends */}
-
-          {/* Flagging and dislikes flagged section begins
-          =================================================*/}
-          <div className="lg:flex items-center lg:space-x-8 lg:space-y-0 space-y-2">
-            {/* Flagged reason display begins */}
-            <div className="flex items-center lg:space-x-3 space-x-2">
-              <span>
-                <FaFlag className="dark:text-gray-400" />
-              </span>
-              {flaggedReason.length > 0 ? (
-                flaggedReason.slice(0, 2).map((reason) => (
-                  <div
-                    key={reason._id}
-                    className="flex items-center w-fit font-semibold lg:text-[17px] text-xs lg:space-x-2 space-x-1"
-                  >
-                    <span
-                      className={`${
-                        reason.length > 0
-                          ? "text-gray-700 bg-base-300 dark:bg-gray-500 dark:text-gray-400"
-                          : "bg-amber-500"
-                      } p-2 h-5 rounded-md flex items-center justify-center border border-gray-500 shadow`}
-                    >
-                      {reason === "Other" ? 0 : reason}
-                    </span>
-                  </div>
-                ))
-              ) : (
-                <span className="flex items-center w-fit font-bold rounded-md lg:text-[17px] text-xs lg:space-x-2">
-                  <span>{reason.length}</span>
-                </span>
-              )}
-            </div>
-            {/* Flagged reason display ends */}
-
-            {/* Likes dislikes section begins */}
-            <div className="flex items-center lg:space-x-4 space-x-3">
-              <div className="flex items-center lg:space-x-2 space-x-1">
-                <span className="">
-                  <FaThumbsUp className="dark:text-gray-400" />
-                </span>
-                <span className="flex items-center justify-center rounded-full border text-gray-800 dark:text-gray-400 border-gray-500 p-1 w-6 h-6">
-                  {reactions.likeCount}
-                </span>
-              </div>
-              <div className="flex items-center lg:space-x-2 space-x-1">
-                <span className="">
-                  <FaThumbsDown className="dark:text-gray-400" />
-                </span>
-                <span className="flex items-center justify-center rounded-full border text-gray-800 dark:text-gray-400 border-gray-500 p-1 w-6 h-6">
-                  {reactions.dislikeCount}
-                </span>
-              </div>
-            </div>
-            {/* Likes dislikes section ends */}
-
-            {/* Social media links section begins */}
-            <div className="flex justify-start -ml-3">
-              <SocialMediaLinks />
-            </div>
-            {/* Social media links section ends */}
-          </div>
-          {/* Flagging and dislikes flagged section ends */}
-
-          {/* Category & tags section begins */}
-          <div className="lg:flex grid gap-2 items-center lg:space-x-2">
-            <div className="flex items-center">
-              <span className="flex items-center w-fit font-bold rounded-md mr-2 py-1 lg:text-[17px] text-xs">
-                <span>
-                  <FaThList className="dark:text-gray-400" />
-                </span>
-              </span>
-              <span className="">
-                {category ? (
-                  <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600  rounded-md px-2 py-1 mr-2 lg:text-[17px] text-xs capitalize dark:bg-gray-700 dark:text-gray-400">
-                    {category.name}
-                  </span>
-                ) : (
-                  "N/A"
-                )}
-              </span>
-            </div>
-
-            <div className="">
-              <div className="flex items-center">
-                <span className="flex items-center w-fit font-bold   rounded-md mr-2 lg:text-[17px] text-xs">
-                  <span>
-                    <FaTags className="dark:text-gray-400" />
-                  </span>
-                </span>
-                {tags && tags.length > 0 ? (
-                  tags.map((tag) => (
-                    <span key={tag._id}>
-                      <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-1 mr-2 lg:text-[17px] text-xs dark:bg-gray-700 dark:text-gray-400">
-                        {tag.name}
-                      </span>
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-gray-400">No tags available</span>
-                )}
-              </div>
-            </div>
-          </div>
-          {/* Category & tags section ends */}
-
-          {/* Comments-count & bookmarks section begins */}
-          <div className="flex items-center lg:space-x-2 space-x-1">
-            <span>
-              <FaComment className="dark:text-gray-400" />
-            </span>
-            <span className="w-6 h-6 p-1 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 dark:text-gray-400 shadow-sm font-semibold">
-              {fetchedComments.length > 0 ? fetchedComments.length : 0}
-            </span>
-            <span className="">
-              <BookmarkButton blogId={_id} />
-            </span>
-          </div>
-          {/* Comments-count & bookmarks section ends */}
-
-          {/* Excerpt section begins */}
-          <div className="lg:py-4 py-2">
-            {blog.excerpt ? (
-              <div className="lg:min-h-24 min-h-36">
-                <div className="min-h-[44px] relative">
-                  <FaQuoteLeft className="absolute top-0 text-xl font-bold text-gray-600 dark:text-gray-300" />
-                  <p
-                    className="absolute top-0 indent-7 font-bold lg:text-gray-600 text-gray-500 italic lg:text-xl dark:text-gray-400 py-2"
-                    dangerouslySetInnerHTML={{
-                      __html: blog.excerpt ? blog.excerpt : "N/A",
-                    }}
-                  />
-                </div>
-              </div>
-            ) : (
-              <p className="text-red-500 text-md font-bold">
-                😃 No blog summary is available now.
-              </p>
-            )}
-          </div>
-          {/* Excerpt section ends */}
-
-          {/* Blog image section begins */}
-          <div className="lg:my-10 my-4">
-            <Link to="/" className="m-0">
+        {/* Floating text box left top begins */}
+        <div>
+          <motion.div
+            ref={leftColumnRef}
+            animate={controls}
+            className="w-[14rem] absolute bg-gray-50 dark:bg-gray-800 left-0 rounded-md invisible lg:visible shadow-md space-y-4 border border-gray-100 dark:border-gray-700"
+          >
+            <div className="w-full">
               <img
                 src={image?.url ? image.url : `${apiURL}${image}`}
-                alt={title.slice(0, 15)}
-                className="w-full min-h-48 object-cover shadow-md rounded-lg"
+                alt={title?.slice(0, 20)}
+                className="rounded-t-md h-28 w-full"
               />
-            </Link>
-          </div>
-          {/* Blog image section ends */}
-
-          {/* Blog post content section begins */}
-          <div className="lg:pt-6 pt-4">
-            {blog?.content ? (
+            </div>
+            <div className="lg:min-h-72 min-h-80 relative p-2">
+              <FaQuoteLeft className="absolute top-0 text-xl font-bold text-gray-500 dark:text-gray-400" />
               <p
-                style={{ fontSize: "20px" }}
-                className="prose prose-lg max-w-none list-decimal text-gray-700 mb-4 indent-7 dark:text-gray-400"
+                className="absolute top-0 left-2 right-2 indent-7 lg:text-gray-600 text-gray-500s italic dark:text-gray-400 text-info-content first-letter:font-roboto first-letter:capitalize dark:first-letter:text-info first-letter:font-extrabold lg:first-letter:text-2xl first-letter:text-extra-bold lg:min-h-72 h-80 first-letter:text-gray-800"
                 dangerouslySetInnerHTML={{
-                  __html: blog.content ? blog.content : "N/A",
+                  __html: blog?.excerpt ? blog.excerpt : "N/A",
                 }}
               />
-            ) : (
-              <p>No blog post content is available</p>
-            )}
-          </div>
-
-          <div className="flex items-center lg:justify-start justify-center lg:space-x-6 space-x-2 lg:py-8 py-4">
-            <p className="text-gray-500">
-              <span className="lg:text-xl text-sm font-bold text-gray-500">
-                Words count:
-              </span>{" "}
-              <span className="italic lg:text-xl text-sm font-bold text-gray-500">
-                {wordCount}
-              </span>{" "}
-            </p>
-          </div>
-          {/* Blog post content section ends */}
+            </div>
+          </motion.div>
         </div>
-        {/* ------> Blog content wrapper ends ------>*/}
-      </div>
+        {/* Floating text box left top ends */}
 
-      {/**===================================
+        <div className="lg:max-w-3xl mx-auto lg:px-4 borders">
+          <ScrollProgressBar />
+          <div className="lg:space-y-4 space-y-3">
+            {/* ------> Blog content wrapper begins ------> */}
+            {/* Blog post title begins */}
+            <div className="lg:mb-7">
+              <Link to="/" className="m-0">
+                <h1 className="lg:text-3xl text-lg font-extrabold text-gray-900 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-5xl first-letter:text-extra-bold dark:text-gray-300">
+                  {title}
+                </h1>
+              </Link>
+            </div>
+            {/* Blog post title ends */}
+            {/* Author, follow, reading time, published at section begins */}
+            <div className="lg:flex items-center lg:space-y-0 space-y-2 lg:space-x-4 space-x-0">
+              <div className="hover:link">
+                <div className="flex items-center lg:space-x-3 space-x-2 hover-target">
+                  <div className="relative">
+                    <AuthorInfoModal
+                      user={user}
+                      title={blog?.author?.name}
+                      author={author}
+                      blog={blog}
+                    >
+                      <div className="space-y-2">
+                        <p className="flex items-center gap-1.5 font-bold">
+                          <LucideIcon.CreditCard size={18} /> Super Admin
+                        </p>
+
+                        <p className="flex items-center gap-1.5">
+                          <LucideIcon.Mail size={18} /> {author?.email}
+                        </p>
+
+                        <Link
+                          target="_blank"
+                          to="https://portfolio-h5k5.vercel.app"
+                          className="m-0 hover:link text-blue-400 flex items-center gap-1.5"
+                        >
+                          <LucideIcon.Briefcase size={16} /> My Portfolio Link
+                        </Link>
+
+                        <SocialMediaLinks />
+                      </div>
+                    </AuthorInfoModal>
+                  </div>
+                </div>
+              </div>
+
+              <div className="lg:flex flex-1 items-center lg:space-x-4 space-x-0 lg:space-y-0 space-y-3">
+                <div className="h-8 border border-gray-300 dark:border-gray-700 rounded-full shadow-sm flex items-center lg:space-x-2 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 text-gray-600 dark:text-gray-400">
+                  <span>Read in:</span>
+                  <span className="italic">
+                    {<BlogReadingTimeCounter content={content} />}
+                  </span>
+                </div>
+
+                <div className="border border-gray-300 dark:border-gray-700 rounded-full shadow-sm h-8 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 flex items-center">
+                  <p className="text-gray-600 flex items-center space-x-2 hover:text-base-200 dark:text-gray-400">
+                    <FaClock className="" />
+                    <span>{dateFormatter(publishAt)}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            {/* Author, follow, reading time, published at section ends */}
+            {/* Flagging and dislikes flagged section begins */}
+            <div className="lg:inline-flex items-center lg:space-x-8 lg:space-y-0 space-y-3">
+              <div className="flex items-center lg:gap-10 gap-6">
+                {/* Flagged reason display begins */}
+                <div className="flex items-center lg:space-x-3 space-x-2">
+                  <span>
+                    <FaFlag className="dark:text-gray-400" />
+                  </span>
+                  {flaggedReason.length > 0 ? (
+                    flaggedReason.slice(0, 2).map((reason) => (
+                      <div
+                        key={reason._id}
+                        className="flex items-center w-fit font-semibold lg:text-[17px] text-xs lg:space-x-2 space-x-1"
+                      >
+                        <span
+                          className={`${
+                            reason.length > 0
+                              ? "text-gray-700 bg-base-300 dark:bg-gray-500 dark:text-gray-400"
+                              : "bg-amber-500"
+                          } p-2 h-5 rounded-md flex items-center justify-center border border-gray-500 shadow`}
+                        >
+                          {reason === "Other" ? 0 : reason}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <span className="flex items-center w-fit font-bold rounded-md lg:text-[17px] text-xs lg:space-x-2">
+                      <span>{reason.length}</span>
+                    </span>
+                  )}
+                </div>
+                {/* Flagged reason display ends */}
+
+                {/* Likes dislikes section begins */}
+                <div className="inline-flex items-center lg:space-x-4 space-x-3">
+                  <div className="flex items-center lg:space-x-2 space-x-1">
+                    <span className="">
+                      <FaThumbsUp className="dark:text-gray-400" />
+                    </span>
+                    <span className="flex items-center justify-center rounded-full border text-gray-800 dark:text-gray-400 border-gray-500 p-1 w-6 h-6">
+                      {reactions.likeCount}
+                    </span>
+                  </div>
+                  <div className="flex items-center lg:space-x-2 space-x-1">
+                    <span className="">
+                      <FaThumbsDown className="dark:text-gray-400" />
+                    </span>
+                    <span className="flex items-center justify-center rounded-full border text-gray-800 dark:text-gray-400 border-gray-500 p-1 w-6 h-6">
+                      {reactions.dislikeCount}
+                    </span>
+                  </div>
+                </div>
+                {/* Likes dislikes section ends */}
+              </div>
+
+              {/* Social media links section begins */}
+              <div className="flex justify-start">
+                <SocialMediaLinks />
+              </div>
+              {/* Social media links section ends */}
+            </div>
+            {/* Flagging and dislikes flagged section ends */}
+            {/* Category & tags section begins */}
+            <div className="lg:flex grid gap-2 items-center lg:space-x-2">
+              <div className="flex items-center">
+                <span className="flex items-center w-fit font-bold rounded-md mr-2 py-1 lg:text-[17px] text-xs">
+                  <span>
+                    <FaThList className="dark:text-gray-400" />
+                  </span>
+                </span>
+                <span className="">
+                  {category ? (
+                    <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600  rounded-md px-2 py-1 mr-2 lg:text-[17px] text-xs capitalize dark:bg-gray-700 dark:text-gray-400">
+                      {category?.name}
+                    </span>
+                  ) : (
+                    "N/A"
+                  )}
+                </span>
+              </div>
+
+              <div className="">
+                <div className="flex items-center">
+                  <span className="flex items-center w-fit font-bold   rounded-md mr-2 lg:text-[17px] text-xs">
+                    <span>
+                      <FaTags className="dark:text-gray-400" />
+                    </span>
+                  </span>
+                  {tags?.length && tags.length > 0 ? (
+                    tags.map((tag) => (
+                      <span key={tag?._id}>
+                        <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-1 mr-2 lg:text-[17px] text-xs dark:bg-gray-700 dark:text-gray-400">
+                          {tag.name}
+                        </span>
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-gray-400">No tags available</span>
+                  )}
+                </div>
+              </div>
+            </div>
+            {/* Category & tags section ends */}
+            {/* Comments-count & bookmarks section begins */}
+            <div className="flex items-center lg:space-x-2 space-x-1">
+              <span>
+                <FaComment className="dark:text-gray-400" />
+              </span>
+              <span className="w-6 h-6 p-1 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 dark:text-gray-400 shadow-sm font-semibold">
+                {fetchedComments?.length > 0 ? fetchedComments?.length : 0}
+              </span>
+              <span className="">
+                <BookmarkButton blogId={_id} />
+              </span>
+            </div>
+            {/* Comments-count & bookmarks section ends */}
+            {/* Excerpt section begins */}
+            <div className="lg:py-4 py-2">
+              {blog.excerpt ? (
+                <div className="lg:min-h-32 min-h-52">
+                  <div className="min-h-[44px] relative">
+                    <FaQuoteLeft className="absolute top-0 text-xl font-bold text-gray-600 dark:text-gray-300" />
+                    <p
+                      className="absolute top-0 indent-7 font-bold lg:text-gray-600 text-gray-500 italic lg:text-xl dark:text-gray-400 py-2 first-letter:font-roboto first-letter:capitalize dark:first-letter:text-info first-letter:font-extrabold lg:first-letter:text-2xl first-letter:text-extra-bold first-letter:text-gray-800"
+                      dangerouslySetInnerHTML={{
+                        __html: blog.excerpt ? blog.excerpt : "N/A",
+                      }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <p className="text-red-500 text-md font-bold">
+                  😃 No blog summary is available now.
+                </p>
+              )}
+            </div>
+            {/* Excerpt section ends */}
+            {/* Blog image section begins */}
+            <div className="lg:my-10 my-4">
+              <Link to="/" className="m-0">
+                <img
+                  src={image?.url ? image.url : `${apiURL}${image}`}
+                  alt={title.slice(0, 15)}
+                  className="w-full min-h-48 object-cover shadow-md rounded-lg"
+                />
+              </Link>
+            </div>
+            {/* Blog image section ends */}
+            {/* Blog post content section begins */}
+            <div className="lg:pt-6 pt-4">
+              {blog?.content ? (
+                <p
+                  style={{ fontSize: "20px" }}
+                  className="prose prose-lg max-w-none list-decimal text-gray-700 mb-4 indent-7 dark:text-gray-400"
+                  dangerouslySetInnerHTML={{
+                    __html: blog.content ? blog.content : "N/A",
+                  }}
+                />
+              ) : (
+                <p>No blog post content is available</p>
+              )}
+            </div>
+            <div className="flex items-center lg:justify-start justify-center lg:space-x-6 space-x-2 lg:py-8 py-4">
+              <p className="text-gray-500">
+                <span className="lg:text-xl text-sm font-bold text-gray-500">
+                  Words count:
+                </span>{" "}
+                <span className="italic lg:text-xl text-sm font-bold text-gray-500">
+                  {wordCount}
+                </span>{" "}
+              </p>
+            </div>
+            {/* Blog post content section ends */}
+          </div>
+          {/* ------> Blog content wrapper ends ------>*/}
+        </div>
+
+        {/**===================================
       | RELATED BLOG POSTS SECTION BEGINS
       |**====================================*/}
-      <div className="lg:max-w-7xl w-full mx-auto">
-        <div className="lg:flex w-full flex-col lg:max-w-7xl mx-auto">
-          <div className="divider font-bold dark:text-gray-400">
-            Related Posts Section
+        <div className="lg:max-w-7xl w-full mx-auto">
+          <div className="lg:flex w-full flex-col lg:max-w-7xl mx-auto">
+            <div className="divider font-bold dark:text-gray-400">
+              Related Posts Section
+            </div>
+          </div>
+          <div className="">
+            <RelatedBlogPosts
+              slug={slug}
+              user={user}
+              bookmarkedPosts={bookmarkedPosts}
+            />
           </div>
         </div>
-        <div className="">
-          <RelatedBlogPosts
-            slug={slug}
-            user={user}
-            bookmarkedPosts={bookmarkedPosts}
-          />
-        </div>
-      </div>
-      {/**===================================
+        {/**===================================
       | RELATED BLOG POSTS SECTION ENDS
       |**====================================*/}
 
-      {/**===================================
+        {/**===================================
       | LIKE DISLIKE SECTION BEGINS
       |**====================================*/}
-      <div className="lg:flex w-full flex-col lg:max-w-3xl mx-auto">
-        <div className="flex w-full flex-col">
-          <div className="divider font-bold dark:text-gray-400">
-            Like Dislike Section
-          </div>
-        </div>
-
-        {/* Like & dislike button begins */}
-        <div className="grid lg:grid-cols-3 grid-col-1 gap-2 items-center justify-center w-full lg:justify-between lg:space-x- lg:space-y-0 space-y-4 lg:py-4 py-4">
-          <div className="relative lg:flex lg:justify-start grid justify-center">
-            <Button
-              onClick={() => handleLike(slug)}
-              label={`${reactions.likeCount > 0 ? "Liked Post" : "Like Post"}`}
-              icon={reactions.likeCount > 0 ? <FaThumbsUp /> : <FaThumbsDown />}
-              variant={isLiked ? "active" : "outline"}
-              className="lg:min-w-44 min-w-44"
-            />
-            <div
-              className={`${
-                reactions.likeCount > 0 ? style.active : "whitewhite"
-              } absolute lg:-top-5 lg:-left-5 -top-5 -right-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
-            >
-              {reactions.likeCount}
+        <div className="lg:flex w-full flex-col lg:max-w-3xl mx-auto">
+          <div className="flex w-full flex-col">
+            <div className="divider font-bold dark:text-gray-400">
+              Like Dislike Section
             </div>
           </div>
 
-          <div className="relative lg:flex lg:justify-center grid justify-center">
-            <Button
-              label={`${
-                reactions.dislikeCount > 0 ? "Disliked Post" : "Dislike Post"
-              }`}
-              onClick={() => handleDislike(slug)}
-              icon={
-                reactions.dislikeCount > 0 ? <FaThumbsDown /> : <FaThumbsUp />
-              }
-              variant={isDisliked ? "active" : "outline"}
-              className="lg:min-w-44 min-w-44"
-            />
-            <div
-              className={`${
-                reactions.dislikeCount > 0 ? style.active : "whitewhite"
-              } absolute lg:-top-5 lg:left-4 -top-5 -right-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
-            >
-              {reactions.dislikeCount}
-            </div>
-          </div>
-          {!isFlagOpen ? (
-            <div className="lg:flex lg:justify-end">
+          {/* Like & dislike button begins */}
+          <div className="grid lg:grid-cols-3 grid-col-1 gap-2 items-center justify-center w-full lg:justify-between lg:space-x- lg:space-y-0 space-y-4 lg:py-4 py-4">
+            <div className="relative lg:flex lg:justify-start grid justify-center">
               <Button
-                onClick={handleFlagToggle}
-                label="Flag Post"
-                icon={<FaFlag />}
-                variant={flag ? "active" : "outline"}
+                onClick={() => handleLike(slug)}
+                label={`${reactions.likeCount > 0 ? "Liked Post" : "Like Post"}`}
+                icon={
+                  reactions.likeCount > 0 ? <FaThumbsUp /> : <FaThumbsDown />
+                }
+                variant={isLiked ? "active" : "outline"}
                 className="lg:min-w-44 min-w-44"
               />
+              <div
+                className={`${
+                  reactions.likeCount > 0 ? style.active : "whitewhite"
+                } absolute lg:-top-5 lg:-left-5 -top-5 -right-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
+              >
+                {reactions.likeCount}
+              </div>
             </div>
-          ) : (
-            <>
-              <div className="lg:flex lg:justify-end grid justify-center">
+
+            <div className="relative lg:flex lg:justify-center grid justify-center">
+              <Button
+                label={`${
+                  reactions.dislikeCount > 0 ? "Disliked Post" : "Dislike Post"
+                }`}
+                onClick={() => handleDislike(slug)}
+                icon={
+                  reactions.dislikeCount > 0 ? <FaThumbsDown /> : <FaThumbsUp />
+                }
+                variant={isDisliked ? "active" : "outline"}
+                className="lg:min-w-44 min-w-44"
+              />
+              <div
+                className={`${
+                  reactions.dislikeCount > 0 ? style.active : "whitewhite"
+                } absolute lg:-top-5 lg:left-4 -top-5 -right-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
+              >
+                {reactions.dislikeCount}
+              </div>
+            </div>
+            {!isFlagOpen ? (
+              <div className="lg:flex lg:justify-end">
                 <Button
-                  onClick={handleFlagPost}
-                  label="Flag Post Now"
+                  onClick={handleFlagToggle}
+                  label="Flag Post"
                   icon={<FaFlag />}
-                  variant={flagPostNow ? "active" : "whitewhite"}
-                  disabled={isPending}
+                  variant={flag ? "active" : "outline"}
                   className="lg:min-w-44 min-w-44"
                 />
               </div>
-              {isFlagOpen && (
-                <div className="lg;pt-8 pt-4">
-                  <select
-                    value={reason}
-                    onChange={(e) => setReason(e.target.value)}
-                    className="select select-bordered lg:select-sm select-sm lg:max-w-44 max-w-44 rounded-full"
-                  >
-                    <option disabled value="">
-                      Select one reason
-                    </option>
-                    {predefinedReasons.map((reason) => (
-                      <option key={reason} value={reason}>
-                        {reason}
-                      </option>
-                    ))}
-                  </select>
-
-                  {reason === "Other" && (
-                    <textarea
-                      className="textarea textarea-bordered lg:max-w-44 max-w-44 "
-                      rows="3"
-                      placeholder="Custom comment..."
-                      value={customComment}
-                      onChange={(e) => setCustomComment(e.target.value)}
-                    />
-                  )}
+            ) : (
+              <>
+                <div className="lg:flex lg:justify-end grid justify-center">
+                  <Button
+                    onClick={handleFlagPost}
+                    label="Flag Post Now"
+                    icon={<FaFlag />}
+                    variant={flagPostNow ? "active" : "whitewhite"}
+                    disabled={isPending}
+                    className="lg:min-w-44 min-w-44"
+                  />
                 </div>
-              )}
-              <div className="flex lg:justify-center justify-center flex-start lg:pt-4 pt-2">
-                <Button
-                  onClick={handleFlagToggle}
-                  label="Cancel Flagging"
-                  icon={<FaRegTimesCircle />}
-                  variant={cancelFlag ? "outline" : "warning"}
-                  className="lg:min-w-44 min-w-44 flex justify-end"
-                />
-              </div>
-            </>
-          )}
-        </div>
-        {/* Like & dislike button ends */}
-      </div>
+                {isFlagOpen && (
+                  <div className="lg;pt-8 pt-4">
+                    <select
+                      value={reason}
+                      onChange={(e) => setReason(e.target.value)}
+                      className="select select-bordered lg:select-sm select-sm lg:max-w-44 max-w-44 rounded-full"
+                    >
+                      <option disabled value="">
+                        Select one reason
+                      </option>
+                      {predefinedReasons.map((reason) => (
+                        <option key={reason} value={reason}>
+                          {reason}
+                        </option>
+                      ))}
+                    </select>
 
-      {/**===================================
+                    {reason === "Other" && (
+                      <textarea
+                        className="textarea textarea-bordered lg:max-w-44 max-w-44 "
+                        rows="3"
+                        placeholder="Custom comment..."
+                        value={customComment}
+                        onChange={(e) => setCustomComment(e.target.value)}
+                      />
+                    )}
+                  </div>
+                )}
+                <div className="flex lg:justify-center justify-center flex-start lg:pt-4 pt-2">
+                  <Button
+                    onClick={handleFlagToggle}
+                    label="Cancel Flagging"
+                    icon={<FaRegTimesCircle />}
+                    variant={cancelFlag ? "outline" : "warning"}
+                    className="lg:min-w-44 min-w-44 flex justify-end"
+                  />
+                </div>
+              </>
+            )}
+          </div>
+          {/* Like & dislike button ends */}
+        </div>
+
+        {/**===================================
       | COMMENT SECTION BEGINS
       |**====================================*/}
 
-      <div className="lg:flex w-full flex-col lg:max-w-3xl mx-auto">
-        <div className="divider font-bold dark:text-gray-400">
-          Comments Section
-        </div>
-      </div>
-
-      <div className="lg:max-w-3xl mx-auto w-full">
-        <div className="lg:flex grid gap-6 items-center lg:justify-between justify-center lg:py-4 py-4 lg:px-0 px-2">
-          <div className="relative">
-            <Button
-              onClick={handleCommentBoxToggle}
-              icon={!activeComment ? <FaComment /> : <FaTimesCircle />}
-              label={activeComment ? "Hide Form" : "Add Comment"}
-              variant={activeComment ? "active" : "outline"}
-              className="lg:text-[1rem] text-[1rem] lg:min-w-44 min-w-44"
-            />
-            <div
-              className={`${
-                activeComment ? style.active : "white"
-              } absolute lg:-top-5 lg:-left-5 -top-5 -right-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
-            >
-              {fetchedComments.length > 0 ? fetchedComments.length : 0}
-            </div>
-          </div>
-          <div className="relative">
-            <Button
-              onClick={handleViewCommentsToggle}
-              label={isViewCommentsOpen ? "Hide Comments" : "View Comments"}
-              icon={!isViewCommentsOpen ? <FaEye /> : <FaEyeSlash />}
-              variant={isOpenComments ? "active" : "outline"}
-              className="lg:text-[1rem] text-[1rem] lg:min-w-44 min-w-44"
-            />
-            <div
-              className={`${
-                isOpenComments ? style.active : "white"
-              } absolute -top-5 -left-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
-            >
-              {fetchedComments.length > 0 ? fetchedComments.length : 0}
-            </div>
+        <div className="lg:flex w-full flex-col lg:max-w-3xl mx-auto">
+          <div className="divider font-bold dark:text-gray-400">
+            Comments Section
           </div>
         </div>
-      </div>
 
-      {/**=====================================
+        <div className="lg:max-w-3xl mx-auto w-full">
+          <div className="lg:flex grid gap-6 items-center lg:justify-between justify-center lg:py-4 py-4 lg:px-0 px-2">
+            <div className="relative">
+              <Button
+                onClick={handleCommentBoxToggle}
+                icon={!activeComment ? <FaComment /> : <FaTimesCircle />}
+                label={activeComment ? "Hide Form" : "Add Comment"}
+                variant={activeComment ? "active" : "outline"}
+                className="lg:text-[1rem] text-[1rem] lg:min-w-44 min-w-44"
+              />
+              <div
+                className={`${
+                  activeComment ? style.active : "white"
+                } absolute lg:-top-5 lg:-left-5 -top-5 -right-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
+              >
+                {fetchedComments.length > 0 ? fetchedComments.length : 0}
+              </div>
+            </div>
+            <div className="relative">
+              <Button
+                onClick={handleViewCommentsToggle}
+                label={isViewCommentsOpen ? "Hide Comments" : "View Comments"}
+                icon={!isViewCommentsOpen ? <FaEye /> : <FaEyeSlash />}
+                variant={isOpenComments ? "active" : "outline"}
+                className="lg:text-[1rem] text-[1rem] lg:min-w-44 min-w-44"
+              />
+              <div
+                className={`${
+                  isOpenComments ? style.active : "white"
+                } absolute -top-5 -left-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
+              >
+                {fetchedComments.length > 0 ? fetchedComments.length : 0}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/**=====================================
       | COMMENT LIST & COMMENT FORM BOX BEGINS
       |**======================================*/}
 
-      {isCommentBoxOpen && (
-        <div className="my-4">
-          <div className="mx-auto lg:max-w-3xl w-full bg-gray-200 dark:bg-gray-700 lg:p-8 p-2 rounded-lg shadow-sm">
-            <div className="lg:my-4 my-2">
-              <h2 className="font-bold lg:text-3xl text-xl flex items-center">
-                <FaCommentAlt className="mr-1" /> Add Comment
-              </h2>
-            </div>
-            <form
-              action=""
-              onSubmit={handleSubmitComment}
-              className="lg:space-y-3 space-y-2"
-            >
-              <input
-                onChange={handleChange}
-                type="text"
-                name="name"
-                value={formData.name}
-                placeholder="Your Name..."
-                className="input input-bordered w-full dark:bg-gray-600"
-              />
-              {errors.name && (
-                <p className="text-sm text-red-500">{errors.name}</p>
-              )}
-              <input
-                onChange={handleChange}
-                type="email"
-                value={formData.email}
-                name="email"
-                placeholder="Your Email..."
-                className="input input-bordered w-full dark:bg-gray-600"
-              />
-              {errors.email && (
-                <p className="text-sm text-red-500">{errors.email}</p>
-              )}
-              <textarea
-                onChange={handleChange}
-                className="textarea w-full dark:bg-gray-600"
-                name="content"
-                value={formData.content}
-                type="text"
-                id=""
-                rows="4"
-                cols="50"
-                placeholder="Your Comment..."
-              ></textarea>
-              {errors.content && (
-                <p className="text-sm text-red-500">{errors.content}</p>
-              )}
-
-              <div className="flex items-center space-x-4 mt-4">
-                <CTAButton
-                  label={isPending ? "Submitting..." : "Submit Comment"}
-                  disabled={isPending}
-                  type="submit"
-                  icon={<FaPlusCircle />}
-                  variant="primary"
-                  className="btn lg:text-normal text-sm btn-sm transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90"
-                />
-                <CTAButton
-                  onClick={handleCommentBoxToggle}
-                  type="submit"
-                  label="Cancel"
-                  icon={<FaArrowAltCircleRight />}
-                  variant="warning"
-                  className="btn lg:text-normal text-sm btn-sm transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90"
-                />
+        {isCommentBoxOpen && (
+          <div className="my-4">
+            <div className="mx-auto lg:max-w-3xl w-full bg-gray-200 dark:bg-gray-700 lg:p-8 p-2 rounded-lg shadow-sm">
+              <div className="lg:my-4 my-2">
+                <h2 className="font-bold lg:text-3xl text-xl flex items-center">
+                  <FaCommentAlt className="mr-1" /> Add Comment
+                </h2>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      <div className="">
-        {isViewCommentsOpen && (
-          <div className="lg:px-4 px-2">
-            <div className="px-2 border-b-2 dark:border-gray-700">
-              <h2 className="lg:text-2xl text-xl mb-4 font-bold text-gray-600 dark:text-base-200 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-5xl first-letter:text-extra-bold flex items-center">
-                <FaComment className="mr-1" /> Comments List{" "}
-                <span className="w-6 h-6 flex text-sm items-center justify-center rounded-full border-2 border-gray-400 p-[2px] ml-2">
-                  {fetchedComments?.length > 0 ? fetchedComments?.length : 0}
-                </span>
-              </h2>
-            </div>
-            {fetchedComments.length > 0 ? (
-              fetchedComments?.map((comment, index) => (
-                <CommentCard
-                  key={comment._id}
-                  comment={comment}
-                  slug={slug}
-                  onDataChanged={fetchCommentsList}
-                  index={index}
+              <form
+                action=""
+                onSubmit={handleSubmitComment}
+                className="lg:space-y-3 space-y-2"
+              >
+                <input
+                  onChange={handleChange}
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  placeholder="Your Name..."
+                  className="input input-bordered w-full dark:bg-gray-600"
                 />
-              ))
-            ) : (
-              <p className="flex justify-center lg:text-xl text-gray-500 lg:pt-6 pt-2">
-                No comments yet. Be the first to comment right now!
-              </p>
-            )}
+                {errors.name && (
+                  <p className="text-sm text-red-500">{errors.name}</p>
+                )}
+                <input
+                  onChange={handleChange}
+                  type="email"
+                  value={formData.email}
+                  name="email"
+                  placeholder="Your Email..."
+                  className="input input-bordered w-full dark:bg-gray-600"
+                />
+                {errors.email && (
+                  <p className="text-sm text-red-500">{errors.email}</p>
+                )}
+                <textarea
+                  onChange={handleChange}
+                  className="textarea w-full dark:bg-gray-600"
+                  name="content"
+                  value={formData.content}
+                  type="text"
+                  id=""
+                  rows="4"
+                  cols="50"
+                  placeholder="Your Comment..."
+                ></textarea>
+                {errors.content && (
+                  <p className="text-sm text-red-500">{errors.content}</p>
+                )}
+
+                <div className="flex items-center space-x-4 mt-4">
+                  <CTAButton
+                    label={isPending ? "Submitting..." : "Submit Comment"}
+                    disabled={isPending}
+                    type="submit"
+                    icon={<FaPlusCircle />}
+                    variant="primary"
+                    className="btn lg:text-normal text-sm btn-sm transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90"
+                  />
+                  <CTAButton
+                    onClick={handleCommentBoxToggle}
+                    type="submit"
+                    label="Cancel"
+                    icon={<FaArrowAltCircleRight />}
+                    variant="warning"
+                    className="btn lg:text-normal text-sm btn-sm transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90"
+                  />
+                </div>
+              </form>
+            </div>
           </div>
         )}
-      </div>
-      {/* Comments list & comment box ends */}
 
-      {/**========================================
+        <div className="">
+          {isViewCommentsOpen && (
+            <div className="lg:px-4 px-2">
+              <div className="px-2 border-b-2 dark:border-gray-700">
+                <h2 className="lg:text-2xl text-xl mb-4 font-bold text-gray-600 dark:text-base-200 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-5xl first-letter:text-extra-bold flex items-center">
+                  <FaComment className="mr-1" /> Comments List{" "}
+                  <span className="w-6 h-6 flex text-sm items-center justify-center rounded-full border-2 border-gray-400 p-[2px] ml-2">
+                    {fetchedComments?.length > 0 ? fetchedComments?.length : 0}
+                  </span>
+                </h2>
+              </div>
+              {fetchedComments.length > 0 ? (
+                fetchedComments?.map((comment, index) => (
+                  <CommentCard
+                    key={comment._id}
+                    comment={comment}
+                    slug={slug}
+                    onDataChanged={fetchCommentsList}
+                    index={index}
+                  />
+                ))
+              ) : (
+                <p className="flex justify-center lg:text-xl text-gray-500 lg:pt-6 pt-2">
+                  No comments yet. Be the first to comment right now!
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+        {/* Comments list & comment box ends */}
+
+        {/**========================================
       | FLOATING BUTTON TO LOAD HOME PAGE BEGINS
       |**=========================================*/}
 
-      <div className="">
-        <Link to="/">
-          <div
-            className="tooltip fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-300 z-50 text-orange-500 px-3 py-1 shadow-lg h-14 w-14 opacity-50 rounded-full border border-gray-400 flex items-center justify-center"
-            data-tip="Go Home Page"
-          >
-            <FaArrowLeft className="text-gray-500 text-xl" />
-          </div>
-        </Link>
-      </div>
-      {/* Floating button to lead to homepage ends */}
+        <div className="">
+          <Link to="/">
+            <div
+              className="tooltip fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-300 z-50 text-orange-500 px-3 py-1 shadow-lg h-14 w-14 opacity-50 rounded-full border border-gray-400 flex items-center justify-center"
+              data-tip="Go Home Page"
+            >
+              <FaArrowLeft className="text-gray-500 text-xl" />
+            </div>
+          </Link>
+        </div>
+        {/* Floating button to lead to homepage ends */}
 
-      {/* Comments section ends */}
+        {/* Comments section ends */}
 
-      <div className="lg:flex justify-center items-center space-x-4 lg:px-0 px-1">
-        <Link to="/" className="m-0 flex justify-center items-center w-full">
-          <Button label="Go Home Page" icon={<FaHome />} variant="outline" />
-        </Link>
+        <div className="lg:flex justify-center items-center space-x-4 lg:px-0 px-1">
+          <Link to="/" className="m-0 flex justify-center items-center w-full">
+            <Button label="Go Home Page" icon={<FaHome />} variant="outline" />
+          </Link>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

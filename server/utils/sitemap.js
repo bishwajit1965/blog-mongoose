@@ -2,7 +2,7 @@ const { SitemapStream, streamToPromise } = require("sitemap");
 const path = require("path");
 const fs = require("fs"); // Add the fs import
 const Blog = require("../models/Blog"); // Adjust the path to your Blog model
-const apiURL = process.env.API_URL || "http://localhost:3000";
+const SITE_URL = process.env.SITE_URL || "http://localhost:5173";
 
 const generateSitemap = async () => {
   // Ensure the public directory exists
@@ -12,18 +12,18 @@ const generateSitemap = async () => {
   }
   const sitemapPath = path.join(__dirname, "../public/sitemap.xml");
   const sitemapStream = new SitemapStream({
-    hostname: `${apiURL}`,
+    hostname: `${SITE_URL}`,
   });
 
   try {
     const blogs = await Blog.find({ status: "published" }, "slug").select(
-      "slug updatedAt"
+      "slug updatedAt",
     );
     blogs.forEach((blog) => {
       sitemapStream.write({
-        url: `/blogs/${blog.slug}`,
-        changefreq: "weekly",
-        priority: 0.8,
+        url: `/blog-details/${blog?.slug}`,
+        changefreq: "monthly",
+        priority: 0.9,
         lastmod: blog.updatedAt.toISOString(), //Include the last modified string
       });
     });

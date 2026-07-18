@@ -200,7 +200,11 @@ const BlogPostsToFlagTable = ({
             <div className="bg-white dark:bg-gray-800 dark:text-gray-300 p-4 rounded shadow-lg max-w-xl w-full lg:space-y-4 space-y-2">
               <div className="h-">
                 <img
-                  src={`${apiURL}${modalData.image}`}
+                  src={
+                    modalData?.image?.url
+                      ? modalData?.image?.url
+                      : `${apiURL}${modalData.image}`
+                  }
                   alt={modalData.title}
                   className="rounded-md w-full h-64 shadow-md"
                 />

@@ -1,4 +1,10 @@
-import { FaBlog, FaBookmark, FaRegListAlt, FaSearch } from "react-icons/fa";
+import {
+  FaBlog,
+  FaBloggerB,
+  FaBookmark,
+  FaRegListAlt,
+  FaSearch,
+} from "react-icons/fa";
 import { Suspense, lazy } from "react";
 
 import BlogPosts from "../blogPosts/BlogPosts";
@@ -24,8 +30,37 @@ import { useState } from "react";
 import PopularPosts from "../../components/popularPosts/PopularPosts";
 import BlogHero from "../../components/blogHero/BlogHero";
 import { LucideRefreshCw } from "lucide-react";
+import useGetComingSoonPost from "../../hooks/useGetComingSoonPost";
+import { motion } from "framer-motion";
 
-// import BookmarkedPage from "../bookmarkedPage/BookmarkedPage";
+const sectionMotion = {
+  hidden: {
+    opacity: 0,
+    y: 25,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+};
+
+const sidebarMotion = {
+  hidden: {
+    opacity: 0,
+    x: 40,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.5,
+    },
+  },
+};
 
 const BookmarkedPage = lazy(() => import("../bookmarkedPage/BookmarkedPage"));
 
@@ -41,9 +76,6 @@ const Home = () => {
   const { data: bookmarkedPosts } = useGetBookmarkedPosts();
   const isFilterActive = selectedTag || selectedCategory;
 
-  console.log("Searched term", searchTerm);
-  console.log("User in Home", user);
-
   const {
     data: categories,
     isLoading: isCategoryLoading,
@@ -55,6 +87,8 @@ const Home = () => {
     isLoading: isTagLoading,
     error: isTagError,
   } = useGetTags();
+
+  const { data: comingSoon } = useGetComingSoonPost();
 
   const handleToggle = () => {
     setShowBookmarks((prev) => !prev);
@@ -77,12 +111,24 @@ const Home = () => {
         <title>Nova Journal || Home Page</title>
       </Helmet>
 
-      <BlogHero data={data} />
+      <motion.div
+        variants={sectionMotion}
+        initial="hidden"
+        animate="visible"
+        className=""
+      >
+        <BlogHero data={data} />
+      </motion.div>
 
       {/**=================================
       | MARQUEE NOTIFICATION SECTION BEGINS
       |**==================================*/}
-      <div className="border-t-8 border-base-content/25 rounded-xs">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="border-t-8 border-base-content/25 rounded-xs"
+      >
         <Marquee
           speed={50}
           pauseOnHover={true}
@@ -102,7 +148,7 @@ const Home = () => {
         >
           <MarqueeNotification />
         </Marquee>
-      </div>
+      </motion.div>
       {/**=================================
       | MARQUEE NOTIFICATION SECTION ENDS
       |**==================================*/}
@@ -110,11 +156,25 @@ const Home = () => {
       {/**===================================
       | BLOG CONTENT AREA LEFT & RIGHT BEGINS
       |**====================================*/}
-      <div className="grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-16 gap-2">
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={{
+          visible: {
+            transition: {
+              staggerChildren: 0.15,
+            },
+          },
+        }}
+        className="grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-16 gap-2"
+      >
         {/**============================
         | BLOG CONTENT AREA LEFT BEGINS
         |**=============================*/}
-        <div className="col-span-12 lg:col-span-8 space-y-4 lg:py-8 py-4 shadow-sm rounded-b-lg border-b border-gray-200 dark:border-gray-700">
+        <motion.div
+          variants={sectionMotion}
+          className="col-span-12 lg:col-span-8 space-y-4 lg:py-8 py-4 shadow-sm rounded-b-lg border-b border-gray-200 dark:border-gray-700"
+        >
           {/* Bookmarked blog post section begins */}
           <div className="">
             {showBlogPosts ? (
@@ -264,7 +324,7 @@ const Home = () => {
             )}
           </div>
           {/* Blog posts section ends */}
-        </div>
+        </motion.div>
         {/**================================
         | BLOG CONTENT AREA LEFT ENDS
         |**=================================*/}
@@ -272,13 +332,28 @@ const Home = () => {
         {/**=======================================
         | RIGHT SIDEBAR BEGINS
         |**========================================*/}
-        <div className="col-span-12 lg:col-span-4 rounded-xl lg:py-8 py-4 shadow-sm rounded-b-lg border-b border-gray-200 dark:border-gray-700">
+        <motion.div
+          variants={sidebarMotion}
+          className="col-span-12 lg:col-span-4 rounded-xl lg:py-8 py-4 shadow-sm rounded-b-lg border-b border-gray-200 dark:border-gray-700"
+        >
           <div className="sticky top-[5.8rem]">
             <div className="lg:space-y-8 space-y-4">
               {/**=================================
               | COMING SOON POSTS SECTION BEGINS
               | ===================================*/}
               <div className="">
+                <SectionTitle
+                  title="Coming Soon"
+                  decoratedText="Posts"
+                  dataLength={
+                    comingSoon?.length > 0 ? (
+                      comingSoon?.length
+                    ) : (
+                      <span className="">{0}</span>
+                    )
+                  }
+                  icon={<FaBloggerB />}
+                />
                 <ComingSoonPost />
               </div>
               {/**=================================
@@ -287,9 +362,16 @@ const Home = () => {
 
               {/* Social media links section begins */}
               {user && (
-                <div className="bg-base-300 dark:bg-gray-800 rounded-md lg:p-4 p-2">
-                  <SocialMediaLinks />
-                </div>
+                <>
+                  <div className="">
+                    <div className="mb-2.5">
+                      <SectionTitle title="Follow" decoratedText="Me on" />
+                    </div>
+                    <div className="bg-base-300 dark:bg-gray-800 rounded-md p-4 flex justify-center">
+                      <SocialMediaLinks />
+                    </div>
+                  </div>
+                </>
               )}
               {/* Social media links section ends */}
 
@@ -325,11 +407,11 @@ const Home = () => {
               {/* Popular posts section ends */}
             </div>
           </div>
-        </div>
+        </motion.div>
         {/**=====================================
         | RIGHT SIDEBAR ENDS
         |**======================================*/}
-      </div>
+      </motion.div>
       {/**===================================
       | BLOG CONTENT AREA LEFT & RIGHT ENDS
       |*=====================================*/}
@@ -337,10 +419,16 @@ const Home = () => {
       {/**===================================
       | BLOG RANDOM POSTS SECTION BEGINS
       |**====================================*/}
-      <div className="lg:my-10 my-4">
+      <motion.div
+        variants={sectionMotion}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="lg:my-10 my-4"
+      >
         {/* <SectionTitle title="Random Posts" /> */}
         <RandomBlogPosts />
-      </div>
+      </motion.div>
       {/**===================================
       | BLOG RANDOM POSTS SECTION ENDS
       |**====================================*/}
@@ -348,7 +436,13 @@ const Home = () => {
       {/**===================================
       | BLOG OLDER POSTS SECTION BEGINS
       |**====================================*/}
-      <div className="lg:my- my-4">
+      <motion.div
+        variants={sectionMotion}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="lg:my- my-4"
+      >
         <SectionTitle
           title="Older"
           decoratedText="Blog Posts"
@@ -370,7 +464,7 @@ const Home = () => {
         >
           <OlderBlogPosts />
         </Marquee>
-      </div>
+      </motion.div>
       {/**===================================
       | BLOG OLDER POSTS SECTION ENDS
       |**====================================*/}
