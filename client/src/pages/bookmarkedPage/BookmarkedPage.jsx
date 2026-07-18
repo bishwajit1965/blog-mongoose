@@ -4,6 +4,7 @@ import useAuth from "../../hooks/useAuth";
 import useGetBookmarkedPosts from "../../hooks/useGetBookmarkedPosts";
 import PageTitle from "../../components/pageTitle/PageTitle";
 import { Helmet } from "react-helmet-async";
+import { motion } from "framer-motion";
 
 const BookmarkedPage = () => {
   const { user } = useAuth();
@@ -21,12 +22,17 @@ const BookmarkedPage = () => {
     );
 
   return (
-    <>
+    <div className="max-w-4xl mx-auto">
       <Helmet>
         <title>Nova Blogging Platform || Bookmarked Page</title>
       </Helmet>
 
-      <div className="rounded-lg lg:space-y-4 space-y-2">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="rounded-lg lg:space-y-4 space-y-2"
+      >
         <div className="">
           <PageTitle
             title="All My"
@@ -48,8 +54,8 @@ const BookmarkedPage = () => {
             />
           ))
         )}
-      </div>
-    </>
+      </motion.div>
+    </div>
   );
 };
 

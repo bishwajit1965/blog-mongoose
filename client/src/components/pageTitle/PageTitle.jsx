@@ -11,17 +11,21 @@ const PageTitle = ({
   slogan,
   navigationLink,
   navigationArea,
+  icon,
 }) => {
   return (
-    <div className="lg:p-6 p-2 text-center shadow-md bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-800 pb-2 lg:space-y-2 space-y-1 dark:border-b dark:border-slate-700 rounded-t-md dark:text-emerald-400 dark:hover:text-emerald-300 hover:bg-gray-900 hover:text-gray-600">
-      <h1 className="lg:text-3xl text-xl font-serif font-bold rounded-b-md flex items-center justify-center">
-        {title} &nbsp;
+    <div className="text-center lg:mb-6 mb-3 lg:space-y-2 space-y-1">
+      <h1 className="lg:text-3xl text-sm font-serif font-bold rounded-b-md flex items-center justify-center gap-1.5">
+        {icon} {title}
         <span className="text-amber-800 dark:text-amber-500">
-          {decoratedText} {""} {":"}{" "}
+          {decoratedText}
         </span>
         {dataLength ? (
-          <span>
-            &nbsp;{dataLength}{" "}
+          <span className="flex items-center gap-2">
+            &nbsp;{" "}
+            <span className="w-6 h-6 text-sm bg-gray-800 dark:bg-gray-600 text-base-100 rounded-full flex items-center justify-center">
+              {dataLength}
+            </span>{" "}
             <span className="text-blue-500 dark:text-emerald-400">{about}</span>
           </span>
         ) : (
@@ -30,7 +34,7 @@ const PageTitle = ({
       </h1>
 
       {subtitle && (
-        <h2 className="lg:text-2xl text-xl font-serif max-w-5xl mx-auto hidden lg:block">
+        <h2 className="lg:text-xl text-xs font-serif max-w-5xl mx-auto hidden lg:block">
           {subtitle}
         </h2>
       )}

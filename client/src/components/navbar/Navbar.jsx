@@ -107,8 +107,9 @@ const Navbar = () => {
               )}
             </ul>
           </div>
-
-          <img src={Logo} alt="Logo" className="lg:w-14 lg:h-14 h-8 w-8" />
+          <Link to="/" className="m-0 hidden lg:flex">
+            <img src={Logo} alt="Logo" className="lg:w-16 lg:h-16 h-12 w-12" />
+          </Link>
 
           <Link to="/" className="ml-0">
             <span className="xl:text-2xl xl:w-48 md:w-32 lg:block xl:block lg:text-xs md:hidden md:ml-0 hidden lg:font-extrabold text-base-content/80 dark:text-base-300 hover:link">

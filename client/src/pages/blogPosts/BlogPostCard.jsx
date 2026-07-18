@@ -18,6 +18,8 @@ import { Link } from "react-router-dom";
 import SocialMediaLinks from "../../components/socialMediaLinks/SocialMediaLinks";
 import { getComments } from "../../services/commentApiService";
 import useDateFormatter from "../../hooks/useDateFormatter";
+import { motion } from "framer-motion";
+import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
 
 const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
   const {
@@ -53,36 +55,60 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
   }, [fetchCommentsList]);
 
   return (
-    <div className="rounded-lg lg:space-y-4 space-y-2">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4 }}
+      className="rounded-lg lg:space-y-4 space-y-2 overflow-x-clip"
+    >
       {/* Blog author section begins */}
       <div className="hover:link">
-        <div className="flex items-center lg:space-x-3 space-x-2 hover-target">
+        <div className="flex flex-wrap gap-2 items-center lg:space-x-3 space-x-0 hover-target">
           <div className="">
-            <AuthorInfoModal user={user} title="Bishwajit Paul" author={author}>
-              <>
-                <p>Email: {user?.email}</p>
-                <p>Role: Admin</p>
-                <p>
-                  <Link
-                    to="https://www.test.com"
-                    className="link underline m-0"
-                  >
-                    I teach everything I know at
-                  </Link>
+            <AuthorInfoModal
+              user={user}
+              title={blog?.author?.name}
+              author={author}
+              blog={blog}
+            >
+              <div className="space-y-2">
+                <p className="flex items-center gap-1.5 font-bold">
+                  <LucideIcon.CreditCard size={18} /> Super Admin
                 </p>
+
+                <p className="flex items-center gap-1.5">
+                  <LucideIcon.Mail size={18} /> {author?.email}
+                </p>
+
+                <Link
+                  target="_blank"
+                  to="https://portfolio-h5k5.vercel.app"
+                  className="m-0 hover:link text-blue-400 flex items-center gap-1.5"
+                >
+                  <LucideIcon.Briefcase size={16} /> My Portfolio Link
+                </Link>
+
                 <SocialMediaLinks />
-              </>
+              </div>
             </AuthorInfoModal>
+          </div>
+
+          <div className="text-gray-500 dark:text-gray-400 lg:text-normal text-sm font-bold flex items-center space-x-2">
+            <span>
+              <FaClock className="text-xl" />
+            </span>
+            <span className="text-normal">{formattedDate}</span>
           </div>
         </div>
       </div>
       {/* Blog author section ends */}
-      <div className="grid lg:grid-cols-12 grid-cols-1 lg:gap-8 gap-2 justify-between items-center">
+      <div className="grid lg:grid-cols-12 grid-cols-1 lg:gap-14 gap-2 justify-between items-center">
         <div className="col-span-12 lg:col-span-7 lg:space-y-4 space-y-2 rounded-md min-h-[13.5rem]">
           {/* Blog title begins */}
           <div className="">
             <Link to={`/blog-details/${slug}`} className="m-0">
-              <h2 className="lg:text-3xl text-lg font-extrabold capitalize text-gray-800 dark:text-gray-400 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-4xl first-letter:text-2xl first-letter:text-extra-bold">
+              <h2 className="lg:text-2xl text-lg font-extrabold capitalize text-gray-800 dark:text-gray-400 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-4xl first-letter:text-2xl first-letter:text-extra-bold">
                 {title.length > 60 ? `${title.slice(0, 60)}...` : title}
               </h2>
             </Link>
@@ -92,13 +118,16 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
           {/* Blog excerpt begins */}
           <div className="">
             {excerpt ? (
-              <div className="lg:min-h-[5.6rem] min-h-44">
-                <div className="min-h-[44px] relative">
+              <div className="lg:min-h-[5.6rem] min-h-[14rem]">
+                <div className="relative">
                   <FaQuoteLeft className="absolute top-0 text-xl text-gray-600 dark:text-gray-300" />
                   <p
                     className="absolute top-0 indent-7 dark:text-gray-400"
                     dangerouslySetInnerHTML={{
-                      __html: excerpt ? blog.excerpt : "N/A",
+                      __html:
+                        excerpt?.length > 280
+                          ? blog?.excerpt.slice(0, 280) + "..."
+                          : blog?.excerpt,
                     }}
                   />
                 </div>
@@ -117,12 +146,12 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
             <img
               src={image?.url ? image.url : `${apiURL}${image}`}
               alt={title.slice(0, 10)}
-              className="w-full lg:object-cover h-auto rounded-lg shadow-md border border-base-content/15 dark:border-gray-700"
+              className="w-full lg:object-cover h-auto rounded-lg shadow-md border border-base-content/15 dark:border-gray-700 transition-all hover:scale-105"
             />
           </Link>
         </div>
       </div>
-      <div className="lg:space-y-4 space-y-2">
+      <div className="lg:space-y-4 space-y-4">
         {/* Category & tags, comments & bookmark section begins */}
         <div className="lg:flex grid gap-2 items-center lg:space-x-4">
           <div className="flex items-center">
@@ -184,12 +213,6 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
 
         {/* Author published on & bookmarked on section begins */}
         <div className="lg:flex items-center grid lg:space-x-2 space-x-0 lg:space-y-0 space-y-2">
-          <div className="text-gray-500 dark:text-gray-400 lg:text-normal text-sm font-bold flex items-center space-x-2">
-            <span>
-              <FaClock className="text-xl" />
-            </span>
-            <span className="text-normal">{formattedDate}</span>
-          </div>
           <div className="dark:text-base-300">
             {bookmarkedAt && (
               <div className="text-gray-500 lg:text-normal text-sm font-bold flex items-center space-x-2">
@@ -210,7 +233,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
           <div
             dangerouslySetInnerHTML={{
               __html:
-                content.length > 345 ? `${content.slice(0, 345)}...` : content,
+                content.length > 430 ? `${content.slice(0, 430)}...` : content,
             }}
             className="prose max-w-none list-decimal text-gray-700 dark:text-gray-400 mb-4 text-pretty"
           />
@@ -254,7 +277,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
           </p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

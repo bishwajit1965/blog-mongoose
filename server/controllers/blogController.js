@@ -657,6 +657,7 @@ const getFlaggingHistory = async (req, res) => {
   }
 };
 
+// Get Popular Posts
 const getPopularPosts = async (req, res) => {
   try {
     const popularPosts = await Blog.aggregate([
@@ -715,43 +716,111 @@ const getPopularPosts = async (req, res) => {
   }
 };
 
+// Get RSS feed
 const getRssFeed = async (req, res) => {
   try {
-    const siteUrl = process.env.SITE_API_URL || "http://localhost:3000";
+    const siteUrl = process.env.SITE_URL || "http://localhost:5173";
 
-    const posts = await Blog.find().sort({ createdAt: -1 }).limit(20);
+    const posts = await Blog.find({
+      status: "published",
+      // isDeleted: false,
+    })
+      .sort({ publishAt: -1 })
+      .limit(20);
 
-    const feed = create({
-      rss: {
-        "@version": "2.0",
-        channel: {
-          title: "Bishwajit.dev",
-          link: siteUrl,
-          description: "Latest blog posts",
-          item: posts.map((post) => ({
-            title: post.title || "Untitled",
-            link: `${siteUrl}/blog-details/${post.slug}`,
-            description: post.excerpt
-              ? post.excerpt
-              : post.content
-                ? post.content.substring(0, 200)
-                : "",
-            pubDate: post.createdAt
-              ? new Date(post.createdAt).toUTCString()
-              : new Date().toUTCString(),
-          })),
-        },
-      },
-    }).end({ prettyPrint: true });
+    const feed = create({ version: "1.0", encoding: "UTF-8" })
+      .ele("rss", {
+        version: "2.0",
+        "xmlns:atom": "http://www.w3.org/2005/Atom",
+      })
 
-    res.set("Content-Type", "application/xml");
-    res.send(feed);
+      .ele("channel")
+
+      .ele("title")
+      .txt("Nova Journal")
+      .up()
+
+      .ele("link")
+      .txt(siteUrl)
+      .up()
+
+      .ele("description")
+      .txt("Latest articles from Nova Journal")
+      .up()
+
+      .ele("language")
+      .txt("en")
+      .up()
+
+      .ele("lastBuildDate")
+      .txt(new Date().toUTCString())
+      .up()
+
+      .ele("generator")
+      .txt("Nova Journal RSS Generator")
+      .up()
+
+      .ele("atom:link", {
+        href: `${siteUrl}/api/blogs/rss`,
+        rel: "self",
+        type: "application/rss+xml",
+      })
+      .up();
+
+    posts.forEach((post) => {
+      const url = `${siteUrl}/blog-details/${post.slug}`;
+
+      feed
+        .ele("item")
+
+        .ele("title")
+        .txt(post.title || "Untitled")
+        .up()
+
+        .ele("link")
+        .txt(url)
+        .up()
+
+        .ele("guid", {
+          isPermaLink: "true",
+        })
+        .txt(url)
+        .up()
+
+        .ele("description")
+        .txt(post.excerpt || post.content?.substring(0, 300) || "")
+        .up()
+
+        .ele("pubDate")
+        .txt(new Date(post.publishAt || post.createdAt).toUTCString())
+        .up();
+
+      // Optional category
+      if (post.category?.name) {
+        feed.ele("category").txt(post.category.name).up();
+      }
+
+      // Optional author
+      if (post.author?.name) {
+        feed.ele("author").txt(post.author.name).up();
+      }
+
+      feed.up(); // closes <item>
+    });
+
+    const xml = feed.end({
+      prettyPrint: true,
+    });
+
+    res.setHeader("Content-Type", "application/rss+xml; charset=UTF-8");
+    res.send(xml);
   } catch (error) {
     console.error("RSS ERROR:", error);
     res.status(500).send("Failed to generate RSS feed");
   }
 };
 
+// Delete Blog By Slug
 const deleteBlogBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
@@ -805,42 +874,6 @@ const deleteBlogBySlug = async (req, res) => {
     });
   }
 };
-
-// const deleteBlogBySlug = async (req, res) => {
-//   try {
-//     const { slug } = req.params;
-//     if (!req.user.permissions.includes("delete-post")) {
-//       return res.status(403).json({ message: "Unauthorized to delete blog" });
-//     }
-
-//     let blog;
-//     if (mongoose.Types.ObjectId.isValid(slug)) {
-//       blog = await Blog.findById(slug);
-//     } else {
-//       blog = await Blog.findOne({ slug });
-//     }
-//     if (!blog) {
-//       return res.status(404).json({ message: "Blog not found" });
-//     }
-
-//     if (blog.image) {
-//       const imagePath = path.resolve("uploads", path.basename(blog.image));
-
-//       try {
-//         await fs.promises.unlink(imagePath);
-//       } catch (err) {
-//         console.warn("Error deleting blog image:", err.message);
-//       }
-//     }
-//     await Blog.deleteOne({ _id: blog._id });
-//     await generateSitemap(); // ✅ Regenerate sitemap after successful blog deletion
-//     res.status(200).json({ message: "Blog deleted successfully" });
-//   } catch (error) {
-//     res
-//       .status(500)
-//       .json({ message: "Error deleting blog", error: error.message });
-//   }
-// };
 
 module.exports = {
   createBlog,

@@ -40,13 +40,11 @@ import WriterDashboard from "../admin/adminComponent/writerDashboard/WriterDashb
 import WriterLayout from "../admin/adminLayout/WriterLayout";
 import { createBrowserRouter } from "react-router-dom";
 import ManageMessages from "../admin/adminDataManagement/manageMessages/ManageMessages";
-import ComingSoonPost from "../components/comingSoonPost/ComingSoonPost";
 import FeatureUnderConstructionPage from "../pages/featureUnderConstruction/FeatureUnderConstructionPage";
 import BookmarkedPage from "../pages/bookmarkedPage/BookmarkedPage";
-// import AdminDataProvider from "../admin/adminProviders/AdminDataProvider";
-// import AdminAuthProvider from "../admin/adminProviders/AdminAuthProvider";
 import AdminProviders from "../admin/adminProviders/AdminProviders";
 import AdminAuthProviders from "../admin/adminProviders/groups/AdminAuthProviders";
+import ComingSoonPage from "../pages/comingSoonPage/ComingSoonPage";
 
 // Common Admin Routes (Super Admin can access all)
 const superAdminRoutes = [
@@ -93,7 +91,7 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      { path: "blog-coming-soon", element: <ComingSoonPost /> },
+      { path: "blog-coming-soon", element: <ComingSoonPage /> },
       { path: "blog-posts", element: <BlogPosts /> },
       {
         path: "blog-details/:slug",

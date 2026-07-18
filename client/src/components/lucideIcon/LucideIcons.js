@@ -73,6 +73,7 @@ import {
   BookOpen,
   UserCircle,
   Loader,
+  Briefcase,
 } from "lucide-react";
 // Central registry
 export const LucideIcon = {
@@ -83,6 +84,7 @@ export const LucideIcon = {
   AlertCircle,
   Book,
   BookOpen,
+  Briefcase,
   Check,
   CheckCircle2,
   CheckCircle,

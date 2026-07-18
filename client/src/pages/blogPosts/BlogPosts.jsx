@@ -53,12 +53,13 @@ const BlogPosts = ({
       </div>
     );
   }
+
   if (error) return <p className="flex justify-center">{error.message}</p>;
 
   return (
     <div className="">
       <Helmet>
-        <title>Nova Blogging Platform || Home</title>
+        <title>Nova Journal || Home</title>
       </Helmet>
       <div className="lg:space-y-6 space-y-4">
         {paginatedData.length === 0 ? (

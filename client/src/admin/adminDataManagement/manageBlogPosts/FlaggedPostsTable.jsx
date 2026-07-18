@@ -508,7 +508,11 @@ const FlaggedPostsTable = ({
             <div className="">
               <div className="h-60">
                 <img
-                  src={`${apiURL}${modalData?.postId?.image}`}
+                  src={
+                    modalData?.postId?.image?.url
+                      ? modalData?.postId?.image?.url
+                      : `${apiURL}${modalData?.postId?.image}`
+                  }
                   alt={modalData?.postId?.title.slice(0, 20)}
                   className="rounded-md w-full h-60 shadow-md"
                 />
