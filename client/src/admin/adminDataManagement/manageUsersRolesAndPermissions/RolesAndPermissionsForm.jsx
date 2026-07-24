@@ -49,7 +49,7 @@ const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
           roles: selectedRoles,
           permissions: userPermissions,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       onSuccess();
       setSuccessMessage(res.data.message);
@@ -174,7 +174,7 @@ const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
                       toggleSelection(
                         perm._id,
                         userPermissions,
-                        setUserPermissions
+                        setUserPermissions,
                       )
                     }
                     checked={userPermissions.includes(perm._id)}
@@ -190,15 +190,15 @@ const RolesAndPermissionsForm = ({ user, roles, permissions, onSuccess }) => {
               <div className="">
                 <CTAButton
                   label="Assign Role & Permission"
-                  className="btn btn-sm"
+                  size="sm"
                   icon={<FaCompass />}
                 />
               </div>
-              <div className="">
+              <div className="my-2">
                 <CTAButton
                   onClick={onSuccess}
                   label="Cancel Edit"
-                  className="btn btn-sm"
+                  size="sm"
                   variant="warning"
                   icon={<FaTimesCircle />}
                 />

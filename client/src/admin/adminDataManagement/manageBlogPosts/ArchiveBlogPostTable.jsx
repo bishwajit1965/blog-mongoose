@@ -95,7 +95,7 @@ const ArchiveBlogPostTable = ({ blogs, loading, onSuccess }) => {
                           onClick={() => openModal(blog)}
                           label="VIEW"
                           icon={<FaEye />}
-                          className="btn btn-xs text-xs"
+                          size="xs"
                           variant="primary"
                         />
                         <CTAButton
@@ -111,7 +111,7 @@ const ArchiveBlogPostTable = ({ blogs, loading, onSuccess }) => {
                               <FaStoreAltSlash />
                             )
                           }
-                          className="btn btn-xs text-xs"
+                          size="xs"
                           variant="primary"
                         />
                       </>

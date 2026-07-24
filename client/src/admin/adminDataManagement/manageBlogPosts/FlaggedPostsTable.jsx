@@ -409,7 +409,7 @@ const FlaggedPostsTable = ({
                           onClick={() => openModal(post)}
                           label="View"
                           icon={<FaEye />}
-                          className="btn btn-xs text-xs"
+                          size="xs"
                           variant="primary"
                         />
                         {post.reviewStatus !== "pending" ? (
@@ -430,7 +430,7 @@ const FlaggedPostsTable = ({
                               )
                             }
                             // disabled={post.reviewHistory.length >= 3}
-                            className="btn btn-xs text-xs"
+                            size="xs"
                             variant="info"
                           />
                         ) : (
@@ -456,7 +456,7 @@ const FlaggedPostsTable = ({
                                   <FaCheck />
                                 )
                               }
-                              className="btn btn-xs text-xs"
+                              size="xs"
                               variant="success"
                             />
                             <CTAButton
@@ -476,7 +476,7 @@ const FlaggedPostsTable = ({
                                   <FaTimes />
                                 )
                               }
-                              className="btn btn-xs text-xs"
+                              size="xs"
                               variant="danger"
                             />
                           </>
@@ -527,11 +527,7 @@ const FlaggedPostsTable = ({
                   </h2>
                 </div>
                 <div className="flex justify-end items-center px-2">
-                  <CTAButton
-                    label="View Post"
-                    icon={<FaEye />}
-                    className="btn btn-xs text-xs mt-1"
-                  />
+                  <CTAButton label="View Post" icon={<FaEye />} size="xs" />
                 </div>
               </div>
             </div>

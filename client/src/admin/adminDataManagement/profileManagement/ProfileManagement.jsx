@@ -122,14 +122,14 @@ const ProfileManagement = () => {
                       <>
                         <button
                           type="submit"
-                          className="bg-blue-500 btn btn-sm text-white px-4 py-2 rounded mt-2"
+                          className="bg-blue-500 btn btn-sm text-white"
                         >
                           Update
                         </button>
 
                         <button
                           // onClick={onCancel}
-                          className="bg-gray-500 btn btn-sm text-white px-4 py-2 rounded"
+                          className="bg-gray-500 btn btn-sm text-white   rounded"
                         >
                           Cancel
                         </button>

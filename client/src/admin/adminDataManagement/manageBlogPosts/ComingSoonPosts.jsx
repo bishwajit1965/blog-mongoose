@@ -110,7 +110,7 @@ const ComingSoonPosts = () => {
                         onClick={() => setSelectedComingSoonBlog(post)}
                         label="View"
                         icon={<FaEye />}
-                        className="btn btn-sm text-sm"
+                        size="xs"
                         variant="primary"
                       />
                     </td>

@@ -229,7 +229,7 @@ const getBlogBySlug = async (req, res) => {
       .populate("category", "name")
       .populate("tags", "name");
     if (!blog) return res.status(404).json({ message: "Blog not found" });
-    await generateSitemap(); // ✅ Regenerate sitemap after successful blog fetching by slug
+    // await generateSitemap(); // ✅ Regenerate sitemap after successful blog fetching by slug
     res.status(200).json(blog);
   } catch (error) {
     res.status(500).json({ message: "Error fetching blog", error });

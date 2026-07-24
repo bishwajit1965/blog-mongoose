@@ -80,9 +80,14 @@ const BlogDetailsPage = () => {
   const [reactions, setReactions] = useState({ likes: 0, dislikes: 0 });
   const { data: bookmarkedPosts } = useGetBookmarkedPosts();
 
+  console.log("BLOG IN BLOG DETAILS PAGE", blog);
+
   const {
     _id,
     title,
+    metaTitle,
+    metaDescription,
+    metaKeywords,
     author,
     content,
     category,
@@ -90,6 +95,7 @@ const BlogDetailsPage = () => {
     excerpt,
     image,
     publishAt,
+    updatedAt,
     flaggedReason,
   } = blog || {};
 
@@ -393,13 +399,18 @@ const BlogDetailsPage = () => {
     <>
       <Seo
         title={title}
+        metaTitle={metaTitle}
         description={excerpt}
+        metaDescription={metaDescription}
+        metaKeywords={metaKeywords}
         image={image?.url}
         url={`blog-details/${slug}`}
         author={author?.name}
         category={category?.name}
         tags={tags?.map((tag) => tag?.name)}
         publishDate={publishAt}
+        modifiedDate={updatedAt}
+        schemaType="BlogPosting"
       />
 
       <div className="overflow-x-hidden dark:text-gray-200 lg:shadow-sm relative rounded-lg">

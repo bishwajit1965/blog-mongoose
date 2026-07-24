@@ -6,6 +6,7 @@ import AdminUserProvider from "../data/AdminUserProvider";
 import AdminBlogProvider from "../data/AdminBlogProvider";
 import AdminCategoryProvider from "../data/AdminCategoryProvider";
 import AdminTagProvider from "../data/AdminTagProvider";
+import AdminPageProvider from "../zdump/AdminPageProvider";
 
 const AdminDataProviders = ({ children }) => {
   return (
@@ -15,7 +16,9 @@ const AdminDataProviders = ({ children }) => {
           <AdminUserProvider>
             <AdminBlogProvider>
               <AdminCategoryProvider>
-                <AdminTagProvider>{children}</AdminTagProvider>
+                <AdminPageProvider>
+                  <AdminTagProvider>{children}</AdminTagProvider>
+                </AdminPageProvider>
               </AdminCategoryProvider>
             </AdminBlogProvider>
           </AdminUserProvider>

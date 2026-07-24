@@ -74,6 +74,8 @@ import {
   UserCircle,
   Loader,
   Briefcase,
+  KeyRound,
+  KeySquare,
 } from "lucide-react";
 // Central registry
 export const LucideIcon = {
@@ -115,6 +117,8 @@ export const LucideIcon = {
   Home,
   Heart,
   HeartCrack,
+  KeyRound,
+  KeySquare,
   Layers,
   Layers2,
   Layers3,

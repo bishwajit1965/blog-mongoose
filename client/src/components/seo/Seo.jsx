@@ -1,57 +1,76 @@
-import seoConfig from "./seoConfig";
 import { Helmet } from "react-helmet-async";
+import seoConfig from "./seoConfig";
 
 const Seo = ({
   author,
   title,
+  metaTitle,
   description,
+  metaDescription,
+  metaKeywords = [],
   image,
   url,
   category,
   tags = [],
   publishDate,
+  modifiedDate,
+  schemaType,
 }) => {
-  const seoTitle = title
-    ? `${title} | ${seoConfig.siteName}`
+  /* ============================================================
+   * Strips HTML tags
+   * ============================================================ */
+  const stripHtml = (html = "") => {
+    return html.replace(/<[^>]*>/g, "").trim();
+  };
+
+  /* ============================================================
+   * SEO Values
+   * ============================================================ */
+
+  const pageTitle = metaTitle || title;
+
+  const seoTitle = pageTitle
+    ? pageTitle.includes(seoConfig.siteName)
+      ? pageTitle
+      : `${pageTitle} | ${seoConfig.siteName}`
     : seoConfig.defaultTitle;
 
-  const seoDescription = description || seoConfig.defaultDescription;
+  const seoDescription = stripHtml(
+    metaDescription || description || seoConfig.defaultDescription,
+  );
 
-  // const seoImage = image || seoConfig.defaultImage;
   const seoImage = image || `${seoConfig.siteUrl}${seoConfig.defaultImage}`;
 
   const seoUrl = url
-    ? `${seoConfig.siteUrl}/${url.replace(/^\//, "")}`
+    ? `${seoConfig.siteUrl}/${url.replace(/^\/+/, "")}`
     : seoConfig.siteUrl;
 
-  const seoAuthor = author || "";
+  const seoAuthor = author || seoConfig.author;
 
   const seoCategory = category || "";
 
-  const seoTags = tags || [];
+  const seoTags =
+    metaKeywords?.length > 0 ? metaKeywords : tags?.length > 0 ? tags : [];
 
   const seoPublishDate = publishDate || "";
 
-  /**================================================================
-  | *  JSON-LD
-  | *  What is JSON-LD?
-  | *  JSON-LD stands for JavaScript Object Notation for Linked Data.
-  | *  It is embedded in your page like this:
-  **================================================================*/
+  const seoModifiedDate = modifiedDate || seoPublishDate;
+
+  /* ============================================================
+   * JSON-LD Schema
+   * ============================================================ */
 
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
+    "@type": schemaType,
 
     headline: seoTitle,
-
     description: seoDescription,
-
     image: seoImage,
 
     author: {
       "@type": "Person",
-      name: seoAuthor || seoConfig.author,
+      name: seoAuthor,
     },
 
     publisher: {
@@ -72,54 +91,87 @@ const Seo = ({
 
     datePublished: seoPublishDate,
 
-    dateModified: seoPublishDate,
+    dateModified: seoModifiedDate,
 
     keywords: seoTags.join(", "),
 
     articleSection: seoCategory,
 
-    inLanguage: "en",
+    inLanguage: seoConfig.language,
   };
 
   return (
-    <div className="">
-      <Helmet>
-        {/* Basic SEO */}
-        <title>{seoTitle}</title>
+    <Helmet>
+      {/* ========================================================
+          Basic SEO
+      ======================================================== */}
 
-        <meta name="description" content={seoDescription} />
+      <title>{seoTitle}</title>
 
-        <meta name="author" content={seoAuthor} />
+      <meta name="description" content={seoDescription} />
 
-        <link rel="canonical" href={seoUrl} />
+      <meta name="author" content={seoAuthor} />
 
-        {/* Open Graph - Social Sharing */}
-        <meta property="og:title" content={seoTitle} />
+      <meta name="keywords" content={seoTags.join(", ")} />
 
-        <meta property="og:description" content={seoDescription} />
+      <link rel="canonical" href={seoUrl} />
 
-        <meta property="og:image" content={seoImage} />
+      {/* ========================================================
+          Open Graph
+      ======================================================== */}
 
-        <meta property="og:url" content={seoUrl} />
+      <meta property="og:type" content="article" />
 
-        <meta property="og:type" content="article" />
+      <meta property="og:title" content={seoTitle} />
 
-        {/* Article Metadata */}
-        <meta property="article:author" content={seoAuthor} />
+      <meta property="og:description" content={seoDescription} />
 
-        <meta property="article:section" content={seoCategory} />
+      <meta property="og:image" content={seoImage} />
 
-        {seoTags.map((tag) => (
-          <meta key={tag} property="article:tag" content={tag} />
-        ))}
+      <meta property="og:image:alt" content={seoTitle} />
 
-        <meta property="article:published_time" content={seoPublishDate} />
+      <meta property="og:url" content={seoUrl} />
 
-        <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
-        </script>
-      </Helmet>
-    </div>
+      <meta property="og:site_name" content={seoConfig.siteName} />
+
+      <meta property="og:locale" content={seoConfig.locale} />
+
+      {/* ========================================================
+          Article Metadata
+      ======================================================== */}
+
+      <meta property="article:author" content={seoAuthor} />
+
+      <meta property="article:section" content={seoCategory} />
+
+      <meta property="article:published_time" content={seoPublishDate} />
+
+      {seoTags.map((tag) => (
+        <meta key={tag} property="article:tag" content={tag} />
+      ))}
+
+      {/* ========================================================
+          Twitter Card
+      ======================================================== */}
+
+      <meta name="twitter:card" content="summary_large_image" />
+
+      <meta name="twitter:title" content={seoTitle} />
+
+      <meta name="twitter:description" content={seoDescription} />
+
+      <meta name="twitter:image" content={seoImage} />
+
+      <meta name="twitter:creator" content={seoConfig.twitter} />
+
+      {/* ========================================================
+          Structured Data (JSON-LD)
+      ======================================================== */}
+
+      <script type="application/ld+json">
+        {JSON.stringify(structuredData)}
+      </script>
+    </Helmet>
   );
 };
 

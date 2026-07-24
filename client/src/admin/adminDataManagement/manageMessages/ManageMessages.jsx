@@ -9,10 +9,10 @@ import {
   notifyError,
   notifySuccess,
 } from "../../adminComponent/adminToastNotification/AdminToastNotification";
-import { Eye, Check, RefreshCcw } from "lucide-react";
 import CTAButton from "../../../components/buttons/CTAButton";
 import { FaTimes } from "react-icons/fa";
 import AdminPagination from "../../adminComponent/adminPagination/AdminPagination";
+import { LucideIcon } from "../../lib/LucideIcons";
 
 // Modal component
 const MessageModal = ({ isOpen, onClose, message }) => {
@@ -96,7 +96,7 @@ const ManageMessages = () => {
       />
       <div className="p-2">
         <div className="overflow-x-auto rounded-md border border-base-content/5 dark:border-gray-700 bg-base-100 dark:bg-gray-800">
-          <table className="table">
+          <table className="table table-xs">
             <thead className="dark:text-gray-400">
               <tr className="dark:border-slate-700 dark:bg-gray-900">
                 <th>#</th>
@@ -129,54 +129,59 @@ const ManageMessages = () => {
                     </td>
                     <td>{dateFormatter(new Date(message.createdAt))}</td>
                     <td className="flex flex-wrap gap-1">
-                      <button
+                      <CTAButton
                         onClick={() => openModal(message)}
-                        className="bg-gray-500 text-white px-2 py-1 rounded hover:bg-gray-600 flex items-center gap-1"
-                      >
-                        <Eye size={16} /> View
-                      </button>
+                        size="xs"
+                        label="View"
+                        variant="primary"
+                        icon={<LucideIcon.Eye size="14" />}
+                      />
 
                       {message.status === "new" && (
                         <>
-                          <button
+                          <CTAButton
                             onClick={() =>
                               handleUpdateStatus(message._id, "read")
                             }
-                            className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 flex items-center gap-1"
-                          >
-                            <Eye size={16} /> Mark as Read
-                          </button>
-                          <button
+                            size="xs"
+                            label="Mark As Read"
+                            icon={<LucideIcon.Eye size="14" />}
+                            variant="primary"
+                          />
+
+                          <CTAButton
                             onClick={() =>
                               handleUpdateStatus(message._id, "resolved")
                             }
-                            className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 flex items-center gap-1"
-                          >
-                            <Check size={16} /> Resolve
-                          </button>
+                            size="xs"
+                            label="Resolve"
+                            icon={<LucideIcon.Check />}
+                          />
                         </>
                       )}
 
                       {message.status === "read" && (
-                        <button
+                        <CTAButton
                           onClick={() =>
                             handleUpdateStatus(message._id, "resolved")
                           }
-                          className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 flex items-center gap-1"
-                        >
-                          <Check size={16} /> Resolve
-                        </button>
+                          size="xs"
+                          variant="info"
+                          label="Resolve"
+                          icon={<LucideIcon.Check size="14" />}
+                        />
                       )}
 
                       {message.status === "resolved" && (
-                        <button
+                        <CTAButton
                           onClick={() =>
                             handleUpdateStatus(message._id, "read")
                           }
-                          className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 flex items-center gap-1"
-                        >
-                          <RefreshCcw size={16} /> Re-Open
-                        </button>
+                          size="xs"
+                          variant="success"
+                          label="Re-Open"
+                          icon={<LucideIcon.RefreshCcwDot size="14" />}
+                        />
                       )}
                     </td>
                   </tr>

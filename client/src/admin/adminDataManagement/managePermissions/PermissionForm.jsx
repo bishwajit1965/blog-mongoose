@@ -97,20 +97,21 @@ const PermissionForm = ({ onSuccess, existingPermission = null }) => {
             // required
           />
         </div>
-
-        <CTAButton
-          label={
-            loading
-              ? "Saving..."
-              : existingPermission
-                ? "Update Permission"
-                : "Create Permission"
-          }
-          disabled={loading}
-          className="btn btn-sm mt-4"
-          icon={existingPermission ? <FaEdit /> : <FaPlusCircle />}
-          variant={existingPermission ? "success" : "primary"}
-        />
+        <div className="mt-4">
+          <CTAButton
+            label={
+              loading
+                ? "Saving..."
+                : existingPermission
+                  ? "Update Permission"
+                  : "Create Permission"
+            }
+            disabled={loading}
+            size="sm"
+            icon={existingPermission ? <FaEdit /> : <FaPlusCircle />}
+            variant={existingPermission ? "success" : "primary"}
+          />
+        </div>
       </form>
     </>
   );

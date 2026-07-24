@@ -1,14 +1,14 @@
-import { Loader as LoaderIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
-const Loader = ({
-  size = 48,
-  color = "currentColor",
-  message = "Loading...",
-}) => {
+const Loader = ({ size = 48, message = "Loading...", className = "" }) => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-      <LoaderIcon className="animate-spin" size={size} color={color} />
-      <span className="text-lg font-medium text-gray-700">{message}</span>
+    <div
+      className={`flex flex-col items-center justify-center min-h-[50vh] gap-4 ${className}`}
+      role="status"
+      aria-live="polite"
+    >
+      <Loader2 className="animate-spin text-primary" size={size} />
+      {message && <p className="text-sm text-base-content/70">{message}</p>}
     </div>
   );
 };

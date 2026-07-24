@@ -61,14 +61,14 @@ const CategoriesTable = ({ onEdit, onDelete }) => {
                       onClick={() => onEdit(category)}
                       label="Edit"
                       icon={<FaEdit />}
-                      className="btn btn-xs text-xs"
+                      size="xs"
                       variant="primary"
                     />
                     <CTAButton
                       onClick={() => handleDelete(category._id)}
                       label="Delete"
                       icon={<FaTrashAlt />}
-                      className="btn btn-xs text-xs"
+                      size="xs"
                       variant="danger"
                     />
                   </>

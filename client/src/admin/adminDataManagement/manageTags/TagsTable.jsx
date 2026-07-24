@@ -51,21 +51,22 @@ const TagsTable = ({ onEdit, onDelete }) => {
               <td className="flex space-x-1 justify-end p-0">
                 {Array.isArray(adminData?.user?.roles) &&
                 adminData.user.roles.some(
-                  (role) => role.name === "super-admin" || role.name === "admin"
+                  (role) =>
+                    role.name === "super-admin" || role.name === "admin",
                 ) ? (
                   <>
                     <CTAButton
                       onClick={() => onEdit(tag)}
                       label="Edit"
                       icon={<FaEdit />}
-                      className="btn btn-xs text-xs"
+                      size="xs"
                       variant="primary"
                     />
                     <CTAButton
                       onClick={() => handleDelete(tag._id)}
                       label="Delete"
                       icon={<FaTrashAlt />}
-                      className="btn btn-xs text-xs"
+                      size="xs"
                       variant="danger"
                     />
                   </>

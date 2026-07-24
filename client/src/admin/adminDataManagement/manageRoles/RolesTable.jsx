@@ -52,7 +52,7 @@ const RolesTable = ({ onDelete, onEdit }) => {
               <td>
                 {role.permissions.map((perId, index) => {
                   const matchingPermission = permissions.find(
-                    (perm) => perm._id === perId
+                    (perm) => perm._id === perId,
                   );
                   if (matchingPermission) {
                     // Check if it's the last item
@@ -67,21 +67,22 @@ const RolesTable = ({ onDelete, onEdit }) => {
               <td className="flex p-0 space-x-1 justify-end">
                 {Array.isArray(adminData?.user?.roles) &&
                 adminData.user.roles.some(
-                  (role) => role.name === "super-admin" || role.name === "admin"
+                  (role) =>
+                    role.name === "super-admin" || role.name === "admin",
                 ) ? (
                   <>
                     <CTAButton
                       onClick={() => onEdit(role)}
                       label="Edit"
                       icon={<FaEdit />}
-                      className="btn btn-xs text-xs"
+                      size="xs"
                       variant="primary"
                     />
                     <CTAButton
                       onClick={() => handleDelete(role._id)}
                       label="Delete"
                       icon={<FaTrashAlt />}
-                      className="btn btn-xs text-xs"
+                      size="xs"
                       variant="danger"
                     />
                   </>

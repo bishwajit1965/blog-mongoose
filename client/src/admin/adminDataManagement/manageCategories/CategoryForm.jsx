@@ -110,19 +110,21 @@ const CategoryForm = ({ onSuccess, existingCategory = null }) => {
           />
         </div>
 
-        <CTAButton
-          label={
-            loading
-              ? "Saving..."
-              : existingCategory
-                ? "Update Category"
-                : "Create Category"
-          }
-          disabled={loading}
-          className="btn btn-sm mt-4"
-          icon={existingCategory ? <FaEdit /> : <FaPlusCircle />}
-          variant={existingCategory ? "success" : "primary"}
-        />
+        <div className="mt-4">
+          <CTAButton
+            label={
+              loading
+                ? "Saving..."
+                : existingCategory
+                  ? "Update Category"
+                  : "Create Category"
+            }
+            disabled={loading}
+            size="sm"
+            icon={existingCategory ? <FaEdit /> : <FaPlusCircle />}
+            variant={existingCategory ? "success" : "primary"}
+          />
+        </div>
       </form>
     </div>
   );

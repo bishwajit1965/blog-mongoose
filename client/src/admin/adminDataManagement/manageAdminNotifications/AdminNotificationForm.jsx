@@ -197,7 +197,7 @@ const AdminNotificationForm = ({
                     : "Create Notice"
               }
               disabled={loading}
-              className="btn btn-sm"
+              size="sm"
               icon={existingNotice ? <FaEdit /> : <FaPlusCircle />}
               variant={existingNotice ? "success" : "primary"}
             />
@@ -207,7 +207,7 @@ const AdminNotificationForm = ({
               <CTAButton
                 onClick={onSuccess}
                 label="Cancel Edit"
-                className="btn btn-sm"
+                size="xs"
                 variant="warning"
                 icon={<FaTimesCircle />}
               />
@@ -221,7 +221,7 @@ const AdminNotificationForm = ({
           label={!isHidden ? "Expand View" : "Shrink View"}
           icon={!isHidden ? <FaExpandArrowsAlt /> : <FaExchangeAlt />}
           variant="primary"
-          className="btn btn-sm invisible lg:visible"
+          size="sm"
         />
       </div>
     </div>

@@ -76,6 +76,11 @@ const bookmarkRoutes = require("./routes/bookmarkRoutes");
 const requestRoutes = require("./routes/requestRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 const followUserRoutes = require("./routes/followUserRoutes");
+const rssRoutes = require("./routes/rssRoutes");
+const pageRoutes = require("./routes/pageRoutes");
+
+// Public routes imported
+const publicPageRoutes = require("./routes/publicPageRoutes");
 
 /**==============================================
  *  ROUTE SET UP
@@ -104,6 +109,11 @@ app.use("/api/bookmark-post", bookmarkRoutes);
 app.use("/api/requests", requestRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/follow-users", followUserRoutes);
+app.use("/api/rss", rssRoutes);
+app.use("/api/pages", pageRoutes);
+
+// Public page route
+app.use("/api/public/pages", publicPageRoutes);
 
 // WebSocket connection for real-time presence tracking
 io.on("connection", (socket) => {

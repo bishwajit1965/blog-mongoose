@@ -28,22 +28,22 @@ const Navbar = () => {
 
   const routes = [
     { id: 1, route: "/", name: "Home" },
-    { id: 2, route: "/about-me", name: "About Me" },
+    { id: 2, route: "/about-me", name: "About" },
     { id: 3, route: "/contact-me", name: "Contact" },
-    { id: 4, route: "/blog-coming-soon", name: "Blog Coming Soon" },
-    { id: 5, route: "/bookmarked-page", name: "My Bookmarks" },
-    {
-      id: 6,
-      route: "http://localhost:3000/api/blogs/rss",
-      name: "Rss",
-      external: true,
-    },
-    { id: 7, route: "/user-profile", name: "Profile" },
-    { id: 8, route: "/notice", name: "Notice" },
-    {
-      id: 9,
-      isThemeToggle: true, // Differentiator key
-    },
+    { id: 4, route: "/privacy-policy", name: "Privacy" },
+    { id: 5, route: "/terms-conditions", name: "Terms" },
+    { id: 6, route: "/editorial-policy", name: "Editorial" },
+    { id: 7, route: "/cookie-policy", name: "Cookie" },
+    { id: 8, route: "/disclaimer", name: "Disclaimer" },
+    { id: 9, route: "/dmca-policy", name: "Dmca" },
+    { id: 10, route: "/licensing", name: "Licensing" },
+    { id: 11, route: "/custom", name: "Custom" },
+    { id: 12, route: "/blog-coming-soon", name: "Blog Coming Soon" },
+    { id: 13, route: "/bookmarked-page", name: "My Bookmarks" },
+    { id: 14, route: "/rss", name: "Rss" },
+    { id: 15, route: "/user-profile", name: "Profile" },
+    { id: 16, route: "/notice", name: "Notice" },
+    { id: 17, isThemeToggle: true }, // Differentiator key
   ];
 
   const handleLogOut = async () => {
@@ -66,7 +66,7 @@ const Navbar = () => {
         theme === "dark" ? "bg-gray-800" : "bg-base-200"
       } lg:px-0 lg:bg-base-200 md:py-0 shadow-md fixed top-0 lg:max-w-full mx-auto z-50 lg:top-0 pt-0 mt-0`}
     >
-      <div className="navbar dark:bg-gray-800 lg:px-[7rem]">
+      <div className="navbar dark:bg-gray-800 lg:px-[2rem]">
         <div className="navbar-start">
           <div className="dropdown">
             <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -84,7 +84,7 @@ const Navbar = () => {
             <ul
               tabIndex={0}
               className={`bg-base-200 border lg:hidden md:hidden lg:ml-2 -ml-2 space-y-1 z-[1] shadow-lg w-96 absolute duration-1000 md:static rounded-b-md ${
-                open ? "top-[65px]" : "-top-72"
+                open ? "top-[4.5rem]" : "-top-[34rem]"
               } dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 dark:shadow-lg`}
             >
               {routes.map((item) =>
@@ -111,11 +111,11 @@ const Navbar = () => {
             <img src={Logo} alt="Logo" className="lg:w-16 lg:h-16 h-12 w-12" />
           </Link>
 
-          <Link to="/" className="ml-0">
+          {/* <Link to="/" className="ml-0">
             <span className="xl:text-2xl xl:w-48 md:w-32 lg:block xl:block lg:text-xs md:hidden md:ml-0 hidden lg:font-extrabold text-base-content/80 dark:text-base-300 hover:link">
               Nova Journal
             </span>
-          </Link>
+          </Link> */}
         </div>
         <div className="navbar-center hidden md:block lg:flex">
           <ul className="menu-horizontal">
@@ -141,7 +141,7 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        <div className="navbar-end dark:bg-gray-800 bg-red-500s">
+        <div className="navbar-end dark:bg-gray-800">
           <div className="dropdown dropdown-bottom dropdown-end">
             <label tabIndex={0} className=" dark:bg-gray-800 border-none">
               <div className="flex items-center gap-2 cursor-pointer">
@@ -149,9 +149,9 @@ const Navbar = () => {
                   user.photoURL ? (
                     <>
                       <div className="flex items-center space-x-1">
-                        <span className="text-[8px] lg:text-sm capitalize hidden lg:block">
+                        {/* <span className="text-[8px] lg:text-sm capitalize hidden lg:block">
                           {user ? user.displayName : ""}
-                        </span>
+                        </span> */}
                         <img
                           src={user.photoURL}
                           alt="Profile pic"
@@ -194,14 +194,15 @@ const Navbar = () => {
           </div>
           <div className="flex justify-end items-center">
             {user ? (
-              <button
-                className="btn btn-sm bg-base-200 capitalize dark:text-slate-300 dark:bg-gray-800 dark:border-none"
-                onClick={handleLogOut}
-              >
-                <FaSignOutAlt />
-                <span className="hidden lg:block">Logout</span>
-              </button>
+              <></>
             ) : (
+              // <button
+              //   className="btn btn-sm bg-base-200 capitalize dark:text-slate-300 dark:bg-gray-800 dark:border-none"
+              //   onClick={handleLogOut}
+              // >
+              //   <FaSignOutAlt />
+              //   <span className="hidden lg:block">Logouts</span>
+              // </button>
               <>
                 <NavLink to="/login" className="flex items-center">
                   <FaSignInAlt className="mr-1" />

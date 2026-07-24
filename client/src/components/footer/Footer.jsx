@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import SocialMediaLinks from "../socialMediaLinks/SocialMediaLinks";
+import { LucideRss } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -19,51 +20,81 @@ const Footer = () => {
           </div>
 
           {/* Navigation Section */}
-          <div>
-            <h4 className="text-lg font-semibold text-white mb-3">
-              Quick Links
-            </h4>
+          <div className="grid grid-cols-2 gap-8">
+            {/* Company */}
+            <div>
+              <h4 className="text-lg font-semibold text-white mb-3">Company</h4>
 
-            <div className="flex flex-col gap-2 text-sm">
-              <Link to="/" className="hover:text-indigo-400 transition-colors">
-                Home
-              </Link>
+              <div className="flex flex-col gap-2 text-sm">
+                <Link to="/" className="hover:text-indigo-400">
+                  Home
+                </Link>
+                <Link to="/about-me" className="hover:text-indigo-400">
+                  About
+                </Link>
+                <Link to="/contact-me" className="hover:text-indigo-400">
+                  Contact
+                </Link>
+                <Link to="/blog-posts" className="hover:text-indigo-400">
+                  Articles
+                </Link>
+                <Link to="/blog-coming-soon" className="hover:text-indigo-400">
+                  Coming Soon
+                </Link>
+                <Link to="/rss" className="hover:text-indigo-400">
+                  RSS Feed
+                </Link>
+              </div>
+            </div>
 
-              <Link
-                to="/blog-posts"
-                className="hover:text-indigo-400 transition-colors"
-              >
-                Articles
-              </Link>
+            {/* Legal */}
+            <div>
+              <h4 className="text-lg font-semibold text-white mb-3">Legal</h4>
 
-              <Link
-                to="/about-me"
-                className="hover:text-indigo-400 transition-colors"
-              >
-                About Me
-              </Link>
+              <div className="flex flex-col gap-2 text-sm">
+                <Link to="/privacy-policy" className="hover:text-indigo-400">
+                  Privacy Policy
+                </Link>
 
-              <Link
-                to="/contact-me"
-                className="hover:text-indigo-400 transition-colors"
-              >
-                Contact
-              </Link>
+                <Link to="/terms-conditions" className="hover:text-indigo-400">
+                  Terms & Conditions
+                </Link>
 
-              <Link
-                to="/terms-conditions"
-                className="hover:text-indigo-400 transition-colors"
-              >
-                Terms & Conditions
-              </Link>
+                <Link to="/cookie-policy" className="hover:text-indigo-400">
+                  Cookie Policy
+                </Link>
+
+                <Link to="/disclaimer" className="hover:text-indigo-400">
+                  Disclaimer
+                </Link>
+
+                <Link to="/editorial-policy" className="hover:text-indigo-400">
+                  Editorial Policy
+                </Link>
+
+                <Link to="/dmca-policy" className="hover:text-indigo-400">
+                  DMCA Policy
+                </Link>
+
+                <Link to="/licensing" className="hover:text-indigo-400">
+                  Licensing
+                </Link>
+              </div>
             </div>
           </div>
 
           {/* Social Section */}
           <div>
             <h4 className="text-lg font-semibold text-white mb-3">Connect</h4>
-
-            <SocialMediaLinks />
+            <div className="flex items-center lg:gap-4">
+              <SocialMediaLinks />
+              <Link
+                to="http://localhost:3000/api/blogs/rss"
+                className="flex items-center gap-"
+              >
+                <LucideRss className="text-amber-500 font-bold w-6 h-6" />
+              </Link>
+            </div>
 
             <p className="text-xs text-gray-500 mt-4">
               Built with React, Node.js, MongoDB, and modern web technologies.

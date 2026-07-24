@@ -1,6 +1,4 @@
 // components/ui/SearchBox.jsx
-
-import React from "react";
 import { Search } from "lucide-react";
 
 const SearchBox = ({ value, onChange, placeholder = "Search..." }) => {

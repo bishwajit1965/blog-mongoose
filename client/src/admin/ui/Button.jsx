@@ -57,12 +57,6 @@ const Button = ({
 
   const loadingSpinner = <Loader size={16} className="animate-spin" />;
 
-  // Alternative Icon
-
-  // const loadingSpinner = (
-  //   <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-  // );
-
   const handleClick = (e) => {
     if (isDisabled) {
       e.preventDefault();
@@ -93,11 +87,6 @@ const Button = ({
           {children}
         </>
       )}
-      {/* {loading && loadingSpinner}
-
-      {!loading && Icon && <Icon className="w-4 h-4" />}
-
-      {!loading && children} */}
     </Component>
   );
 };

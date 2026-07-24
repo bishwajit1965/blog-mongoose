@@ -1,4 +1,3 @@
-import AboutMe from "../pages/aboutMe/AboutMe";
 import AdminDashboard from "../admin/adminComponent/adminDashboard/AdminDashboard";
 import AdminLayout from "../admin/adminLayout/adminLayout";
 import AdminLogin from "../admin/adminPages/AdminLogin";
@@ -6,7 +5,6 @@ import ArchivedBlogPosts from "../admin/adminDataManagement/manageBlogPosts/Arch
 import BlogDetailsPage from "../pages/blogPosts/BlogDetailsPage";
 import BlogPosts from "../pages/blogPosts/BlogPosts";
 import ComingSoonPosts from "../admin/adminDataManagement/manageBlogPosts/ComingSoonPosts";
-import ContactMe from "../pages/contactMe/ContactMe";
 import EditorDashboard from "../admin/adminComponent/editorDashboard/EditorDashboard";
 import EditorLayout from "../admin/adminLayout/EditorLayout";
 import ErrorPage from "../pages/errorPage/ErrorPage";
@@ -25,7 +23,6 @@ import ManageRoles from "../admin/adminDataManagement/manageRoles/ManageRoles";
 import ManageTags from "../admin/adminDataManagement/manageTags/ManageTags";
 import ManageUsers from "../admin/adminDataManagement/manageUsers/ManageUsers";
 import ManageUsersRolesAndPermissions from "../admin/adminDataManagement/manageUsersRolesAndPermissions/ManageUsersRolesAndPermissions";
-import PrivateRoute from "../privateRoute/PrivateRoute";
 import ProfileManagement from "../admin/adminDataManagement/profileManagement/ProfileManagement";
 import Register from "../pages/register/Register";
 import RequireAdmin from "../admin/requireAdmin/RequireAdmin";
@@ -34,7 +31,6 @@ import RootLayout from "../layouts/rootLayout/RootLayout";
 import ScheduledPosts from "../admin/adminDataManagement/manageBlogPosts/ScheduledPosts";
 import SuperAdminDashboard from "../admin/adminComponent/superAdminDashboard/SuperAdminDashboard";
 import SuperAdminLayout from "../admin/adminLayout/SuperAdminLayout";
-import TermsConditions from "../pages/TermsConditions/TermsConditions";
 import Unauthorized from "../admin/unauthorized/Unauthorized";
 import WriterDashboard from "../admin/adminComponent/writerDashboard/WriterDashboard";
 import WriterLayout from "../admin/adminLayout/WriterLayout";
@@ -45,6 +41,9 @@ import BookmarkedPage from "../pages/bookmarkedPage/BookmarkedPage";
 import AdminProviders from "../admin/adminProviders/AdminProviders";
 import AdminAuthProviders from "../admin/adminProviders/groups/AdminAuthProviders";
 import ComingSoonPage from "../pages/comingSoonPage/ComingSoonPage";
+import RssPage from "../pages/rssPage/RssPage";
+import PageManagement from "../admin/pages/PageManagement";
+import PublicPage from "../pages/testPage/PublicPage";
 
 // Common Admin Routes (Super Admin can access all)
 const superAdminRoutes = [
@@ -69,6 +68,7 @@ const superAdminRoutes = [
   { path: "manage-notification", element: <ManageAdminNotification /> },
   { path: "manage-comments", element: <ManageComments /> },
   { path: "manage-messages", element: <ManageMessages /> },
+  { path: "manage-pages", element: <PageManagement /> },
 ];
 
 const router = createBrowserRouter([
@@ -82,14 +82,9 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { index: true, element: <Home /> },
-      { path: "about-me", element: <AboutMe /> },
       {
-        path: "contact-me",
-        element: (
-          <PrivateRoute>
-            <ContactMe />
-          </PrivateRoute>
-        ),
+        path: ":slug",
+        element: <PublicPage />,
       },
       { path: "blog-coming-soon", element: <ComingSoonPage /> },
       { path: "blog-posts", element: <BlogPosts /> },
@@ -114,6 +109,10 @@ const router = createBrowserRouter([
         path: "notice",
         element: <FrontendNoticeManager />,
       },
+      {
+        path: "rss",
+        element: <RssPage />,
+      },
       // Under construction
       {
         path: "user-profile",
@@ -132,7 +131,7 @@ const router = createBrowserRouter([
     children: [
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
-      { path: "terms-conditions", element: <TermsConditions /> },
+      // { path: "terms-conditions", element: <TermsConditions /> },
     ],
   },
 
@@ -157,7 +156,7 @@ const router = createBrowserRouter([
       <AdminProviders>
         <RequireAdmin
           allowedRoles={["super-admin"]}
-          allowedPermissions={["edit-post"]}
+          allowedPermissions={["edit-post", "create-post", "delete-post"]}
         >
           <SuperAdminLayout />
         </RequireAdmin>

@@ -71,7 +71,7 @@ const AdminNoticeTable = ({
         label={label}
         variant={variant}
         icon={icon}
-        className="btn btn-xs text-xs w-20"
+        size="xs"
       />
     );
   };
@@ -351,6 +351,7 @@ const AdminNoticeTable = ({
                             icon={<FaEdit />}
                             className={btnSizeSm}
                             variant="info"
+                            size="xs"
                           />
                           {notice.status !== "published" ? (
                             <CTAButton
@@ -359,6 +360,7 @@ const AdminNoticeTable = ({
                               icon={<FaEye />}
                               className={btnSize}
                               variant="success"
+                              size="xs"
                             />
                           ) : (
                             ""
@@ -371,6 +373,7 @@ const AdminNoticeTable = ({
                             icon={<FaEye />}
                             className={btnSizeSm}
                             variant="primary"
+                            size="xs"
                           />
                           {notice.status !== "archived" && (
                             <CTAButton
@@ -379,6 +382,7 @@ const AdminNoticeTable = ({
                               icon={<FaEye />}
                               className={btnSize}
                               variant="warning"
+                              size="xs"
                             />
                           )}
                         </div>
@@ -389,6 +393,7 @@ const AdminNoticeTable = ({
                             icon={<FaTrashAlt />}
                             className={btnSizeSm}
                             variant="danger"
+                            size="xs"
                           />
 
                           {notice.status !== "deleted" && (
@@ -398,6 +403,7 @@ const AdminNoticeTable = ({
                               icon={<FaTrashRestoreAlt />}
                               className={btnSize}
                               variant="danger"
+                              size="xs"
                             />
                           )}
                         </div>

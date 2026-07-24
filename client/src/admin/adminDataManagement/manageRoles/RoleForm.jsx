@@ -133,16 +133,21 @@ const RoleForm = ({ onSuccess, existingRole = null, isDark, customStyles }) => {
             styles={customStyles(isDark)}
           />
         </div>
-
-        <CTAButton
-          label={
-            loading ? "Saving..." : existingRole ? "Update Role" : "Create Role"
-          }
-          disabled={loading}
-          className="btn btn-sm mt-4"
-          icon={existingRole ? <FaEdit /> : <FaPlusCircle />}
-          variant={existingRole ? "success" : "primary"}
-        />
+        <div className="mt-4">
+          <CTAButton
+            label={
+              loading
+                ? "Saving..."
+                : existingRole
+                  ? "Update Role"
+                  : "Create Role"
+            }
+            disabled={loading}
+            size="sm"
+            icon={existingRole ? <FaEdit /> : <FaPlusCircle />}
+            variant={existingRole ? "success" : "primary"}
+          />
+        </div>
       </form>
     </div>
   );

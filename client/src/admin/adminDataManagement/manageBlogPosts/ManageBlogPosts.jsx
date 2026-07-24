@@ -258,7 +258,7 @@ const ManageBlogPosts = () => {
               onClick={() => handleUploadBlogView()}
               icon={<FaRegPlusSquare />}
               variant="success"
-              className="btn btn-xs text-xs"
+              size="xs"
             />
           )}
           {blogDetailDataView && (
@@ -267,7 +267,7 @@ const ManageBlogPosts = () => {
               onClick={() => handleUploadBlogView()}
               icon={<FaRegPlusSquare />}
               variant="success"
-              className="btn btn-xs text-xs"
+              size="xs"
             />
           )}
         </div>

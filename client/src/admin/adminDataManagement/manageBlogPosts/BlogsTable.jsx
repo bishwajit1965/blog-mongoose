@@ -74,17 +74,17 @@ const BlogsTable = ({
                     <>
                       <CTAButton
                         onClick={() => onEdit(blog)}
-                        label="EDIT"
+                        label="Edit"
                         icon={<FaEdit />}
-                        className="btn btn-xs text-xs"
+                        size="xs"
                         variant="primary"
                       />
 
                       <CTAButton
                         onClick={() => handleBlogDetailView(blog)}
-                        label="VIEW"
+                        label="View"
                         icon={<FaEye />}
-                        className="btn btn-xs text-xs"
+                        size="xs"
                         variant="primary"
                       />
 
@@ -92,17 +92,17 @@ const BlogsTable = ({
                       hasPermission("restore-post") ? (
                         <CTAButton
                           onClick={() => onSelectRestorePost(blog)}
-                          label="RESTORE"
+                          label="Restore"
                           icon={<FaRecycle />}
-                          className="btn btn-xs text-xs"
+                          size="xs"
                           variant="success"
                         />
                       ) : (
                         <CTAButton
                           onClick={() => onSelectSoftDeleteBlog(blog)}
-                          label="S-DEL"
+                          label="S.DEL"
                           icon={<FaAccessibleIcon />}
-                          className="btn btn-xs text-xs"
+                          size="xs"
                           variant="warning"
                         />
                       )}
@@ -111,7 +111,7 @@ const BlogsTable = ({
                         onClick={() => onSelectPermanentDelete(blog)}
                         label="DEL"
                         icon={<FaTrashAlt />}
-                        className="btn btn-xs text-xs"
+                        size="xs"
                         variant="danger"
                       />
                     </>

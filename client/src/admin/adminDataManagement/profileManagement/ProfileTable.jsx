@@ -47,7 +47,7 @@ const ProfileTable = ({ profiles, onView, onEdit }) => {
                   onClick={() => onView(profile)}
                   label="View"
                   icon={<FaEye />}
-                  className="btn btn-xs text-xs"
+                  size="xs"
                   variant="primary"
                 />
 
@@ -55,7 +55,7 @@ const ProfileTable = ({ profiles, onView, onEdit }) => {
                   onClick={() => onEdit(profile)}
                   label="Edit"
                   icon={<FaEdit />}
-                  className="btn btn-xs text-xs"
+                  size="xs"
                   variant="info"
                 />
               </td>

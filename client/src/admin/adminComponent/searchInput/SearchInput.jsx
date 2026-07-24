@@ -13,8 +13,12 @@ const SearchInput = ({ data, onFilteredDataChange, pageLimit = 5 }) => {
   // Handle search filtering
   useEffect(() => {
     if (searchQuery) {
-      const filtered = data.filter((item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()),
+      const filtered = data.filter(
+        (item) =>
+          item.title?.toLowerCase().includes(searchQuery) ||
+          item.slug?.toLowerCase().includes(searchQuery) ||
+          item.pageType?.toLowerCase().includes(searchQuery) ||
+          item.status?.toLowerCase().includes(searchQuery),
       );
       setFilteredData(filtered);
     } else {
@@ -41,13 +45,15 @@ const SearchInput = ({ data, onFilteredDataChange, pageLimit = 5 }) => {
         placeholder="Search blog post by title..."
       />
 
-      <button
-        onClick={handleRemoveSearchText}
-        className="flex items-center gap-2 bg-success dark:bg-gray-700 dark:text-gray-400 px-2 py-1 rounded-md text-base-100 shadow"
-      >
-        <RefreshCcw size={20} />
-        Reset
-      </button>
+      {searchQuery && (
+        <button
+          onClick={handleRemoveSearchText}
+          className="flex items-center gap-2 bg-success dark:bg-gray-700 dark:text-gray-400 px-2 py-1 rounded-md text-base-100 shadow"
+        >
+          <RefreshCcw size={20} />
+          Reset
+        </button>
+      )}
     </div>
   );
 };

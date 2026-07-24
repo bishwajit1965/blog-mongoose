@@ -14,6 +14,7 @@ const RootLayout = () => {
           </div>
         </div>
       </div>
+
       <Footer />
     </div>
   );

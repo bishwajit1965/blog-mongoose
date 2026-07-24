@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Helmet } from "react-helmet-async";
 import SocialMediaLinks from "../../components/socialMediaLinks/SocialMediaLinks";
 import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
 import useAuth from "../../hooks/useAuth";
@@ -14,6 +13,7 @@ import PageTitle from "../../components/pageTitle/PageTitle";
 import { Input } from "../../admin/ui/Input";
 import Textarea from "../../admin/ui/Textarea";
 import { Link } from "react-router-dom";
+import Seo from "../../components/seo/Seo";
 
 const ContactMe = () => {
   const [loading, setLoading] = useState(false);
@@ -59,9 +59,12 @@ const ContactMe = () => {
   };
   return (
     <div>
-      <Helmet>
-        <title>Nova Journal || Contact Page</title>
-      </Helmet>
+      <Seo
+        title="Contact"
+        description="Contact Nova Journal."
+        url="contact-me"
+        schemaType="ContactPage"
+      />
 
       <motion.section
         initial={{ opacity: 0, scale: 0.8 }}
