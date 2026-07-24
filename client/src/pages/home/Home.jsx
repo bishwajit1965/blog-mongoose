@@ -11,7 +11,6 @@ import BlogPosts from "../blogPosts/BlogPosts";
 import Button from "../../components/buttons/Button";
 import Categories from "../../components/categories/Categories";
 import ComingSoonPost from "../../components/comingSoonPost/ComingSoonPost";
-import { Helmet } from "react-helmet-async";
 import Marquee from "react-fast-marquee";
 import MarqueeNotification from "../../components/marqueeNotification/MarqueeNotification";
 import OlderBlogPosts from "../blogPosts/OlderBlogPosts";
@@ -32,6 +31,7 @@ import BlogHero from "../../components/blogHero/BlogHero";
 import { LucideRefreshCw } from "lucide-react";
 import useGetComingSoonPost from "../../hooks/useGetComingSoonPost";
 import { motion } from "framer-motion";
+import Seo from "../../components/seo/Seo";
 
 const sectionMotion = {
   hidden: {
@@ -107,9 +107,11 @@ const Home = () => {
 
   return (
     <div className="">
-      <Helmet>
-        <title>Nova Journal || Home Page</title>
-      </Helmet>
+      <Seo
+        description="Nova Journal shares practical software engineering articles, React, Node.js, MongoDB, debugging, software architecture, and full-stack web development."
+        url=""
+        schemaType="WebSite"
+      />
 
       <motion.div
         variants={sectionMotion}

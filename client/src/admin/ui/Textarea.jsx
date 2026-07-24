@@ -22,7 +22,7 @@ const Textarea = forwardRef(
       <div className="form-control w-full space-y-1">
         {label && (
           <label htmlFor={name} className="label flex justify-items-start">
-            <span className="label-text">{label}</span>
+            <span className="label-text text-gray-400 ">{label}</span>
           </label>
         )}
 
@@ -43,7 +43,7 @@ const Textarea = forwardRef(
             rows={rows}
             disabled={disabled}
             className={clsx(
-              "textarea textarea-bordered w-full",
+              "textarea textarea-bordered w-full -mt-2",
               error && "textarea-error",
               className,
             )}
@@ -53,7 +53,9 @@ const Textarea = forwardRef(
 
         {error && (
           <label className="label flex justify-items-start">
-            <span className="label-text-alt text-error text-xs">{error}</span>
+            <span className="label-text-alt text-error text-xs absolute bottom-24">
+              {error}
+            </span>
           </label>
         )}
       </div>

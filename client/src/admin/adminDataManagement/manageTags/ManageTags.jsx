@@ -50,7 +50,7 @@ const ManageTags = () => {
                   <CTAButton
                     onClick={handleCancelEdit}
                     label="Cancel Edit"
-                    className="btn btn-sm mt-2"
+                    size="xs"
                     variant="warning"
                     icon={<FaTimesCircle />}
                   />

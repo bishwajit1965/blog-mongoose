@@ -71,7 +71,7 @@ const ProfileUpdateForm = ({ profile, isEditing, onUpdate, onCancel }) => {
             <CTAButton
               label="Update Data"
               icon={<FaEdit />}
-              className="btn btn-sm text-sm"
+              size="sm"
               variant="primary"
             />
 
@@ -79,7 +79,7 @@ const ProfileUpdateForm = ({ profile, isEditing, onUpdate, onCancel }) => {
               onClick={onCancel}
               label="Cancel"
               icon={<FaTimesCircle />}
-              className="btn btn-sm text-sm"
+              size="sm"
               variant="warning"
             />
           </div>

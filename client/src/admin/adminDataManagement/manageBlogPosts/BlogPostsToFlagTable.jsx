@@ -146,7 +146,7 @@ const BlogPostsToFlagTable = ({
                             onClick={() => openModal(blog)}
                             label="View"
                             icon={<FaEye />}
-                            className="btn btn-xs text-xs"
+                            size="xs"
                             variant="primary"
                           />
                           {!blog.isFlagged === true ? (
@@ -163,7 +163,7 @@ const BlogPostsToFlagTable = ({
                                   <FaFlag />
                                 )
                               }
-                              className="btn btn-xs text-xs"
+                              size="xs"
                               variant="primary"
                             />
                           ) : (

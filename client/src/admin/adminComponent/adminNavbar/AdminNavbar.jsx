@@ -67,7 +67,7 @@ const AdminNavbar = () => {
             </label>
             <ul
               tabIndex={0}
-              className={`bg-base-200 border lg:hidden md:hidden lg:ml-2 -ml-4 space-y-1 z-[1] shadow-lg w-96 absolute duration-1000 md:static rounded-b-md ${
+              className={`bg-base-200 border lg:hidden md:hidden lg:ml-2 -ml-2 space-y-1 z-[1] shadow-lg lg:w-96 w-80 absolute duration-1000 md:static rounded-b-md ${
                 open ? "top-[65px]" : "-top-72"
               }  dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 dark:shadow-lg`}
             >

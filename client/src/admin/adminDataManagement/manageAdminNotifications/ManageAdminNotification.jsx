@@ -13,8 +13,10 @@ const ManageAdminNotification = () => {
   const [editingNotice, setEditingNotice] = useState(null);
   const [noticeDetailDataView, setNoticeDetailDataView] = useState(null);
   const [singleNotice, setSingleNotice] = useState(null);
+
   const { allMessageNotification, fetchAdminMessageNotification } =
     useAdminMessageNotification();
+
   const { isColumnHidden, toggleColumnHide } = useToggleColumn();
 
   const handleEdit = (notice) => {

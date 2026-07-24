@@ -4,6 +4,7 @@ import { useState } from "react";
 
 const AdminNotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
+
   const addNotification = (message) => {
     setNotifications((prev) => [...prev, message]);
 

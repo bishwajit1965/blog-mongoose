@@ -300,69 +300,6 @@ const BlogPostForm = ({
       setLoading(false);
     }
   };
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   // Send form data to the server
-  //   try {
-  //     setLoading(true);
-  //     const formDataToSend = new FormData();
-  //     formDataToSend.append("title", formData.title);
-  //     formDataToSend.append("content", content);
-  //     formDataToSend.append("wordCount", wordCount);
-  //     formDataToSend.append("selectedLength", selectedLength);
-  //     formDataToSend.append("excerpt", formData.excerpt);
-  //     formDataToSend.append("author", formData.author);
-  //     formDataToSend.append("category", formData.category);
-  //     formData.tags.forEach((tag) => formDataToSend.append("tags", tag));
-  //     formDataToSend.append("status", formData.status);
-
-  //     if (formData.imageFile) {
-  //       formDataToSend.append("image", formData.imageFile);
-  //     }
-
-  //     if (
-  //       formData.status === "scheduled" ||
-  //       (formData.status === "coming-soon" && formData.publishAt)
-  //     ) {
-  //       formDataToSend.append("publishAt", formData.publishAt);
-  //     }
-
-  //     if (existingBlog) {
-  //       if (hasPermission("edit-post")) {
-  //         const response = await updateBlogBySlug(
-  //           existingBlog.slug,
-  //           formDataToSend,
-  //         );
-  //         notifySuccess(response?.message);
-  //         // console.log("Sent data to update:", formData.content);
-  //         // notifySuccess("Blog post updated successfully!");
-  //       } else {
-  //         notifyError(response.error);
-  //         // notifyError("You do not have permission to edit a blog post.");
-  //       }
-  //     } else {
-  //       if (hasPermission("create-post")) {
-  //        const response = await createBlog(formDataToSend);
-  //         notifySuccess(response?.message);
-  //         // notifySuccess("Blog post created successfully!");
-  //       } else {
-  //         notifyError(blogMessages.permissionError);
-  //         // notifyError("Error in creating blog post.");
-  //       }
-  //     }
-  //     onSuccess();
-  //   } catch (error) {
-  //     console.error("Error in creating/updating permission.", error);
-  //     notifyError(
-  //       error.response?.data?.message ||
-  //         "Something went wrong while saving the blog.",
-  //     );
-  //     notifyError("Error in creating/updating permission.");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   return (
     <div className="relative mb-4">
@@ -607,7 +544,7 @@ const BlogPostForm = ({
                     : "Create Blog"
               }
               disabled={loading}
-              className="btn btn-sm"
+              size="sm"
               icon={existingBlog ? <FaEdit /> : <FaPlusCircle />}
               variant={existingBlog ? "success" : "primary"}
             />
@@ -618,7 +555,7 @@ const BlogPostForm = ({
                 <CTAButton
                   onClick={onSuccess}
                   label="Cancel Edit"
-                  className="btn btn-sm"
+                  size="sm"
                   variant="warning"
                   icon={<FaTimesCircle />}
                 />
@@ -638,7 +575,7 @@ const BlogPostForm = ({
                   <CTAButton
                     onClick={handleCancelCreateBlog}
                     label="Cancel Blog Upload"
-                    className="btn btn-sm"
+                    size="sm"
                     variant="warning"
                     icon={<FaTimesCircle />}
                   />
@@ -655,7 +592,8 @@ const BlogPostForm = ({
           label={!isHidden ? "Expand View" : "Shrink View"}
           icon={!isHidden ? <FaExpandArrowsAlt /> : <FaExchangeAlt />}
           variant="primary"
-          className="btn btn-sm invisible lg:visible"
+          size="sm"
+          className=" invisible lg:visible"
         />
       </div>
     </div>

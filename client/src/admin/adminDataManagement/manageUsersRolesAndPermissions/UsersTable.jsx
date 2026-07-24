@@ -66,7 +66,7 @@ const UsersTable = ({ onDelete, onEdit }) => {
               <td className="capitalize">
                 {user?.permissions?.map((permissionId, index) => {
                   const matchingPermissions = permissions.find(
-                    (p) => p._id === permissionId._id
+                    (p) => p._id === permissionId._id,
                   );
                   if (matchingPermissions) {
                     return index === user.permissions.length - 1
@@ -79,21 +79,22 @@ const UsersTable = ({ onDelete, onEdit }) => {
               <td className="flex space-x-1 justify-end p-0">
                 {Array.isArray(adminData?.user?.roles) &&
                 adminData?.user?.roles?.some(
-                  (role) => role.name === "super-admin" || role.name === "admin"
+                  (role) =>
+                    role.name === "super-admin" || role.name === "admin",
                 ) ? (
                   <>
                     <CTAButton
                       onClick={() => onEdit(user)}
                       label="Edit"
                       icon={<FaEdit />}
-                      className="btn btn-xs text-xs"
+                      size="xs"
                       variant="primary"
                     />
                     <CTAButton
                       onClick={() => handleDelete(user._id)}
                       label="Delete"
                       icon={<FaTrashAlt />}
-                      className="btn btn-xs text-xs"
+                      size="xs"
                       variant="danger"
                     />
                   </>

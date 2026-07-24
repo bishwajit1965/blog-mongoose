@@ -157,6 +157,10 @@ import {
   Download,
   DownloadCloud,
   DownloadCloudIcon,
+  LucideTextAlignStart,
+  LucideTextInitial,
+  LucideText,
+  ArchiveRestore,
 } from "lucide-react";
 
 // Central registry
@@ -170,6 +174,7 @@ export const LucideIcon = {
   ArrowRight,
   ArrowBigLeft,
   ArrowBigRightDash,
+  ArchiveRestore,
   Briefcase,
   Book,
   BookAIcon,
@@ -251,6 +256,9 @@ export const LucideIcon = {
   LogIn,
   Loader2,
   LogOut,
+  LucideTextAlignStart,
+  LucideTextInitial,
+  LucideText,
   MapPin,
   Menu,
   Mail,

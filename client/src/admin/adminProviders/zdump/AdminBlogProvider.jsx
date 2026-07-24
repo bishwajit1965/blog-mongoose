@@ -14,6 +14,7 @@ const AdminBlogProvider = ({ children }) => {
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(false);
+
   console.log("CRUD BLOGS", superAdminBlogsAll);
 
   const fetchBlogsCategoriesAndTags = useCallback(async () => {

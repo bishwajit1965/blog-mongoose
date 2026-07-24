@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import useAdminAuth from "../adminHooks/useAdminAuth";
 import { Loader } from "lucide-react";
 import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
+import { Input } from "../ui/Input";
 
 const AdminLogin = () => {
   const { loginAdmin, isAuthenticated, checkAuth, authInitialized, adminData } =
@@ -84,15 +85,11 @@ const AdminLogin = () => {
       </Helmet>
 
       <div className="h-screen flex items-center">
-        <div className="lg:max-w-xs w-full mx-auto">
-          <div className="border border-slate-300 shadow-md bg-base-300 p-6 rounded-md dark:bg-gray-900 dark:border-gray-700">
-            <h1 className="text-xl font-bold pb-2 flex items-center gap-2">
+        <div className="lg:max-w-sm w-full mx-auto">
+          <div className="border border-slate-300 shadow-md bg-base-300 lg:p-8 p-4 rounded-md dark:bg-gray-900 dark:border-gray-700">
+            <h1 className="text-xl font-bold flex items-center gap-2">
               <LucideIcon.LogIn size={20} />
-              Admin Login{" "}
-              <span className="flex justify-center items-center">
-                {" "}
-                {loading && <Loader className="animate-spin" />}
-              </span>
+              Nova Journal • Admin Login
             </h1>
             {emailError && (
               <p className="text-red-500 text-xs mb-2">{emailError}</p>
@@ -100,23 +97,32 @@ const AdminLogin = () => {
             {passwordError && (
               <p className="text-red-500 text-xs mb-2">{passwordError}</p>
             )}
-            <form onSubmit={handleLogin}>
-              <input
+
+            <div className="divider m-2"></div>
+            <div className="flex justify-center">
+              <span className="flex justify-center items-center">
+                {loading && <Loader className="animate-spin" />}
+              </span>
+            </div>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <Input
                 type="email"
                 name="email"
                 placeholder="Enter admin email..."
                 value={formData.email}
                 onChange={handleInputChange}
-                className="input input-bordered input-sm w-full mb-2 dark:bg-gray-700"
+                className="input-sm py-4"
+                icon={LucideIcon.Mail}
               />
               <div className="relative w-full">
-                <input
+                <Input
                   type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="Enter Password..."
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="input input-bordered input-sm w-full mb-2 dark:bg-gray-700"
+                  className="input-sm py-4"
+                  icon={LucideIcon.KeyRound}
                 />
                 <span
                   role="button"
@@ -133,7 +139,7 @@ const AdminLogin = () => {
                 loading={loading}
                 icon={<FaSignInAlt />}
                 variant="primary"
-                className="btn btn-sm"
+                size="xs"
                 type="submit" // ✅ Ensures form submission
                 disabled={loading} // ✅ Prevents multiple clicks
               />

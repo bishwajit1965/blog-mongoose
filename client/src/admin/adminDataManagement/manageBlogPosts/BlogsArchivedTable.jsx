@@ -161,7 +161,7 @@ const BlogsArchivedTable = ({ archivedBlogs, loading, onSuccess }) => {
                               <FaStoreAltSlash />
                             )
                           }
-                          className="btn btn-xs text-xs"
+                          size="xs"
                           variant="info"
                         />
 
@@ -170,7 +170,7 @@ const BlogsArchivedTable = ({ archivedBlogs, loading, onSuccess }) => {
                           label="View"
                           disabled={loading}
                           icon={<FaEye />}
-                          className="btn btn-xs text-xs"
+                          size="xs"
                           variant="primary"
                         />
 
@@ -189,7 +189,7 @@ const BlogsArchivedTable = ({ archivedBlogs, loading, onSuccess }) => {
                               <FaTrashRestore />
                             )
                           }
-                          className="btn btn-xs text-xs"
+                          size="xs"
                           variant="danger"
                         />
                       </>

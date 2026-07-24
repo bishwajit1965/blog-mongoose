@@ -141,7 +141,7 @@ const ManageComments = () => {
                       onClick={() => openReviewModal(comment, "approve")}
                       disabled={isApproving}
                       label="Approve"
-                      className="btn btn-xs text-xs w-20"
+                      size="xs"
                       variant="primary"
                       icon={<FaCheck />}
                     />
@@ -149,7 +149,7 @@ const ManageComments = () => {
                       onClick={() => openReviewModal(comment, "reject")}
                       disabled={isRejecting}
                       label="Reject"
-                      className="btn btn-xs text-xs w-20"
+                      size="xs"
                       variant="info"
                       icon={<FaTimes />}
                     />
@@ -157,7 +157,7 @@ const ManageComments = () => {
                       onClick={() => handleDeleteComment(comment._id)}
                       disabled={isDeleting}
                       label="Delete"
-                      className="btn btn-xs text-xs w-20"
+                      size="xs"
                       variant="danger"
                       icon={<FaTrash />}
                     />

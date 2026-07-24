@@ -27,17 +27,18 @@ const SuperAdminFeatures = () => {
     { id: 15, route: "manage-notification", name: "Manage Notifications" },
     { id: 16, route: "manage-comments", name: "Manage Comments" },
     { id: 17, route: "manage-messages", name: "Manage Messages" },
+    { id: 18, route: "manage-pages", name: "Manage Pages" },
   ];
 
   return (
     <div className="dark:bg-gray-800 bg-base-200 border-gray-200 rounded-b-sm dark:border-gray-700">
       <div className="lg:space-y-1 lg:p-[15px] lg:h-[calc(100vh-145px)] lg:overflow-y-scroll lg:fixed lg:top-[146px]">
-        {superAdminRoutesFeatures.map((path) => (
+        {superAdminRoutesFeatures?.map((path) => (
           <NavLink
             key={path.id}
             to={path.route}
             className={({ isActive }) =>
-              `m-0 flex items-center px-2 py-2 rounded-lg transition-all ${
+              `m-0 flex items-center px-2 py-2 rounded-sm transition-all ${
                 isActive
                   ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-white font-bold"
                   : "hover:bg-gray-100 dark:hover:bg-gray-600 hover:font-bold"

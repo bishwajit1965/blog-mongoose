@@ -9,6 +9,7 @@ const API_PATHS = {
   COMMENTS: "/comments",
   COMMENTS_ADMIN: "/admin-only-comments",
   NOTIFICATIONS: "/notifications",
+  PAGES: "/pages",
   PERMISSIONS: "/permissions",
   PROFILE: "/profile",
   ROLES: "/roles",

@@ -53,20 +53,20 @@ const ProfileData = ({ profile, onEdit, onCancel }) => {
           </span>
         </div>
       </div>
-
+      <div className="divider"></div>
       <div className="flex lg:mt-4 mt-2 space-x-2">
         <CTAButton
           onClick={onEdit}
           label="Edit Profile"
           icon={<FaEdit />}
-          className="btn btn-sm text-sm"
+          size="sm"
           variant="primary"
         />
         <CTAButton
           onClick={onCancel}
           label="Cancel"
           icon={<FaTimesCircle />}
-          className="btn btn-sm text-sm"
+          size="sm"
           variant="warning"
         />
       </div>

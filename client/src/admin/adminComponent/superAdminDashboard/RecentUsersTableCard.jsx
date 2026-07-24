@@ -46,8 +46,8 @@ const RecentUsersTableCard = ({ recentUsers }) => {
                   <CTAButton
                     onClick={() => setSelectedUser(user)}
                     label="View"
+                    size="xs"
                     icon={<FaEye />}
-                    className="btn btn-xs text-xs"
                     variant="primary"
                   />
                 </td>

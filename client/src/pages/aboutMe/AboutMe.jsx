@@ -1,18 +1,22 @@
 // src/client/components/AboutMe.jsx
-import { Helmet } from "react-helmet-async";
 import Avatar from "/assets/bishwajit-1.jpg";
 import { motion } from "framer-motion";
 import PageTitle from "../../components/pageTitle/PageTitle";
 import { Link } from "react-router-dom";
 import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
 import SocialMediaLinks from "../../components/socialMediaLinks/SocialMediaLinks";
+import Seo from "../../components/seo/Seo";
 
 const AboutMe = () => {
   return (
     <>
-      <Helmet>
-        <title>Nova Journal ||About Me Page</title>
-      </Helmet>
+      <Seo
+        title="About"
+        description="Learn about Nova Journal."
+        url="about-me"
+        schemaType="AboutPage"
+      />
+
       <motion.section
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}

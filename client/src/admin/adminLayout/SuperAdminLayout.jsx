@@ -10,7 +10,7 @@ const SuperAdminLayout = () => {
     <div className="lg:max-w-full mx-auto">
       <AdminNavbar />
 
-      <div className="grid lg:grid-cols-12 grid-cols-1 justify-between">
+      <div className="grid lg:grid-cols-12 grid-cols-1 lg:gap-4 gap-2 justify-between">
         <div className="lg:col-span-2 col-span-12 bg-base-200 dark:bg-gray-800 dark:text-gray-300 lg:sticky">
           <AdminSideNav />
         </div>

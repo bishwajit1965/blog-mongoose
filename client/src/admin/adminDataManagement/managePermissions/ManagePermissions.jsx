@@ -55,11 +55,11 @@ const ManagePermissions = () => {
               />
 
               {editingPermission && (
-                <div className="lg:mt-[-40px] lg:pl-[180px]">
+                <div className="lg:mt-[-44px] lg:pl-[180px]">
                   <CTAButton
                     onClick={handleCancelEdit}
                     label="Cancel Edit"
-                    className="btn btn-sm mt-2"
+                    size="sm"
                     variant="warning"
                     icon={<FaTimesCircle />}
                   />

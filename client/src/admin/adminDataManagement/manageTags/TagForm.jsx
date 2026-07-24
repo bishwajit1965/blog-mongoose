@@ -90,16 +90,17 @@ const TagForm = ({ onSuccess, existingTag = null }) => {
             // required
           />
         </div>
-
-        <CTAButton
-          label={
-            loading ? "Saving..." : existingTag ? "Update Tag" : "Create Tag"
-          }
-          disabled={loading}
-          className="btn btn-sm mt-4"
-          icon={existingTag ? <FaEdit /> : <FaPlusCircle />}
-          variant={existingTag ? "success" : "primary"}
-        />
+        <div className="mt-4">
+          <CTAButton
+            label={
+              loading ? "Saving..." : existingTag ? "Update Tag" : "Create Tag"
+            }
+            disabled={loading}
+            size="sm"
+            icon={existingTag ? <FaEdit /> : <FaPlusCircle />}
+            variant={existingTag ? "success" : "primary"}
+          />
+        </div>
       </form>
     </div>
   );

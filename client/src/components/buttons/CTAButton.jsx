@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { cn } from "../../utils/cn";
 
 /**
  * A reusable CTA (Call to Action) button or link component.
@@ -29,14 +30,17 @@ const CTAButton = ({
   to = null,
   target = "_self",
   rel = "noopener noreferrer",
+  size = "md",
 }) => {
   const navigate = useNavigate();
   // Defined base styles
   const baseStyle =
-    "px-1.5 py-0.25 my-1 mx-1 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 inline-flex items-center justify-center gap-2 border";
+    "px-1.5 pb-0.25 my-1 mx-1 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 inline-flex items-center justify-center gap-2 border shadow-sm";
 
   // Defined Variant Styles
   const variantStyles = {
+    base: "bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-900 hover:text-base-100 focus:ring-blue-500",
+
     primary:
       "bg-blue-600 text-white border-blue-600 hover:bg-blue-700 focus:ring-blue-500",
 
@@ -55,16 +59,27 @@ const CTAButton = ({
     info: "bg-cyan-600 text-white border-cyan-600 hover:bg-cyan-700 focus:ring-cyan-500",
 
     light:
-      "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200 focus:ring-gray-300",
+      "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200 hover:text-gray-900 focus:ring-gray-300",
 
     white:
-      "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 focus:ring-gray-300",
+      "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:text-gray-900 focus:ring-gray-300",
+  };
+
+  const sizeStyles = {
+    xs: "h-7 w-content px-1.5 py-1 text-xs",
+    sm: "h-9 w-content px-2 py-2 text-sm",
+    md: "h-10 w-content px-3 py-3 text-medium",
+    lg: "h-12 w-content px-4 py-4 text-lg",
   };
 
   // Combine all styles
-  const combinedClass = `${baseStyle} ${variantStyles[variant]} ${
-    (disabled || loading) && "opacity-50 cursor-not-allowed"
-  } ${className}`;
+  const combinedClass = cn(
+    baseStyle,
+    sizeStyles[size],
+    variantStyles[variant],
+    (disabled || loading) && "opacity-50 cursor-not-allowed",
+    className,
+  );
 
   const content = (
     <span className="flex items-center justify-center space-x-1">
@@ -73,7 +88,7 @@ const CTAButton = ({
       ) : (
         icon && <span>{icon}</span>
       )}
-      <span className="text-base-200">{loading ? loadingLabel : label}</span>
+      <span className="">{loading ? loadingLabel : label}</span>
     </span>
   );
 
