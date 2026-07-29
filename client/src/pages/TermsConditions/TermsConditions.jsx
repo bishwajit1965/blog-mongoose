@@ -1,6 +1,4 @@
-import Footer from "../../components/footer/Footer";
 import { Link } from "react-router-dom";
-import PageTitle from "../../components/pageTitle/PageTitle";
 import {
   Shield,
   FileText,
@@ -57,18 +55,9 @@ const TermsConditions = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
-      {/* PAGE TITLE */}
-      <PageTitle
-        title="Terms &"
-        decoratedText="Conditions"
-        slogan="Clear rules. Safe space. Better experience."
-        navigationLink="register"
-        navigationArea="Start Writing"
-      />
-
+    <div className="min-h-screen lg:space-y-8 space-y-4">
       {/* HERO STRIP */}
-      <div className="max-w-4xl mx-auto px-4 mt-6">
+      <div className="max-w-5xl mx-auto">
         <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-2xl p-6 shadow-md">
           <h2 className="text-xl md:text-2xl font-bold">Your trust matters.</h2>
           <p className="text-sm md:text-base mt-2 opacity-90">
@@ -79,13 +68,10 @@ const TermsConditions = () => {
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="max-w-4xl mx-auto px-4 py-10">
-        <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition duration-300 p-6 md:p-10 space-y-8">
-          {/* LAST UPDATED */}
-          <p className="text-sm text-gray-400">Last updated: March 2026</p>
-
+      <div className="max-w-5xl mx-auto">
+        <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition duration-300 p-6 md:p-10 space-y-8 dark:bg-gray-800 dark:text-gray-400">
           {/* INTRO */}
-          <p className="text-gray-700 leading-relaxed">
+          <p className="text-gray-700 leading-relaxed dark:text-gray-400">
             By accessing or using this platform, you agree to be bound by these
             Terms and Conditions. If you do not agree, please discontinue use
             immediately.
@@ -100,16 +86,18 @@ const TermsConditions = () => {
               <div className="text-indigo-500 mt-1">{item.icon}</div>
 
               <div>
-                <h3 className="font-semibold text-lg text-gray-900">
+                <h3 className="font-semibold text-lg text-gray-900 dark:bg-gray-800 dark:text-gray-400">
                   {index + 1}. {item.title}
                 </h3>
-                <p className="text-gray-600 mt-1">{item.text}</p>
+                <p className="text-gray-600 mt-1 dark:text-gray-400">
+                  {item.text}
+                </p>
               </div>
             </div>
           ))}
 
           {/* CTA */}
-          <div className="text-center pt-6">
+          <div className="text-center">
             <Link
               to="/register"
               className="inline-block px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl font-semibold transition shadow-md"
@@ -119,8 +107,6 @@ const TermsConditions = () => {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };

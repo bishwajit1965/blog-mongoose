@@ -7,7 +7,7 @@ const ErrorPage = () => {
   return (
     <>
       <div className="h-screen flex items-center justify-center dark:bg-gray-800 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 text-gray-700 rounded-md">
-        <div className="text-center max-w-4xl px-4 lg:space-y-4 space-y-2">
+        <div className="text-center max-w-5xl px-4 lg:space-y-4 space-y-2">
           <div className="flex justify-center">
             <LucideIcon.AlertCircle
               size-={20}
@@ -17,7 +17,7 @@ const ErrorPage = () => {
 
           <h1 className="lg:text-3xl text-lg font-extrabold text-red-600 mb-2 flex items-center justify-center gap-2">
             <span className="lg:text-3xl font-extrabold text-lg">404 ! </span>{" "}
-            NOT FOUND
+            PAGE NOT FOUND
           </h1>
 
           <p className="text-lg font-medium mb-4 dark:text-gray-400">

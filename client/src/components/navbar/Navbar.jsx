@@ -10,11 +10,12 @@ import {
   FaUserFriends,
 } from "react-icons/fa";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import AuthContext from "../../authContext/AuthContext";
 import Logo from "/assets/Nova_Journal_Logo_F.png";
 import ThemeContext from "../../themeContext/ThemeContext";
+import { getPublicAuthorData } from "../../services/publicAuthorDataService";
 
 const Navbar = () => {
   const { user, setUser, handleSignOut } = useContext(AuthContext);
@@ -22,10 +23,24 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
+  const [author, setAuthor] = useState(null);
+
+  useEffect(() => {
+    const fetchAuthor = async () => {
+      const response = await getPublicAuthorData();
+
+      if (response) {
+        setAuthor(response?.data);
+      }
+    };
+
+    fetchAuthor();
+  }, []);
+
   const handleOpen = () => {
     setOpen(!open);
   };
-
+  console.log("AUTHOR IN NAVBAR", author);
   const routes = [
     { id: 1, route: "/", name: "Home" },
     { id: 2, route: "/about-me", name: "About" },
@@ -41,7 +56,7 @@ const Navbar = () => {
     { id: 12, route: "/blog-coming-soon", name: "Blog Coming Soon" },
     { id: 13, route: "/bookmarked-page", name: "My Bookmarks" },
     { id: 14, route: "/rss", name: "Rss" },
-    { id: 15, route: "/user-profile", name: "Profile" },
+    { id: 15, route: `/author/${author ? author?._id : "#"}`, name: "Profile" },
     { id: 16, route: "/notice", name: "Notice" },
     { id: 17, isThemeToggle: true }, // Differentiator key
   ];
@@ -110,12 +125,6 @@ const Navbar = () => {
           <Link to="/" className="m-0 hidden lg:flex">
             <img src={Logo} alt="Logo" className="lg:w-16 lg:h-16 h-12 w-12" />
           </Link>
-
-          {/* <Link to="/" className="ml-0">
-            <span className="xl:text-2xl xl:w-48 md:w-32 lg:block xl:block lg:text-xs md:hidden md:ml-0 hidden lg:font-extrabold text-base-content/80 dark:text-base-300 hover:link">
-              Nova Journal
-            </span>
-          </Link> */}
         </div>
         <div className="navbar-center hidden md:block lg:flex">
           <ul className="menu-horizontal">
@@ -140,6 +149,30 @@ const Navbar = () => {
               </button>
             </li>
           </ul>
+
+          {/* <div className="navbar-center hidden lg:flex">
+            <ul className="menu menu-horizontal px-1">
+              <li>
+                <button>Item 1</button>
+              </li>
+              <li>
+                <details>
+                  <summary>Parent</summary>
+                  <ul className="p-2 bg-base-100 w-40 z-1">
+                    <li>
+                      <button>Submenu 1</button>
+                    </li>
+                    <li>
+                      <button>Submenu 2</button>
+                    </li>
+                  </ul>
+                </details>
+              </li>
+              <li>
+                <button>Item 3</button>
+              </li>
+            </ul>
+          </div> */}
         </div>
         <div className="navbar-end dark:bg-gray-800">
           <div className="dropdown dropdown-bottom dropdown-end">

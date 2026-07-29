@@ -7,9 +7,9 @@ const RootLayout = () => {
     <div className="lg:max-w-full mx-auto">
       <Navbar />
 
-      <div className="lg:max-w-7xl mx-auto">
+      <div className="lg:max-w-full mx-auto">
         <div className="pt-[4.75rem]">
-          <div className="lg:gap-4 lg:min-h-[calc(100vh-210px)] lg:py-8 py-4 lg:px-4 px-4">
+          <div className="lg:min-h-[calc(100vh-210px)] lg:py-8 py-4">
             <Outlet />
           </div>
         </div>

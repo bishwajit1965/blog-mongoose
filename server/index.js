@@ -78,9 +78,13 @@ const contactRoutes = require("./routes/contactRoutes");
 const followUserRoutes = require("./routes/followUserRoutes");
 const rssRoutes = require("./routes/rssRoutes");
 const pageRoutes = require("./routes/pageRoutes");
+const adminAuthorFollowUnfollowRoutes = require("./routes/adminAuthorFollowUnfollowRoutes");
 
 // Public routes imported
 const publicPageRoutes = require("./routes/publicPageRoutes");
+const publicUsersRoutes = require("./routes/publicUsersRoutes");
+const publicAuthorProfileRoutes = require("./routes/publicAuthorProfileRoutes");
+const publicAuthorFollowStatusRoutes = require("./routes/publicAuthorFollowStatusRoutes");
 
 /**==============================================
  *  ROUTE SET UP
@@ -111,9 +115,13 @@ app.use("/api/contacts", contactRoutes);
 app.use("/api/follow-users", followUserRoutes);
 app.use("/api/rss", rssRoutes);
 app.use("/api/pages", pageRoutes);
+app.use("/api/author", adminAuthorFollowUnfollowRoutes);
 
 // Public page route
 app.use("/api/public/pages", publicPageRoutes);
+app.use("/api/public/users", publicUsersRoutes);
+app.use("/api/public/author", publicAuthorProfileRoutes);
+app.use("/api/public/author-follow-status", publicAuthorFollowStatusRoutes);
 
 // WebSocket connection for real-time presence tracking
 io.on("connection", (socket) => {

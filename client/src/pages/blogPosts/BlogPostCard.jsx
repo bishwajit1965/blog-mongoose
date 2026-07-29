@@ -60,7 +60,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
-      className="rounded-lg lg:space-y-4 space-y-2 overflow-x-clip"
+      className="rounded-lg lg:space-y-4 space-y-2 overflow-x-clip p-2"
     >
       {/* Blog author section begins */}
       <div className="hover:link">
@@ -77,8 +77,16 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
                   <LucideIcon.CreditCard size={18} /> Super Admin
                 </p>
 
-                <p className="flex items-center gap-1.5">
+                <p className="flex items-center text-sm gap-1.5">
                   <LucideIcon.Mail size={18} /> {author?.email}
+                </p>
+
+                <p className="text-sm">
+                  Followers: {author.followers?.length || 0}
+                </p>
+
+                <p className="text-sm">
+                  Following: {author.following?.length || 0}
                 </p>
 
                 <Link
@@ -241,13 +249,13 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
         {/* Blog content ends */}
 
         {/* Read more button begins */}
-        <div className="flex items-center justify-between">
-          <div className="lg:text-[16px] text-sm text-gray-500 font-bold italic border border-gray-400 dark:border-gray-700 dark:text-gray-300 dark:bg-gray-800 rounded-full shadow-sm lg:py-1 py-[4px] lg:px-2.5 px-1 flex items-center lg:space-x-2 space-x-1">
+        <div className="lg:flex flex-wrap items-center justify-between lg:space-y-0 space-y-4">
+          <div className="lg:text-[16px] text-sm text-gray-500 font-bold italic border border-gray-400 dark:border-gray-700 dark:text-gray-300 dark:bg-gray-800 rounded-full shadow-sm lg:py-1 py-[4px] lg:px-2.5 px-1 flex items-center justify-center lg:space-x-2 space-x-1 w-content">
             <span>
               <FaReadme />
             </span>
             <span>Read in:</span>
-            <span className="italic">
+            <span className="italics">
               {<BlogReadingTimeCounter content={content} />}
             </span>
           </div>
@@ -261,7 +269,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
                 label="Read More"
                 icon={<FaBookReader />}
                 variant="outline"
-                className="btn btn-sm font-bold text-[16px] text-sm rounded-lgs"
+                // className="btn btn-sm font-bold text-[16px] text-sm rounded-lgs"
               />
             </Link>
           </div>

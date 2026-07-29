@@ -1,6 +1,7 @@
 const API_PATHS = {
   ARCHIVED: "/archived-blogs",
   AUDIT_LOGS: "/audit-logs",
+  AUTHOR_PUBLIC_PROFILE: "/author",
   FLAGGED_BLOGS: "/flagged-blogs",
   BLOGS: "/blogs",
   BOOKMARKED_POSTS: "/bookmark-post",
@@ -8,10 +9,12 @@ const API_PATHS = {
   CONTACT: "/contacts",
   COMMENTS: "/comments",
   COMMENTS_ADMIN: "/admin-only-comments",
+  FOLLOW_UNFOLLOW_USERS: "/author",
   NOTIFICATIONS: "/notifications",
   PAGES: "/pages",
   PERMISSIONS: "/permissions",
   PROFILE: "/profile",
+  PUBLIC_AUTHOR_DATA: "/public/author",
   ROLES: "/roles",
   TAGS: "/tags",
   USERS: "/admin/users",
@@ -19,5 +22,7 @@ const API_PATHS = {
   RECENT_USERS: "/users/recent",
   REACTIONS: "/reactions",
   REQUESTS: "/requests",
+  PUBLIC_USERS: "/public/users",
 };
+
 export default API_PATHS;

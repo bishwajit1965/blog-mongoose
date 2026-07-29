@@ -6,7 +6,6 @@ const User = require("../models/User");
 const createRole = async (req, res) => {
   try {
     const { name, description, permissions } = req.body;
-    console.log("Request Body:", req.body);
     const role = new Role({ name, description, permissions });
     await role.save();
     res.status(201).json({ message: "Role created successfully", role });
@@ -98,7 +97,7 @@ const updateRole = async (req, res) => {
     const updatedRole = await Role.findByIdAndUpdate(
       id,
       { name, description, permissions: permissionIds },
-      { new: true }
+      { new: true },
     ).populate("permissions", "name");
 
     if (!updatedRole) {

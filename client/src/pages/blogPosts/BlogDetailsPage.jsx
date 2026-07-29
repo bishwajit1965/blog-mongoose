@@ -51,6 +51,8 @@ import { useMutation } from "@tanstack/react-query";
 import useWordCount from "../../admin/adminHooks/useWordCount";
 import Seo from "../../components/seo/Seo";
 import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
+import Breadcrumbs from "../../components/breadCrumbs/BreadCrumbs";
+import useMongoUsers from "../../hooks/useMongoUsers";
 
 // Button active state style
 const style = {
@@ -59,6 +61,8 @@ const style = {
 };
 
 const BlogDetailsPage = () => {
+  const { publicUsers } = useMongoUsers();
+
   const { user } = useAuth();
   const blog = useLoaderData();
   const slug = blog?.slug || blog?.blog?.slug;
@@ -80,7 +84,9 @@ const BlogDetailsPage = () => {
   const [reactions, setReactions] = useState({ likes: 0, dislikes: 0 });
   const { data: bookmarkedPosts } = useGetBookmarkedPosts();
 
-  console.log("BLOG IN BLOG DETAILS PAGE", blog);
+  console.log("USER IN BLOG DETAILS PAGE", user);
+  console.log(" BLOG IN BLOG DETAILS PAGE", blog);
+  console.log(" PUBLIC MONGO USERS", publicUsers);
 
   const {
     _id,
@@ -98,6 +104,12 @@ const BlogDetailsPage = () => {
     updatedAt,
     flaggedReason,
   } = blog || {};
+
+  // Current Mongo User in BlogDetails Page
+  const currentMongoUser = publicUsers?.find(
+    (mongoUser) => mongoUser.firebaseUid === user?.uid,
+  );
+  console.log("Current Mongo User", currentMongoUser);
 
   // Comment form related code
   const [errors, setErrors] = useState({});
@@ -332,8 +344,6 @@ const BlogDetailsPage = () => {
   if (!blog || blog.length === 0)
     return <div className="flex justify-center">No blog found</div>;
 
-  console.log("Form data:", formData);
-
   /**==================================================
    * COMMENTING FUNCTIONALITY AND COMMENT FORM TOGGLER
    *===================================================*/
@@ -416,12 +426,21 @@ const BlogDetailsPage = () => {
       <div className="overflow-x-hidden dark:text-gray-200 lg:shadow-sm relative rounded-lg">
         {isLoading && <AdminLoader />}
 
+        {/* BreadCrumbs */}
+        <Breadcrumbs
+          items={[
+            { label: "Home", path: "/" },
+            { label: blog?.category?.name },
+            { label: blog.title },
+          ]}
+        />
+
         {/* Floating text box left top begins */}
         <div>
           <motion.div
             ref={leftColumnRef}
             animate={controls}
-            className="w-[14rem] absolute bg-gray-50 dark:bg-gray-800 left-0 rounded-md invisible lg:visible shadow-md space-y-4 border border-gray-100 dark:border-gray-700"
+            className="w-[14rem] absolute bg-gray-50 dark:bg-gray-800 left-20 rounded-md invisible lg:visible shadow-md space-y-4 border border-gray-100 dark:border-gray-700"
           >
             <div className="w-full">
               <img
@@ -443,7 +462,7 @@ const BlogDetailsPage = () => {
         </div>
         {/* Floating text box left top ends */}
 
-        <div className="lg:max-w-3xl mx-auto lg:px-4 borders">
+        <div className="lg:max-w-3xl mx-auto px-4 borders">
           <ScrollProgressBar />
           <div className="lg:space-y-4 space-y-3">
             {/* ------> Blog content wrapper begins ------> */}
@@ -472,8 +491,16 @@ const BlogDetailsPage = () => {
                           <LucideIcon.CreditCard size={18} /> Super Admin
                         </p>
 
-                        <p className="flex items-center gap-1.5">
+                        <p className="flex items-center text-sm gap-1.5">
                           <LucideIcon.Mail size={18} /> {author?.email}
+                        </p>
+
+                        <p className="text-sm">
+                          Followers: {blog.author.followers?.length || 0}
+                        </p>
+
+                        <p className="text-sm">
+                          Following: {blog.author.following?.length || 0}
                         </p>
 
                         <Link
@@ -519,7 +546,7 @@ const BlogDetailsPage = () => {
                   {flaggedReason.length > 0 ? (
                     flaggedReason.slice(0, 2).map((reason) => (
                       <div
-                        key={reason._id}
+                        key={reason?._id}
                         className="flex items-center w-fit font-semibold lg:text-[17px] text-xs lg:space-x-2 space-x-1"
                       >
                         <span
@@ -659,7 +686,7 @@ const BlogDetailsPage = () => {
             {/* Blog post content section begins */}
             <div className="lg:pt-6 pt-4">
               {blog?.content ? (
-                <p
+                <article
                   style={{ fontSize: "20px" }}
                   className="prose prose-lg max-w-none list-decimal text-gray-700 mb-4 indent-7 dark:text-gray-400"
                   dangerouslySetInnerHTML={{
@@ -730,7 +757,7 @@ const BlogDetailsPage = () => {
               />
               <div
                 className={`${
-                  reactions.likeCount > 0 ? style.active : "whitewhite"
+                  reactions.likeCount > 0 ? style.active : "white"
                 } absolute lg:-top-5 lg:-left-5 -top-5 -right-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
               >
                 {reactions.likeCount}
@@ -751,7 +778,7 @@ const BlogDetailsPage = () => {
               />
               <div
                 className={`${
-                  reactions.dislikeCount > 0 ? style.active : "whitewhite"
+                  reactions.dislikeCount > 0 ? style.active : "white"
                 } absolute lg:-top-5 lg:left-4 -top-5 -right-5 w-8 h-8 p-1 border border-1 border-gray-400 rounded-full flex items-center justify-center`}
               >
                 {reactions.dislikeCount}
@@ -774,7 +801,7 @@ const BlogDetailsPage = () => {
                     onClick={handleFlagPost}
                     label="Flag Post Now"
                     icon={<FaFlag />}
-                    variant={flagPostNow ? "active" : "whitewhite"}
+                    variant={flagPostNow ? "active" : "white"}
                     disabled={isPending}
                     className="lg:min-w-44 min-w-44"
                   />

@@ -1,6 +1,5 @@
 import { Input } from "../../ui/Input";
 import { LucideIcon } from "../../lib/LucideIcons";
-// import Textarea from "../../ui/Textarea";
 import CTAButton from "../../../components/buttons/CTAButton";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
@@ -65,16 +64,6 @@ const PageForm = ({
             }));
           }}
         />
-
-        {/* <Textarea
-          label="Page Content"
-          placeholder="Page content..."
-          icon={LucideIcon.LucideTextAlignStart}
-          name="content"
-          value={pageForm?.content}
-          onChange={onHandleChange}
-          error={errors?.content}
-        /> */}
 
         <Input
           label="Seo Title"

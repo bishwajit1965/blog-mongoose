@@ -36,14 +36,15 @@ import WriterDashboard from "../admin/adminComponent/writerDashboard/WriterDashb
 import WriterLayout from "../admin/adminLayout/WriterLayout";
 import { createBrowserRouter } from "react-router-dom";
 import ManageMessages from "../admin/adminDataManagement/manageMessages/ManageMessages";
-import FeatureUnderConstructionPage from "../pages/featureUnderConstruction/FeatureUnderConstructionPage";
 import BookmarkedPage from "../pages/bookmarkedPage/BookmarkedPage";
 import AdminProviders from "../admin/adminProviders/AdminProviders";
 import AdminAuthProviders from "../admin/adminProviders/groups/AdminAuthProviders";
 import ComingSoonPage from "../pages/comingSoonPage/ComingSoonPage";
 import RssPage from "../pages/rssPage/RssPage";
 import PageManagement from "../admin/pages/PageManagement";
-import PublicPage from "../pages/testPage/PublicPage";
+import PublicPage from "../pages/publicPage/PublicPage";
+import ManageAuthorFollowUnfollowProfile from "../admin/adminDataManagement/manageAuthorFollowUnfollowProfile/ManageAuthorFollowUnfollowProfile";
+import AuthorProfile from "../pages/authorProfile/AuthorProfile";
 
 // Common Admin Routes (Super Admin can access all)
 const superAdminRoutes = [
@@ -69,6 +70,10 @@ const superAdminRoutes = [
   { path: "manage-comments", element: <ManageComments /> },
   { path: "manage-messages", element: <ManageMessages /> },
   { path: "manage-pages", element: <PageManagement /> },
+  {
+    path: "manage-follow-unfollow",
+    element: <ManageAuthorFollowUnfollowProfile />,
+  },
 ];
 
 const router = createBrowserRouter([
@@ -113,10 +118,13 @@ const router = createBrowserRouter([
         path: "rss",
         element: <RssPage />,
       },
-      // Under construction
       {
-        path: "user-profile",
-        element: <FeatureUnderConstructionPage />,
+        path: "author/:authorId",
+        element: <AuthorProfile />,
+      },
+      {
+        path: "*",
+        element: <ErrorPage />,
       },
     ],
   },

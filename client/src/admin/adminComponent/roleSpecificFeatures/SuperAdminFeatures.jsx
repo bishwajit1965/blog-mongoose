@@ -28,6 +28,11 @@ const SuperAdminFeatures = () => {
     { id: 16, route: "manage-comments", name: "Manage Comments" },
     { id: 17, route: "manage-messages", name: "Manage Messages" },
     { id: 18, route: "manage-pages", name: "Manage Pages" },
+    {
+      id: 19,
+      route: "manage-follow-unfollow",
+      name: "Manage Follow Unfollow",
+    },
   ];
 
   return (
@@ -46,7 +51,7 @@ const SuperAdminFeatures = () => {
             }
           >
             <Suspense fallback={<span>🔄</span>}>
-              <FaArrowAltCircleRight className="mr-2" />
+              <FaArrowAltCircleRight className="pr-1" />
             </Suspense>
             {path.name}
           </NavLink>

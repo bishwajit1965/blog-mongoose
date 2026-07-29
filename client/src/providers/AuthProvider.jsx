@@ -25,16 +25,18 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
 
   // Send token to backend
-  const sendUserToBackend = async (token) => {
+  const sendUserToBackend = async (firebaseUser, token) => {
     try {
-      const response = await api.post(
-        "/users/register",
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` }, //Send token as a bearer token
-          withCredentials: true, // Allow cookie
-        },
-      );
+      const userData = {
+        firebaseUid: firebaseUser.uid,
+        name: firebaseUser.displayName,
+        email: firebaseUser.email,
+        avatar: firebaseUser.photoURL,
+      };
+      const response = await api.post("/users/register", userData, {
+        headers: { Authorization: `Bearer ${token}` }, //Send token as a bearer token
+        withCredentials: true, // Allow cookie
+      });
       return response.data;
     } catch (error) {
       console.error(
@@ -48,9 +50,9 @@ const AuthProvider = ({ children }) => {
   const handleUserAuthentication = useCallback(async (firebaseUser) => {
     try {
       const token = await firebaseUser.getIdToken();
-      const userData = await sendUserToBackend(token);
+      const userData = await sendUserToBackend(firebaseUser, token);
       setUser({ ...firebaseUser, ...userData });
-      setUser(firebaseUser);
+      // setUser(firebaseUser);
     } catch (error) {
       console.error("Error during authentication", error);
       throw error;

@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import Button from "../buttons/Button";
 import { useFollowUser, useUnfollowUser } from "../../hooks/userFollowers";
 
-const FollowButton = ({ authorId, isFollowingInitial }) => {
+const FollowButton = ({ authorId, isFollowingInitial, onSuccess }) => {
   const [isFollowing, setIsFollowing] = useState(isFollowingInitial);
   const followMutation = useFollowUser();
   const unfollowMutation = useUnfollowUser();
@@ -14,6 +14,7 @@ const FollowButton = ({ authorId, isFollowingInitial }) => {
         onSuccess: (data) => {
           toast.success(data.message || "Unfollowed successfully");
           setIsFollowing(false);
+          onSuccess();
         },
         onError: (error) => {
           toast.error(error.response?.data?.message || "Failed to unfollow");
@@ -24,6 +25,7 @@ const FollowButton = ({ authorId, isFollowingInitial }) => {
         onSuccess: (data) => {
           toast.success(data.message || "Followed successfully");
           setIsFollowing(true);
+          onSuccess();
         },
         onError: (error) => {
           toast.error(error.response?.data?.message || "Failed to follow");
@@ -35,9 +37,9 @@ const FollowButton = ({ authorId, isFollowingInitial }) => {
   return (
     <Button
       onClick={handleClick}
-      disabled={followMutation.isLoading || unfollowMutation.isLoading}
+      disabled={followMutation?.isPending || unfollowMutation?.isPending}
       label={isFollowing ? "Unfollow" : "Follow"}
-      variant="outline"
+      variant={isFollowing ? "success" : "outline"}
     />
   );
 };
