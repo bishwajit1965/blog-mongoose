@@ -32,6 +32,11 @@ const loginAdmin = async (req, res) => {
     const accessToken = generateJWT(payload, "access");
     const refreshToken = generateJWT(payload, "refresh");
 
+    await User.findByIdAndUpdate(user._id, {
+      isOnline: true,
+      lastSeen: new Date(),
+    });
+
     const isProduction = process.env.NODE_ENV === "production";
 
     // Set cookies
@@ -109,10 +114,42 @@ const refreshAccessToken = async (req, res) => {
 };
 
 // Logout Admin
-const logoutAdmin = (req, res) => {
-  res.clearCookie("authToken");
-  res.clearCookie("refreshToken");
-  res.status(200).json({ message: "Logout successful." });
+const logoutAdmin = async (req, res) => {
+  try {
+    const token = req.cookies.authToken;
+
+    if (token) {
+      const decoded = verifyJWT(token, "access");
+
+      if (decoded && !decoded.expired) {
+        await User.findByIdAndUpdate(decoded.id, {
+          isOnline: false,
+          lastSeen: new Date(),
+        });
+      }
+    }
+
+    res.clearCookie("authToken");
+    res.clearCookie("refreshToken");
+
+    return res.status(200).json({
+      message: "Logout successful.",
+    });
+  } catch (error) {
+    console.error("Logout error:", error);
+
+    res.clearCookie("authToken");
+    res.clearCookie("refreshToken");
+
+    return res.status(200).json({
+      message: "Logout successful.",
+    });
+  }
 };
+// const logoutAdmin = (req, res) => {
+//   res.clearCookie("authToken");
+//   res.clearCookie("refreshToken");
+//   res.status(200).json({ message: "Logout successful." });
+// };
 
 module.exports = { loginAdmin, refreshAccessToken, logoutAdmin };

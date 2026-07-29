@@ -119,366 +119,377 @@ const Home = () => {
         animate="visible"
         className=""
       >
-        <BlogHero data={data} />
-      </motion.div>
+        {/**=================================
+      | BLOG HERO SECTION BEGINS
+      |**==================================*/}
 
-      {/**=================================
+        <BlogHero data={data} categories={categories} tags={tags} />
+
+        {/**=================================
+      | BLOG HERO SECTION ENDS
+      |**==================================*/}
+
+        {/**=================================
       | MARQUEE NOTIFICATION SECTION BEGINS
       |**==================================*/}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="border-t-8 border-base-content/25 rounded-xs"
-      >
-        <Marquee
-          speed={50}
-          pauseOnHover={true}
-          pauseOnClick={true}
-          gradient={true}
-          gradientColor="#333"
-          gradientWidth={400}
-          autoFill={false}
-          style={{
-            backgroundColor: "#222",
-            height: "50px",
-            fontWeight: "bold",
-            fontSize: "25px",
-            color: "white",
-            borderRadius: "0px 0px 5px 5px",
-          }}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="border-t-8 border-base-content/25 rounded-xs"
         >
-          <MarqueeNotification />
-        </Marquee>
-      </motion.div>
-      {/**=================================
+          <Marquee
+            speed={50}
+            pauseOnHover={true}
+            pauseOnClick={true}
+            gradient={true}
+            gradientColor="#333"
+            gradientWidth={400}
+            autoFill={false}
+            style={{
+              backgroundColor: "#222",
+              height: "50px",
+              fontWeight: "bold",
+              fontSize: "25px",
+              color: "white",
+              borderRadius: "0px 0px 5px 5px",
+            }}
+          >
+            <MarqueeNotification />
+          </Marquee>
+        </motion.div>
+
+        {/**=================================
       | MARQUEE NOTIFICATION SECTION ENDS
       |**==================================*/}
+      </motion.div>
 
-      {/**===================================
+      <div className="lg:max-w-7xl mx-auto lg:px-4 px-4">
+        {/**===================================
       | BLOG CONTENT AREA LEFT & RIGHT BEGINS
       |**====================================*/}
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={{
-          visible: {
-            transition: {
-              staggerChildren: 0.15,
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{
+            visible: {
+              transition: {
+                staggerChildren: 0.15,
+              },
             },
-          },
-        }}
-        className="grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-16 gap-2"
-      >
-        {/**============================
+          }}
+          className="grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-14 gap-2"
+        >
+          {/**============================
         | BLOG CONTENT AREA LEFT BEGINS
         |**=============================*/}
-        <motion.div
-          variants={sectionMotion}
-          className="col-span-12 lg:col-span-8 space-y-4 lg:py-8 py-4 shadow-sm rounded-b-lg border-b border-gray-200 dark:border-gray-700"
-        >
-          {/* Bookmarked blog post section begins */}
-          <div className="">
-            {showBlogPosts ? (
-              <SectionTitle
-                title="Blog"
-                decoratedText="Posts"
-                icon={<FaBlog />}
-                dataLength={data?.length > 0 ? data.length : 0}
-              />
-            ) : (
-              <SectionTitle
-                title="My Bookmarked Posts ➡️"
-                icon={<FaBookmark />}
-                description="Latest blog posts first. Summary is added."
-                dataLength={
-                  bookmarkedPosts?.bookmarks.length > 0
-                    ? bookmarkedPosts?.bookmarks.length
-                    : 0
-                }
-              />
-            )}
-            <div className="grid lg:grid-cols-12 grid-cols-1 gap-2 items-center justify-evenly px-2 py-4">
-              <div className="col-span-12 lg:col-span-3">
-                <Button
-                  onClick={() => handleToggle(!showBookmarks)}
-                  label={showBookmarks ? "Blog Posts" : "My Bookmarks"}
-                  icon={showBookmarks ? <FaBlog /> : <FaBookmark />}
-                  variant={showBookmarks ? "gray" : "white"}
-                  className="dark:bg-slate-800 text-slate-400 dark:text-slate-400 dark:border-slate-700 text-sm"
+          <motion.div
+            variants={sectionMotion}
+            className="col-span-12 lg:col-span-8 space-y-4 lg:py-8 py-4 shadow-sm rounded-b-lg border-b border-gray-200 dark:border-gray-700"
+          >
+            {/* Bookmarked blog post section begins */}
+            <div className="">
+              {showBlogPosts ? (
+                <SectionTitle
+                  title="Blog"
+                  decoratedText="Posts"
+                  icon={<FaBlog />}
+                  dataLength={data?.length > 0 ? data.length : 0}
                 />
-              </div>
-
-              {/* Category search begins */}
-              {!width && (
-                <div className="col-span-12 lg:col-span-2">
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="border border-gray-300 input-sm rounded-full py- px-4 w-full dark:bg-slate-800 text-slate-400 dark:text-slate-400 dark:border-slate-700"
-                  >
-                    <option value="">All Categories</option>
-                    {categories?.map((category) => (
-                      <option key={category._id} value={category.name}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              ) : (
+                <SectionTitle
+                  title="My Bookmarked Posts ➡️"
+                  icon={<FaBookmark />}
+                  description="Latest blog posts first. Summary is added."
+                  dataLength={
+                    bookmarkedPosts?.bookmarks.length > 0
+                      ? bookmarkedPosts?.bookmarks.length
+                      : 0
+                  }
+                />
               )}
-              {/* Category search ends */}
-
-              {/* Tag search begins */}
-              {!width && (
-                <div className="col-span-12 lg:col-span-2">
-                  <select
-                    value={selectedTag}
-                    onChange={(e) => setSelectedTag(e.target.value)}
-                    className="border border-gray-300 input-sm rounded-full py- px-4 w-full dark:bg-slate-800 text-slate-400 dark:text-slate-400 dark:border-slate-700"
-                  >
-                    <option value="">All Tags</option>
-                    {tags?.map((tag) => (
-                      <option key={tag._id} value={tag.name}>
-                        {tag.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-              {/* Tag search ends */}
-
-              {/* Search bar begins */}
-              <div
-                className={`${
-                  width ? "col-span-9" : "col-span-3"
-                } col-span-12 lg: w-full flex justify-end relative`}
-              >
-                <input
-                  onClick={handleSetWidth}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  type="text"
-                  placeholder="Search..."
-                  className={`${
-                    width ? "w-full flex justify-end" : "lg:w-full w-full"
-                  } input lg:pl-6 pl-6 input-sm input-bordered rounded-full w-full max-w-full flex justify-end dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700`}
-                />
-
-                <FaSearch
-                  className={`${
-                    width
-                      ? "absolute top-[.6rem] left-2 w-[1rem]"
-                      : "absolute lg:w-[1rem] top-[.6rem] left-2 right-[11.2rem]"
-                  } text-sm lg:[1rem] text-gray-400`}
-                />
-              </div>
-              {/* Search bar ends */}
-
-              {/* Clear Filter */}
-              {!width && (
-                <div className="col-span-12 lg:col-span-2">
+              <div className="grid lg:grid-cols-12 grid-cols-1 gap-2 items-center justify-evenly px-2 py-4">
+                <div className="col-span-12 lg:col-span-3">
                   <Button
-                    onClick={handleClearFilter}
-                    icon={
-                      <LucideRefreshCw
-                        size={15}
-                        className="text-slate-500 dark:text-slate-300"
-                      />
-                    }
-                    variant={
-                      isFilterActive
-                        ? "danger"
-                        : "white dark:bg-slate-800 dark:text-slate-400 border-4 border-slate-800 dark:border-red-700 text-sm py-2"
-                    }
-                    label="Refresh"
-                    className={
-                      isFilterActive
-                        ? "border-4 shadow-xl border-amber-500"
-                        : "dark:bg-gray-800 dark:text-slate-400 dark:border-slate-600 text-sm py-2"
-                    }
+                    onClick={() => handleToggle(!showBookmarks)}
+                    label={showBookmarks ? "Blog Posts" : "My Bookmarks"}
+                    icon={showBookmarks ? <FaBlog /> : <FaBookmark />}
+                    variant={showBookmarks ? "gray" : "white"}
+                    className="dark:bg-slate-800 text-slate-400 dark:text-slate-400 dark:border-slate-700 text-sm"
                   />
                 </div>
-              )}
-              {/* Clear Filter Ends*/}
-            </div>
 
-            {showBookmarks && (
-              <div className="w-full lg:mt-4 mt-2">
-                <Suspense fallback={<div>Loading...</div>}>
-                  <BookmarkedPage />
-                </Suspense>
+                {/* Category search begins */}
+                {!width && (
+                  <div className="col-span-12 lg:col-span-2">
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="border border-gray-300 input-sm rounded-full py- px-4 w-full dark:bg-slate-800 text-slate-400 dark:text-slate-400 dark:border-slate-700"
+                    >
+                      <option value="">All Categories</option>
+                      {categories?.map((category) => (
+                        <option key={category._id} value={category.name}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+                {/* Category search ends */}
+
+                {/* Tag search begins */}
+                {!width && (
+                  <div className="col-span-12 lg:col-span-2">
+                    <select
+                      value={selectedTag}
+                      onChange={(e) => setSelectedTag(e.target.value)}
+                      className="border border-gray-300 input-sm rounded-full py- px-4 w-full dark:bg-slate-800 text-slate-400 dark:text-slate-400 dark:border-slate-700"
+                    >
+                      <option value="">All Tags</option>
+                      {tags?.map((tag) => (
+                        <option key={tag._id} value={tag.name}>
+                          {tag.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+                {/* Tag search ends */}
+
+                {/* Search bar begins */}
+                <div
+                  className={`${
+                    width ? "col-span-9" : "col-span-3"
+                  } col-span-12 lg: w-full flex justify-end relative`}
+                >
+                  <input
+                    onClick={handleSetWidth}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    type="text"
+                    placeholder="Search..."
+                    className={`${
+                      width ? "w-full flex justify-end" : "lg:w-full w-full"
+                    } input lg:pl-6 pl-6 input-sm input-bordered rounded-full w-full max-w-full flex justify-end dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700`}
+                  />
+
+                  <FaSearch
+                    className={`${
+                      width
+                        ? "absolute top-[.6rem] left-2 w-[1rem]"
+                        : "absolute lg:w-[1rem] top-[.6rem] left-2 right-[11.2rem]"
+                    } text-sm lg:[1rem] text-gray-400`}
+                  />
+                </div>
+                {/* Search bar ends */}
+
+                {/* Clear Filter */}
+                {!width && (
+                  <div className="col-span-12 lg:col-span-2">
+                    <Button
+                      onClick={handleClearFilter}
+                      icon={
+                        <LucideRefreshCw
+                          size={15}
+                          className="text-slate-500 dark:text-slate-300"
+                        />
+                      }
+                      variant={
+                        isFilterActive
+                          ? "danger"
+                          : "white dark:bg-slate-800 dark:text-slate-400 border-4 border-slate-800 dark:border-red-700 text-sm py-2"
+                      }
+                      label="Refresh"
+                      className={
+                        isFilterActive
+                          ? "border-4 shadow-xl border-amber-500"
+                          : "dark:bg-gray-800 dark:text-slate-400 dark:border-slate-600 text-sm py-2"
+                      }
+                    />
+                  </div>
+                )}
+                {/* Clear Filter Ends*/}
               </div>
-            )}
-          </div>
-          {/* Bookmarked blog post section ends */}
 
-          {/* Blog posts section begins */}
-          <div className="">
-            {showBlogPosts && (
-              <BlogPosts
-                data={data}
-                isLoading={isLoading}
-                error={error}
-                user={user}
-                searchTerm={searchTerm}
-                selectedCategory={selectedCategory}
-                selectedTag={selectedTag}
-              />
-            )}
-          </div>
-          {/* Blog posts section ends */}
-        </motion.div>
-        {/**================================
+              {showBookmarks && (
+                <div className="w-full lg:mt-4 mt-2">
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <BookmarkedPage />
+                  </Suspense>
+                </div>
+              )}
+            </div>
+            {/* Bookmarked blog post section ends */}
+
+            {/* Blog posts section begins */}
+            <div className="">
+              {showBlogPosts && (
+                <BlogPosts
+                  data={data}
+                  isLoading={isLoading}
+                  error={error}
+                  user={user}
+                  searchTerm={searchTerm}
+                  selectedCategory={selectedCategory}
+                  selectedTag={selectedTag}
+                />
+              )}
+            </div>
+            {/* Blog posts section ends */}
+          </motion.div>
+          {/**================================
         | BLOG CONTENT AREA LEFT ENDS
         |**=================================*/}
 
-        {/**=======================================
+          {/**=======================================
         | RIGHT SIDEBAR BEGINS
         |**========================================*/}
-        <motion.div
-          variants={sidebarMotion}
-          className="col-span-12 lg:col-span-4 rounded-xl lg:py-8 py-4 shadow-sm rounded-b-lg border-b border-gray-200 dark:border-gray-700"
-        >
-          <div className="sticky top-[5.8rem]">
-            <div className="lg:space-y-8 space-y-4">
-              {/**=================================
+          <motion.div
+            variants={sidebarMotion}
+            className="col-span-12 lg:col-span-4 rounded-xl lg:py-8 py-4 shadow-sm rounded-b-lg border-b border-gray-200 dark:border-gray-700"
+          >
+            <div className="sticky top-[5.8rem]">
+              <div className="lg:space-y-8 space-y-4">
+                {/**=================================
               | COMING SOON POSTS SECTION BEGINS
               | ===================================*/}
-              <div className="">
-                <SectionTitle
-                  title="Coming Soon"
-                  decoratedText="Posts"
-                  dataLength={
-                    comingSoon?.length > 0 ? (
-                      comingSoon?.length
-                    ) : (
-                      <span className="">{0}</span>
-                    )
-                  }
-                  icon={<FaBloggerB />}
-                />
-                <ComingSoonPost />
-              </div>
-              {/**=================================
+                <div className="">
+                  <SectionTitle
+                    title="Coming Soon"
+                    decoratedText="Posts"
+                    dataLength={
+                      comingSoon?.length > 0 ? (
+                        comingSoon?.length
+                      ) : (
+                        <span className="">{0}</span>
+                      )
+                    }
+                    icon={<FaBloggerB />}
+                  />
+                  <ComingSoonPost />
+                </div>
+                {/**=================================
               | COMING SOON POSTS SECTION ENDS
               |**==================================*/}
 
-              {/* Social media links section begins */}
-              {user && (
-                <>
-                  <div className="">
-                    <div className="mb-2.5">
-                      <SectionTitle title="Follow" decoratedText="Me on" />
+                {/* Social media links section begins */}
+                {user && (
+                  <>
+                    <div className="">
+                      <div className="mb-2.5">
+                        <SectionTitle title="Follow" decoratedText="Me on" />
+                      </div>
+                      <div className="bg-base-300 dark:bg-gray-800 rounded-md p-4 flex justify-center">
+                        <SocialMediaLinks />
+                      </div>
                     </div>
-                    <div className="bg-base-300 dark:bg-gray-800 rounded-md p-4 flex justify-center">
-                      <SocialMediaLinks />
-                    </div>
-                  </div>
-                </>
-              )}
-              {/* Social media links section ends */}
+                  </>
+                )}
+                {/* Social media links section ends */}
 
-              {/* Categories section begins */}
-              <div className="lg:my-10 my-2">
-                <Categories
-                  data={categories}
-                  isLoading={isCategoryLoading}
-                  onCategorySelect={setSelectedCategory}
-                  selectedCategory={selectedCategory}
-                  error={isError}
-                  user={user}
-                />
-              </div>
-              {/* Categories section ends */}
+                {/* Categories section begins */}
+                <div className="lg:my-10 my-2">
+                  <Categories
+                    data={categories}
+                    isLoading={isCategoryLoading}
+                    onCategorySelect={setSelectedCategory}
+                    selectedCategory={selectedCategory}
+                    error={isError}
+                    user={user}
+                  />
+                </div>
+                {/* Categories section ends */}
 
-              {/* Tags section begins */}
-              <div className="lg:my-10 my-2">
-                <Tags
-                  data={tags}
-                  isLoading={isTagLoading}
-                  error={isTagError}
-                  onTagSelect={setSelectedTag}
-                  selectedTag={selectedTag}
-                />
-              </div>
-              {/* Tags section ends */}
+                {/* Tags section begins */}
+                <div className="lg:my-10 my-2">
+                  <Tags
+                    data={tags}
+                    isLoading={isTagLoading}
+                    error={isTagError}
+                    onTagSelect={setSelectedTag}
+                    selectedTag={selectedTag}
+                  />
+                </div>
+                {/* Tags section ends */}
 
-              {/* Popular posts section begins */}
-              <div className="lg:my-10 my-2 lg:space-y-4 space-y-2">
-                <PopularPosts />
+                {/* Popular posts section begins */}
+                <div className="lg:my-10 my-2 lg:space-y-4 space-y-2">
+                  <PopularPosts />
+                </div>
+                {/* Popular posts section ends */}
               </div>
-              {/* Popular posts section ends */}
             </div>
-          </div>
-        </motion.div>
-        {/**=====================================
+          </motion.div>
+          {/**=====================================
         | RIGHT SIDEBAR ENDS
         |**======================================*/}
-      </motion.div>
-      {/**===================================
+        </motion.div>
+        {/**===================================
       | BLOG CONTENT AREA LEFT & RIGHT ENDS
       |*=====================================*/}
 
-      {/**===================================
+        {/**===================================
       | BLOG RANDOM POSTS SECTION BEGINS
       |**====================================*/}
-      <motion.div
-        variants={sectionMotion}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        className="lg:my-10 my-4"
-      >
-        {/* <SectionTitle title="Random Posts" /> */}
-        <RandomBlogPosts />
-      </motion.div>
-      {/**===================================
+        <motion.div
+          variants={sectionMotion}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="lg:my-10 my-4"
+        >
+          {/* <SectionTitle title="Random Posts" /> */}
+          <RandomBlogPosts />
+        </motion.div>
+        {/**===================================
       | BLOG RANDOM POSTS SECTION ENDS
       |**====================================*/}
 
-      {/**===================================
+        {/**===================================
       | BLOG OLDER POSTS SECTION BEGINS
       |**====================================*/}
-      <motion.div
-        variants={sectionMotion}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        className="lg:my- my-4"
-      >
-        <SectionTitle
-          title="Older"
-          decoratedText="Blog Posts"
-          icon={<FaRegListAlt size={20} />}
-        />
-        <Marquee
-          speed={50}
-          pauseOnHover={true}
-          pauseOnClick={true}
-          autoFill={false}
-          style={{
-            backgroundColor: "",
-            height: "px",
-            fontWeight: "bold",
-            fontSize: "20px",
-            color: "black",
-            padding: "px",
-          }}
+        <motion.div
+          variants={sectionMotion}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="lg:my- my-4"
         >
-          <OlderBlogPosts />
-        </Marquee>
-      </motion.div>
-      {/**===================================
+          <SectionTitle
+            title="Older"
+            decoratedText="Blog Posts"
+            icon={<FaRegListAlt size={20} />}
+          />
+          <Marquee
+            speed={50}
+            pauseOnHover={true}
+            pauseOnClick={true}
+            autoFill={false}
+            style={{
+              backgroundColor: "",
+              height: "px",
+              fontWeight: "bold",
+              fontSize: "20px",
+              color: "black",
+              padding: "px",
+            }}
+          >
+            <OlderBlogPosts />
+          </Marquee>
+        </motion.div>
+        {/**===================================
       | BLOG OLDER POSTS SECTION ENDS
       |**====================================*/}
 
-      {/* Scroll to top button */}
-      <div className="height-[px]">
-        <ScrollTopButton />
-      </div>
+        {/* Scroll to top button */}
+        <div className="height-[px]">
+          <ScrollTopButton />
+        </div>
 
-      {/* Scroll progress bar begins */}
-      <div className="">
-        <ScrollProgressBar />
+        {/* Scroll progress bar begins */}
+        <div className="">
+          <ScrollProgressBar />
+        </div>
       </div>
     </div>
   );

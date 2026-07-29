@@ -1,10 +1,17 @@
 import { useState } from "react";
 import FollowButton from "../followButton/FollowButton";
+import useMongoUsers from "../../hooks/useMongoUsers";
 
 const AuthorInfoModal = ({ user, blog, author, title = "User", children }) => {
+  const { publicUsers, fetchPublicUsers } = useMongoUsers();
   const [isOpen, setIsOpen] = useState(false);
   const handleMouseEnter = () => setIsOpen(true);
   const handleMouseLeave = () => setIsOpen(false);
+
+  // Current Mongo User in BlogDetails Page
+  const currentMongoUser = publicUsers?.find(
+    (mongoUser) => mongoUser.firebaseUid === user?.uid,
+  );
 
   return (
     <div className="hover:link">
@@ -48,10 +55,10 @@ const AuthorInfoModal = ({ user, blog, author, title = "User", children }) => {
                 <FollowButton
                   authorId={blog?.author?._id} // Mongo _id
                   disabled={!user}
-                  isFollowingInitial={
-                    user?._id !== blog?.author?._id &&
-                    user?.following?.some((id) => id.equals(blog.author?._id))
-                  }
+                  isFollowingInitial={currentMongoUser?.following?.includes(
+                    blog.author._id,
+                  )}
+                  onSuccess={fetchPublicUsers}
                 />
               </div>
             </div>
@@ -60,6 +67,7 @@ const AuthorInfoModal = ({ user, blog, author, title = "User", children }) => {
                 <span>{author.name}</span>
               </p>
             </div>
+            <p>MERN Full Stack Developer</p>
 
             <p className="text-sm text-gray-600 dark:text-base-300">
               I am a developer. I develop websites with utmost care and keep in

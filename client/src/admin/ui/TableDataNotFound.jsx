@@ -4,7 +4,7 @@ const TableDataNotFound = ({ icon, table, message }) => {
   const defaultMessage = "No data is available now !";
   const defaultIcon = <LucideAlertCircle size={20} className="text-red-500" />;
   return (
-    <div className="">
+    <div className="max-w-full col-span-12">
       <p className="flex items-center justify-center gap-1.5">
         {icon ? icon : defaultIcon}
         {`${table ? table : ""} ${message ? message : defaultMessage}`}

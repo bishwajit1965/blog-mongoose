@@ -9,6 +9,7 @@ import { createRoot } from "react-dom/client";
 import router from "./routes/Routes.jsx";
 import AuthProvider from "./providers/AuthProvider.jsx";
 import PublicDataProvider from "./providers/PublicDataProvider.jsx";
+import AuthPublicUsersProvider from "./providers/AuthPublicUsersProvider.jsx";
 
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
@@ -17,22 +18,24 @@ createRoot(document.getElementById("root")).render(
       <HelmetProvider>
         <ThemeProvider>
           <PublicDataProvider>
-            <AuthProvider>
-              <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={true}
-                closeOnClick={false}
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored"
-                transition={Bounce}
-              />
-              <RouterProvider router={router} />
-            </AuthProvider>
+            <AuthPublicUsersProvider>
+              <AuthProvider>
+                <ToastContainer
+                  position="top-right"
+                  autoClose={5000}
+                  hideProgressBar={false}
+                  newestOnTop={true}
+                  closeOnClick={false}
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="colored"
+                  transition={Bounce}
+                />
+                <RouterProvider router={router} />
+              </AuthProvider>
+            </AuthPublicUsersProvider>
           </PublicDataProvider>
         </ThemeProvider>
       </HelmetProvider>

@@ -62,7 +62,7 @@ const AdminPagination = ({
   return (
     <div className="flex flex-col items-center space-y-2 mt-3">
       <div className="flex items-center space-x-2 dark:bg-gray-700 border dark:border-gray-700 rounded shadow-sm">
-        <label htmlFor="itemsPerPage" className="text-sm pl-2">
+        <label htmlFor="itemsPerPage text-xs" className="text-xs pl-1">
           Items per page:
         </label>
         <select
@@ -83,20 +83,20 @@ const AdminPagination = ({
         <button
           disabled={currentPage === 1}
           onClick={() => handlePageChange(currentPage - 1)}
-          className={`px-2 py-[2px] rounded ${
+          className={`px-1 py-[1px] rounded ${
             currentPage === 1
               ? "bg-gray-300 cursor-not-allowed dark:bg-gray-600"
-              : "bg-gray-200 hover:bg-blue-500 hover:text-white dark:bg-gray-700"
+              : "bg-gray-200 hover:bg-blue-500 hover:text-white dark:bg-gray-700 text-xs"
           }`}
         >
-          <FaAngleLeft className="inline" /> Prev
+          <FaAngleLeft size={14} className="inline" /> Prev
         </button>
 
         {pages.map((page, index) => (
           <button
             key={index}
             onClick={() => handlePageChange(page)}
-            className={`px-3 py-[2px] rounded ${
+            className={`px-2 py-[2px] rounded ${
               page === currentPage
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 hover:bg-blue-500 hover:text-white dark:bg-gray-700"
@@ -110,13 +110,13 @@ const AdminPagination = ({
         <button
           disabled={currentPage === totalPages}
           onClick={() => handlePageChange(currentPage + 1)}
-          className={`px-2 py-[2px] rounded ${
+          className={`px-1 py-[1px] rounded ${
             currentPage === totalPages
               ? "bg-gray-300 cursor-not-allowed dark:bg-gray-600"
               : "bg-gray-200 hover:bg-blue-500 hover:text-white dark:bg-gray-700"
           }`}
         >
-          Next <FaAngleRight className="inline" />
+          Next <FaAngleRight size={14} className="inline" />
         </button>
       </div>
 

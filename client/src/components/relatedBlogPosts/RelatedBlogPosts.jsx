@@ -4,7 +4,8 @@ import AdminPagination from "../../admin/adminComponent/adminPagination/AdminPag
 import Button from "../buttons/Button";
 import RelatedBlogPostsCard from "./RelatedBlogPostsCard";
 import useGetRelatedPosts from "../../hooks/useGetRelatedPosts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Loader from "../loader/Loader";
 
 // Button active state style
 const style = {
@@ -15,16 +16,20 @@ const style = {
 const RelatedBlogPosts = ({ slug, user }) => {
   const { data, isLoading, isError } = useGetRelatedPosts(slug);
 
-  const [paginatedData, setPaginatedData] = useState(data || []);
+  const [paginatedData, setPaginatedData] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
+
+  useEffect(() => {
+    setPaginatedData(data || []);
+  }, [data]);
 
   const handleToggleRelatedView = () => {
     setIsExpanded(!isExpanded);
   };
 
-  if (isLoading) return <div>Loading related posts...</div>;
+  if (isLoading) return <Loader />;
 
-  if (isError) return <div>Error loading related posts.{isError.message}</div>;
+  if (isError) return <div>Unable to load related posts.{isError.message}</div>;
 
   return (
     <div className="">
@@ -32,7 +37,9 @@ const RelatedBlogPosts = ({ slug, user }) => {
         <div className="relative">
           <Button
             onClick={handleToggleRelatedView}
-            label={isExpanded ? "Hide Related Posts" : "Show Related Posts"}
+            label={
+              isExpanded ? "Hide Related Articles" : "Explore Related Articles"
+            }
             icon={isExpanded ? <FaEyeSlash /> : <FaEye />}
             variant={`${isExpanded ? "success" : "outline"}`}
           />
@@ -58,7 +65,7 @@ const RelatedBlogPosts = ({ slug, user }) => {
                 .slice(0, 3)
                 .map((blog) => (
                   <RelatedBlogPostsCard
-                    key={blog._id}
+                    key={blog?._id}
                     blog={blog}
                     user={user}
                   />

@@ -1,5 +1,6 @@
-import api from "../helperApiService/helperApiService";
+// import api from "../helperApiService/helperApiService";
 import { useQuery } from "@tanstack/react-query";
+import api from "../admin/adminServices/api";
 
 const useApiQuery = ({
   key,
@@ -37,6 +38,7 @@ export default useApiQuery;
 //   onSuccess: (data) => console.log("Data fetched successfully:", data),
 //   fetcher: (url, params) => api.get(url, { params }).then((res) => res.data),
 // });
+
 // This hook can be used in any component to fetch data from the API using React Query.
 
 // EASY EXAMPLE:

@@ -4,6 +4,7 @@ const Role = require("../models/Role");
 const bcrypt = require("bcrypt");
 const { validateUserInput } = require("../utils/validators");
 const UserActionAuditLog = require("../models/UserActionAuditLog");
+const { generateJWT } = require("../utils/jwt");
 
 // Used for creating user in MongoDB immediately after Firebase signUp
 const createUser = async (req, res) => {
@@ -63,6 +64,14 @@ const createUser = async (req, res) => {
 
     console.log("💾 Saving user to MongoDB...");
     const savedUser = await newUser.save();
+
+    const token = generateJWT({
+      id: savedUser._id,
+      email: savedUser.email,
+      roles: savedUser.roles,
+      permissions: savedUser.permissions,
+    });
+
     console.log("✅ User saved successfully!");
 
     return res.status(201).json({
@@ -108,7 +117,7 @@ const banUser = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       userId,
       { isBanned: true, banExpiresAt: banUntil },
-      { new: true }
+      { new: true },
     );
     // If no user return an error
     if (!user) {
@@ -144,7 +153,7 @@ const unbanUser = async (req, res) => {
       },
       {
         new: true,
-      }
+      },
     );
     if (!user) {
       return res.status(404).json({ message: " User not found." });

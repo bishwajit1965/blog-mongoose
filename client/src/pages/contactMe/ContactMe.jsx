@@ -7,14 +7,29 @@ import {
   notifyError,
   notifySuccess,
 } from "../../admin/adminComponent/adminToastNotification/AdminToastNotification";
-import Button from "../../components/buttons/Button";
 import { motion } from "framer-motion";
 import PageTitle from "../../components/pageTitle/PageTitle";
 import { Input } from "../../admin/ui/Input";
-import Textarea from "../../admin/ui/Textarea";
 import { Link } from "react-router-dom";
 import Seo from "../../components/seo/Seo";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { LucideUserCog2 } from "lucide-react";
+import CTAButton from "../../components/buttons/CTAButton";
 
+const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, 3, 4, 5, 6, false] }], // Header options
+    ["bold", "italic", "underline"], // Basic formatting
+    [{ list: "ordered" }, { list: "bullet" }], // Ordered & unordered lists
+    [{ indent: "-1" }, { indent: "+1" }], // Indentation
+    ["blockquote", "code-block"], // Block elements
+    ["image", "link", "video"], // Media options
+    [{ align: [] }], // Alignment options
+    [{ color: [] }, { background: [] }], // Text color and background color
+    ["clean"], // Remove formatting
+  ],
+};
 const ContactMe = () => {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -49,9 +64,9 @@ const ContactMe = () => {
       };
       console.log("Contact payload", contactPayload);
       await createContact(contactPayload);
-      notifySuccess("Message uploaded successfully!");
+      notifySuccess("Message sent successfully!!");
     } catch (error) {
-      console.error("Error in uploading contact message", error);
+      console.error("Error in sending message", error);
     } finally {
       setLoading(false);
     }
@@ -81,8 +96,7 @@ const ContactMe = () => {
         <div className="max-w-2xl mx-auto text-base-content dark:text-base-300 border dark:border-gray-700 rounded-xl lg:p-6 p-4 shadow hover:shadow-lg">
           <form onSubmit={handleSubmit} className="space-y-4 ">
             <h1 className="lg:text-xl text-sm font-extrabold text-gray-700 dark:text-gray-400 flex items-center gap-2">
-              <LucideIcon.UserCircle /> Contact with the Nova Journal Super
-              Admin
+              <LucideIcon.UserCircle /> Contact the Author
             </h1>
             <Input
               type="text"
@@ -105,44 +119,69 @@ const ContactMe = () => {
               icon={LucideIcon.Mail}
             />
 
-            <Textarea
-              name="message"
-              value={form?.message}
-              onChange={handleChange}
-              placeholder="Your Message..."
-              className="dark:bg-gray-700 dark:text-gray-400"
-            ></Textarea>
-            <Button
-              type="submit"
-              variant="indigo"
-              disabled={loading}
-              icon={
-                loading ? (
-                  <LucideIcon.Loader className="animate-spin" />
-                ) : (
-                  <LucideIcon.MailPlus />
-                )
-              }
-              label={loading ? "Sending Message..." : "Send Message"}
-              className="w-full py-2"
+            <ReactQuill
+              theme="snow"
+              modules={quillModules}
+              value={form.message || ""}
+              onChange={(value) => {
+                setForm((prev) => ({
+                  ...prev,
+                  message: value,
+                }));
+              }}
             />
+
+            <div className="flex items-center justify-between gap-4">
+              <CTAButton
+                type="submit"
+                variant="primary"
+                size="md"
+                disabled={loading}
+                icon={
+                  loading ? (
+                    <LucideIcon.Loader className="animate-spin" />
+                  ) : (
+                    <LucideIcon.MailPlus />
+                  )
+                }
+                label={loading ? "Sending Message..." : "Send Message"}
+                className=""
+              />
+
+              <div className="">
+                <h2 className="border-b dark:border-gray-700 dark:text-gray-400 mb-1 text-medium font-bold flex items-center gap-1">
+                  <LucideUserCog2 size={16} />
+                  Admin Contact Info
+                </h2>
+                <p className="flex items-center">
+                  <LucideIcon.Mail
+                    size={14}
+                    className="dark:hover:text-blue-500"
+                  />
+                  <a
+                    href="mailto:minu@gmail.com"
+                    className="text-sm dark:hover:text-blue-500 dark:text-gray-400"
+                  >
+                    paul.bishwajit09@gmail.com
+                  </a>
+                </p>
+
+                <Link
+                  target="__blank"
+                  to="https://portfolio-h5k5.vercel.app"
+                  className="hover:link dark:hover:text-blue-500 text-sm m-0 flex items-center dark:text-gray-400 justify-start gap-2"
+                >
+                  <LucideIcon.Briefcase
+                    size={14}
+                    className="dark:hover:text-blue-500"
+                  />{" "}
+                  My Portfolio Link
+                </Link>
+              </div>
+            </div>
           </form>
 
           <div className="text-center text-gray-600 pt-4">
-            <p className="flex items-center justify-center">
-              <LucideIcon.Mail size={16} />
-              <a href="mailto:minu@gmail.com" className="hover:underline">
-                paul.bishwajit09@gmail.com
-              </a>
-            </p>
-
-            <Link
-              target="__blank"
-              to="https://portfolio-h5k5.vercel.app"
-              className="link text-blue-500 text-sm m-0 flex items-center  justify-center gap-2"
-            >
-              <LucideIcon.Briefcase size={16} /> My Portfolio Link
-            </Link>
             <div className="divider m-2 dark:divider-neutral"></div>
             <div className="space-y-2">
               <p>Follow me on: </p>

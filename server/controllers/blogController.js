@@ -38,7 +38,6 @@ const generateExcerpt = (content, maxLength = 500) => {
 };
 
 const createBlog = async (req, res) => {
-  console.log("📌Create blog post controller is hit");
   try {
     let {
       title,
@@ -160,7 +159,7 @@ const createBlog = async (req, res) => {
       metaDescription: seoDescription,
       metaKeywords: seoKeywords,
     });
-    console.log("✅ NEW BLOG POST", newBlog);
+
     const blog = await newBlog.save();
 
     await generateSitemap(); // ✅ Regenerate sitemap after successful blog creation
@@ -189,7 +188,7 @@ const getAllBlogs = async (req, res) => {
       status: "published",
       moderationStatus: { $nin: ["hidden", "deleted"] },
     })
-      .populate("author", "name email avatar")
+      .populate("author", "name email avatar followers following")
       .populate("category", "name")
       .populate("tags", "name")
       .sort({ createdAt: -1 });
@@ -203,7 +202,7 @@ const getAllBlogs = async (req, res) => {
 const getBlogsForSuperAdminDashBoard = async (req, res) => {
   try {
     const blogs = await Blog.find({})
-      .populate("author", "name email avatar")
+      .populate("author", "name email avatar followers following")
       .populate("category", "name")
       .populate("tags", "name")
       .sort({ createdAt: -1 })
@@ -225,11 +224,11 @@ const getBlogBySlug = async (req, res) => {
       slug: req.params.slug,
       status: "published",
     })
-      .populate("author", "name email")
+      .populate("author", "name email avatar followers following")
       .populate("category", "name")
       .populate("tags", "name");
     if (!blog) return res.status(404).json({ message: "Blog not found" });
-    // await generateSitemap(); // ✅ Regenerate sitemap after successful blog fetching by slug
+
     res.status(200).json(blog);
   } catch (error) {
     res.status(500).json({ message: "Error fetching blog", error });
@@ -242,7 +241,7 @@ const getRandomPost = async (req, res) => {
     const random = Math.floor(Math.random() * count);
     const randomPost = await Blog.find({ status: "published" })
       .skip(random)
-      .populate("author", "name email avatar")
+      .populate("author", "name email avatar followers following")
       .populate("category", "name")
       .populate("tags", "name")
       .limit(4);
@@ -270,7 +269,7 @@ const getRelatedBlogPosts = async (req, res) => {
         { tags: { $in: currentPost.tags } },
       ],
     })
-      .populate("author", "name email avatar")
+      .populate("author", "name email avatar followers following")
       .populate("category", "name")
       .populate("tags", "name")
       .limit(15); // Adjust limit as needed

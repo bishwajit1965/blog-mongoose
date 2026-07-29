@@ -36,12 +36,12 @@ const AdminPageTitle = ({ title, decoratedText, subtitle }) => {
   return (
     <div className="text-center border-b border-slate-300 dark:border-gray-700 shadow-sm bg-base-300 py-1 dark:bg-gray-800">
       <h2 className="lg:text-2xl text-lg font-extrabold dark:text-emerald-400">
-        <span className="lg:text-2xl text-1zl font-extrabold text-orange-700 dark:text-amber-400">
+        <span className="lg:text-2xl text-lg font-extrabold text-orange-700 dark:text-amber-400">
           Welcome to
         </span>
-        {roleBasedTitle}
+        &nbsp; {roleBasedTitle}
         <span className="text-orange-700 dark:text-amber-400">
-          {decoratedText}
+          &nbsp; {decoratedText}
         </span>
       </h2>
       {subtitle && (

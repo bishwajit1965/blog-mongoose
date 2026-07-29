@@ -23,6 +23,7 @@ const BlogDetailsView = ({ blog, manageBlog, toggler, isHidden }) => {
 
   const seoTitle = blog.metaTitle || blog.title.substring(0, 60);
   const seoDescription = blog.metaDescription || blog.content.substring(0, 160);
+
   const seoKeywords =
     blog.metaKeywords || blog.title.toLowerCase().split(" ").slice(0, 10);
   const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
@@ -30,11 +31,11 @@ const BlogDetailsView = ({ blog, manageBlog, toggler, isHidden }) => {
 
   // International date time format without any library
   const formattedDate = new Intl.DateTimeFormat("en-GB").format(
-    new Date(blog.publishAt)
+    new Date(blog.publishAt),
   );
   const getRelativeTime = (date) => {
     const diff = Math.floor(
-      (new Date() - new Date(date)) / (1000 * 60 * 60 * 24)
+      (new Date() - new Date(date)) / (1000 * 60 * 60 * 24),
     );
     return diff === 0 ? "Today" : `${diff} days ago`;
   };

@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 
 const useWordTyping = (text, speed = 100, delayAfterComplete = 5000) => {
-  const words = text.split(" ");
+  const heroPhrases = text.split(" ");
   const [displayed, setDisplayed] = useState([]);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if (index < words.length) {
+    if (index < heroPhrases.length) {
       const timeout = setTimeout(() => {
-        setDisplayed((prev) => [...prev, words[index]]);
+        setDisplayed((prev) => [...prev, heroPhrases[index]]);
         setIndex((prev) => prev + 1);
       }, speed);
 
@@ -21,7 +21,7 @@ const useWordTyping = (text, speed = 100, delayAfterComplete = 5000) => {
 
       return () => clearTimeout(resetTimeout);
     }
-  }, [index, words, speed, delayAfterComplete]);
+  }, [index, heroPhrases, speed, delayAfterComplete]);
 
   return displayed.join(" ");
 };
