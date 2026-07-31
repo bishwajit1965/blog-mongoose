@@ -14,7 +14,7 @@ const PublicPageLayout = ({ page, children }) => {
         schemaType="WebPage"
       />
 
-      <section className="max-w-5xl mx-auto lg:px-4 px-4 lg:py-4 py-2">
+      <section className="max-w-6xl mx-auto lg:px-4 px-4 lg:py-4 py-2">
         <header className="mb-12 border-b-2 border-base-content/15 dark:border-gray-600 lg:pb-6 pb-3">
           <h1 className="text-4xl md:text-5xl font-bold dark:text-gray-400">
             {page?.title}

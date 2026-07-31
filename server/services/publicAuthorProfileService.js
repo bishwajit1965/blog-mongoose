@@ -117,7 +117,7 @@ const getLatestFollowerCountService = async (authorId) => {
     await author.populate({
       path: "followers",
       select: "name avatar",
-      options: { limit: 5 },
+      options: { limit: 10 },
     });
 
     return {

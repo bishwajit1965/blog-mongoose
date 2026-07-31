@@ -52,7 +52,7 @@ const Button = ({
     gray: "border border-1 border-gray-500 text-gray-700 bg-gray-200 rounded-full shadow-md focus:ring-2 focus:ring-offset-2 transition-transform duration-300",
 
     outline:
-      "bg-base-100 rounded-full border border-1 border-slate-500 hover:bg-slate-800 hover:text-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700 transition-all duration-300 dark:text-gray-400 shadow focus:ring-slate-400 focus:ring-offset-2",
+      "bg-base-100 rounded-full border border-1 border-slate-700 hover:bg-slate-800 hover:text-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700 transition-all duration-300 dark:text-gray-400 shadow focus:ring-slate-400 focus:ring-offset-2",
 
     active:
       "bg-teal-600 border border-1 text-gray-100 hover:bg-emerald-700  border-emerald-400 shadow-sm focus:ring-2 focus:ring-offset-2 transition-transform duration-300",

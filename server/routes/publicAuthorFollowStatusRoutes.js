@@ -5,10 +5,18 @@ const router = express.Router();
 const {
   getAuthorFollowStatus,
 } = require("../controllers/publicAuthorFollowStatusController");
-const { authenticateToken } = require("../middlewares/authenticateToken");
 
-router.use(authenticateToken);
+router.use((req, res, next) => {
+  console.log("PUBLIC FOLLOW ROUTE HIT");
+  next();
+});
 
-router.get("/follow-status/:authorId", getAuthorFollowStatus);
+const authenticateFirebase = require("../middlewares/authenticateFirebase");
+
+router.get(
+  "/follow-status/:authorId",
+  authenticateFirebase,
+  getAuthorFollowStatus,
+);
 
 module.exports = router;

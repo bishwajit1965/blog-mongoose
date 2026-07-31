@@ -2,6 +2,7 @@ import CountBadge from "../../admin/ui/CountBadge";
 import TableDataNotFound from "../../admin/ui/TableDataNotFound";
 import FollowButton from "../../components/followButton/FollowButton";
 import useLastSeenFormatter from "../../hooks/useLastSeenFormatter";
+import useMongoUsers from "../../hooks/useMongoUsers";
 import AuthorFollowersCard from "./AuthorFollowersCard";
 
 const AuthorProfileHeader = ({
@@ -10,7 +11,11 @@ const AuthorProfileHeader = ({
   onlineStatus,
   followers,
   followerCount,
+  authorFollowStatus,
+  refreshFollowers,
 }) => {
+  const { fetchPublicUsers } = useMongoUsers();
+
   // Online Offline status display
   const { isOnline, lastSeen } = onlineStatus || {};
   const formattedLastSeen = useLastSeenFormatter(lastSeen);
@@ -18,6 +23,11 @@ const AuthorProfileHeader = ({
   const { name, avatar, followersCount, followingCount } = profile || {};
 
   console.log("Profile Header", profile);
+  console.log("HEADER FOLLOW STATUS:", authorFollowStatus);
+  // Handle refetch after action
+  const handleRefetch = async () => {
+    await Promise.all([fetchPublicUsers(), refreshFollowers()]);
+  };
 
   return (
     <div className="border lg:p-8 p-4 border-base-content/15 rounded-xl shadow-sm hover:shadow-xl space-y-6">
@@ -31,28 +41,30 @@ const AuthorProfileHeader = ({
             />
           </div>
           <div className="flex justify-center">
-            <div className="space-y-4">
+            <div className="space-y-2">
               <h1 className="lg:text-2xl text-lg font-bold text-center">
                 {name}
               </h1>
-              <p className="font-medium text-center lg:max-w-3xl">
-                I am Bishwajit Paul, a MERN Full Stack Developer passionate
-                about building modern, scalable, and maintainable web
-                applications. Nova Journal is my developer diary — a place where
-                I document my journey of learning, building, debugging, and
-                improving as a software developer.
-              </p>
-
               <p className="flex items-center justify-center">
                 {isOnline ? (
-                  <span className="text-green-600 font-semibold">
-                    🟢 Online
+                  <span className="text-emerald-600 font-semibold border-2 border-emerald-400 rounded-full px-2 p-0.5">
+                    🟢 Online Now
                   </span>
                 ) : (
-                  <span className="text-gray-500">
+                  <span className="text-gray-500 border-2 border-gray-500 rounded-full px-2 p-0.5">
                     Offline 🔴 Last seen {formattedLastSeen}
                   </span>
                 )}
+              </p>
+              <p className="font-medium text-center lg:max-w-3xl">
+                I am Bishwajit Paul, a{" "}
+                <span className="font-bold dark:text-amber-500">
+                  MERN Full Stack Developer
+                </span>{" "}
+                passionate about building modern, scalable, and maintainable web
+                applications. Nova Journal is my developer diary — a place where
+                I document my journey of learning, building, debugging, and
+                improving as a software developer.
               </p>
             </div>
           </div>
@@ -62,8 +74,13 @@ const AuthorProfileHeader = ({
           </div>
 
           <div className="divider dark:divider-neutral"></div>
+
           <div className="flex justify-center">
-            <FollowButton />
+            <FollowButton
+              authorId={profile?._id}
+              isFollowingInitial={authorFollowStatus?.isFollowing}
+              onSuccess={handleRefetch}
+            />
           </div>
         </div>
       </div>

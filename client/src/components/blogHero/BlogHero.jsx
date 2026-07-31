@@ -91,10 +91,10 @@ const BlogHero = ({ data = [], categories, tags }) => {
                     key={blog?._id}
                     className="lg:flex grid items-center gap-4"
                   >
-                    <div>
+                    <div className="flex lg:justify-start justify-center">
                       <img
                         src={blog?.author?.avatar}
-                        alt=""
+                        alt={blog?.author?.name}
                         className="w-32 h-32 rounded-full object-cover bg-gray-400 p-1 shadow-md"
                       />
                     </div>
@@ -147,7 +147,7 @@ const BlogHero = ({ data = [], categories, tags }) => {
 
           <div className="flex gap-8 flex-wrap">
             <Link to="/blog-coming-soon" className="m-0">
-              <button className="px-4 py-3 border border-white/50 bg-indigo-500 hover:bg-indigo-600 rounded-xl font-semibold transition transform hover:scale-105 shadow-lg">
+              <button className="lg:px-4 lg:py-3 px-1 py-1 border border-white/50 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold transition transform hover:scale-105 shadow-lg">
                 <span className="flex items-center gap-1">
                   <FaCar size={20} /> Coming Soon
                 </span>
@@ -155,7 +155,7 @@ const BlogHero = ({ data = [], categories, tags }) => {
             </Link>
 
             <Link to="/contact-me" className="m-0">
-              <button className="px-4 py-3 border border-white/50 bg-emerald-500 hover:bg-emerald-600 rounded-xl font-semibold transition transform hover:scale-105">
+              <button className="lg:px-4 lg:py-3 px-1 py-1 border border-white/50 bg-emerald-500 hover:bg-emerald-600 rounded-lg font-semibold transition transform hover:scale-105">
                 <span className="flex items-center gap-1">
                   <FaEnvelope size={20} /> About Me
                 </span>

@@ -7,7 +7,7 @@ const ErrorPage = () => {
   return (
     <>
       <div className="h-screen flex items-center justify-center dark:bg-gray-800 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 text-gray-700 rounded-md">
-        <div className="text-center max-w-5xl px-4 lg:space-y-4 space-y-2">
+        <div className="text-center max-w-full px-4 lg:space-y-4 space-y-2">
           <div className="flex justify-center">
             <LucideIcon.AlertCircle
               size-={20}
