@@ -1,5 +1,50 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
+const sanitizeHtml = require("sanitize-html");
+
+const sanitizeRichText = (value = "") =>
+  sanitizeHtml(value, {
+    allowedTags: [
+      "b",
+      "i",
+      "em",
+      "strong",
+      "a",
+      "p",
+      "br",
+      "ul",
+      "ol",
+      "li",
+      "blockquote",
+      "code",
+      "pre",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+      "span",
+      "div",
+      "img",
+    ],
+    allowedAttributes: {
+      a: ["href", "name", "target", "rel"],
+      img: ["src", "alt", "title"],
+      "*": ["class"],
+    },
+    allowedSchemes: ["http", "https", "mailto"],
+    transformTags: {
+      a: (tagName, attribs) => ({
+        tagName,
+        attribs: {
+          ...attribs,
+          rel: "noopener noreferrer nofollow",
+          target: "_blank",
+        },
+      }),
+    },
+  });
 
 const BlogSchema = new mongoose.Schema(
   {
@@ -190,6 +235,16 @@ BlogSchema.pre("save", async function (next) {
 
   if (this.status === "published" && !this.publishAt) {
     this.publishAt = new Date();
+  }
+
+  if (this.content) {
+    this.content = sanitizeRichText(this.content);
+  }
+  if (this.excerpt) {
+    this.excerpt = sanitizeRichText(this.excerpt);
+  }
+  if (this.metaDescription) {
+    this.metaDescription = sanitizeRichText(this.metaDescription);
   }
 
   // ✅ Auto-generate SEO meta title & description

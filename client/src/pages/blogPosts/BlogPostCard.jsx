@@ -9,6 +9,7 @@ import {
   FaThList,
 } from "react-icons/fa";
 import { useCallback, useEffect, useState } from "react";
+import DOMPurify from "dompurify";
 
 import AuthorInfoModal from "../../components/authorInfoModal/AuthorInfoModal";
 import BlogReadingTimeCounter from "../../components/blogReadingTimeCounter/BlogReadingTimeCounter";
@@ -20,6 +21,34 @@ import { getComments } from "../../services/commentApiService";
 import useDateFormatter from "../../hooks/useDateFormatter";
 import { motion } from "framer-motion";
 import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
+
+const sanitizeHtml = (value = "") =>
+  DOMPurify.sanitize(value, {
+    ALLOWED_TAGS: [
+      "b",
+      "em",
+      "i",
+      "strong",
+      "p",
+      "br",
+      "ul",
+      "ol",
+      "li",
+      "blockquote",
+      "a",
+      "code",
+      "pre",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+      "span",
+      "div",
+    ],
+    ALLOWED_ATTR: ["href", "target", "rel", "class"],
+  });
 
 const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
   const {
@@ -132,10 +161,11 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
                   <p
                     className="absolute top-0 indent-7 dark:text-gray-400"
                     dangerouslySetInnerHTML={{
-                      __html:
+                      __html: sanitizeHtml(
                         excerpt?.length > 280
                           ? blog?.excerpt.slice(0, 280) + "..."
                           : blog?.excerpt,
+                      ),
                     }}
                   />
                 </div>

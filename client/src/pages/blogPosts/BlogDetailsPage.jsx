@@ -30,6 +30,7 @@ import {
 } from "../../services/reactionApiService";
 import { motion, useAnimation } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
+import DOMPurify from "dompurify";
 
 import AdminLoader from "../../admin/adminComponent/adminLoader/AdminLoader";
 import AuthorInfoModal from "../../components/authorInfoModal/AuthorInfoModal";
@@ -59,6 +60,34 @@ const style = {
   active:
     "bg-teal-500 text-gray-100 hover:bg-emerald-700 border border-1 border-emerald-400 shadow-md focus:ring-2 focus:ring-offset-2 transition-transform duration-300 border-none",
 };
+
+const sanitizeHtml = (value = "") =>
+  DOMPurify.sanitize(value, {
+    ALLOWED_TAGS: [
+      "b",
+      "em",
+      "i",
+      "strong",
+      "p",
+      "br",
+      "ul",
+      "ol",
+      "li",
+      "blockquote",
+      "a",
+      "code",
+      "pre",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+      "span",
+      "div",
+    ],
+    ALLOWED_ATTR: ["href", "target", "rel", "class"],
+  });
 
 const BlogDetailsPage = () => {
   const { publicUsers } = useMongoUsers();
@@ -454,7 +483,7 @@ const BlogDetailsPage = () => {
               <p
                 className="absolute top-0 left-2 right-2 indent-7 lg:text-gray-600 text-gray-500s italic dark:text-gray-400 text-info-content first-letter:font-roboto first-letter:capitalize dark:first-letter:text-info first-letter:font-extrabold lg:first-letter:text-2xl first-letter:text-extra-bold lg:min-h-72 h-80 first-letter:text-gray-800"
                 dangerouslySetInnerHTML={{
-                  __html: blog?.excerpt ? blog.excerpt : "N/A",
+                  __html: sanitizeHtml(blog?.excerpt ? blog.excerpt : "N/A"),
                 }}
               />
             </div>
@@ -660,7 +689,7 @@ const BlogDetailsPage = () => {
                     <p
                       className="absolute top-0 indent-7 font-bold lg:text-gray-600 text-gray-500 italic lg:text-xl dark:text-gray-400 py-2 first-letter:font-roboto first-letter:capitalize dark:first-letter:text-info first-letter:font-extrabold lg:first-letter:text-2xl first-letter:text-extra-bold first-letter:text-gray-800"
                       dangerouslySetInnerHTML={{
-                        __html: blog.excerpt ? blog.excerpt : "N/A",
+                        __html: sanitizeHtml(blog.excerpt ? blog.excerpt : "N/A"),
                       }}
                     />
                   </div>
@@ -690,7 +719,7 @@ const BlogDetailsPage = () => {
                   style={{ fontSize: "20px" }}
                   className="prose prose-lg max-w-none list-decimal text-gray-700 mb-4 indent-7 dark:text-gray-400"
                   dangerouslySetInnerHTML={{
-                    __html: blog.content ? blog.content : "N/A",
+                    __html: sanitizeHtml(blog.content ? blog.content : "N/A"),
                   }}
                 />
               ) : (
