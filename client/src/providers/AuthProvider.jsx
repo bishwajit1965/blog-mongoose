@@ -52,7 +52,7 @@ const AuthProvider = ({ children }) => {
       const token = await firebaseUser.getIdToken();
       const userData = await sendUserToBackend(firebaseUser, token);
       setUser({ ...firebaseUser, ...userData });
-      // setUser(firebaseUser);
+      setUser(firebaseUser);
     } catch (error) {
       console.error("Error during authentication", error);
       throw error;

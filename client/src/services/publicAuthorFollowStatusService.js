@@ -6,6 +6,7 @@ import waitForAuth from "../utils/waitForAuth";
 const getAuthorFollowStatus = (authorId) =>
   handleApiCall(async () => {
     const currentUser = await waitForAuth();
+
     const token = currentUser ? await currentUser.getIdToken() : null;
 
     return api.get(
