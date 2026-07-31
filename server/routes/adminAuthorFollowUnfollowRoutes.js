@@ -11,4 +11,3 @@ router.get("/user/:userId/followers", getAllFollowers);
 router.get("/user/:userId/following", getAllFollowing);
 
 module.exports = router;
-// follow / unfollow / author;

@@ -291,19 +291,15 @@ const Home = () => {
                       icon={
                         <LucideRefreshCw
                           size={15}
-                          className="text-slate-500 dark:text-slate-300"
+                          className="text-slate-700s dark:text-slate-300"
                         />
                       }
-                      variant={
-                        isFilterActive
-                          ? "danger"
-                          : "white dark:bg-slate-800 dark:text-slate-400 border-4 border-slate-800 dark:border-red-700 text-sm py-2"
-                      }
+                      variant={isFilterActive ? "danger" : "white"}
                       label="Refresh"
                       className={
                         isFilterActive
-                          ? "border-4 shadow-xl border-amber-500"
-                          : "dark:bg-gray-800 dark:text-slate-400 dark:border-slate-600 text-sm py-2"
+                          ? "border-2 shadow-xl border-amber-500"
+                          : "dark:bg-gray-800 dark:text-slate-400 dark:border-slate-600 text-sm btn btn-sm"
                       }
                     />
                   </div>

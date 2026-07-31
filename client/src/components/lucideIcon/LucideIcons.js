@@ -76,6 +76,11 @@ import {
   Briefcase,
   KeyRound,
   KeySquare,
+  UserPlus,
+  UserPlus2Icon,
+  UserMinus,
+  UserMinus2,
+  UserMinus2Icon,
 } from "lucide-react";
 // Central registry
 export const LucideIcon = {
@@ -155,4 +160,9 @@ export const LucideIcon = {
   X,
   Rocket,
   UserCircle,
+  UserPlus,
+  UserPlus2Icon,
+  UserMinus,
+  UserMinus2,
+  UserMinus2Icon,
 };

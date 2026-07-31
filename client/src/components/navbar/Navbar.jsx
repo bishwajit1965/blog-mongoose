@@ -28,12 +28,10 @@ const Navbar = () => {
   useEffect(() => {
     const fetchAuthor = async () => {
       const response = await getPublicAuthorData();
-
       if (response) {
         setAuthor(response?.data);
       }
     };
-
     fetchAuthor();
   }, []);
 
@@ -56,7 +54,11 @@ const Navbar = () => {
     { id: 12, route: "/blog-coming-soon", name: "Blog Coming Soon" },
     { id: 13, route: "/bookmarked-page", name: "My Bookmarks" },
     { id: 14, route: "/rss", name: "Rss" },
-    { id: 15, route: `/author/${author ? author?._id : "#"}`, name: "Profile" },
+    {
+      id: 15,
+      route: author?._id ? `/author/${author?._id}` : null,
+      name: "Profile",
+    },
     { id: 16, route: "/notice", name: "Notice" },
     { id: 17, isThemeToggle: true }, // Differentiator key
   ];

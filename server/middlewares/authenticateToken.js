@@ -69,7 +69,7 @@ const authorizePermissions =
         message: "Access denied. Insufficient permissions.",
       });
     }
-
+    console.log("REQ USER", req.user);
     next();
   };
 

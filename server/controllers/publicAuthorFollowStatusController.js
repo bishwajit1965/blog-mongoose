@@ -1,41 +1,39 @@
+const User = require("../models/User");
 const {
   getAuthorFollowStatusService,
 } = require("../services/publicAuthorFollowStatusService");
 
-const User = require("../models/User");
-
 const getAuthorFollowStatus = async (req, res) => {
-  console.log("🎯 📌Get author follow status controller method is hit");
-  const { authorId } = req.params;
+  try {
+    const { authorId } = req.params;
 
-  const viewer = await User.findOne({
-    email: req.user.email,
-  }).select("_id");
+    if (!req.user) {
+      return res.status(200).json({
+        success: true,
+        message: "No logged-in user.",
+        data: {
+          isFollowing: false,
+        },
+      });
+    }
 
-  //   if (!viewer) {
-  //     return {
-  //       isFollowing: false,
-  //     };
-  //   }
+    const viewerId = req.user._id;
 
-  const viewerId = viewer._id;
+    const followStatus = await getAuthorFollowStatusService(authorId, viewerId);
 
-  //   const viewerId = req.user?.id;
+    return res.status(200).json({
+      success: true,
+      message: "Follow status fetched successfully.",
+      data: followStatus,
+    });
+  } catch (error) {
+    console.error("Follow status error:", error);
 
-  const followStatus = await getAuthorFollowStatusService(authorId, viewerId);
-
-  if (!followStatus) {
-    return res.status(404).json({
+    return res.status(500).json({
       success: false,
-      message: "Author not found.",
+      message: "Failed to fetch follow status.",
     });
   }
-
-  return res.status(200).json({
-    success: true,
-    message: "Follow status fetched successfully.",
-    data: followStatus,
-  });
 };
 
 module.exports = {

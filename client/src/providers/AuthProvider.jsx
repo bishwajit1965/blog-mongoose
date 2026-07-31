@@ -61,9 +61,9 @@ const AuthProvider = ({ children }) => {
 
   // Create a new user with email and password
   const registerUserWithEmailAndPassword = async (
+    name,
     email,
     password,
-    name,
     photoUrl,
   ) => {
     setLoading(true);
@@ -80,8 +80,8 @@ const AuthProvider = ({ children }) => {
       // Prepare data to send to backend
       const userData = {
         firebaseUid,
-        email,
         name,
+        email,
         password,
         photoUrl,
         roles: ["user"], //Assign default role

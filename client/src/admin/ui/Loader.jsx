@@ -3,7 +3,7 @@ import { Loader2 } from "lucide-react";
 const Loader = ({ size = 48, message = "Loading...", className = "" }) => {
   return (
     <div
-      className={`flex flex-col items-center justify-center min-h-[50vh] gap-4 ${className}`}
+      className={`flex flex-col items-center justify-center min-h-screen gap-4 ${className}`}
       role="status"
       aria-live="polite"
     >
