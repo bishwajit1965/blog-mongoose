@@ -23,6 +23,7 @@ client/.env.local
 server/.env
 
 # Ignore folders in server
+**/.env
 server/config/
 server/uploads/
 server/mongoose/
