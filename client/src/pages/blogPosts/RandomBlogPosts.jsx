@@ -7,7 +7,6 @@ const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 const RandomBlogPosts = () => {
   const { data, isLoading, error } = useGetRandomBlogPosts();
-  console.log("Random posts", data);
 
   if (isLoading) return <p className="flex justify-center">Loading...</p>;
   if (error) return <p className="flex justify-center">{error.message}</p>;

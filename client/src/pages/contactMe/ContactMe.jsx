@@ -75,9 +75,9 @@ const ContactMe = () => {
   return (
     <div>
       <Seo
-        title="Contact"
-        description="Contact Nova Journal."
-        url="contact-me"
+        title="Contact Bishwajit Paul | Nova Journal"
+        description="Get in touch with Bishwajit Paul for software development discussions, technical collaboration, project inquiries, and professional communication through Nova Journal."
+        url="/contact-me"
         schemaType="ContactPage"
       />
 
@@ -131,7 +131,7 @@ const ContactMe = () => {
               }}
             />
 
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-4">
               <CTAButton
                 type="submit"
                 variant="primary"
@@ -141,7 +141,7 @@ const ContactMe = () => {
                   loading ? (
                     <LucideIcon.Loader className="animate-spin" />
                   ) : (
-                    <LucideIcon.MailPlus />
+                    <LucideIcon.MailPlus size={20} />
                   )
                 }
                 label={loading ? "Sending Message..." : "Send Message"}

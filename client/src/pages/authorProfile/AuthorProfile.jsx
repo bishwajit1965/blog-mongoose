@@ -26,11 +26,6 @@ const AuthorProfile = () => {
   const [followersCount, setFollowersCount] = useState({});
   const [authorFollowStatus, setAuthorFollowStatus] = useState({});
 
-  console.log("Author Id", authorId);
-  console.log("Followers response", followers);
-  console.log("On line status", onlineStatus);
-  console.log("Author follow status", authorFollowStatus);
-
   const refreshFollowers = async () => {
     const response = await getAuthorFollowers(authorId);
 
@@ -93,7 +88,6 @@ const AuthorProfile = () => {
       if (authorFollowStatusResponse) {
         setAuthorFollowStatus(authorFollowStatusResponse?.data || {});
       }
-      console.log("FOLLOW STATUS RESPONSE:", authorFollowStatusResponse?.data);
     } catch (error) {
       console.error("Failed to load author profile:", error);
     } finally {

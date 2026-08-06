@@ -51,8 +51,11 @@ const AuthProvider = ({ children }) => {
     try {
       const token = await firebaseUser.getIdToken();
       const userData = await sendUserToBackend(firebaseUser, token);
-      setUser({ ...firebaseUser, ...userData });
-      setUser(firebaseUser);
+      const mergedUser = {
+        ...firebaseUser,
+        ...(userData?.user || userData || {}),
+      };
+      setUser(mergedUser);
     } catch (error) {
       console.error("Error during authentication", error);
       throw error;
@@ -68,34 +71,30 @@ const AuthProvider = ({ children }) => {
   ) => {
     setLoading(true);
     try {
+      const cleanName = typeof name === "string" ? name.trim() : "";
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password,
       );
 
-      await handleUserAuthentication(userCredential.user);
+      const firebaseUser = userCredential.user;
+      const displayName = cleanName || firebaseUser.displayName || "User";
 
-      const firebaseUid = userCredential.user.uid;
-      // Prepare data to send to backend
+      await handleUserAuthentication(firebaseUser);
+
+      const firebaseUid = firebaseUser.uid;
       const userData = {
         firebaseUid,
-        name,
+        name: displayName,
         email,
         password,
         photoUrl,
-        roles: ["user"], //Assign default role
+        roles: ["user"],
       };
 
-      // Save user data to MongoDB
       const response = await api.post("/users/register", userData);
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(
-          result.message || "Failed to save user data to MongoDB.",
-        );
-      }
-      console.log("User saved to MongoDB.", result.user);
+      console.log("User saved to MongoDB.", response.data?.user);
       return userCredential;
     } catch (error) {
       console.error("Error during email/password Sign-Up:", error);

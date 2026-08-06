@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import SocialMediaLinks from "../socialMediaLinks/SocialMediaLinks";
 import { LucideRss } from "lucide-react";
+import { LucideIcon } from "../lucideIcon/LucideIcons";
 
-const Footer = () => {
+const Footer = ({ systemSettings }) => {
+  const settings = systemSettings?.data?.branding || {};
   const currentYear = new Date().getFullYear();
   return (
     <footer className="bg-gray-900 text-gray-300 border-t border-gray-700">
@@ -10,13 +12,27 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand Section */}
           <div className="space-y-3">
-            <h3 className="text-xl font-bold text-white">Bishwajit Paul</h3>
-
+            <h3 className="text-xl font-bold text-white flex items-center gap-1">
+              <LucideIcon.UserCircle size={16} /> Bishwajit Paul
+            </h3>
+            <p className="flex items-center gap-1 text-sm">
+              <LucideIcon.Mail size={16} />
+              {systemSettings?.data?.contact?.email}
+            </p>
+            <address className="flex items-center gap-1 text-sm">
+              <LucideIcon.FaAddressBook size={16} />{" "}
+              {systemSettings?.data?.contact?.address}
+            </address>
             <p className="text-sm leading-relaxed text-gray-400">
               A developer diary sharing software engineering thoughts,
               development experiences, architectural decisions, and lessons
               learned while building real-world applications.
             </p>
+            <img
+              src={settings?.logo?.secureUrl}
+              alt={settings?.site?.name}
+              className="w-28 h-28 object-cover"
+            />
           </div>
 
           {/* Navigation Section */}
@@ -104,7 +120,7 @@ const Footer = () => {
 
         {/* Bottom Copyright */}
         <div className="border-t border-gray-700 mt-8 pt-5 text-center text-sm text-gray-400">
-          © {currentYear} Bishwajit Paul. All rights reserved.
+          &copy; {currentYear} {systemSettings?.data?.branding?.footerText}
         </div>
       </div>
     </footer>

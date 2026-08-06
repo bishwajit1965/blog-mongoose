@@ -82,8 +82,10 @@ import {
   UserMinus2,
   UserMinus2Icon,
 } from "lucide-react";
+import { FaAddressBook } from "react-icons/fa";
 // Central registry
 export const LucideIcon = {
+  FaAddressBook,
   ArrowBigRight,
   ArrowRight,
   ArrowBigLeft,

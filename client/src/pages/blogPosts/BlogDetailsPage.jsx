@@ -52,7 +52,8 @@ import useWordCount from "../../admin/adminHooks/useWordCount";
 import Seo from "../../components/seo/Seo";
 import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
 import Breadcrumbs from "../../components/breadCrumbs/BreadCrumbs";
-import useMongoUsers from "../../hooks/useMongoUsers";
+import ScrollTopButton from "../../components/scrollTopButton/ScrollTopButton";
+import useSystemSettings from "../../hooks/useSystemSettings";
 
 // Button active state style
 const style = {
@@ -61,8 +62,7 @@ const style = {
 };
 
 const BlogDetailsPage = () => {
-  const { publicUsers } = useMongoUsers();
-
+  const { systemSettings } = useSystemSettings();
   const { user } = useAuth();
   const blog = useLoaderData();
   const slug = blog?.slug || blog?.blog?.slug;
@@ -84,9 +84,9 @@ const BlogDetailsPage = () => {
   const [reactions, setReactions] = useState({ likes: 0, dislikes: 0 });
   const { data: bookmarkedPosts } = useGetBookmarkedPosts();
 
-  console.log("USER IN BLOG DETAILS PAGE", user);
-  console.log(" BLOG IN BLOG DETAILS PAGE", blog);
-  console.log(" PUBLIC MONGO USERS", publicUsers);
+  const system = systemSettings?.data || {};
+  console.log("System settings", systemSettings?.data);
+  console.log("System", system);
 
   const {
     _id,
@@ -104,12 +104,6 @@ const BlogDetailsPage = () => {
     updatedAt,
     flaggedReason,
   } = blog || {};
-
-  // Current Mongo User in BlogDetails Page
-  const currentMongoUser = publicUsers?.find(
-    (mongoUser) => mongoUser.firebaseUid === user?.uid,
-  );
-  console.log("Current Mongo User", currentMongoUser);
 
   // Comment form related code
   const [errors, setErrors] = useState({});
@@ -697,15 +691,21 @@ const BlogDetailsPage = () => {
                 <p>No blog post content is available</p>
               )}
             </div>
-            <div className="flex items-center lg:justify-start justify-center lg:space-x-6 space-x-2 lg:py-8 py-4">
-              <p className="text-gray-500">
+            <div className="flex items-center lg:justify-center justify-center lg:space-x-40 space-x-2 lg:py-8 py-4">
+              <p className="text-gray-500 border rounded-full px-4 py-0.25 dark:border-slate-600 shadow">
                 <span className="lg:text-xl text-sm font-bold text-gray-500">
-                  Words count:
+                  🧮 Words count:
                 </span>{" "}
                 <span className="italic lg:text-xl text-sm font-bold text-gray-500">
                   {wordCount}
                 </span>{" "}
               </p>
+              <div className="h-8 border border-gray-300 dark:border-gray-700 rounded-full shadow-sm flex items-center lg:space-x-2 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 text-gray-600 dark:text-gray-400">
+                <span>📖 Read in:</span>
+                <span className="italic">
+                  {<BlogReadingTimeCounter content={content} />}
+                </span>
+              </div>
             </div>
             {/* Blog post content section ends */}
           </div>
@@ -1026,6 +1026,11 @@ const BlogDetailsPage = () => {
           <Link to="/" className="m-0 flex justify-center items-center w-full">
             <Button label="Go Home Page" icon={<FaHome />} variant="outline" />
           </Link>
+        </div>
+
+        {/* Scroll to top button */}
+        <div className="height-[px]">
+          <ScrollTopButton />
         </div>
       </div>
     </>

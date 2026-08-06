@@ -23,6 +23,7 @@ const API_PATHS = {
   REACTIONS: "/reactions",
   REQUESTS: "/requests",
   PUBLIC_USERS: "/public/users",
+  SETTINGS: "/settings",
 };
 
 export default API_PATHS;

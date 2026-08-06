@@ -269,6 +269,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
                 label="Read More"
                 icon={<FaBookReader />}
                 variant="outline"
+                size="xs"
                 // className="btn btn-sm font-bold text-[16px] text-sm rounded-lgs"
               />
             </Link>

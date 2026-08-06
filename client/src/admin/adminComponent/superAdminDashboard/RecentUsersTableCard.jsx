@@ -3,7 +3,7 @@ import AdminPagination from "../adminPagination/AdminPagination";
 import CTAButton from "../../../components/buttons/CTAButton";
 import { FaEye } from "react-icons/fa";
 import UserModal from "./UserModal";
-import useSocketConnection from "../../../../../server/helpers/useSocketConnection";
+import useSocketConnection from "../../../hooks/useSocketConnection";
 import { useState } from "react";
 
 const RecentUsersTableCard = ({ recentUsers }) => {

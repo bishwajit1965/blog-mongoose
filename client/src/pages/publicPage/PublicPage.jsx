@@ -41,7 +41,7 @@ const PublicPage = () => {
   }, [fetchPublicPages]);
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-5xl mx-auto">
       {loading ? (
         <Loader />
       ) : publicPage ? (

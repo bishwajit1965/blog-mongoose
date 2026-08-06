@@ -8,7 +8,11 @@ const Loader = ({ size = 48, message = "Loading...", className = "" }) => {
       aria-live="polite"
     >
       <Loader2 className="animate-spin text-primary" size={size} />
-      {message && <p className="text-sm text-base-content/70">{message}</p>}
+      {message && (
+        <p className="text-sm text-base-content/70 dark:text-gray-400">
+          {message}
+        </p>
+      )}
     </div>
   );
 };

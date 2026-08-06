@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import AdminLoader from "../../admin/adminComponent/adminLoader/AdminLoader";
 import ComingSoonPost from "../../components/comingSoonPost/ComingSoonPost";
 import PageTitle from "../../components/pageTitle/PageTitle";
@@ -6,6 +7,10 @@ import useGetComingSoonPost from "../../hooks/useGetComingSoonPost";
 import { motion } from "framer-motion";
 const ComingSoonPage = () => {
   const { data, isPending, isError } = useGetComingSoonPost();
+
+  const location = useLocation();
+  const pathName = location.pathname.split("/")[1];
+  console.log("pathName", pathName);
 
   if (isPending) return <AdminLoader />;
 
@@ -28,13 +33,14 @@ const ComingSoonPage = () => {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
+        className="lg:max-w-6xl mx-auto p-2"
       >
         <PageTitle
           title="Coming"
           decoratedText="Soon Post(s)"
           dataLength={data?.length ? data?.length : 0}
         />
-        <ComingSoonPost />
+        <ComingSoonPost pathName={pathName} />
       </motion.div>
     </>
   );

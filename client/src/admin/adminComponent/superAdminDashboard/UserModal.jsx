@@ -1,4 +1,4 @@
-import useSocketConnection from "../../../../../server/helpers/useSocketConnection";
+import useSocketConnection from "../../../hooks/useSocketConnection";
 
 const UserModal = ({ user, onClose }) => {
   const { isUserOnline } = useSocketConnection(user?._id);

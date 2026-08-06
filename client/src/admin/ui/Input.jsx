@@ -38,7 +38,7 @@ const Input = ({
           onChange={onChange}
           placeholder={placeholder}
           className={cn(
-            "input input-bordered w-full",
+            "input input-bordered input-sm w-full rounded-sm dark:bg-gray-700",
             Icon && "pl-10",
             error && "border-red-500 focus:border-red-500 focus:ring-red-500",
             className,

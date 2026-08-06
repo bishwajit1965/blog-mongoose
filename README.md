@@ -1,199 +1,52 @@
-# Bishwajit.Dev – Full Stack Blogging Platform
+# Nova Journal
 
-Bishwajit.Dev is a modern full-stack blogging platform built with **React, Node.js, Express, and MongoDB**.
-It supports dynamic blog publishing, category and tag filtering, RSS feeds, SEO-friendly routing, and a scalable backend architecture.
+A production-ready full-stack blogging platform built with the **MERN Stack** that focuses on technical writing, content publishing, SEO, author management, and scalable architecture.
 
-This project was developed as a **production-style portfolio project** to demonstrate full-stack development skills including authentication systems, REST API design, database modeling, and modern frontend architecture.
-
----
+Nova Journal was developed as a portfolio-quality project to demonstrate modern full-stack engineering practices, backend architecture, authentication systems, REST API development, cloud media management, and SEO optimization.
 
 ---
 
-## 👨‍💻 Developer
+## Live Features
 
-<p align="center">
-  <img src="./assets/bishwajit.jpg" width="180" height="180" style="border-radius:50%"/>
-</p>
-
-<p align="center">
-<b>Bishwajit Paul</b><br>
-Full Stack JavaScript Developer
-</p>
-
-<p align="center">
-Passionate about building scalable full-stack applications using the MERN ecosystem.
-Focused on clean architecture, performance, and real-world SaaS product development.
-</p>
-
----
-
-### 🚀 Tech Stack
-
-**Frontend**
-
-- React
-- Vite
-- Tailwind CSS
-- React Router
-- Axios
-
-**Backend**
-
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
+- Technical Blogging Platform
+- Rich Article Publishing
+- Draft, Scheduled & Published Workflow
+- Coming Soon Posts
+- Featured Articles
+- Categories & Tags
+- RSS Feed
+- XML Sitemap
+- Dynamic SEO
+- Structured Data (JSON-LD)
+- Open Graph Metadata
+- Twitter Cards
+- Reading Time Estimation
+- Comments
+- Bookmarks
+- Author Profiles
+- Follow / Unfollow Authors
+- Public Author Pages
+- Related Articles
+- Search
+- Responsive Design
+- Dark / Light Theme
+- System Settings
+- Cloudinary Image Management
+- Firebase Authentication
 - JWT Authentication
-
-**Tools & DevOps**
-
-- Git & GitHub
-- Postman
-- Multer (File Upload)
-- Socket.IO
-- Cron Jobs
-- REST API Design
+- Role Based Authorization
+- Admin Dashboard
+- Production Ready Folder Structure
 
 ---
 
-### 📫 Connect With Me
+# Developer
 
-<p align="center">
+## Bishwajit Paul
 
-<a href="https://github.com/bishwajit1965">
-GitHub
-</a>
-&nbsp;&nbsp;|&nbsp;&nbsp;
-<a href="https://www.linkedin.com/feed/">
-LinkedIn
-</a>
-&nbsp;&nbsp;|&nbsp;&nbsp;
-<a href="mailto:paul.bishwajit09@gmail.com">
-Email
-</a>
+Full Stack JavaScript Developer
 
-</p>
-
----
-
-⭐ If you like this project, consider giving it a **star** on GitHub.
-
----
-
-## Developer Skills Demonstrated
-
-This project showcases practical experience in:
-
-### Frontend Development
-
-- React component architecture
-- React Hooks based state management
-- Dynamic routing with React Router
-- Responsive UI using TailwindCSS
-- API integration using Axios
-- Component reusability and modular design
-
----
-
-### Backend Development
-
-- RESTful API design with Express.js
-- MVC style controller architecture
-- JWT authentication and authorization
-- Role based access control
-- Middleware based request validation
-- File upload handling using Multer
-
----
-
-### Database Design
-
-- MongoDB schema design with Mongoose
-- Relational document modeling
-- Indexing and optimized queries
-- Data validation and schema enforcement
-
----
-
-### Advanced Features Implemented
-
-- Scheduled post publishing system
-- Blog filtering by categories and tags
-- Full site text based search
-- RSS feed generation
-- SEO friendly blog routing
-- Blog view tracking
-- Image upload handling
-- Modular and scalable backend structure
-
----
-
-### Development Principles Followed
-
-- Clean and modular code structure
-- Separation of concerns
-- Reusable components
-- Maintainable folder architecture
-- Production-style backend organization
-
----
-
-## Purpose of the Project
-
-This project was built to:
-
-- Demonstrate full-stack development capability
-- Showcase backend API architecture
-- Practice real-world blog platform features
-- Build a production-ready portfolio project
-
----
-
-## Contact
-
-GitHub: https://github.com/bishwajit1965/blog-mongoose
-Email: paul.bishwajit09@gmail.com
-
-# Features
-
-## Core Blog Features
-
-- Create, edit, update, and delete blog posts
-- Draft, scheduled, and published post workflow
-- Category and tag system
-- Blog filtering by category and tag
-- Featured images for posts
-- Responsive blog post cards
-- Scheduled posts with countdown timer
-- "Coming Soon" post preview
-
----
-
-## User Interaction
-
-- Comment system
-- Post view tracking
-- Category navigation
-- Tag based content discovery
-- Responsive layout for mobile and desktop
-
----
-
-## SEO & Content Distribution
-
-- SEO friendly slug URLs
-- RSS feed support
-- Sitemap generation
-- Structured blog content rendering
-
----
-
-## Admin Dashboard
-
-- Secure admin authentication
-- Blog post management (CRUD)
-- Category and tag management
-- Post scheduling system
+Focused on building scalable full-stack web applications using the MERN ecosystem with production-level architecture and clean software engineering practices.
 
 ---
 
@@ -203,11 +56,14 @@ Email: paul.bishwajit09@gmail.com
 
 - React
 - React Router
-- TailwindCSS
+- Vite
+- Tailwind CSS
+- TanStack Query
 - Axios
+- React Helmet Async
+- Framer Motion
 - React Icons
-
----
+- Lucide React
 
 ## Backend
 
@@ -216,307 +72,258 @@ Email: paul.bishwajit09@gmail.com
 - MongoDB
 - Mongoose
 - JWT Authentication
-- Multer (file upload)
-- Node Cron (scheduled tasks)
-- TanStack Query
+- Firebase Admin SDK
+- Cloudinary
+- Multer
+- Node Cron
+
+---
+
+# Major Features
+
+## Authentication
+
+- Email & Password Authentication
+- Google Authentication
+- Firebase Authentication
+- JWT Access Token
+- Refresh Token
+- Role Based Access
+- Protected Routes
+
+---
+
+## Blog Management
+
+- Create Articles
+- Update Articles
+- Delete Articles
+- Draft Posts
+- Scheduled Publishing
+- Automatic Publishing
+- Featured Posts
+- Reading Time
+- Rich Content
+- Excerpts
+- Categories
+- Tags
+
+---
+
+## Author System
+
+- Public Author Profile
+- Follow Authors
+- Followers
+- Following
+- Author Information Modal
+- Published Articles
+
+---
+
+## User Features
+
+- Bookmark Posts
+- Reading Time Counter
+- Comments
+- Search
+- Related Articles
+
+---
+
+## SEO
+
+Nova Journal includes a complete SEO implementation.
+
+- Dynamic Meta Tags
+- Canonical URLs
+- Open Graph Tags
+- Twitter Cards
+- Structured Data
+- RSS Feed
+- XML Sitemap
+- robots.txt
+- Dynamic Page Titles
+- Dynamic Meta Description
+- Dynamic Keywords
+
+---
+
+## Administration
+
+- Dashboard
+- Blog Management
+- Categories
+- Tags
+- Authors
+- Users
+- Comments
+- Notifications
+- System Settings
+
+---
+
+## System Settings
+
+Dynamic system configuration controls:
+
+- Site Information
+- Branding
+- Logos
+- SEO Defaults
+- Social Links
+- Contact Information
+- Maintenance Mode
+- Registration Control
 
 ---
 
 # Project Architecture
 
-The project follows a **layered architecture** separating frontend, API logic, and database models.
-
 ```
 Client (React)
-      ↓
+        │
+        ▼
 REST API (Express)
-      ↓
+        │
+        ▼
 Controllers
-      ↓
+        │
+        ▼
+Services
+        │
+        ▼
 Mongoose Models
-      ↓
-MongoDB Database
+        │
+        ▼
+MongoDB
 ```
 
 ---
 
 # Folder Structure
 
-## Client
-
 ```
-client/
-│
+client
+├── app
 ├── components
-├── pages
-├── hooks
-├── services
 ├── contexts
+├── hooks
+├── layouts
+├── pages
+├── providers
+├── routes
+├── services
+└── utils
+
+server
+├── config
+├── constants
+├── controllers
+├── middleware
+├── models
+├── routes
+├── services
 └── utils
 ```
 
 ---
 
-## Server
+# Cloud Features
 
-```
-server/
-│
-├── controllers
-├── models
-├── routes
-├── middleware
-├── utils
-└── config
-```
+- Cloudinary Image Storage
+- Automatic Image Optimization
+- Secure Upload API
+- Media Management
 
 ---
 
-# Authentication System
+# Security
 
-The platform uses **JWT based authentication with refresh tokens**.
-
-### Authentication Flow
-
-1. User logs in with email and password
-2. Server generates
-
-- Access Token
-- Refresh Token
-
-3. Access token is used for protected API requests
-4. Refresh token generates a new access token when expired
-
-### Security Features
-
-- Password hashing with bcrypt
-- Token verification middleware
-- Role based access control
-
----
-
-# Database Models
-
-The application uses **MongoDB with Mongoose schemas**.
-
----
-
-## User Model
-
-```
-name
-email
-password
-role
-avatar
-createdAt
-```
-
----
-
-## BlogPost Model
-
-```
-title
-slug
-content
-author
-category
-tags
-featuredImage
-status
-publishAt
-views
-createdAt
-```
-
-Post status options:
-
-```
-draft
-scheduled
-published
-```
-
----
-
-## Comment Model
-
-```
-post
-user
-content
-status
-createdAt
-```
-
----
-
-## Category Model
-
-```
-name
-slug
-description
-```
-
----
-
-## Tag Model
-
-```
-name
-slug
-```
-
----
-
-# Filtering System
-
-Posts can be filtered using **category and tag combinations**.
-
-Example query:
-
-```
-/blogs?category=nodejs&tag=authentication
-```
-
-This allows dynamic discovery of blog posts.
-
----
-
-# RSS Feed
-
-The blog generates an RSS feed for content distribution.
-
-Feed endpoint:
-
-```
-/api/blogs/rss
-```
-
-Users can subscribe to the feed using RSS readers or browser extensions to automatically receive updates when new posts are published.
-
----
-
-# Scheduled Posts
-
-The platform supports **Coming Soon publishing**.
-
-The platform supports **Future Publishing**.
-
-Posts scheduled for the future:
-
-- Appear in the "Coming Soon" section
-- Display a countdown timer
-- Automatically become visible once the publish time arrives
-
----
-
-# Image Upload System
-
-Images are uploaded using **Multer middleware**.
-
-Used for:
-
-- Blog featured images
-- Author profile images
-- Media uploads for future features
-
----
-
-# Performance Considerations
-
-The application includes several optimizations:
-
-- Lean MongoDB queries
-- Modular controller design
-- Pagination for blog lists
-- Optimized API responses
+- Password Hashing
+- JWT Authentication
+- Protected APIs
+- Role Based Authorization
+- Refresh Tokens
+- Secure Middleware
 
 ---
 
 # Installation
 
-## Clone the Repository
+Clone repository
 
+```bash
+git clone https://github.com/bishwajit1965/nova-journal.git
 ```
-git clone https://github.com/bishwajit1965/blog-mongoose.git
-```
 
----
+Install dependencies
 
-## Install Dependencies
-
-Client
-
-```
+```bash
 cd client
 npm install
-```
 
-Server
-
-```
-cd server
+cd ../server
 npm install
+```
+
+Run development server
+
+```bash
+npm run dev
 ```
 
 ---
 
 # Environment Variables
 
-Create a `.env` file in the **server** directory.
+```env
+PORT=
+MONGO_URI=
+JWT_SECRET=
+JWT_REFRESH_SECRET=
+CLIENT_URL=
 
-Example configuration:
+CLOUDINARY_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_SECRET=
 
-```
-PORT=3000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
-CLIENT_URL=http://localhost:5173
-```
-
----
-
-# Run the Project
-
-Start backend server
-
-```
-npm run dev  OR nodemon index.js
-```
-
-Start frontend
-
-```
-npm run dev
+FIREBASE_PROJECT_ID=
+FIREBASE_PRIVATE_KEY=
+FIREBASE_CLIENT_EMAIL=
 ```
 
 ---
 
-# Future Improvements
+# Future Roadmap
 
-Planned enhancements for the project include:
-
-- Full text search
-- Redis caching
-- Markdown editor support
-- Post reactions system
-- Email newsletter integration
-- Advanced analytics dashboard
-
----
-
-# Author
-
-**Bishwajit Paul**
-
-Full Stack JavaScript Developer
-React | Node.js | Express | MongoDB
+- Newsletter
+- AI Assisted Writing
+- Markdown Editor
+- Analytics Dashboard
+- Multi-language Support
+- Newsletter Subscription
+- Progressive Web App
+- Redis Caching
 
 ---
 
-# License
+# Connect
 
-This project is licensed under the MIT License.
+GitHub
+
+https://github.com/bishwajit1965
+
+LinkedIn
+
+https://www.linkedin.com/in/bishwajit-paul
+
+Email
+
+paul.bishwajit09@gmail.com
+
+---
+
+## License
+
+MIT License

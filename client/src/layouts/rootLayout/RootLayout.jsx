@@ -1,11 +1,13 @@
 import Footer from "../../components/footer/Footer";
 import Navbar from "../../components/navbar/Navbar";
 import { Outlet } from "react-router-dom";
+import useSystemSettings from "../../hooks/useSystemSettings";
 
 const RootLayout = () => {
+  const { systemSettings } = useSystemSettings();
   return (
     <div className="lg:max-w-full mx-auto">
-      <Navbar />
+      <Navbar systemSettings={systemSettings} />
 
       <div className="lg:max-w-full mx-auto">
         <div className="pt-[4.75rem]">
@@ -15,7 +17,7 @@ const RootLayout = () => {
         </div>
       </div>
 
-      <Footer />
+      <Footer systemSettings={systemSettings} />
     </div>
   );
 };

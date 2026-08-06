@@ -13,6 +13,7 @@ const createUser = async (req, res) => {
     console.log("📩 Request body data:", req.body);
 
     const { firebaseUid, name, email, password, avatar } = req.body;
+    const safeName = typeof name === "string" ? name.trim() : "";
 
     if (!firebaseUid || !email) {
       console.error("❌ Missing required fields!");
@@ -54,9 +55,9 @@ const createUser = async (req, res) => {
     // Creating new user instance
     const newUser = new User({
       firebaseUid,
-      name: name || "Anonymous",
+      name: safeName || email.split("@")[0] || "Anonymous",
       email,
-      password: hashedPassword, // Will be null if not provided
+      password: hashedPassword,
       avatar: avatar || "https://i.ibb.co/MgsDqCZ/FB-IMG-1678691214526.jpg",
       roles: [defaultRole._id],
       permissions: [defaultPermission._id],

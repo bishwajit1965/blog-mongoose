@@ -22,8 +22,6 @@ const AuthorProfileHeader = ({
 
   const { name, avatar, followersCount, followingCount } = profile || {};
 
-  console.log("Profile Header", profile);
-  console.log("HEADER FOLLOW STATUS:", authorFollowStatus);
   // Handle refetch after action
   const handleRefetch = async () => {
     await Promise.all([fetchPublicUsers(), refreshFollowers()]);

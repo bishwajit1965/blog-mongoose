@@ -41,24 +41,27 @@ const Register = () => {
       return;
     }
 
-    registerUserWithEmailAndPassword(data.email, data.password)
+    const cleanName = data.name?.trim();
+
+    registerUserWithEmailAndPassword(
+      cleanName,
+      data.email,
+      data.password,
+      data.photoURL,
+    )
       .then(() => {
-        updateUserProfile(data.name, data.photoURL).then(async () => {
+        updateUserProfile(cleanName, data.photoURL).then(async () => {
           const saveUser = {
-            firebaseUid: user.uid,
-            name: data.name,
+            firebaseUid: user?.uid,
+            name: cleanName,
             email: data.email,
             avatar: data.photoURL,
             password: data.password,
             roles: ["user"],
           };
-          const response = await api.post(
-            "/users/register",
-            saveUser, // ✅ Send user data directly
-            {
-              headers: token ? { Authorization: `Bearer ${token}` } : {}, // ✅ Only include if token exists
-            },
-          );
+          const response = await api.post("/users/register", saveUser, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+          });
 
           return response.data;
         });

@@ -15,6 +15,7 @@ const ComingSoonPost = ({
   title = "Send Coming Soon Request !",
   message = "We are working on something amazing ! Request your topic unhesitatingly & stay tuned for the updates!",
   buttonLabel = "Notify Me!",
+  pathName,
 }) => {
   const { user } = useAuth();
   const [name, setName] = useState("");
@@ -137,7 +138,11 @@ const ComingSoonPost = ({
       ) : (
         <div className="grid lg:grid-cols-12 grid-cols-1 gap-2 justify-between">
           {data.map((post) => (
-            <ComingSoonPostCard key={post._id} post={post} />
+            <ComingSoonPostCard
+              key={post._id}
+              post={post}
+              pathName={pathName}
+            />
           ))}
         </div>
       )}

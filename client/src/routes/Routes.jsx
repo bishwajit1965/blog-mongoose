@@ -45,6 +45,7 @@ import PageManagement from "../admin/pages/PageManagement";
 import PublicPage from "../pages/publicPage/PublicPage";
 import ManageAuthorFollowUnfollowProfile from "../admin/adminDataManagement/manageAuthorFollowUnfollowProfile/ManageAuthorFollowUnfollowProfile";
 import AuthorProfile from "../pages/authorProfile/AuthorProfile";
+import SystemSettingsManagement from "../admin/adminDataManagement/manageSystemSettings/SystemSettingsManagement";
 
 // Common Admin Routes (Super Admin can access all)
 const superAdminRoutes = [
@@ -70,6 +71,7 @@ const superAdminRoutes = [
   { path: "manage-comments", element: <ManageComments /> },
   { path: "manage-messages", element: <ManageMessages /> },
   { path: "manage-pages", element: <PageManagement /> },
+  { path: "system-settings", element: <SystemSettingsManagement /> },
   {
     path: "manage-follow-unfollow",
     element: <ManageAuthorFollowUnfollowProfile />,

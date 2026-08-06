@@ -7,9 +7,7 @@ import Contact from "../models/Contact.js";
  */
 export const createContact = async (req, res) => {
   try {
-    console.log("🚀 Create contact controller is hit!");
     const { name, email, message } = req.body;
-    console.log("Req body", req.body);
 
     if (!message) {
       return res.status(400).json({

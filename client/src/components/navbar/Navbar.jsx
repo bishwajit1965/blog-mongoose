@@ -13,7 +13,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 
 import AuthContext from "../../authContext/AuthContext";
-import Logo from "/assets/Nova_Journal_Logo_F.png";
+import Logo from "/assets/favicon/nova-journal-brand.svg";
 import ThemeContext from "../../themeContext/ThemeContext";
 import { getPublicAuthorData } from "../../services/publicAuthorDataService";
 
@@ -38,7 +38,7 @@ const Navbar = () => {
   const handleOpen = () => {
     setOpen(!open);
   };
-  console.log("AUTHOR IN NAVBAR", author);
+
   const routes = [
     { id: 1, route: "/", name: "Home" },
     { id: 2, route: "/about-me", name: "About" },
@@ -124,8 +124,12 @@ const Navbar = () => {
               )}
             </ul>
           </div>
-          <Link to="/" className="m-0 hidden lg:flex">
-            <img src={Logo} alt="Logo" className="lg:w-16 lg:h-16 h-12 w-12" />
+          <Link to="/" className="m-0 hidden lg:flex items-center">
+            <img
+              src={Logo}
+              alt="Nova Journal logo"
+              className="lg:h-12 h-10 w-auto rounded-xl object-contain shadow-md"
+            />
           </Link>
         </div>
         <div className="navbar-center hidden md:block lg:flex">

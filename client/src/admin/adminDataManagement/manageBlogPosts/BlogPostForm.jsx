@@ -65,6 +65,7 @@ const BlogPostForm = ({
       tags: [],
       image: "",
       status: "draft",
+      isFeatured: false,
       imageFile: null,
       publishAt: null,
     });
@@ -86,6 +87,7 @@ const BlogPostForm = ({
     image: "",
     imageFile: null,
     status: "draft",
+    isFeatured: false,
     publishAt: "",
     wordCount: 0, // ✅ Add this
     selectedLength: "300-600", // ✅ Add this (default range)
@@ -133,6 +135,7 @@ const BlogPostForm = ({
           publicId: "",
         },
         status: existingBlog.status || "draft",
+        isFeatured: existingBlog.isFeatured || false,
         imageFile: null,
         publishAt: existingBlog.publishAt || null,
         wordCount: blogWordCount, // ✅ Fix: Use calculated word count
@@ -173,6 +176,7 @@ const BlogPostForm = ({
           publicId: "",
         },
         status: "draft",
+        isFeatured: false,
         imageFile: null,
         publishAt: null,
         wordCount: 0,
@@ -244,6 +248,7 @@ const BlogPostForm = ({
       formDataToSend.append("author", formData.author);
       formDataToSend.append("category", formData.category);
       formDataToSend.append("status", formData.status);
+      formDataToSend.append("isFeatured", String(formData.isFeatured));
 
       formData.tags.forEach((tag) => {
         formDataToSend.append("tags", tag);
@@ -443,8 +448,7 @@ const BlogPostForm = ({
 
         {/* Post status & author */}
         <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between">
-          {/* Post Status */}
-          <div className="lg:col-span-6 col-span-12">
+          <div className="lg:col-span-4 col-span-12">
             {existingBlog ? (
               <div className="">
                 <label className="block text-xs font-bold text-gray-500">
@@ -475,7 +479,8 @@ const BlogPostForm = ({
               </div>
             )}
           </div>
-          <div className="lg:col-span-6 col-span-12">
+
+          <div className="lg:col-span-4 col-span-12">
             <label className="block text-xs font-bold text-gray-500">
               Post status:
             </label>
@@ -490,6 +495,26 @@ const BlogPostForm = ({
               <option value="published">Published</option>
               <option value="coming-soon">Coming Soon</option>
               <option value="scheduled">Will Publish At</option>
+            </select>
+          </div>
+
+          <div className="lg:col-span-4 col-span-12">
+            <label className="block text-xs font-bold text-gray-500">
+              Featured article:
+            </label>
+            <select
+              name="isFeatured"
+              value={formData.isFeatured ? "yes" : "no"}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  isFeatured: e.target.value === "yes",
+                })
+              }
+              className="select select-sm input-bordered w-full max-w-full dark:bg-gray-800 dark:border-gray-700"
+            >
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
             </select>
           </div>
         </div>

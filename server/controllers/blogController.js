@@ -46,6 +46,7 @@ const createBlog = async (req, res) => {
       category,
       tags,
       status,
+      isFeatured,
       publishAt,
       metaTitle,
       metaDescription,
@@ -53,18 +54,14 @@ const createBlog = async (req, res) => {
     } = req.body;
 
     const userId = req.user.id;
-    console.log("User Id", userId);
 
     const user = await User.findById({ _id: userId });
-    console.log("User", user);
 
     if (!req.user.permissions.includes("create-post")) {
       return res
         .status(403)
         .json({ message: "You do not have permission to create a blog!" });
     }
-
-    // console.log("User Id:", userId);
 
     if (!excerpt) {
       excerpt = await generateExcerpt(content); // ✅ Now allowed because `excerpt` is `let`
@@ -151,6 +148,7 @@ const createBlog = async (req, res) => {
       category,
       tags: formattedTags,
       status,
+      isFeatured: Boolean(isFeatured),
       publishAt: validPublishAt,
       author: userId, // Mongo _id
       firebaseUid: user.firebaseUid || null,
@@ -309,6 +307,7 @@ const updateBlogBySlug = async (req, res) => {
       category,
       tags,
       status,
+      isFeatured,
       publishAt,
       author,
     } = req.body;
@@ -429,6 +428,8 @@ const updateBlogBySlug = async (req, res) => {
     blog.tags = formattedTags;
     blog.markModified("tags");
     blog.status = status || blog.status;
+    blog.isFeatured =
+      isFeatured !== undefined ? Boolean(isFeatured) : blog.isFeatured;
     blog.publishAt = publishAt || blog.publishAt;
     blog.author = author || blog.author;
 
@@ -653,6 +654,34 @@ const getFlaggingHistory = async (req, res) => {
     return res
       .status(500)
       .json({ error: "Failed to fetch flagging history.", error });
+  }
+};
+
+// Get featured posts
+const getFeaturedPosts = async (req, res) => {
+  try {
+    const featuredPosts = await Blog.find({
+      status: "published",
+      isFeatured: true,
+      moderationStatus: { $nin: ["hidden", "deleted"] },
+    })
+      .populate("author", "name email avatar")
+      .populate("category", "name")
+      .populate("tags", "name")
+      .sort({ publishAt: -1, createdAt: -1 })
+      .limit(3)
+      .lean();
+
+    res.status(200).json({
+      success: true,
+      featuredPosts,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching featured posts",
+      error,
+    });
   }
 };
 
@@ -887,6 +916,7 @@ module.exports = {
   getAllNonDeletedBlogs,
   flagPost,
   getFlaggingHistory,
+  getFeaturedPosts,
   getPopularPosts,
   getRssFeed,
   deleteBlogBySlug,

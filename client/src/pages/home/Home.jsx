@@ -24,6 +24,7 @@ import useAuth from "../../hooks/useAuth";
 import useGetBlogs from "../../hooks/useGetBlogs";
 import useGetBookmarkedPosts from "../../hooks/useGetBookmarkedPosts";
 import useGetCategories from "../../hooks/useGetCategories";
+import useGetFeaturedBlogs from "../../hooks/useGetFeaturedBlogs";
 import useGetTags from "../../hooks/useGetTags";
 import { useState } from "react";
 import PopularPosts from "../../components/popularPosts/PopularPosts";
@@ -32,6 +33,8 @@ import { LucideRefreshCw } from "lucide-react";
 import useGetComingSoonPost from "../../hooks/useGetComingSoonPost";
 import { motion } from "framer-motion";
 import Seo from "../../components/seo/Seo";
+import useSystemSettings from "../../hooks/useSystemSettings";
+import FeaturedPosts from "../../components/featuredPosts/FeaturedPosts";
 
 const sectionMotion = {
   hidden: {
@@ -65,6 +68,7 @@ const sidebarMotion = {
 const BookmarkedPage = lazy(() => import("../bookmarkedPage/BookmarkedPage"));
 
 const Home = () => {
+  const { systemSettings } = useSystemSettings();
   const { user } = useAuth();
   const [width, setWidth] = useState(false);
   const [showBookmarks, setShowBookmarks] = useState(false);
@@ -73,9 +77,11 @@ const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
   const { data, isLoading, error } = useGetBlogs();
+  const { data: featuredPosts = [], isLoading: isFeaturedLoading } =
+    useGetFeaturedBlogs();
   const { data: bookmarkedPosts } = useGetBookmarkedPosts();
   const isFilterActive = selectedTag || selectedCategory;
-
+  console.log("SYSTEM SETTINGS HOME PAGE", systemSettings);
   const {
     data: categories,
     isLoading: isCategoryLoading,
@@ -165,6 +171,19 @@ const Home = () => {
       </motion.div>
 
       <div className="lg:max-w-7xl mx-auto lg:px-4 px-4">
+        {/**==================================
+        * FEATURED POSTS BEGIN
+        ======================================*/}
+
+        <FeaturedPosts
+          featuredPosts={featuredPosts}
+          isFeaturedLoading={isFeaturedLoading}
+        />
+
+        {/**==================================
+        * FEATURED POSTS END
+        ======================================*/}
+
         {/**===================================
       | BLOG CONTENT AREA LEFT & RIGHT BEGINS
       |**====================================*/}
@@ -276,7 +295,7 @@ const Home = () => {
                   <FaSearch
                     className={`${
                       width
-                        ? "absolute top-[.6rem] left-2 w-[1rem]"
+                        ? "absolute top-[.4rem] left-2 w-[1rem]"
                         : "absolute lg:w-[1rem] top-[.6rem] left-2 right-[11.2rem]"
                     } text-sm lg:[1rem] text-gray-400`}
                   />
@@ -288,6 +307,7 @@ const Home = () => {
                   <div className="col-span-12 lg:col-span-2">
                     <Button
                       onClick={handleClearFilter}
+                      size="xs"
                       icon={
                         <LucideRefreshCw
                           size={15}
@@ -299,7 +319,7 @@ const Home = () => {
                       className={
                         isFilterActive
                           ? "border-2 shadow-xl border-amber-500"
-                          : "dark:bg-gray-800 dark:text-slate-400 dark:border-slate-600 text-sm btn btn-sm"
+                          : "dark:bg-gray-800 dark:text-slate-400 border-slate-300 dark:border-slate-600 text-sm btn btn-sm"
                       }
                     />
                   </div>

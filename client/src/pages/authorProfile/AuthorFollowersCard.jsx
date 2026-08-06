@@ -1,5 +1,4 @@
 const AuthorFollowersCard = ({ follower }) => {
-  console.log("Follower", follower);
   const { name, avatar } = follower || {};
   return (
     <div className="lg:col-span-3 col-span-12">

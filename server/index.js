@@ -25,7 +25,7 @@ const io = new Server(server, {
     credentials: true,
   },
 });
-console.log("🔥 INDEX FILE LOADED");
+console.log("ðŸ”¥ INDEX FILE LOADED");
 
 const port = process.env.PORT || 3000;
 
@@ -79,6 +79,7 @@ const followUserRoutes = require("./routes/followUserRoutes");
 const rssRoutes = require("./routes/rssRoutes");
 const pageRoutes = require("./routes/pageRoutes");
 const adminAuthorFollowUnfollowRoutes = require("./routes/adminAuthorFollowUnfollowRoutes");
+const systemSettingsRoutes = require("./routes/systemSettingsRoutes");
 
 // Public routes imported
 const publicPageRoutes = require("./routes/publicPageRoutes");
@@ -116,6 +117,7 @@ app.use("/api/follow-users", followUserRoutes);
 app.use("/api/rss", rssRoutes);
 app.use("/api/pages", pageRoutes);
 app.use("/api/author", adminAuthorFollowUnfollowRoutes);
+app.use("/api/settings", systemSettingsRoutes);
 
 // Public page route
 app.use("/api/public/pages", publicPageRoutes);
@@ -125,47 +127,47 @@ app.use("/api/public/author-follow-status", publicAuthorFollowStatusRoutes);
 
 // WebSocket connection for real-time presence tracking
 io.on("connection", (socket) => {
-  console.log("🔗 A user connected");
+  console.log("ðŸ”— A user connected");
 
   // Emit event on publish alert
-  socket.emit("publish-alert", "Server has successfully restarted! 🎉");
+  socket.emit("publish-alert", "Server has successfully restarted! ðŸŽ‰");
 
   if (!socket.request.headers.cookie) {
-    console.log("❌ No cookies found in request");
+    console.log("âŒ No cookies found in request");
     return;
   }
 
   // Parse cookies and handle authorization
   const cookies = cookie.parse(socket.request.headers.cookie);
   console.log(
-    "🍪 Received Cookies: ",
+    "ðŸª Received Cookies: ",
     cookies.refreshToken ? "*****" : "No refreshToken",
   );
   const token = cookies.refreshToken;
 
   if (!token) {
-    console.log("❌ No token found in cookies");
+    console.log("âŒ No token found in cookies");
     return;
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("✅ Token Decoded:", decoded);
+    console.log("âœ… Token Decoded:", decoded);
     const userId = decoded.id;
 
     if (userId) {
-      console.log(`🟢 User ${userId} is now online`);
+      console.log(`ðŸŸ¢ User ${userId} is now online`);
       onlineUsers.add(userId);
       io.emit("update-users", Array.from(onlineUsers));
     }
 
     socket.on("disconnect", () => {
-      console.log(`🔴 User ${userId} disconnected`);
+      console.log(`ðŸ”´ User ${userId} disconnected`);
       onlineUsers.delete(userId);
       io.emit("update-users", Array.from(onlineUsers));
     });
   } catch (err) {
-    console.log("❌ Token Verification Failed:", err.message);
+    console.log("âŒ Token Verification Failed:", err.message);
     socket.emit("error", {
       message: "Token verification failed. Please log in again.",
     });

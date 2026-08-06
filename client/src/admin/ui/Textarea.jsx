@@ -43,7 +43,7 @@ const Textarea = forwardRef(
             rows={rows}
             disabled={disabled}
             className={clsx(
-              "textarea textarea-bordered w-full -mt-2",
+              "textarea textarea-bordered w-full -mt-2 dark:bg-gray-700",
               error && "textarea-error",
               className,
             )}

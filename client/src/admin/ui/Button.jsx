@@ -11,6 +11,8 @@ const Button = ({
   loading = false,
   disabled = false,
   tooltip,
+  label = "Submit",
+
   icon: Icon,
   className,
   ...props
@@ -72,7 +74,14 @@ const Button = ({
       onClick={handleClick}
       title={tooltip}
       aria-disabled={isDisabled}
-      className={cn(base, sizes[size], variants[variant], radius, className)}
+      className={cn(
+        base,
+        sizes[size],
+        variants[variant],
+        radius,
+        label,
+        className,
+      )}
       {...(Component === "button" ? { disabled: isDisabled } : {})}
       {...props}
     >
@@ -84,6 +93,7 @@ const Button = ({
       ) : (
         <>
           {Icon && <Icon className="w-4 h-4" />}
+          {label}
           {children}
         </>
       )}

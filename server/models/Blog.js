@@ -34,6 +34,7 @@ const BlogSchema = new mongoose.Schema(
       ],
       default: "draft",
     },
+    isFeatured: { type: Boolean, default: false },
     publishAt: { type: Date, default: null },
     author: {
       type: mongoose.Schema.Types.ObjectId,

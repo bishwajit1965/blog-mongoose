@@ -15,6 +15,7 @@ const {
   getAllNonDeletedBlogs,
   flagPost,
   getFlaggingHistory,
+  getFeaturedPosts,
   getPopularPosts,
   getRssFeed,
   deleteBlogBySlug,
@@ -33,6 +34,8 @@ router.get("/", getAllBlogs); // View all blogs
 router.get("/super-admin", getBlogsForSuperAdminDashBoard); // View all blogs
 
 router.get("/random", getRandomPost);
+
+router.get("/featured", getFeaturedPosts); // View featured blog posts
 
 router.get("/popular", getPopularPosts); // View popular blog posts
 

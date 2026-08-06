@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import seoConfig from "./seoConfig";
+import useSystemSettings from "../../hooks/useSystemSettings";
 
 const Seo = ({
   author,
@@ -17,6 +18,30 @@ const Seo = ({
   schemaType,
 }) => {
   /* ============================================================
+   * Fetch SITE SETTINGS AND USE IT IN SEO GLOBALLY
+   * ============================================================ */
+  const { systemSettings } = useSystemSettings();
+
+  const settings = systemSettings?.data || {};
+
+  // Prepare global data to feed in SEO
+  const siteName = settings?.site?.name || seoConfig.siteName;
+
+  const siteUrl = settings?.site?.websiteUrl || seoConfig.siteUrl;
+
+  const defaultDescription =
+    settings?.seo?.metaDescription || seoConfig.defaultDescription;
+
+  const publisherLogo = settings.branding.logo.secureUrl || "";
+
+  const defaultOgImage =
+    settings?.seo?.ogImage?.secureUrl || `${siteUrl}${seoConfig.defaultImage}`;
+
+  const defaultKeywords = settings?.seo?.keywords || [];
+
+  const language = settings?.localization?.language || seoConfig.language;
+
+  /* ============================================================
    * Strips HTML tags
    * ============================================================ */
   const stripHtml = (html = "") => {
@@ -30,27 +55,33 @@ const Seo = ({
   const pageTitle = metaTitle || title;
 
   const seoTitle = pageTitle
-    ? pageTitle.includes(seoConfig.siteName)
+    ? pageTitle.includes(siteName)
       ? pageTitle
-      : `${pageTitle} | ${seoConfig.siteName}`
+      : `${pageTitle} | ${siteName}`
     : seoConfig.defaultTitle;
 
   const seoDescription = stripHtml(
-    metaDescription || description || seoConfig.defaultDescription,
+    metaDescription || description || defaultDescription,
   );
 
-  const seoImage = image || `${seoConfig.siteUrl}${seoConfig.defaultImage}`;
+  const seoImage = image || `${seoConfig.siteUrl}${defaultOgImage}`;
 
   const seoUrl = url
     ? `${seoConfig.siteUrl}/${url.replace(/^\/+/, "")}`
-    : seoConfig.siteUrl;
+    : siteUrl;
 
   const seoAuthor = author || seoConfig.author;
 
   const seoCategory = category || "";
 
+  // const seoTags =
+  //   metaKeywords?.length > 0 ? metaKeywords : tags?.length > 0 ? tags : [];
   const seoTags =
-    metaKeywords?.length > 0 ? metaKeywords : tags?.length > 0 ? tags : [];
+    metaKeywords?.length > 0
+      ? metaKeywords
+      : tags?.length > 0
+        ? tags
+        : defaultKeywords;
 
   const seoPublishDate = publishDate || "";
 
@@ -78,7 +109,7 @@ const Seo = ({
       name: seoConfig.siteName,
       logo: {
         "@type": "ImageObject",
-        url: `${seoConfig.siteUrl}${seoConfig.defaultImage}`,
+        url: `${publisherLogo}`,
       },
     },
 
@@ -97,7 +128,7 @@ const Seo = ({
 
     articleSection: seoCategory,
 
-    inLanguage: seoConfig.language,
+    inLanguage: language,
   };
 
   return (
