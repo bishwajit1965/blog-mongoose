@@ -35,6 +35,7 @@ import { motion } from "framer-motion";
 import Seo from "../../components/seo/Seo";
 import useSystemSettings from "../../hooks/useSystemSettings";
 import FeaturedPosts from "../../components/featuredPosts/FeaturedPosts";
+import BlogGlobalSearchResults from "../blogPosts/BlogGlobalSearchResults";
 
 const sectionMotion = {
   hidden: {
@@ -68,6 +69,7 @@ const sidebarMotion = {
 const BookmarkedPage = lazy(() => import("../bookmarkedPage/BookmarkedPage"));
 
 const Home = () => {
+  const [loading, setLoading] = useState(false);
   const { systemSettings } = useSystemSettings();
   const { user } = useAuth();
   const [width, setWidth] = useState(false);
@@ -76,12 +78,13 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
+  const [globalSearchQuery, setGlobalSearchQuery] = useState("");
   const { data, isLoading, error } = useGetBlogs();
   const { data: featuredPosts = [], isLoading: isFeaturedLoading } =
     useGetFeaturedBlogs();
   const { data: bookmarkedPosts } = useGetBookmarkedPosts();
   const isFilterActive = selectedTag || selectedCategory;
-  console.log("SYSTEM SETTINGS HOME PAGE", systemSettings);
+
   const {
     data: categories,
     isLoading: isCategoryLoading,
@@ -111,6 +114,47 @@ const Home = () => {
     setSearchTerm("");
   };
 
+  /**===========================================
+  * GLOBAL SEARCH BOX RESET HANDLER
+  ===========================================*/
+  const globalSearchQueryResetHandler = () => {
+    setGlobalSearchQuery("");
+  };
+
+  const filteredBlogs = data?.filter((blog) => {
+    const query = globalSearchQuery.trim().toLowerCase();
+
+    if (!query) return true;
+
+    return (
+      blog.title?.toLowerCase().includes(query) ||
+      blog.excerpt?.toLowerCase().includes(query) ||
+      blog.category?.name?.toLowerCase().includes(query) ||
+      blog.tags?.some((tag) => tag.name?.toLowerCase().includes(query))
+    );
+  });
+
+  console.log("Filtered Blogs", filteredBlogs);
+
+  /**=============================================
+   * GLOBAL SEARCH SUBMIT HANDLER
+   * @param {*} e EVENT HANDLER
+   =============================================*/
+  const handleGlobalSearchSubmitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const response = await filteredBlogs();
+      if (response.success) {
+        console.log("Success", response.success.data);
+      }
+    } catch (error) {
+      console.error("Error in fetching search result", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="">
       <Seo
@@ -129,7 +173,16 @@ const Home = () => {
       | BLOG HERO SECTION BEGINS
       |**==================================*/}
 
-        <BlogHero data={data} categories={categories} tags={tags} />
+        <BlogHero
+          data={data}
+          categories={categories}
+          tags={tags}
+          systemSettings={systemSettings?.data || {}}
+          globalSearchQuery={globalSearchQuery}
+          setGlobalSearchQuery={setGlobalSearchQuery}
+          globalSearchQueryResetHandler={globalSearchQueryResetHandler}
+          onGlobalSearchSubmit={handleGlobalSearchSubmitHandler}
+        />
 
         {/**=================================
       | BLOG HERO SECTION ENDS
@@ -142,7 +195,7 @@ const Home = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="border-t-8 border-base-content/25 rounded-xs"
+          className="border-t-0 border-red-400 rounded-xs"
         >
           <Marquee
             speed={50}
@@ -167,22 +220,30 @@ const Home = () => {
 
         {/**=================================
       | MARQUEE NOTIFICATION SECTION ENDS
-      |**==================================*/}
+      |**====================================*/}
       </motion.div>
 
       <div className="lg:max-w-7xl mx-auto lg:px-4 px-4">
         {/**==================================
+        * BLOG POSTS GLOBAL SEARCH PAGE BEGINS
+        ======================================*/}
+        {globalSearchQuery && (
+          <BlogGlobalSearchResults
+            user={user}
+            filteredBlogs={filteredBlogs}
+            loading={loading}
+            globalSearchQuery={globalSearchQuery}
+          />
+        )}
+
+        {/**==================================
         * FEATURED POSTS BEGIN
         ======================================*/}
-
         <FeaturedPosts
+          user={user}
           featuredPosts={featuredPosts}
           isFeaturedLoading={isFeaturedLoading}
         />
-
-        {/**==================================
-        * FEATURED POSTS END
-        ======================================*/}
 
         {/**===================================
       | BLOG CONTENT AREA LEFT & RIGHT BEGINS
@@ -217,9 +278,8 @@ const Home = () => {
                 />
               ) : (
                 <SectionTitle
-                  title="My Bookmarked Posts ➡️"
+                  title="My Bookmarked Posts"
                   icon={<FaBookmark />}
-                  description="Latest blog posts first. Summary is added."
                   dataLength={
                     bookmarkedPosts?.bookmarks.length > 0
                       ? bookmarkedPosts?.bookmarks.length
@@ -455,7 +515,7 @@ const Home = () => {
           className="lg:my-10 my-4"
         >
           {/* <SectionTitle title="Random Posts" /> */}
-          <RandomBlogPosts />
+          <RandomBlogPosts user={user} />
         </motion.div>
         {/**===================================
       | BLOG RANDOM POSTS SECTION ENDS

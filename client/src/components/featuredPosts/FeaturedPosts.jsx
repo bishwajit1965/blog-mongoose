@@ -1,8 +1,8 @@
-import { FaBloggerB, FaBookReader } from "react-icons/fa";
+import { FaBloggerB } from "react-icons/fa";
 import SectionTitle from "../sectionTitle/SectionTitle";
-import Button from "../buttons/Button";
 import { motion } from "framer-motion";
 import FeaturedPostsSkeleton from "./FeaturedPostsSkeleton";
+import BlogCard from "../canonicalBlogCard/BlogCard";
 
 const sectionMotion = {
   hidden: {
@@ -19,7 +19,7 @@ const sectionMotion = {
   },
 };
 
-const FeaturedPosts = ({ featuredPosts, isFeaturedLoading }) => {
+const FeaturedPosts = ({ featuredPosts, isFeaturedLoading, user }) => {
   return (
     <>
       {isFeaturedLoading && (
@@ -41,52 +41,29 @@ const FeaturedPosts = ({ featuredPosts, isFeaturedLoading }) => {
             title="Featured"
             decoratedText="Articles"
             icon={<FaBloggerB />}
-            dataLength={featuredPosts.length}
+            dataLength={featuredPosts?.length}
           />
-          <div className="grid lg:grid-cols-3 gap-4 mt-4">
-            {featuredPosts.map((post) => (
-              <article
-                key={post._id}
-                className="overflow-hidden rounded-xl border border-base-300 dark:border-gray-700 bg-base-100s shadow-sm transition hover:shadow-lg"
-              >
-                <img
-                  src={
-                    post.image?.url ||
-                    post.featuredImage ||
-                    "https://placehold.co/600x400"
-                  }
-                  alt={post.title}
-                  className="lg:h-52 h-auto w-full object-cover"
-                />
-                <div className="p-4 space-y-3">
-                  <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span className="badge badge-sm badge-outline">
-                      {post.category?.name || "General"}
-                    </span>
-                    <span>
-                      {new Date(
-                        post.publishAt || post.createdAt,
-                      ).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-bold leading-snug text-slate-800 dark:text-slate-100 line-clamp-2">
-                    {post.title}
-                  </h3>
-                  <p className="line-clamp-3 text-sm text-slate-600 dark:text-slate-300">
-                    {post.excerpt || "Read this article to learn more."}
-                  </p>
-                  <div className="">
-                    <Button
-                      href={`/blog-details/${post.slug}`}
-                      label="Read More"
-                      icon={<FaBookReader />}
-                      variant="outline"
-                      size="xs"
-                    />
-                  </div>
+          <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between mt-4">
+            {featuredPosts && featuredPosts?.length > 0 ? (
+              featuredPosts?.map((blog) => (
+                <div key={blog?._id} className="lg:col-span-4 col-span-12">
+                  <BlogCard
+                    post={blog}
+                    user={user}
+                    blog={blog}
+                    showComments={true}
+                    authorInfoModal={true}
+                    showContent={true}
+                    showSocialLinks={true}
+                    showBookmark={true}
+                  />
                 </div>
-              </article>
-            ))}
+              ))
+            ) : (
+              <p className="flex justify-center">
+                No random blog posts available
+              </p>
+            )}
           </div>
         </motion.section>
       )}

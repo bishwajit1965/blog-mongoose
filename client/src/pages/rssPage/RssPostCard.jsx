@@ -1,6 +1,6 @@
 import { FaArrowCircleRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import CTAButton from "../../components/buttons/CTAButton";
+import Button from "../../components/buttons/Button";
 
 const RssPostCard = ({ post }) => {
   const { link, title, description, publishDate, image } = post;
@@ -14,7 +14,7 @@ const RssPostCard = ({ post }) => {
           alt={post.title}
           className="w-full h-52 object-cover rounded-md"
         />
-        <h1 className="text-2xl font-bold text-slate-500">
+        <h1 className="lg:text-xl text-lg font-bold text-gray-700">
           {title.slice(0, 60)}
         </h1>
         <p dangerouslySetInnerHTML={{ __html: description.slice(0, 160) }} />
@@ -24,12 +24,12 @@ const RssPostCard = ({ post }) => {
           <em>{new Date(publishDate).toLocaleString()}</em>
         </p>
       </div>
-      <Link to={link} className="m-0 absolute bottom-2">
-        <CTAButton
+      <Link to={link} className="m-0 absolute bottom-2 right-2">
+        <Button
           label="Read More"
-          className="btn btn-sm"
+          size="xs"
           icon={<FaArrowCircleRight />}
-          variant="success"
+          variant="outline"
         />
       </Link>
     </div>

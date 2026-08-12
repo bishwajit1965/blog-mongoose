@@ -23,7 +23,7 @@ const getPublishedPosts = async (req, res) => {
     // After publishing posts, emit a notification to the admin
     io.emit(
       "publish-alert",
-      `A post titled "${post.title}" has been published!`
+      `A post titled "${post.title}" has been published!`,
     );
   } catch (error) {
     console.error("Error in fetching published posts", error);

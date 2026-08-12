@@ -4,12 +4,16 @@ import Button from "../../components/buttons/Button";
 import jsPDF from "jspdf";
 import logo from "/assets/favicon/webDevProF.png"; // Import your logo
 
-const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+// FOR MULTER UPLOAD (iNITIAL USE - NOT NEEDED NOW)
+// const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 const NoticeModal = ({ notice, onClose }) => {
   const { title, heading, subject, noticeDate, content, pdfUrl } = notice;
 
-  const fileUrl = pdfUrl ? `${apiUrl}${pdfUrl}` : null;
+  const fileUrl = pdfUrl.url ? pdfUrl?.url : null;
+
+  // FOR MULTER UPLOAD (iNITIAL USE - NOT NEEDED NOW)
+  // const fileUrl = pdfUrl ? `${apiUrl}${pdfUrl?.url}` : null;
 
   const handleGeneratePdf = async () => {
     const doc = new jsPDF({
@@ -23,7 +27,7 @@ const NoticeModal = ({ notice, onClose }) => {
     const usableWidth = pageWidth - margin.left - margin.right;
 
     let y = margin.top + 1.3;
-    // let pageNumber = 1;
+
     const pages = [];
 
     const drawLetterhead = () => {
@@ -42,7 +46,7 @@ const NoticeModal = ({ notice, onClose }) => {
       doc.setFont("helvetica", "bold");
       doc.setFontSize(14);
       doc.setTextColor("#000");
-      doc.text("WebDevPro Foundation", margin.left + 1.2, margin.top - 0.4);
+      doc.text("Nova Journal Foundation", margin.left + 1.2, margin.top - 0.4);
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
@@ -53,7 +57,7 @@ const NoticeModal = ({ notice, onClose }) => {
         margin.top - 0.15,
       );
       doc.text(
-        "Email: contact@webdevpro.org | Phone: +91 98765 43210",
+        "Email: contact@novajournal.org | Phone: +88 017 12 80 92 79",
         margin.left + 1.2,
         margin.top + 0.1,
       );
@@ -73,7 +77,7 @@ const NoticeModal = ({ notice, onClose }) => {
       doc.setTextColor(220);
       doc.setFontSize(60);
       doc.setFont("helvetica", "italic");
-      doc.text("WEBDEVPRO", pageWidth / 2, pageHeight / 1.5, {
+      doc.text("NOVA JOURNAL", pageWidth / 2, pageHeight / 1.5, {
         angle: 35,
         align: "center",
       });
@@ -94,7 +98,7 @@ const NoticeModal = ({ notice, onClose }) => {
       doc.setTextColor("#555");
       doc.setFont("helvetica", "italic");
       doc.text(
-        "© 2025 WebDevPro Foundation | www.webdevpro.org",
+        "© 2025 Nova Journal Foundation | www.novajournal.org",
         pageWidth / 2,
         pageHeight - 0.4,
         { align: "center" },
@@ -192,7 +196,7 @@ const NoticeModal = ({ notice, onClose }) => {
     y += 0.3;
     doc.text("Bishwajit Paul", margin.left, y);
     y += 0.25;
-    doc.text("Super Admin, WebDevPro Foundation", margin.left, y);
+    doc.text("Super Admin, Nova Journal Foundation", margin.left, y);
 
     const totalPages = doc.internal.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
@@ -222,9 +226,9 @@ const NoticeModal = ({ notice, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 dark:text-base-300 p-6 rounded-lg w-1/2 max-h-[90vh] overflow-auto">
-        <h2 className="text-xl font-bold mb-4">{heading}</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-gray-800 dark:text-base-300 p-4 rounded-lg lg:w-1/2 max-h-[90vh] overflow-auto">
+        <h2 className="lg:text-xl text-lg font-bold mb-4">{heading}</h2>
         <p className="text-sm mb-2">
           Date: {new Date(noticeDate).toLocaleDateString()}
         </p>
@@ -232,6 +236,7 @@ const NoticeModal = ({ notice, onClose }) => {
         <div className="max-h-60 overflow-y-auto mb-4">
           <p className="mb-4">{content}</p>
         </div>
+
         <div className="">
           {fileUrl && (
             <>
@@ -247,31 +252,27 @@ const NoticeModal = ({ notice, onClose }) => {
           )}
         </div>
 
-        <div className="flex justify-end gap-4 pt-5">
-          <Button
-            onClick={onClose}
-            label="Close"
-            icon={<FaTimes />}
-            variant="danger"
-            className="btn btn-sm"
-          />
-
+        <div className="flex flex-wrap lg:justify-end justify-center gap-4 p-5">
           <Button
             onClick={handleGeneratePdf}
             label="Generate PDF"
+            size="xs"
             icon={<FaRegFilePdf />}
-            className="btn btn-sm"
           />
 
           {pdfUrl && (
-            <Button
-              className="btn btn-sm"
-              onClick={handleDownloadPDF}
-              label="Download PDF"
-            >
+            <Button size="xs" onClick={handleDownloadPDF} label="Download PDF">
               Download as PDF
             </Button>
           )}
+
+          <Button
+            onClick={onClose}
+            label="Close"
+            size="xs"
+            icon={<FaTimes />}
+            variant="danger"
+          />
         </div>
       </div>
     </div>

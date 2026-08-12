@@ -1,16 +1,45 @@
 const Notification = require("../models/Notification");
 const fs = require("fs");
 const path = require("path");
+const {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+} = require("../utils/uploadToCloudinary");
 
 const createNotification = async (req, res) => {
   try {
     const { title, heading, subject, author, content } = req.body;
     const createdBy = req.user.id;
 
-    let pdfUrl = null;
+    // let pdfUrl = null;
+    // if (req.file) {
+    //   // Assuming your static file server serves from /uploads
+    //   pdfUrl = `/uploads/notifications/${req.file.filename}`;
+    // }
+
+    let pdfUrl = {
+      url: null,
+      publicId: null,
+    };
+
     if (req.file) {
-      // Assuming your static file server serves from /uploads
-      pdfUrl = `/uploads/notifications/${req.file.filename}`;
+      try {
+        const uploadPdf = await uploadToCloudinary(
+          req.file.buffer,
+          "developer-diary/notifications",
+          "raw",
+        );
+
+        pdfUrl = {
+          url: uploadPdf.secure_url,
+          publicId: uploadPdf.public_id,
+        };
+      } catch (error) {
+        return res.status(500).json({
+          message: "Pdf upload failed",
+          error: error.message,
+        });
+      }
     }
     const newNotification = new Notification({
       title,
@@ -82,13 +111,11 @@ const getPublicNotifications = async (req, res) => {
       .lean();
     console.log("Fetched notifications:", notifications.length);
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Notifications fetched successfully!",
-        notifications,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Notifications fetched successfully!",
+      notifications,
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -135,31 +162,49 @@ const updateNotification = async (req, res) => {
     const existingNotification = await Notification.findById(id);
     if (!existingNotification)
       return res.status(404).json({ message: "Notification not found." });
+
     console.log("Existing notification:", existingNotification);
 
     // Handle PDF replacement
     let pdfUrl = existingNotification.pdfUrl;
 
     if (req.file) {
-      // Delete the old file if exists
-      if (pdfUrl) {
-        const oldPath = path.join(
-          __dirname,
-          "..",
-          "uploads",
-          "notifications",
-          path.basename(pdfUrl),
-        );
-        if (fs.existsSync(oldPath)) {
-          try {
-            fs.unlinkSync(oldPath);
-          } catch (error) {
-            console.warn("Failed to delete old PDF:", error);
-          }
-        }
+      const oldPublicId = existingNotification.pdfUrl.publicId;
+
+      const uploadedPdf = await uploadToCloudinary(
+        req.file.buffer,
+        "developer-diary/notifications",
+        "raw",
+      );
+      existingNotification.pdfUrl = {
+        url: uploadedPdf.secure_url,
+        publicId: uploadedPdf.public_id,
+      };
+      if (oldPublicId) {
+        await deleteFromCloudinary(oldPublicId);
       }
-      pdfUrl = `/uploads/notifications/${req.file.filename}`;
     }
+
+    // if (req.file) {
+    //   // Delete the old file if exists
+    //   if (pdfUrl) {
+    //     const oldPath = path.join(
+    //       __dirname,
+    //       "..",
+    //       "uploads",
+    //       "notifications",
+    //       path.basename(pdfUrl),
+    //     );
+    //     if (fs.existsSync(oldPath)) {
+    //       try {
+    //         fs.unlinkSync(oldPath);
+    //       } catch (error) {
+    //         console.warn("Failed to delete old PDF:", error);
+    //       }
+    //     }
+    //   }
+    //   pdfUrl = `/uploads/notifications/${req.file.filename}`;
+    // }
 
     const updated = await Notification.findByIdAndUpdate(
       id,
@@ -257,6 +302,22 @@ const softDeleteNotice = async (req, res) => {
 const permanentDeleteNoticeById = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const notice = await Notification.findById(id);
+
+    if (!notice) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Notice not found" });
+    }
+
+    const oldPdfId = notice.pdfUrl.publicId;
+    if (oldPdfId) {
+      await deleteFromCloudinary(oldPdfId, {
+        resource_type: "raw",
+      });
+    }
+
     await Notification.findByIdAndDelete(id);
     res.status(201).json({ message: "Notification deleted successfully" });
   } catch (error) {

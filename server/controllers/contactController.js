@@ -16,22 +16,8 @@ export const createContact = async (req, res) => {
       });
     }
 
-    /***---------------------------------------------------------
-     * This can also work fine, but a bit elaborate, document can be *modified before calling save() (FOR EXAMPLE: contact.status = "read"; instead of "new") method,and hence flexible
-     -----------------------------------------------------------*/
     const contact = new Contact({ user: req.user.id, name, email, message });
-    console.log("Contact", contact);
     await contact.save();
-
-    /**-------------------------------------------------------------
-     * This adds directly, document is not modifiable before saving
-     ---------------------------------------------------------------*/
-    // const contact = await Contact.create({
-    //   user: req.user.id,
-    //   name,
-    //   email,
-    //   message,
-    // });
 
     res.status(201).json({
       success: true,

@@ -1,8 +1,9 @@
+/**================================================
+ * USED FOR ALL IMAGE AND PDF UPLOAD IN CLOUDINARY
+ ==================================================*/
 const cloudinary = require("../config/cloudinary");
 
 const uploadToCloudinary = async (fileBuffer, folder = "blog-posts") => {
-  console.log("Buffer?", Buffer.isBuffer(fileBuffer));
-  console.log("Buffer length:", fileBuffer.length);
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
@@ -11,9 +12,6 @@ const uploadToCloudinary = async (fileBuffer, folder = "blog-posts") => {
       },
 
       (error, result) => {
-        console.log("Cloudinary error:", error);
-        console.log("Cloudinary result:", result);
-
         if (error) {
           reject(error);
         } else {

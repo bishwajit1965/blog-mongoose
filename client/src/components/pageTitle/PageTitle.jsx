@@ -15,7 +15,7 @@ const PageTitle = ({
 }) => {
   return (
     <div className="text-center lg:mb-6 mb-3 lg:space-y-2 space-y-1">
-      <h1 className="lg:text-3xl text-medium font-serif font-bold rounded-b-md flex items-center justify-center gap-1.5">
+      <h1 className="lg:text-3xl text-lg text-medium font-bold rounded-b-md flex items-center justify-center gap-1.5">
         {icon} {title}
         <span className="text-amber-800 dark:text-amber-500">
           {decoratedText}

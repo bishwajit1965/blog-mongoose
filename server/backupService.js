@@ -4,9 +4,18 @@ const fs = require("fs");
 const path = require("path");
 
 const BACKUP_DIR = path.join(__dirname, "../backups");
-const DB_NAME = "blog";
+
+const DB_NAME = process.env.DB_NAME || "blog";
+const DB_USER = process.env.DB_USER;
+const DB_PASSWORD = process.env.DB_PASSWORD;
+
+// const DB_NAME = "blog";
 const BACKUP_RETENTION_DAYS = 7; // Keep backups for 7 days
 const BACKUP_SCHEDULE = "0 2 * * *"; // Runs daily at 2 AM
+
+const MONGO_URI = `mongodb+srv://${encodeURIComponent(DB_USER)}:${encodeURIComponent(
+  DB_PASSWORD,
+)}@cluster0.l3p6wcn.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Ensure backup directory exists
 if (!fs.existsSync(BACKUP_DIR)) {
@@ -20,7 +29,7 @@ const createBackup = () => {
   const backupFilePath = path.join(BACKUP_DIR, backupFileName);
 
   exec(
-    `mongodump --db ${DB_NAME} --archive=${backupFilePath} --gzip`,
+    `mongodump --uri="${MONGO_URI}" --archive="${backupFilePath}" --gzip`,
     (error) => {
       if (error) {
         console.error("❌ Error creating backup:", error);
@@ -28,42 +37,9 @@ const createBackup = () => {
         console.log(`✅ Backup created: ${backupFileName}`);
         deleteOldBackups(); // Call retention function after successful backup
       }
-    }
+    },
   );
 };
-
-// Function to delete old backups
-// const deleteOldBackups = () => {
-//   fs.readdir(BACKUP_DIR, (err, files) => {
-//     if (err) {
-//       console.error("❌ Error reading backup directory:", err);
-//       return;
-//     }
-
-//     const expirationDate =
-//       Date.now() - BACKUP_RETENTION_DAYS * 24 * 60 * 60 * 1000;
-
-//     files.forEach((file) => {
-//       const filePath = path.join(BACKUP_DIR, file);
-//       fs.stat(filePath, (err, stats) => {
-//         if (err) {
-//           console.error(`❌ Error getting file stats for ${file}:`, err);
-//           return;
-//         }
-
-//         if (stats.mtime.getTime() < expirationDate) {
-//           fs.unlink(filePath, (err) => {
-//             if (err) {
-//               console.error(`❌ Error deleting old backup ${file}:`, err);
-//             } else {
-//               console.log(`🗑️ Deleted old backup: ${file}`);
-//             }
-//           });
-//         }
-//       });
-//     });
-//   });
-// };
 
 const deleteOldBackups = async () => {
   try {
@@ -80,7 +56,7 @@ const deleteOldBackups = async () => {
           await fs.promises.unlink(filePath);
           console.log(`🗑️ Deleted old backup: ${file}`);
         }
-      })
+      }),
     );
   } catch (error) {
     console.error("❌ Error during old backup cleanup:", error);
@@ -95,5 +71,8 @@ cron.schedule(BACKUP_SCHEDULE, () => {
 
 module.exports = createBackup;
 
-// database backup command
-// mongorestore --gzip --archive=blog-mongoose/backups/blog-backup-2025-03-21T08-33-06-259Z.gz
+//BACKUP COMMAND TO POPULATE DB WHEN NEEDED FROM BACKUP
+// node -r dotenv/config -e "require('./backupService')()"
+
+//UNCOMMENT & RUN FROM server FOLDER TO POPULATE DATA IF NEEDED
+// node -r dotenv/config -e "const {execFileSync}=require('child_process'); const uri='mongodb+srv://'+encodeURIComponent(process.env.DB_USER)+':'+encodeURIComponent(process.env.DB_PASSWORD)+'@cluster0.l3p6wcn.mongodb.net/'+process.env.DB_NAME+'?retryWrites=true&w=majority&appName=Cluster0'; execFileSync('mongorestore',['--uri',uri,'--gzip','--archive=../backups/blog-backup-2026-08-10T06-52-03-675Z.gz','--nsFrom=blog.*','--nsTo=blog_restore_test.*'],{stdio:'inherit'})"

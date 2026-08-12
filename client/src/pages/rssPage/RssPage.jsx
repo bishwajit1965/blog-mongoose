@@ -5,14 +5,24 @@ import { useEffect, useState } from "react";
 import Loader from "../../components/loader/Loader";
 import RssPostCard from "./RssPostCard";
 import { FaRss } from "react-icons/fa";
-import PageTitle from "../../components/pageTitle/PageTitle";
 import { motion } from "framer-motion";
+import CustomPageTitle from "../../components/pageTitle/CustomPageTitle";
 const baseURL = import.meta.env.VITE_API_BASE_URL;
-console.log("BASEURL", baseURL);
 
 const RssPage = () => {
   const [rssPosts, setRssPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // Latest rss post selection
+  const latestRss = rssPosts?.reduce((latest, notice) => {
+    if (!latest) return notice;
+
+    const latestDate = new Date(latest.updatedAt || latest.createdAt);
+
+    const noticeDate = new Date(notice.updatedAt || notice.createdAt);
+
+    return noticeDate > latestDate ? notice : latest;
+  }, null);
 
   useEffect(() => {
     setLoading(true);
@@ -35,7 +45,7 @@ const RssPage = () => {
             image: item.querySelector("image")?.textContent.trim(),
           }),
         );
-        console.log("Items:", items);
+
         setRssPosts(items); // Assuming your backend sends an array of posts
         setLoading(false);
       })
@@ -50,7 +60,7 @@ const RssPage = () => {
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="lg:max-w-7xl mx-auto lg:p-0 p-2 mb-10"
+      className="lg:max-w-6xl mx-auto lg:p-0 p-2 mb-10"
     >
       <Seo
         title="RSS Feed"
@@ -60,12 +70,12 @@ const RssPage = () => {
       />
 
       {loading && <Loader />}
-      <PageTitle
-        title="Rss Blog"
+
+      <CustomPageTitle
+        title="Rss Blog Posts"
         icon={FaRss}
-        decoratedText="Posts"
         dataLength={rssPosts.length}
-        subtitle="All RSS Blog posts are displayed here."
+        updatedAt={latestRss?.updatedAt || latestRss?.publishDate}
       />
 
       <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between">

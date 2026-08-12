@@ -18,6 +18,7 @@ const {
   authorizeRoles,
   authorizePermissions,
 } = require("../middlewares/authenticateToken");
+const upload = require("../middlewares/upload");
 
 const router = express.Router();
 
@@ -37,7 +38,7 @@ router.post(
   "/create",
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["create-notification"]),
-  uploadNotice.single("file"),
+  upload.single("file"),
   createNotification,
 );
 
@@ -59,7 +60,7 @@ router.patch(
   "/:id",
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["update-notification"]),
-  uploadNotice.single("file"),
+  upload.single("file"),
   updateNotification,
 );
 

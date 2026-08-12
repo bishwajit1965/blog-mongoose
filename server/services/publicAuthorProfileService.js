@@ -43,7 +43,17 @@ const getAuthorLatestPostsService = async (authorId) => {
       author: authorId,
       status: "published",
     })
-      .select("title slug image excerpt createdAt publishAt")
+      .populate({
+        path: "author",
+        select: "name email avatar followers following isOnline lastSeen roles",
+        populate: {
+          path: "roles",
+          select: "name description",
+        },
+      })
+      .populate("category")
+      .populate("tags")
+      .select("title slug category image excerpt content createdAt publishAt")
       .sort({ createdAt: -1 })
       .limit(3);
 

@@ -2,6 +2,7 @@ import {
   FaBookReader,
   FaClock,
   FaComment,
+  FaFileWord,
   FaQuoteLeft,
   FaQuoteRight,
   FaReadme,
@@ -20,8 +21,39 @@ import { getComments } from "../../services/commentApiService";
 import useDateFormatter from "../../hooks/useDateFormatter";
 import { motion } from "framer-motion";
 import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
+import useWordCount from "../../admin/adminHooks/useWordCount";
+import Badge from "../../admin/ui/Badge";
 
-const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
+const BlogPostCard = ({
+  blog,
+  user,
+  bookmarkedAt = null,
+
+  // Required
+  showAuthorAvatar = true,
+  showBlogPostImage = true,
+  showAuthor = true,
+  showWordCount = true,
+  showReadingTime = true,
+  showTitle = true,
+  showExcerpt = true,
+  showContent = true,
+
+  // Optional features
+  showAuthorInfoModal = false,
+  showComments = false,
+  showBookmark = false,
+  showPublishDate = false,
+  showSocialLinks = false,
+  showCategory = false,
+  showTags = false,
+
+  // Optional limits
+  titleLimit = 60,
+  excerptLimit = 245,
+  contentLimit = 370,
+  tagLimit = 2,
+}) => {
   const {
     _id,
     title,
@@ -35,9 +67,34 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
     image,
   } = blog || {};
 
+  /** =========================================
+  |   HELPERS
+  | *========================================== */
   const formattedDate = useDateFormatter(publishAt);
+
   const formattedBookmarkedDate = useDateFormatter(bookmarkedAt);
+
   const [fetchedComments, setFetchedComments] = useState([]);
+
+  const displayTitle =
+    title?.length > titleLimit ? `${title.slice(0, titleLimit)}...` : title;
+
+  const displayExcerpt =
+    excerpt?.length > excerptLimit
+      ? `${excerpt.slice(0, excerptLimit)}...`
+      : excerpt;
+
+  const displayContent =
+    content?.length > contentLimit
+      ? `${content.slice(0, contentLimit)}...`
+      : content;
+
+  const blogPostImage = image?.url || "";
+
+  const visibleTags = tags?.slice(0, tagLimit) || [];
+
+  const wordCount = useWordCount(content);
+
   const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   /**==========================================
@@ -60,163 +117,264 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
-      className="rounded-lg lg:space-y-4 space-y-2 overflow-x-clip p-2"
+      className="rounded-lg lg:space-y-4 space-y-2 overflow-x-clip p-4 lg:border-0 border border-base-content/15"
     >
+      {/*=======================================================================
+       |* BLOG AUTHOR INFO MODAL / SOCIAL LINKS / AUTHOR AVATAR / AUTHOR NAME / PUBLISH DATE / BLOG WORD COUNT / READING TIME SECTION
+       |*====================================================================*/}
+
       {/* Blog author section begins */}
-      <div className="hover:link">
-        <div className="flex flex-wrap gap-2 items-center lg:space-x-3 space-x-0 hover-target">
-          <div className="">
-            <AuthorInfoModal
-              user={user}
-              title={blog?.author?.name}
-              author={author}
-              blog={blog}
-            >
-              <div className="space-y-2">
-                <p className="flex items-center gap-1.5 font-bold">
-                  <LucideIcon.CreditCard size={18} /> Super Admin
-                </p>
+      <div className="">
+        {(showAuthorAvatar ||
+          showAuthorInfoModal ||
+          showSocialLinks ||
+          showWordCount ||
+          showPublishDate ||
+          showReadingTime) && (
+          <div className="flex flex-wrap gap-2 items-center lg:space-x-3 space-x-0 hover-target">
+            {showAuthorInfoModal ? (
+              <AuthorInfoModal
+                user={user}
+                title={blog?.author?.name}
+                author={author}
+                blog={blog}
+              >
+                <div className="space-y-2">
+                  <p className="flex items-center gap-1.5 font-bold">
+                    <LucideIcon.CreditCard size={18} />
+                    {author?.roles?.map((r) => (
+                      <span key={r?._id} className="capitalize">
+                        {r?.name}
+                      </span>
+                    ))}
+                  </p>
 
-                <p className="flex items-center text-sm gap-1.5">
-                  <LucideIcon.Mail size={18} /> {author?.email}
-                </p>
+                  <p className="flex items-center text-sm gap-1.5">
+                    <LucideIcon.Mail size={18} /> {author?.email}
+                  </p>
 
-                <p className="text-sm">
-                  Followers: {author.followers?.length || 0}
-                </p>
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-sm">
+                      Followers: {author.followers?.length || 0}
+                    </p>
 
-                <p className="text-sm">
-                  Following: {author.following?.length || 0}
-                </p>
+                    <p className="text-sm">
+                      Following: {author.following?.length || 0}
+                    </p>
+                  </div>
 
-                <Link
-                  target="_blank"
-                  to="https://portfolio-h5k5.vercel.app"
-                  className="m-0 hover:link text-blue-400 flex items-center gap-1.5"
-                >
-                  <LucideIcon.Briefcase size={16} /> My Portfolio Link
-                </Link>
+                  <Link
+                    target="_blank"
+                    to="https://portfolio-h5k5.vercel.app"
+                    className="m-0 hover:link text-blue-400 flex items-center gap-1.5"
+                  >
+                    <LucideIcon.Briefcase size={16} /> My Portfolio Link
+                  </Link>
+                  {showSocialLinks && <SocialMediaLinks />}
+                </div>
+              </AuthorInfoModal>
+            ) : (
+              <div className="flex items-center gap-2">
+                {showAuthorAvatar && author?.avatar ? (
+                  <img
+                    src={author.avatar}
+                    alt={author?.name || "Author"}
+                    className="h-8 w-8 rounded-full object-cover bg-gray-300 p-0.5 shadow"
+                  />
+                ) : (
+                  <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700" />
+                )}
 
-                <SocialMediaLinks />
+                {showAuthor && author?.name && (
+                  <div className="">
+                    <p className="text-sm font-semibold text-gray-600 dark:text-gray-400">
+                      {author?.name}
+                    </p>
+                  </div>
+                )}
               </div>
-            </AuthorInfoModal>
-          </div>
+            )}
 
-          <div className="text-gray-500 dark:text-gray-400 lg:text-normal text-sm font-bold flex items-center space-x-2">
-            <span>
-              <FaClock className="text-xl" />
-            </span>
-            <span className="text-normal">{formattedDate}</span>
+            {showPublishDate && (
+              <div className="text-gray-500 dark:text-gray-400 lg:text-normal text-sm font-bold flex items-center space-x-2">
+                <span>
+                  <FaClock size={14} />
+                </span>
+                <span className="text-normal">{formattedDate}</span>
+              </div>
+            )}
+
+            {showWordCount && wordCount && (
+              <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400 font-bold">
+                <FaFileWord size={14} />
+                <Badge color="gray">{wordCount} words</Badge>
+              </div>
+            )}
+
+            {showReadingTime && (
+              <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400 font-bold">
+                <LucideIcon.Clock3 size={14} />
+                <span className="text-sm text-gray-500 dark:text-gray-400 font-bold">
+                  Read in:
+                </span>
+                <Badge color="gray">
+                  {<BlogReadingTimeCounter content={content} />}
+                </Badge>
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </div>
       {/* Blog author section ends */}
-      <div className="grid lg:grid-cols-12 grid-cols-1 lg:gap-14 gap-2 justify-between items-center">
-        <div className="col-span-12 lg:col-span-7 lg:space-y-4 space-y-2 rounded-md min-h-[13.5rem]">
-          {/* Blog title begins */}
-          <div className="">
-            <Link to={`/blog-details/${slug}`} className="m-0">
-              <h2 className="lg:text-2xl text-lg font-extrabold capitalize text-gray-800 dark:text-gray-400 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-4xl first-letter:text-2xl first-letter:text-extra-bold">
-                {title.length > 60 ? `${title.slice(0, 60)}...` : title}
-              </h2>
-            </Link>
-          </div>
-          {/* Blog title ends */}
 
-          {/* Blog excerpt begins */}
-          <div className="">
-            {excerpt ? (
-              <div className="lg:min-h-[5.6rem] min-h-[14rem]">
-                <div className="relative">
-                  <FaQuoteLeft className="absolute top-0 text-xl text-gray-600 dark:text-gray-300" />
-                  <p
-                    className="absolute top-0 indent-7 dark:text-gray-400"
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        excerpt?.length > 280
-                          ? blog?.excerpt.slice(0, 280) + "..."
-                          : blog?.excerpt,
-                    }}
-                  />
-                </div>
+      {/*==================================================
+       |* BLOG TITLE / EXCERPT / BLOG IMAGE SECTION
+       |*===============================================*/}
+      <div className="grid lg:grid-cols-12 grid-cols-1 lg:gap-14 gap-2 justify-between items-center">
+        {/* =====> LEFT SIDE BLOG DETAILS COLUMN STARTS (col-span-7) =====> */}
+
+        {(showTitle ||
+          showBlogPostImage ||
+          showExcerpt ||
+          showBlogPostImage) && (
+          <div className="col-span-12 lg:col-span-7 lg:space-y-4 space-y-2 rounded-md min-h-[13.5rem]">
+            {/* Blog title begins */}
+            {showTitle && (
+              <div className="">
+                <Link to={`/blog-details/${slug}`} className="m-0">
+                  <h2 className="lg:text-xl text-lg font-extrabold capitalize text-gray-800 dark:text-gray-400 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-2xl first-letter:text-2xl first-letter:text-extra-bold">
+                    {displayTitle}
+                  </h2>
+                </Link>
               </div>
-            ) : (
-              <p className="text-red-500 text-md font-bold">
-                😃 No blog summary is available now.
-              </p>
+            )}
+            {/* Blog title ends */}
+
+            {/* Blog excerpt begins */}
+            {showExcerpt && (
+              <div className="">
+                {excerpt ? (
+                  <div className="lg:min-h-[8rem] min-h-[9rem]">
+                    <div className="relative">
+                      <FaQuoteLeft
+                        size={20}
+                        className="absolute top-0 text-xl text-gray-600 dark:text-gray-300 pb-1"
+                      />
+                      <p
+                        className="absolute top-0 indent-6 dark:text-gray-400 italic text-prose text-pretty"
+                        dangerouslySetInnerHTML={{
+                          __html: displayExcerpt,
+                        }}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-red-500 text-md font-bold">
+                    😃 No blog summary is available now.
+                  </p>
+                )}
+              </div>
+            )}
+            {/* Blog excerpt ends */}
+          </div>
+        )}
+
+        {/* ====> RIGHT SIDE IMAGE COLUMN STARTS (col-span-5) ====> */}
+
+        {/* Blog image begins */}
+        {showBlogPostImage && blogPostImage && (
+          <div className="col-span-12 lg:col-span-5 min-h-[13.5rem] flex items-center">
+            {blogPostImage && (
+              <Link to={`/blog-details/${slug}`} className="m-0">
+                <img
+                  src={blogPostImage ? blogPostImage : `${apiURL}${image}`}
+                  alt={title?.slice(0, 10)}
+                  className="w-full lg:object-cover h-auto rounded-lg shadow-md border border-base-content/15 dark:border-gray-700 transition-all hover:scale-105"
+                />
+              </Link>
             )}
           </div>
-          {/* Blog excerpt ends */}
-        </div>
-
-        <div className="col-span-12 lg:col-span-5 min-h-[13.5rem]">
-          <Link to={`/blog-details/${slug}`} className="m-0">
-            <img
-              src={image?.url ? image.url : `${apiURL}${image}`}
-              alt={title.slice(0, 10)}
-              className="w-full lg:object-cover h-auto rounded-lg shadow-md border border-base-content/15 dark:border-gray-700 transition-all hover:scale-105"
-            />
-          </Link>
-        </div>
+        )}
+        {/* Blog image ends */}
       </div>
+
+      {/*==================================================
+       |* CATEGORY / TAGS / COMMENTS / BOOKMARKS SECTION
+       |*===============================================*/}
       <div className="lg:space-y-4 space-y-4">
         {/* Category & tags, comments & bookmark section begins */}
-        <div className="lg:flex grid gap-2 items-center lg:space-x-4">
-          <div className="flex items-center">
-            <span className="flex items-center w-fit mr-1 py-1 lg:text-normal text-xs lg:space-x-2">
-              <span>
-                <FaThList size={20} className="text-xl mr-1" />
-              </span>
-            </span>
-            <span className="">
-              {category ? (
-                <span className="bg-gray-200 dark:bg-gray-800 dark:text-gray-400 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-[2px] mr-1 lg:text-normal text-sm capitalize">
-                  {category.name}
-                </span>
-              ) : (
-                "N/A"
-              )}
-            </span>
-          </div>
-
-          {/* Tags section begins */}
-          <div className="flex items-center">
-            <span className="flex items-center w-fit mr-1 py-1 lg:text-normal text-xs lg:space-x-2">
-              <span>
-                <FaTags size={20} className="text-xl mr-1" />
-              </span>
-            </span>
-            {tags && tags.length > 0 ? (
-              tags.map((tag) => (
-                <span key={tag._id}>
-                  <span className="bg-gray-200 dark:bg-gray-800 dark:text-gray-400 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-[2px] mr-1 lg:text-normal text-sm capitalize">
-                    {tag.name}
+        {(showCategory || showTags || showComments || showBookmark) && (
+          <div className="flex flex-wrap lg:gap-8 gap-2 items-center">
+            {/* Category section begins */}
+            {showCategory && (
+              <div className="flex items-center gap-1">
+                <span className="flex items-center gap-2">
+                  <span>
+                    <FaThList size={14} />
                   </span>
                 </span>
-              ))
-            ) : (
-              <span className="text-gray-400 dark:bg-gray-800 dark:text-gray-400">
-                No tags available
-              </span>
+                <span className="">
+                  {category ? (
+                    <Badge color="gray">{category?.name}</Badge>
+                  ) : (
+                    "N/A"
+                  )}
+                </span>
+              </div>
             )}
-          </div>
+            {/* Category section ends */}
 
-          {/* Comments & bookmarks section begins */}
-          <div className="flex items-center lg:space-x-4 space-x-3">
-            <div className="flex items-center lg:space-x-3 space-x-2">
-              <span>
-                <FaComment size={20} className="text-xl" />
-              </span>
-              <span className="w-6 h-6 p-1 flex items-center justify-center rounded-full border border-gray-300 bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 shadow-sm font-semibold">
-                {fetchedComments.length > 0 ? fetchedComments.length : 0}
-              </span>
-            </div>
-            <span className="">
-              <BookmarkButton blogId={_id} />
-            </span>
+            {/* Tags section begins */}
+            {showTags && (
+              <div className="flex items-center gap-1">
+                <span className="flex items-center gap-2">
+                  <span>
+                    <FaTags size={14} />
+                  </span>
+                </span>
+                {visibleTags?.length > 0 ? (
+                  visibleTags.map((tag) => (
+                    <Badge key={tag?._id} color="gray">
+                      <span className="flex items-center">{tag?.name}</span>
+                    </Badge>
+                  ))
+                ) : (
+                  <span className="text-gray-400 dark:bg-gray-800 dark:text-gray-400">
+                    No tags available
+                  </span>
+                )}
+                {tags?.length > tagLimit && <span>...</span>}
+              </div>
+            )}
+            {/* Tags section ends */}
+
+            {/* Comments section begins */}
+            {showComments && (
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
+                  <span>
+                    <FaComment size={14} />
+                  </span>
+                  <span className="w-4 h-4 p-1 text-xs flex items-center justify-center rounded-full border border-gray-300 bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 shadow-sm font-semibold">
+                    {fetchedComments?.length > 0 ? fetchedComments?.length : 0}
+                  </span>
+                </div>
+              </div>
+            )}
+            {/* Comments section ends */}
+
+            {/*  Bookmark section begins */}
+            {showBookmark && (
+              <div className="">
+                <span className="">
+                  <BookmarkButton blogId={_id} />
+                </span>
+              </div>
+            )}
+            {/* Bookmark section ends */}
           </div>
-          {/* Comments & bookmarks section ends */}
-        </div>
+        )}
+
         {/* Category & tags, comments & bookmark  section ends */}
 
         {/* Author published on & bookmarked on section begins */}
@@ -224,7 +382,7 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
           <div className="dark:text-base-300">
             {bookmarkedAt && (
               <div className="text-gray-500 lg:text-normal text-sm font-bold flex items-center space-x-2">
-                <div className="hidden lg:block">||</div>
+                {/* <div className="hidden lg:block">||</div> */}
                 <span className="">Bookmarked on:</span>
                 <span>
                   <FaClock />
@@ -237,15 +395,16 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
         {/* Author published on & bookmarked on section ends */}
 
         {/* Blog content begins */}
-        <div className="dark:text-base-300">
-          <div
-            dangerouslySetInnerHTML={{
-              __html:
-                content.length > 430 ? `${content.slice(0, 430)}...` : content,
-            }}
-            className="prose max-w-none list-decimal text-gray-700 dark:text-gray-400 mb-4 text-pretty"
-          />
-        </div>
+        {showContent && (
+          <div className="dark:text-base-300">
+            <div
+              dangerouslySetInnerHTML={{
+                __html: displayContent,
+              }}
+              className="prose max-w-none list-decimal text-gray-700 dark:text-gray-400 mb-4 text-pretty"
+            />
+          </div>
+        )}
         {/* Blog content ends */}
 
         {/* Read more button begins */}
@@ -270,7 +429,6 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
                 icon={<FaBookReader />}
                 variant="outline"
                 size="xs"
-                // className="btn btn-sm font-bold text-[16px] text-sm rounded-lgs"
               />
             </Link>
           </div>
@@ -278,11 +436,16 @@ const BlogPostCard = ({ blog, user, bookmarkedAt = null }) => {
         {/* Read more button ends */}
       </div>
 
-      <div className="lg:py-10 py-5 relative">
-        <div className="lg:h-[1px] h-[1px] bg-gray-200 dark:bg-gray-700 rounded-md mb- absolute flex justify-center left-2 right-2 lg:-bottom- bottom- lg:w-[90%] mx-auto">
-          <p className="lg:text-base text-sm lg:visible invisible pt-1.5 flex gap-2">
-            <FaQuoteLeft /> Thank you a lot for the interest on the topic !{" "}
-            <FaQuoteRight />
+      {/*==================================================
+       |*  FOOTER & GREETINGS SECTION
+       |*===============================================*/}
+      <div className="lg:py-10 py-5 relative lg:block hidden">
+        <div className="lg:h-[1px] border-b border-base-content/15 dark:border-gray-700 rounded-md absolute flex justify-center left-2 right-2 lg:w-[90%] mx-auto">
+          <p className="lg:text-base text-sm pt-1.5 flex gap-2">
+            <FaQuoteLeft className="text-gray-400" /> Thanks a lot from
+            <span className="font-extrabold">Nova Journal</span> for your
+            interest on the topic ! Keep reading !
+            <FaQuoteRight className="text-gray-400" />
           </p>
         </div>
       </div>

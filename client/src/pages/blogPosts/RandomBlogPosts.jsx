@@ -1,11 +1,9 @@
-import { Link } from "react-router-dom";
 import useGetRandomBlogPosts from "../../hooks/useGetRandomBlogPosts";
 import SectionTitle from "../../components/sectionTitle/SectionTitle";
 import { FaListOl } from "react-icons/fa";
+import BlogCard from "../../components/canonicalBlogCard/BlogCard";
 
-const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
-const RandomBlogPosts = () => {
+const RandomBlogPosts = ({ user }) => {
   const { data, isLoading, error } = useGetRandomBlogPosts();
 
   if (isLoading) return <p className="flex justify-center">Loading...</p>;
@@ -20,53 +18,19 @@ const RandomBlogPosts = () => {
         icon={<FaListOl size={20} />}
       />
       {data && data.length > 0 ? (
-        <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between lg:mt-5 mt-3">
-          {data.map((blog) => (
-            <div
-              key={blog._id}
-              className="col-span-12 lg:col-span-3 lg:space-y-2 space-y-2 shadow-sm rounded-md border border-base-300 dark:border-gray-700 tooltip"
-              data-tip={blog?.title}
-            >
-              <div className="lg:h-44 h-38 w-full">
-                <Link to={`/blog-details/${blog.slug}`} className="m-0">
-                  <img
-                    src={
-                      blog?.image?.url
-                        ? blog?.image?.url
-                        : ` ${apiURL}${blog.image}`
-                    }
-                    alt=""
-                    className="lg:h-44 h-38 w-full rounded-t-lg"
-                  />
-                </Link>
-              </div>
-              <div className="p-2">
-                <Link to={`/blog-details/${blog.slug}`} className="m-0">
-                  <h2 className="text-xl font-extrabold">
-                    {blog.title.length > 60
-                      ? blog.title.slice(0, 60) + "..."
-                      : blog.title}
-                  </h2>
-                </Link>
-              </div>
-              <div className="dark:text-gray-400">
-                <Link to={`/blog-details/${blog.slug}`} className="m-0">
-                  {blog?.content ? (
-                    <p
-                      style={{ fontSize: "16px" }}
-                      className="prose prose-lg max-w-none list-decimal text-gray-700 mb-4 dark:text-gray-400 p-2"
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          blog.content.length > 120
-                            ? blog.content.slice(0, 120) + "..."
-                            : blog.content,
-                      }}
-                    />
-                  ) : (
-                    <p>No blog post content is available</p>
-                  )}
-                </Link>
-              </div>
+        <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between mt-6">
+          {data?.map((blog) => (
+            <div key={blog} className="lg:col-span-4 col-span-12">
+              <BlogCard
+                post={blog}
+                user={user}
+                blog={blog}
+                authorInfoModal={true}
+                showContent={true}
+                showSocialLinks={true}
+                showComments={true}
+                showBookmark={true}
+              />
             </div>
           ))}
         </div>

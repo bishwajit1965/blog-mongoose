@@ -6,7 +6,11 @@ const notificationSchema = new mongoose.Schema({
   subject: { type: String },
   author: { type: String },
   content: { type: String, required: true },
-  pdfUrl: { type: String },
+  // pdfUrl: { type: String },
+  pdfUrl: {
+    url: String,
+    publicId: String,
+  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

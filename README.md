@@ -180,7 +180,6 @@ Dynamic system configuration controls:
 
 # Project Architecture
 
-```
 Client (React)
         │
         ▼
@@ -197,13 +196,11 @@ Mongoose Models
         │
         ▼
 MongoDB
-```
 
 ---
 
 # Folder Structure
 
-```
 client
 ├── app
 ├── components
@@ -253,31 +250,24 @@ server
 
 Clone repository
 
-```bash
 git clone https://github.com/bishwajit1965/nova-journal.git
-```
 
 Install dependencies
 
-```bash
 cd client
 npm install
 
 cd ../server
 npm install
-```
 
 Run development server
 
-```bash
 npm run dev
-```
 
 ---
 
 # Environment Variables
 
-```env
 PORT=
 MONGO_URI=
 JWT_SECRET=
@@ -291,7 +281,6 @@ CLOUDINARY_SECRET=
 FIREBASE_PROJECT_ID=
 FIREBASE_PRIVATE_KEY=
 FIREBASE_CLIENT_EMAIL=
-```
 
 ---
 

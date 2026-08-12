@@ -41,6 +41,7 @@ const createSystemSettings = async (req, res) => {
     });
   }
 };
+
 /**
  * GET /api/settings/public
  * Fetch public system settings
@@ -283,91 +284,3 @@ module.exports = {
   updateSystemSettings,
   updateSystemSettingsImage,
 };
-
-// const {
-//   getSystemSettings,
-//   updateSystemSettings,
-//   updateSettingsImage,
-//   toPublicSettings,
-// } = require("../services/systemSettingsService");
-// const { uploadToCloudinary } = require("../utils/uploadToCloudinary");
-
-// const getSettings = async (req, res) => {
-//   try {
-//     const settings = await getSystemSettings();
-//     return res.status(200).json({ success: true, settings });
-//   } catch (error) {
-//     return res.status(500).json({ success: false, message: error.message });
-//   }
-// };
-
-// const getPublicSettings = async (req, res) => {
-//   try {
-//     const settings = await getSystemSettings();
-//     return res
-//       .status(200)
-//       .json({ success: true, settings: toPublicSettings(settings) });
-//   } catch (error) {
-//     return res.status(500).json({ success: false, message: error.message });
-//   }
-// };
-
-// const updateSettings = async (req, res) => {
-//   try {
-//     const settings = await updateSystemSettings(req.body, req.user.id);
-//     return res
-//       .status(200)
-//       .json({ success: true, message: "System settings updated.", settings });
-//   } catch (error) {
-//     return res.status(400).json({ success: false, message: error.message });
-//   }
-// };
-
-// const uploadSettingsImage = async (req, res) => {
-//   try {
-//     const settings = await updateSettingsImage(
-//       req.params.imageType,
-//       req.file,
-//       req.user.id,
-//     );
-//     return res
-//       .status(200)
-//       .json({ success: true, message: "Settings image updated.", settings });
-//   } catch (error) {
-//     return res
-//       .status(error.status || 500)
-//       .json({ success: false, message: error.message });
-//   }
-// };
-
-// const testUpload = async (req, res) => {
-//   try {
-//     console.log("TEST FILE:", req.file);
-
-//     const result = await uploadToCloudinary(
-//       req.file.buffer,
-//       "developer-diary/system-settings",
-//     );
-
-//     console.log("CLOUDINARY RESULT:", result);
-
-//     res.status(200).json({
-//       success: true,
-//       result,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
-
-// module.exports = {
-//   getSettings,
-//   getPublicSettings,
-//   updateSettings,
-//   uploadSettingsImage,
-//   testUpload,
-// };

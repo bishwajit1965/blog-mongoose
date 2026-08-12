@@ -66,7 +66,18 @@ const BlogPosts = ({
           <p className="flex justify-center">No blog post is available!</p>
         ) : (
           paginatedData.map((blog) => (
-            <BlogPostCard key={blog._id} blog={blog} user={user} />
+            <BlogPostCard
+              key={blog._id}
+              blog={blog}
+              user={user}
+              showAuthorInfoModal={true}
+              showSocialLinks={true}
+              showComments={true}
+              showBookmark={true}
+              showPublishDate={true}
+              showCategory={true}
+              showTags={true}
+            />
           ))
         )}
       </div>

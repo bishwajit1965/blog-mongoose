@@ -4,7 +4,7 @@ const path = require("path");
 const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|gif|svg|webp/;
+  const allowedTypes = /jpeg|jpg|png|gif|svg|pdf|webp/;
 
   const extName = allowedTypes.test(
     path.extname(file.originalname).toLowerCase(),
@@ -29,6 +29,9 @@ const upload = multer({
 
 module.exports = upload;
 
+/**===============================================================
+ * WAS USED INITIALLY (not used now) CLOUDINARY IS BEING USED NOW
+ =================================================================*/
 // const multer = require("multer");
 // const path = require("path");
 // const fs = require("fs");

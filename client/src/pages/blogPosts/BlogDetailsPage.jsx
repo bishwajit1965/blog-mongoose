@@ -1,6 +1,5 @@
 import {
   FaArrowAltCircleRight,
-  FaArrowLeft,
   FaClock,
   FaComment,
   FaCommentAlt,
@@ -54,6 +53,7 @@ import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
 import Breadcrumbs from "../../components/breadCrumbs/BreadCrumbs";
 import ScrollTopButton from "../../components/scrollTopButton/ScrollTopButton";
 import useSystemSettings from "../../hooks/useSystemSettings";
+import HomeButton from "../../components/homeButton/HomeButton";
 
 // Button active state style
 const style = {
@@ -1004,20 +1004,8 @@ const BlogDetailsPage = () => {
         </div>
         {/* Comments list & comment box ends */}
 
-        {/**========================================
-      | FLOATING BUTTON TO LOAD HOME PAGE BEGINS
-      |**=========================================*/}
-
-        <div className="">
-          <Link to="/">
-            <div
-              className="tooltip fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-300 z-50 text-orange-500 px-3 py-1 shadow-lg h-14 w-14 opacity-50 rounded-full border border-gray-400 flex items-center justify-center"
-              data-tip="Go Home Page"
-            >
-              <FaArrowLeft className="text-gray-500 text-xl" />
-            </div>
-          </Link>
-        </div>
+        {/* Floating button to lead to homepage begins */}
+        <HomeButton />
         {/* Floating button to lead to homepage ends */}
 
         {/* Comments section ends */}
@@ -1028,10 +1016,9 @@ const BlogDetailsPage = () => {
           </Link>
         </div>
 
-        {/* Scroll to top button */}
-        <div className="height-[px]">
-          <ScrollTopButton />
-        </div>
+        {/* Scroll to top button begins */}
+        <ScrollTopButton />
+        {/* Scroll to top button ends */}
       </div>
     </>
   );

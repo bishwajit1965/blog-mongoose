@@ -6,6 +6,7 @@ import RelatedBlogPostsCard from "./RelatedBlogPostsCard";
 import useGetRelatedPosts from "../../hooks/useGetRelatedPosts";
 import { useEffect, useState } from "react";
 import Loader from "../loader/Loader";
+import BlogCard from "../canonicalBlogCard/BlogCard";
 
 // Button active state style
 const style = {
@@ -56,20 +57,25 @@ const RelatedBlogPosts = ({ slug, user }) => {
       {isExpanded && (
         <div className="lg:py-8 py-4">
           <div className="grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-8 gap-4">
-            {paginatedData.length === 0 ? (
+            {paginatedData.length > 0 ? (
+              paginatedData.slice(0, 3).map((blog) => (
+                <div key={blog?._id} className="lg:col-span-4 col-span-12">
+                  <BlogCard
+                    post={blog}
+                    blog={blog}
+                    user={user}
+                    authorInfoModal={true}
+                    showContent={true}
+                    showExcerpt={true}
+                    showComments={true}
+                    showBookmark={true}
+                  />
+                </div>
+              ))
+            ) : (
               <p className="flex justify-center col-span-12">
                 No related post is available now! Try later.
               </p>
-            ) : (
-              paginatedData
-                .slice(0, 3)
-                .map((blog) => (
-                  <RelatedBlogPostsCard
-                    key={blog?._id}
-                    blog={blog}
-                    user={user}
-                  />
-                ))
             )}
           </div>
           <div className="lg:p-8 pt-4">

@@ -20,7 +20,7 @@ const CountBadge = ({
 
   return (
     <div
-      className={`w-6 h-6 rounded-full p-2 flex items-center justify-center text-base-100 text-xs border shadow ${color ? `bg-${color}` : "bg-emerald-500"} ${border ? `border-${border}` : "border-emerald-600"}`}
+      className={`lg:w-6 lg:h-6 h-4 w-4 rounded-full p-2 flex items-center justify-center text-base-100 text-xs border shadow ${color ? `bg-${color}` : "bg-emerald-500"} ${border ? `border-${border}` : "border-emerald-600"}`}
     >
       {count}
     </div>

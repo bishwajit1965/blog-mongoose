@@ -261,6 +261,7 @@ const NoticeDetailsView = ({ notice, toggler, isHidden, manageNotice }) => {
         {!isHidden && (
           <CTAButton
             onClick={() => manageNotice()}
+            size="xs"
             label="Go to Create Notice Page"
             icon={<FaPlusCircle />}
             className="m-0 p-2 btn btn-sm"

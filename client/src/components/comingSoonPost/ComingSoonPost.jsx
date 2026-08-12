@@ -136,8 +136,8 @@ const ComingSoonPost = ({
           </div>
         </div>
       ) : (
-        <div className="grid lg:grid-cols-12 grid-cols-1 gap-2 justify-between">
-          {data.map((post) => (
+        <div className="grid lg:grid-cols-12 grid-cols-1">
+          {data?.map((post) => (
             <ComingSoonPostCard
               key={post._id}
               post={post}

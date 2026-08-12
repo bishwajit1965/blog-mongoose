@@ -24,9 +24,9 @@ const AuthorInfoModal = ({ user, blog, author, title = "User", children }) => {
           <div className="">
             {user ? (
               <img
-                src={user?.photoURL}
-                alt={title.slice(0, 15)}
-                className="w-10 rounded-full"
+                src={author?.avatar}
+                alt={author?.name?.slice(0, 10)}
+                className="w-8 h-8 object-cover rounded-full bg-gray-300 p-0.5 shadow"
               />
             ) : (
               <img
@@ -44,12 +44,12 @@ const AuthorInfoModal = ({ user, blog, author, title = "User", children }) => {
         </div>
 
         {isOpen && (
-          <div className="absolute left-0 top-10 ml-0 lg:w-80 w-72 bg-base-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl p-4 rounded-xl z-30 space-y-2 dark:text-gray-400 min-h-80">
+          <div className="absolute left-0 top-10 ml-0 lg:w-80 w-[17rem] bg-base-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl p-4 rounded-xl z-30 space-y-2 dark:text-gray-400 min-h-80">
             <div className="flex justify-between items-center">
               <img
-                src={user?.photoURL}
+                src={author?.avatar}
                 alt={title}
-                className="w-14 h-14 rounded-full"
+                className="w-14 h-14 rounded-full bg-gray-300 p-0.5 shadow"
               />
               <div className="">
                 <FollowButton

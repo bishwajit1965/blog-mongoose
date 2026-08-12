@@ -1,6 +1,7 @@
 import CountBadge from "../../admin/ui/CountBadge";
 import TableDataNotFound from "../../admin/ui/TableDataNotFound";
 import FollowButton from "../../components/followButton/FollowButton";
+import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
 import useLastSeenFormatter from "../../hooks/useLastSeenFormatter";
 import useMongoUsers from "../../hooks/useMongoUsers";
 import AuthorFollowersCard from "./AuthorFollowersCard";
@@ -45,7 +46,7 @@ const AuthorProfileHeader = ({
               </h1>
               <p className="flex items-center justify-center">
                 {isOnline ? (
-                  <span className="text-emerald-600 font-semibold border-2 border-emerald-400 rounded-full px-2 p-0.5">
+                  <span className="text-emerald-600 font-semibold border-2 border-emerald-400 rounded-full px-2 p-0.5 animate-pulse">
                     🟢 Online Now
                   </span>
                 ) : (
@@ -86,7 +87,8 @@ const AuthorProfileHeader = ({
       <div className="lg:space-y-6 space-y-3">
         <div className="">
           <h1 className="lg:text-xl text-medium font-bold flex items-center gap-2">
-            Author Follower Count: <CountBadge dataLength={followerCount} />
+            <LucideIcon.UserPlus /> Author Follower(s) Count:{" "}
+            <CountBadge dataLength={followerCount} />
           </h1>
         </div>
 

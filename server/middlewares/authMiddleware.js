@@ -1,3 +1,6 @@
+/**=======================================================
+ * NOT USED AND NEEDED NOW - IN THIS PROJECT AND DELETABLE
+ =========================================================*/
 // const { verifyJWT } = require("../utils/jwt");
 // const User = require("../models/User");
 

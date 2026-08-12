@@ -8,6 +8,16 @@ export default {
         playFair: ["Playfair Display", "serif"],
         roboto: ["Roboto", "sans-serif"],
       },
+
+      keyframes: {
+        spinSlow: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+      },
+      animation: {
+        "spin-slow": "spinSlow 6s linear infinite",
+      },
     },
   },
   plugins: [require("daisyui"), require("@tailwindcss/typography")],

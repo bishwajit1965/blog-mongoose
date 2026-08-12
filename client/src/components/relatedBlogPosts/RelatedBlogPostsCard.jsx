@@ -14,21 +14,13 @@ import { useState } from "react";
 import { LucideIcon } from "../lucideIcon/LucideIcons";
 
 const RelatedBlogPostsCard = ({ blog, user }) => {
-  const {
-    _id,
-    title,
-    image,
-    slug,
-    author,
-    content,
-    category,
-    // tags,
-    publishAt,
-  } = blog || {};
+  const { _id, title, image, slug, author, content, category, publishAt } =
+    blog || {};
 
   const formattedDate = useDateFormatter(publishAt);
 
   const [fetchedComments, setFetchedComments] = useState([]);
+
   const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   /**==========================================
@@ -90,53 +82,16 @@ const RelatedBlogPostsCard = ({ blog, user }) => {
       </div>
 
       <div className="lg:space-y-4 space-y-2 p-2">
-        <div className="">
+        <div className="min-h-16">
           <Link to={`/blog-details/${slug}`} className="m-0">
-            <h2 className="lg:text-xl text-2xl font-extrabold capitalize text-gray-800 dark:text-base-300 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-4xl first-letter:text-xl first-letter:text-extra-bold">
+            <h2 className="lg:text-xl text-2xl font-extrabold capitalize text-gray-800 dark:text-base-300 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-2xl first-letter:text-xl first-letter:text-extra-bold">
               {title.length > 60 ? `${title.slice(0, 60)}...` : title}
             </h2>
           </Link>
         </div>
 
-        {/* Category & tags, comments & bookmark section begins */}
+        {/* Category & comments & bookmark section begins */}
         <div className="lg:grid gap-2 items-center lg:space-x-0 lg:space-y-4 space-y-2">
-          {/* <div className="flex items-center">
-            <span className="flex items-center w-fit mr-1 py-1 lg:text-normal text-xs lg:space-x-2">
-              <span>
-                <FaThList className="text-xl mr-1" />
-              </span>
-            </span>
-            <span className="">
-              {category ? (
-                <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-[2px] mr-1 lg:text-normal text-sm capitalize">
-                  {category.name}
-                </span>
-              ) : (
-                "N/A"
-              )}
-            </span>
-          </div> */}
-
-          {/* Tags section begins */}
-          {/* <div className="flex items-center">
-            <span className="flex items-center w-fit mr-1 py-1 lg:text-normal text-xs lg:space-x-2">
-              <span>
-                <FaTags className="text-xl mr-1" />
-              </span>
-            </span>
-            {tags && tags.length > 0 ? (
-              tags.map((tag) => (
-                <span key={tag._id}>
-                  <span className="bg-gray-200 flex items-center w-fit font-bold text-gray-600 rounded-md px-2 py-[2px] mr-1 lg:text-normal text-sm capitalize">
-                    {tag.name}
-                  </span>
-                </span>
-              ))
-            ) : (
-              <span className="text-gray-400">No tags available</span>
-            )}
-          </div> */}
-
           {/* Comments & bookmarks section begins */}
           <div className="flex items-center lg:space-x-4 space-x-1">
             <div className="flex items-center">
@@ -184,13 +139,13 @@ const RelatedBlogPostsCard = ({ blog, user }) => {
         {/* Author published on & bookmarked on section ends */}
 
         {/* Blog content begins */}
-        <div className="">
+        <div className="min-h-28">
           <div
             dangerouslySetInnerHTML={{
               __html:
                 content.length > 145 ? `${content.slice(0, 145)}...` : content,
             }}
-            className="prose indent-7 max-w-none list-decimal text-gray-700 dark:text-base-300 mb-4 text-pretty"
+            className="prose indent-4 max-w-none list-decimal text-gray-700 dark:text-base-300 mb-4 text-pretty min-h-28"
           />
         </div>
         {/* Blog content ends */}
@@ -214,9 +169,9 @@ const RelatedBlogPostsCard = ({ blog, user }) => {
             >
               <Button
                 label="Read More"
+                size="xs"
                 icon={<FaBook />}
-                variant="white"
-                className="btn btn-sm font-bold text-[16px] text-sm rounded-lgs"
+                variant="outline"
               />
             </Link>
           </div>

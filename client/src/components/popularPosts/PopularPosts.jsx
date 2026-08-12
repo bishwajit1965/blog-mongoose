@@ -86,13 +86,14 @@ const PopularPosts = () => {
                   }}
                   className="prose max-w-none list-decimal text-gray-700 dark:text-gray-400 text-sm text-pretty"
                 />
-                <div className="flex justify-end py8">
+                <div className="flex justify-end">
                   <Button
                     href={`/blog-details/${post.slug}`}
+                    size="xs"
                     label="Read More"
                     icon={<FaBookReader />}
                     variant="outline"
-                    className="btn btn-sm font-bold text-[16px] text-sm"
+                    className=""
                   />
                 </div>
               </div>

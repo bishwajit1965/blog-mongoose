@@ -1,16 +1,24 @@
 import TableDataNotFound from "../../admin/ui/TableDataNotFound";
-import LatestPostCard from "./LatestPostCard";
+import BlogCard from "../../components/canonicalBlogCard/BlogCard";
 
-const AuthorLatestPosts = ({ latestPosts }) => {
+const AuthorLatestPosts = ({ latestPosts, user }) => {
   return (
     <div className="grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-6 gap-4">
       {latestPosts?.length > 0 ? (
         latestPosts?.map((latestPost) => (
-          <LatestPostCard
-            key={latestPost?._id}
-            latestPost={latestPost}
-            latestPosts={latestPosts}
-          />
+          <div key={latestPost?._id} className="lg:col-span-4 col-span-12">
+            <BlogCard
+              user={user}
+              post={latestPost}
+              blog={latestPost}
+              authorInfoModal={true}
+              showSocialLinks={true}
+              showContent={true}
+              showComments={true}
+              showBookmark={true}
+              showAuthor={true}
+            />
+          </div>
         ))
       ) : (
         <TableDataNotFound />

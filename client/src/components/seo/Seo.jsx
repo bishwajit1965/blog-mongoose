@@ -25,21 +25,21 @@ const Seo = ({
   const settings = systemSettings?.data || {};
 
   // Prepare global data to feed in SEO
-  const siteName = settings?.site?.name || seoConfig.siteName;
+  const siteName = settings?.site?.name || seoConfig?.siteName;
 
-  const siteUrl = settings?.site?.websiteUrl || seoConfig.siteUrl;
+  const siteUrl = settings?.site?.websiteUrl || seoConfig?.siteUrl;
 
   const defaultDescription =
-    settings?.seo?.metaDescription || seoConfig.defaultDescription;
+    settings?.seo?.metaDescription || seoConfig?.defaultDescription;
 
-  const publisherLogo = settings.branding.logo.secureUrl || "";
+  const publisherLogo = settings?.branding?.logo?.secureUrl || "";
 
   const defaultOgImage =
-    settings?.seo?.ogImage?.secureUrl || `${siteUrl}${seoConfig.defaultImage}`;
+    settings?.seo?.ogImage?.secureUrl || `${siteUrl}${seoConfig?.defaultImage}`;
 
   const defaultKeywords = settings?.seo?.keywords || [];
 
-  const language = settings?.localization?.language || seoConfig.language;
+  const language = settings?.localization?.language || seoConfig?.language;
 
   /* ============================================================
    * Strips HTML tags

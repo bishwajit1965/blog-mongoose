@@ -13,6 +13,10 @@ import AuthorLatestPosts from "./AuthorLatestPosts";
 import AuthorComingSoonPosts from "./AuthorComingSoonPosts";
 import { getAuthorFollowStatus } from "../../services/publicAuthorFollowStatusService";
 import Loader from "../../admin/ui/Loader";
+import { FaBloggerB, FaRunning } from "react-icons/fa";
+import { motion } from "framer-motion";
+import CustomPageTitle from "../../components/pageTitle/CustomPageTitle";
+import useAuth from "../../hooks/useAuth";
 
 const AuthorProfile = () => {
   const [loading, setLoading] = useState(true);
@@ -25,7 +29,8 @@ const AuthorProfile = () => {
   const [followers, setFollowers] = useState([]);
   const [followersCount, setFollowersCount] = useState({});
   const [authorFollowStatus, setAuthorFollowStatus] = useState({});
-
+  const { user } = useAuth();
+  console.log("Profile", profile);
   const refreshFollowers = async () => {
     const response = await getAuthorFollowers(authorId);
 
@@ -76,6 +81,7 @@ const AuthorProfile = () => {
       if (latestPostResponse) {
         setLatestPosts(latestPostResponse?.data);
       }
+
       if (comingSoonPostsResponse) {
         setComingSoonPosts(comingSoonPostsResponse?.data);
       }
@@ -99,11 +105,14 @@ const AuthorProfile = () => {
     fetchAuthorPublicProfileFeatures(authorId);
   }, [fetchAuthorPublicProfileFeatures, authorId]);
 
-  console.log("Profile of Author", profile);
-
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
       {loading && <Loader />}
+      <CustomPageTitle title="Author Profile" updatedAt={profile?.createdAt} />
 
       <div className="lg:max-w-6xl mx-auto">
         <div className="lg:space-y-8 space-y-4">
@@ -123,17 +132,23 @@ const AuthorProfile = () => {
           </div>
 
           <div className="lg:space-y-8 space-y-4 p-4">
-            <h1 className="lg:text-3xl text-xl font-bold">Latest Blog Posts</h1>
-            <AuthorLatestPosts latestPosts={latestPosts} />
+            <h1 className="lg:text-3xl text-xl font-bold flex items-center gap-2">
+              <FaBloggerB />
+              Latest Blog Post(s)
+            </h1>
+            <AuthorLatestPosts latestPosts={latestPosts} user={user} />
           </div>
 
           <div className="lg:space-y-8 space-y-4 p-4">
-            <h1 className="lg:text-3xl text-xl font-bold">Coming Soon Posts</h1>
+            <h1 className="lg:text-3xl text-xl font-bold flex items-center gap-2">
+              <FaRunning />
+              Coming Soon Post(s)
+            </h1>
             <AuthorComingSoonPosts comingSoonPosts={comingSoonPosts} />
           </div>
         </div>
       </div>
-    </>
+    </motion.div>
   );
 };
 

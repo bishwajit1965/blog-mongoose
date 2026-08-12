@@ -17,13 +17,16 @@ const {
 
 const router = express.Router();
 
+// FRONTEND ROUTE
 router.get("/public", getPublicSettings);
+
 router.use(
   authenticateToken,
   authorizeRoles(["super-admin", "admin"]),
   authorizePermissions(["upload-settings", "update-settings"]),
 );
 
+// BACKEND ROUTES
 router.get("/", getSystemSettings);
 
 // Create the singleton system settings document (Run only once)
@@ -38,17 +41,3 @@ router.patch(
 );
 
 module.exports = router;
-
-// const {
-//   // getSettings,
-//   // getPublicSettings,
-//   // updateSettings,
-//   // uploadSettingsImage,
-//   // testUpload,
-// } = require("../controllers/systemSettingsController");
-
-// router.get("/", getSettings);
-
-// router.put("/", updateSettings);
-
-// router.post("/test-upload", upload.single("image"), testUpload);

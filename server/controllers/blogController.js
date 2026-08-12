@@ -67,12 +67,12 @@ const createBlog = async (req, res) => {
       excerpt = await generateExcerpt(content); // ✅ Now allowed because `excerpt` is `let`
     }
 
-    if (excerpt.length > 250) {
-      excerpt = excerpt.substring(0, 247) + "..."; // ✅ Allowed with `let`
+    if (excerpt.length > 350) {
+      excerpt = excerpt.substring(0, 347) + "..."; // ✅ Allowed with `let`
     } else if (excerpt.length === 0) {
       excerpt = await generateExcerpt(content);
-      if (excerpt.length > 250) {
-        excerpt = excerpt.substring(0, 247) + "...";
+      if (excerpt.length > 350) {
+        excerpt = excerpt.substring(0, 347) + "...";
       }
     }
 
@@ -186,7 +186,14 @@ const getAllBlogs = async (req, res) => {
       status: "published",
       moderationStatus: { $nin: ["hidden", "deleted"] },
     })
-      .populate("author", "name email avatar followers following")
+      .populate({
+        path: "author",
+        select: "name email avatar followers following isOnline lastSeen roles",
+        populate: {
+          path: "roles",
+          select: "name description",
+        },
+      })
       .populate("category", "name")
       .populate("tags", "name")
       .sort({ createdAt: -1 });
@@ -200,7 +207,14 @@ const getAllBlogs = async (req, res) => {
 const getBlogsForSuperAdminDashBoard = async (req, res) => {
   try {
     const blogs = await Blog.find({})
-      .populate("author", "name email avatar followers following")
+      .populate({
+        path: "author",
+        select: "name email avatar followers following isOnline lastSeen roles",
+        populate: {
+          path: "roles",
+          select: "name description",
+        },
+      })
       .populate("category", "name")
       .populate("tags", "name")
       .sort({ createdAt: -1 })
@@ -222,7 +236,14 @@ const getBlogBySlug = async (req, res) => {
       slug: req.params.slug,
       status: "published",
     })
-      .populate("author", "name email avatar followers following")
+      .populate({
+        path: "author",
+        select: "name email avatar followers following isOnline lastSeen roles",
+        populate: {
+          path: "roles",
+          select: "name description",
+        },
+      })
       .populate("category", "name")
       .populate("tags", "name");
     if (!blog) return res.status(404).json({ message: "Blog not found" });
@@ -239,10 +260,17 @@ const getRandomPost = async (req, res) => {
     const random = Math.floor(Math.random() * count);
     const randomPost = await Blog.find({ status: "published" })
       .skip(random)
-      .populate("author", "name email avatar followers following")
+      .populate({
+        path: "author",
+        select: "name email avatar followers following isOnline lastSeen roles",
+        populate: {
+          path: "roles",
+          select: "name description",
+        },
+      })
       .populate("category", "name")
       .populate("tags", "name")
-      .limit(4);
+      .limit(3);
     if (!randomPost) {
       return res.status(404).json({ message: "No random post found" });
     }
@@ -267,7 +295,14 @@ const getRelatedBlogPosts = async (req, res) => {
         { tags: { $in: currentPost.tags } },
       ],
     })
-      .populate("author", "name email avatar followers following")
+      .populate({
+        path: "author",
+        select: "name email avatar followers following isOnline lastSeen roles",
+        populate: {
+          path: "roles",
+          select: "name description",
+        },
+      })
       .populate("category", "name")
       .populate("tags", "name")
       .limit(15); // Adjust limit as needed
@@ -515,7 +550,14 @@ const getAllNonDeletedBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find({ deletedAt: null })
       .sort({ createdAt: -1 })
-      .populate("author", "name email")
+      .populate({
+        path: "author",
+        select: "name email avatar followers following isOnline lastSeen roles",
+        populate: {
+          path: "roles",
+          select: "name description",
+        },
+      })
       .populate("category", "name")
       .populate("tags", "name");
     await generateSitemap(); // ✅ Regenerate sitemap after successful blog fetching
@@ -665,7 +707,14 @@ const getFeaturedPosts = async (req, res) => {
       isFeatured: true,
       moderationStatus: { $nin: ["hidden", "deleted"] },
     })
-      .populate("author", "name email avatar")
+      .populate({
+        path: "author",
+        select: "name email avatar followers following isOnline lastSeen roles",
+        populate: {
+          path: "roles",
+          select: "name description",
+        },
+      })
       .populate("category", "name")
       .populate("tags", "name")
       .sort({ publishAt: -1, createdAt: -1 })

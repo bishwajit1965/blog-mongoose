@@ -2,9 +2,9 @@ import AdminLoader from "../../admin/adminComponent/adminLoader/AdminLoader";
 import BlogPostCard from "../blogPosts/BlogPostCard";
 import useAuth from "../../hooks/useAuth";
 import useGetBookmarkedPosts from "../../hooks/useGetBookmarkedPosts";
-import PageTitle from "../../components/pageTitle/PageTitle";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
+import CustomPageTitle from "../../components/pageTitle/CustomPageTitle";
 
 const BookmarkedPage = () => {
   const { user } = useAuth();
@@ -22,7 +22,7 @@ const BookmarkedPage = () => {
     );
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       <Helmet>
         <title>Nova Blogging Platform || Bookmarked Page</title>
       </Helmet>
@@ -34,9 +34,8 @@ const BookmarkedPage = () => {
         className="rounded-lg lg:space-y-4 space-y-2"
       >
         <div className="">
-          <PageTitle
-            title="All My"
-            decoratedText="Book Marked Posts"
+          <CustomPageTitle
+            title="My Book Marked Posts"
             dataLength={data?.bookmarks?.length}
           />
         </div>
