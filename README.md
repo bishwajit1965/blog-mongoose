@@ -302,6 +302,21 @@ LinkedIn: https://www.linkedin.com/in/bishwajit-paul
 
 Email: paul.bishwajit09@gmail.com
 
+# V1
+
+Nova Journal V1 is the current production-ready release containing the features documented above.
+
+# V2 — Possible Future Enhancements
+
+- Newsletter
+- AI Assisted Writing
+- Markdown Editor
+- Analytics Dashboard
+- Multi-language Support
+- Newsletter Subscription
+- Progressive Web App
+- Redis Caching
+
 ## License
 
 MIT License
