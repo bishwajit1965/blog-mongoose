@@ -222,9 +222,6 @@ server
 ├── routes
 ├── services
 └── utils
-```
-
----
 
 # Cloud Features
 
@@ -232,8 +229,6 @@ server
 - Automatic Image Optimization
 - Secure Upload API
 - Media Management
-
----
 
 # Security
 
@@ -243,8 +238,6 @@ server
 - Role Based Authorization
 - Refresh Tokens
 - Secure Middleware
-
----
 
 # Installation
 
@@ -264,8 +257,6 @@ Run development server
 
 npm run dev
 
----
-
 # Environment Variables
 
 PORT=
@@ -282,8 +273,6 @@ FIREBASE_PROJECT_ID=
 FIREBASE_PRIVATE_KEY=
 FIREBASE_CLIENT_EMAIL=
 
----
-
 # Future Roadmap
 
 - Newsletter
@@ -294,8 +283,6 @@ FIREBASE_CLIENT_EMAIL=
 - Newsletter Subscription
 - Progressive Web App
 - Redis Caching
-
----
 
 # Connect
 
@@ -310,8 +297,6 @@ https://www.linkedin.com/in/bishwajit-paul
 Email
 
 paul.bishwajit09@gmail.com
-
----
 
 ## License
 
