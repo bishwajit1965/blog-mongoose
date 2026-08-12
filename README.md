@@ -40,7 +40,7 @@ Nova Journal was developed as a portfolio-quality project to demonstrate modern 
 
 ---
 
-# Developer
+## Developer
 
 ## Bishwajit Paul
 
@@ -50,7 +50,7 @@ Focused on building scalable full-stack web applications using the MERN ecosyste
 
 ---
 
-# Tech Stack
+## Tech Stack
 
 ## Frontend
 
@@ -79,7 +79,7 @@ Focused on building scalable full-stack web applications using the MERN ecosyste
 
 ---
 
-# Major Features
+## Major Features
 
 ## Authentication
 
@@ -178,7 +178,7 @@ Dynamic system configuration controls:
 
 ---
 
-# Project Architecture
+## Project Architecture
 
 Client (React)
         │
@@ -199,7 +199,7 @@ MongoDB
 
 ---
 
-# Folder Structure
+## Folder Structure
 
 client
 ├── app
@@ -223,14 +223,16 @@ server
 ├── services
 └── utils
 
-# Cloud Features
+---
+
+## Cloud Features
 
 - Cloudinary Image Storage
 - Automatic Image Optimization
 - Secure Upload API
 - Media Management
 
-# Security
+## Security
 
 - Password Hashing
 - JWT Authentication
@@ -239,7 +241,9 @@ server
 - Refresh Tokens
 - Secure Middleware
 
-# Installation
+---
+
+## Installation
 
 Clone repository
 
@@ -257,7 +261,9 @@ Run development server
 
 npm run dev
 
-# Environment Variables
+---
+
+## Environment Variables
 
 PORT=
 MONGO_URI=
@@ -273,7 +279,9 @@ FIREBASE_PROJECT_ID=
 FIREBASE_PRIVATE_KEY=
 FIREBASE_CLIENT_EMAIL=
 
-# Future Roadmap
+---
+
+## Future Roadmap
 
 - Newsletter
 - AI Assisted Writing
@@ -284,19 +292,15 @@ FIREBASE_CLIENT_EMAIL=
 - Progressive Web App
 - Redis Caching
 
-# Connect
+---
 
-GitHub
+## Connect
 
-https://github.com/bishwajit1965
+GitHub : https://github.com/bishwajit1965
 
-LinkedIn
+LinkedIn: https://www.linkedin.com/in/bishwajit-paul
 
-https://www.linkedin.com/in/bishwajit-paul
-
-Email
-
-paul.bishwajit09@gmail.com
+Email: paul.bishwajit09@gmail.com
 
 ## License
 
