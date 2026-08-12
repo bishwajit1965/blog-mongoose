@@ -79,7 +79,7 @@ Focused on building scalable full-stack web applications using the MERN ecosyste
 
 ---
 
-## Major Features
+# Major Features
 
 ## Authentication
 
