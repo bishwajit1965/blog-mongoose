@@ -295,7 +295,7 @@ FIREBASE_CLIENT_EMAIL=
 ---
 
 ## Connect
-
+More
 GitHub : https://github.com/bishwajit1965
 
 LinkedIn: https://www.linkedin.com/in/bishwajit-paul
@@ -311,11 +311,11 @@ Nova Journal V1 is the current production-ready release containing the features 
 - Newsletter
 - AI Assisted Writing
 - Markdown Editor
-- Analytics Dashboard
+- More Advanced Analytics Dashboard
 - Multi-language Support
 - Newsletter Subscription
 - Progressive Web App
-- Redis Caching
+- Redis CachingMore
 
 ## License
 
