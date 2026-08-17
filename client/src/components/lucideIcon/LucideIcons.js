@@ -82,6 +82,8 @@ import {
   UserMinus2,
   UserMinus2Icon,
   Clock3,
+  RotateCcwIcon,
+  LucideRefreshCw,
 } from "lucide-react";
 import { FaAddressBook } from "react-icons/fa";
 // Central registry
@@ -113,6 +115,7 @@ export const LucideIcon = {
   Clock3,
   CreditCard,
   RotateCcwKey,
+  RotateCcwIcon,
   Edit,
   Edit2,
   Eye,
@@ -138,6 +141,7 @@ export const LucideIcon = {
   Loader,
   Loader2,
   LogOut,
+  LucideRefreshCw,
   MapPin,
   Menu,
   Mail,

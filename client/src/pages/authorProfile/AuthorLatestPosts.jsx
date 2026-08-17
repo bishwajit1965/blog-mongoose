@@ -14,7 +14,7 @@ const AuthorLatestPosts = ({ latestPosts, user }) => {
               authorInfoModal={true}
               showSocialLinks={true}
               showContent={true}
-              showComments={true}
+              showComments={false}
               showBookmark={true}
               showAuthor={true}
             />

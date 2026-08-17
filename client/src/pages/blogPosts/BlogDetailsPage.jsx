@@ -434,7 +434,7 @@ const BlogDetailsPage = () => {
           <motion.div
             ref={leftColumnRef}
             animate={controls}
-            className="w-[14rem] absolute bg-gray-50 dark:bg-gray-800 left-20 rounded-md invisible lg:visible shadow-md space-y-4 border border-gray-100 dark:border-gray-700"
+            className="w-[17rem] absolute bg-gray-50 dark:bg-gray-800 left-20 rounded-md invisible lg:visible shadow-md space-y-4 border border-gray-100 dark:border-gray-700"
           >
             <div className="w-full">
               <img
@@ -443,10 +443,10 @@ const BlogDetailsPage = () => {
                 className="rounded-t-md h-28 w-full"
               />
             </div>
-            <div className="lg:min-h-72 min-h-80 relative p-2">
-              <FaQuoteLeft className="absolute top-0 text-xl font-bold text-gray-500 dark:text-gray-400" />
+            <div className="lg:min-h-80 min-h-80 relative p-2">
+              <FaQuoteLeft className="absolute top-0 left-4 text-xl font-bold text-gray-500 dark:text-gray-400" />
               <p
-                className="absolute top-0 left-2 right-2 indent-7 lg:text-gray-600 text-gray-500s italic dark:text-gray-400 text-info-content first-letter:font-roboto first-letter:capitalize dark:first-letter:text-info first-letter:font-extrabold lg:first-letter:text-2xl first-letter:text-extra-bold lg:min-h-72 h-80 first-letter:text-gray-800"
+                className="absolute top-2 left-4 right-4 indent-7 lg:text-gray-600 text-gray-500s italic dark:text-gray-400 text-info-content first-letter:font-roboto first-letter:capitalize dark:first-letter:text-info first-letter:font-extrabold lg:first-letter:text-2xl first-letter:text-extra-bold lg:min-h-72 h-80 first-letter:text-gray-800"
                 dangerouslySetInnerHTML={{
                   __html: blog?.excerpt ? blog.excerpt : "N/A",
                 }}
@@ -529,6 +529,7 @@ const BlogDetailsPage = () => {
               </div>
             </div>
             {/* Author, follow, reading time, published at section ends */}
+
             {/* Flagging and dislikes flagged section begins */}
             <div className="lg:inline-flex items-center lg:space-x-8 lg:space-y-0 space-y-3">
               <div className="flex items-center lg:gap-10 gap-6">

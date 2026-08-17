@@ -29,13 +29,13 @@ import useGetTags from "../../hooks/useGetTags";
 import { useState } from "react";
 import PopularPosts from "../../components/popularPosts/PopularPosts";
 import BlogHero from "../../components/blogHero/BlogHero";
-import { LucideRefreshCw } from "lucide-react";
 import useGetComingSoonPost from "../../hooks/useGetComingSoonPost";
 import { motion } from "framer-motion";
 import Seo from "../../components/seo/Seo";
 import useSystemSettings from "../../hooks/useSystemSettings";
 import FeaturedPosts from "../../components/featuredPosts/FeaturedPosts";
 import BlogGlobalSearchResults from "../blogPosts/BlogGlobalSearchResults";
+import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
 
 const sectionMotion = {
   hidden: {
@@ -134,8 +134,6 @@ const Home = () => {
     );
   });
 
-  console.log("Filtered Blogs", filteredBlogs);
-
   /**=============================================
    * GLOBAL SEARCH SUBMIT HANDLER
    * @param {*} e EVENT HANDLER
@@ -223,7 +221,7 @@ const Home = () => {
       |**====================================*/}
       </motion.div>
 
-      <div className="lg:max-w-7xl mx-auto lg:px-4 px-4">
+      <div className="lg:max-w-7xl mx-auto lg:px-4 px-4 space-y-12">
         {/**==================================
         * BLOG POSTS GLOBAL SEARCH PAGE BEGINS
         ======================================*/}
@@ -265,16 +263,17 @@ const Home = () => {
         |**=============================*/}
           <motion.div
             variants={sectionMotion}
-            className="col-span-12 lg:col-span-8 space-y-4 lg:py-8 py-4 shadow-sm rounded-b-lg border-b border-gray-200 dark:border-gray-700"
+            className="col-span-12 lg:col-span-8 space-y-4 shadow-sm rounded-lg border-b border-gray-200 dark:border-gray-700  "
           >
             {/* Bookmarked blog post section begins */}
-            <div className="">
+            <div className="bg-white lg:p-6 p-4 rounded-xl mb-6 shadow-lg hover:shadow-xl dark:bg-gray-800">
               {showBlogPosts ? (
                 <SectionTitle
                   title="Blog"
                   decoratedText="Posts"
                   icon={<FaBlog />}
                   dataLength={data?.length > 0 ? data.length : 0}
+                  dataName="articles"
                 />
               ) : (
                 <SectionTitle
@@ -287,7 +286,7 @@ const Home = () => {
                   }
                 />
               )}
-              <div className="grid lg:grid-cols-12 grid-cols-1 gap-2 items-center justify-evenly px-2 py-4">
+              <div className="grid lg:grid-cols-12 grid-cols-1 gap-2 items-center justify-between pb-4">
                 <div className="col-span-12 lg:col-span-3">
                   <Button
                     onClick={() => handleToggle(!showBookmarks)}
@@ -336,15 +335,40 @@ const Home = () => {
                 )}
                 {/* Tag search ends */}
 
+                {/* Clear Filter */}
+                {!width && isFilterActive && (
+                  <div className="col-span-12 lg:col-span-2">
+                    <Button
+                      onClick={handleClearFilter}
+                      size="xs"
+                      icon={
+                        <LucideIcon.LucideRefreshCw
+                          size={16}
+                          className="text-base-100"
+                        />
+                      }
+                      variant={isFilterActive ? "refresh" : "white"}
+                      label="Refresh"
+                      className={
+                        isFilterActive
+                          ? "border-2 shadow-xl border-green-300"
+                          : "dark:bg-gray-800 dark:text-slate-400 border-slate-300 dark:border-slate-600 text-sm btn btn-sm"
+                      }
+                    />
+                  </div>
+                )}
+                {/* Clear Filter Ends*/}
+
                 {/* Search bar begins */}
                 <div
                   className={`${
                     width ? "col-span-9" : "col-span-3"
-                  } col-span-12 lg: w-full flex justify-end relative`}
+                  } col-span-12 lg: w-full flex justify-end relative gap-2`}
                 >
                   <input
                     onClick={handleSetWidth}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    value={searchTerm}
                     type="text"
                     placeholder="Search..."
                     className={`${
@@ -355,36 +379,37 @@ const Home = () => {
                   <FaSearch
                     className={`${
                       width
-                        ? "absolute top-[.4rem] left-2 w-[1rem]"
+                        ? "absolute top-[.6rem] left-2 w-[1rem]"
                         : "absolute lg:w-[1rem] top-[.6rem] left-2 right-[11.2rem]"
                     } text-sm lg:[1rem] text-gray-400`}
                   />
-                </div>
-                {/* Search bar ends */}
 
-                {/* Clear Filter */}
-                {!width && (
-                  <div className="col-span-12 lg:col-span-2">
+                  {searchTerm && (
                     <Button
-                      onClick={handleClearFilter}
+                      onClick={() => {
+                        setSearchTerm("");
+                        setWidth(false);
+                      }}
                       size="xs"
+                      variant={searchTerm ? "refresh" : "white"}
+                      label="Refresh"
                       icon={
-                        <LucideRefreshCw
-                          size={15}
-                          className="text-slate-700s dark:text-slate-300"
+                        <LucideIcon.LucideRefreshCw
+                          size={16}
+                          className="text-base-100"
                         />
                       }
-                      variant={isFilterActive ? "danger" : "white"}
-                      label="Refresh"
                       className={
-                        isFilterActive
-                          ? "border-2 shadow-xl border-amber-500"
-                          : "dark:bg-gray-800 dark:text-slate-400 border-slate-300 dark:border-slate-600 text-sm btn btn-sm"
+                        searchTerm
+                          ? "border-2 shadow-xl border-green-300"
+                          : "dark:bg-gray-800 dark:text-slate-400 border-green-300 dark:border-slate-600 text-sm btn btn-sm"
                       }
-                    />
-                  </div>
-                )}
-                {/* Clear Filter Ends*/}
+                    >
+                      Refresh
+                    </Button>
+                  )}
+                </div>
+                {/* Search bar ends */}
               </div>
 
               {showBookmarks && (
@@ -422,17 +447,17 @@ const Home = () => {
         |**========================================*/}
           <motion.div
             variants={sidebarMotion}
-            className="col-span-12 lg:col-span-4 rounded-xl lg:py-8 py-4 shadow-sm rounded-b-lg border-b border-gray-200 dark:border-gray-700"
+            className="col-span-12 lg:col-span-4 rounded-xl"
           >
             <div className="sticky top-[5.8rem]">
-              <div className="lg:space-y-8 space-y-4">
+              <div className="lg:space-y-6 space-y-4">
                 {/**=================================
               | COMING SOON POSTS SECTION BEGINS
               | ===================================*/}
-                <div className="">
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg lg:p-6 p-4">
                   <SectionTitle
-                    title="Coming Soon"
-                    decoratedText="Posts"
+                    title="Coming"
+                    decoratedText="Soon"
                     dataLength={
                       comingSoon?.length > 0 ? (
                         comingSoon?.length
@@ -451,11 +476,11 @@ const Home = () => {
                 {/* Social media links section begins */}
                 {user && (
                   <>
-                    <div className="">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg lg:p-6 p-4">
                       <div className="mb-2.5">
                         <SectionTitle title="Follow" decoratedText="Me on" />
                       </div>
-                      <div className="bg-base-300 dark:bg-gray-800 rounded-md p-4 flex justify-center">
+                      <div className="flex justify-center">
                         <SocialMediaLinks />
                       </div>
                     </div>
@@ -464,7 +489,7 @@ const Home = () => {
                 {/* Social media links section ends */}
 
                 {/* Categories section begins */}
-                <div className="lg:my-10 my-2">
+                <div className="lg:my-10 my-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg lg:p-6 p-4">
                   <Categories
                     data={categories}
                     isLoading={isCategoryLoading}
@@ -477,7 +502,7 @@ const Home = () => {
                 {/* Categories section ends */}
 
                 {/* Tags section begins */}
-                <div className="lg:my-10 my-2">
+                <div className="lg:my-10 my-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg lg:p-6 p-4">
                   <Tags
                     data={tags}
                     isLoading={isTagLoading}
@@ -489,9 +514,7 @@ const Home = () => {
                 {/* Tags section ends */}
 
                 {/* Popular posts section begins */}
-                <div className="lg:my-10 my-2 lg:space-y-4 space-y-2">
-                  <PopularPosts />
-                </div>
+                <PopularPosts />
                 {/* Popular posts section ends */}
               </div>
             </div>
@@ -529,7 +552,7 @@ const Home = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="lg:my- my-4"
+          className=""
         >
           <SectionTitle
             title="Older"

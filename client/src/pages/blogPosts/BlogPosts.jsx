@@ -69,19 +69,20 @@ const BlogPosts = ({
             <BlogPostCard
               key={blog._id}
               blog={blog}
+              shadow-lg
               user={user}
               showAuthorInfoModal={true}
               showSocialLinks={true}
-              showComments={true}
+              showComments={false}
               showBookmark={true}
               showPublishDate={true}
               showCategory={true}
-              showTags={true}
+              showTags={false}
             />
           ))
         )}
       </div>
-      <div className="lg:pt-12 py-4 bg-base-3000 rounded-lg">
+      <div className="lg:pt-12 py-4 bg-base-3000 rounded-lg bg-white dark:bg-gray-800 mt-6 shadow-lg hover:shadow-xl">
         {/* Pagination */}
         <AdminPagination
           items={isFilteringActive ? filteredData : data}

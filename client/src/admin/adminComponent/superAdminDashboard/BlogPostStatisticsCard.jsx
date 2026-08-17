@@ -42,10 +42,10 @@ const BlogPostStatisticsCard = () => {
       value: blogStats.publishedPosts,
       color: "#4CAF50",
     },
-    { name: "Draft Posts", value: blogStats.comingSoonPosts, color: "#FF00ff" },
+    { name: "Draft Posts", value: blogStats.draftPosts, color: "#FF00ff" },
     {
       name: "Coming Soon Posts",
-      value: blogStats.draftPosts,
+      value: blogStats.comingSoonPosts,
       color: "#FF9800",
     },
     {

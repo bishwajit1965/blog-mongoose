@@ -91,13 +91,10 @@ const getAllArchivedBlogs = async (req, res) => {
 // ==============================
 const restoreArchivedBlog = async (req, res) => {
   try {
-    console.log("✅ Archived Blog route is hit");
     const { slug } = req.params;
-    console.log("Slug Blog", slug);
+
     const archivedBlog = await ArchivedBlog.findOne({ slug });
-    console.log("firebaseUid:", archivedBlog?.firebaseUid);
-    console.log("originalId:", archivedBlog?.originalId);
-    console.log("Archived Blog", archivedBlog);
+
     if (!archivedBlog)
       return res.status(404).json({ message: "Archived blog not found" });
 

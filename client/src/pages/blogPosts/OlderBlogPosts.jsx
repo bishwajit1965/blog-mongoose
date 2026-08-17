@@ -17,7 +17,7 @@ const OlderBlogPosts = () => {
 
   return (
     <div
-      className="lg:grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-4 gap-4 lg:pt-6 pt-4 lg:space-x-0 space-x-2 hover:mt-"
+      className="lg:grid lg:grid-cols-12 grid-cols-1 justify-between lg:gap-4 gap-4 lg:pt-8 pt-4 lg:space-x-0 space-x-2"
       onMouseEnter={handleViewBlogDetails}
       onMouseLeave={handleHideBlogDetails}
     >
@@ -39,7 +39,7 @@ const OlderBlogPosts = () => {
                   blog?.image?.url ? blog?.image?.url : `${apiURL}${blog.image}`
                 }
                 alt={blog?.slug}
-                className="lg:w-[18.5rem] w-[10.5rem] lg:h-52 h-36 rounded-md shadow-md bg-gray-200 p-2"
+                className="lg:w-[18.5rem] w-[10.5rem] lg:h-52 h-36 rounded-md shadow-md bg-gray-200 p-0.5"
               />
               {blogInfo && (
                 <div className="absolute top-0 left-0 bottom-0 right-0 bg-gray-700 opacity-75 p-4 rounded-md text-white lg:space-y-2 hover:opacity-100">

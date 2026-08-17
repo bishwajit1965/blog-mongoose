@@ -11,12 +11,6 @@ const createNotification = async (req, res) => {
     const { title, heading, subject, author, content } = req.body;
     const createdBy = req.user.id;
 
-    // let pdfUrl = null;
-    // if (req.file) {
-    //   // Assuming your static file server serves from /uploads
-    //   pdfUrl = `/uploads/notifications/${req.file.filename}`;
-    // }
-
     let pdfUrl = {
       url: null,
       publicId: null,
@@ -99,7 +93,6 @@ const getActiveNotifications = async (req, res) => {
 };
 
 const getPublicNotifications = async (req, res) => {
-  console.log("🚀 Public notification controller is hit!");
   try {
     const notifications = await Notification.find({
       isActive: true,
@@ -109,7 +102,6 @@ const getPublicNotifications = async (req, res) => {
         publishedAt: -1,
       })
       .lean();
-    console.log("Fetched notifications:", notifications.length);
 
     res.status(200).json({
       success: true,
@@ -162,8 +154,6 @@ const updateNotification = async (req, res) => {
     const existingNotification = await Notification.findById(id);
     if (!existingNotification)
       return res.status(404).json({ message: "Notification not found." });
-
-    console.log("Existing notification:", existingNotification);
 
     // Handle PDF replacement
     let pdfUrl = existingNotification.pdfUrl;

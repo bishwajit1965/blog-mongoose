@@ -3,7 +3,6 @@ const Blog = require("../models/Blog");
 
 // ✅ Add a blog post to bookmarks
 const bookMarkPost = async (req, res) => {
-  console.log("🚀 Bookmark route is hit");
   const userId = req.user.id;
   const { blogId } = req.params;
 
@@ -16,7 +15,7 @@ const bookMarkPost = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Blog not found" });
     }
-    console.log("Blog to bookmark", blog);
+
     // Prevent duplicate bookmark (unique index exists on userId + blogId)
     const alreadyBookmarked = await Bookmark.findOne({ userId, blogId });
     if (alreadyBookmarked) {
@@ -33,8 +32,6 @@ const bookMarkPost = async (req, res) => {
       category: blog.category,
       tags: blog.tags,
     });
-
-    console.log("New Bookmark", newBookmark);
 
     await newBookmark.save();
 

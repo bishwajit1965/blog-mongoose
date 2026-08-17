@@ -14,6 +14,7 @@ router.use(authenticateUser);
 
 // Now using authorId (Mongo _id) instead of Firebase UID
 router.put("/:authorId/follow", followUser);
+
 router.delete("/:authorId/unfollow", unfollowUser);
 
 module.exports = router;

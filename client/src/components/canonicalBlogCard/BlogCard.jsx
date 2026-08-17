@@ -6,7 +6,6 @@ import {
   FaTags,
 } from "react-icons/fa";
 import Badge from "../../admin/ui/Badge";
-import Button from "../../components/buttons/Button";
 import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
 import useDateFormatter from "../../hooks/useDateFormatter";
 import BlogReadingTimeCounter from "../blogReadingTimeCounter/BlogReadingTimeCounter";
@@ -25,13 +24,13 @@ const BlogCard = ({
   // Optional features
   authorInfoModal = false,
   showContent = false,
+  showTags = false,
   showComments = false,
   showBookmark = false,
   showSocialLinks = false,
 
   // Used features
   showCategory = true,
-  showTags = true,
   showAuthor = true,
   showAuthorAvatar = true,
   showDate = true,
@@ -43,8 +42,8 @@ const BlogCard = ({
 
   // Optional limits
   titleLimit = 60,
-  excerptLimit = 145,
-  contentLimit = 145,
+  excerptLimit = 150,
+  contentLimit = 150,
   tagLimit = 2,
 }) => {
   const {
@@ -101,22 +100,24 @@ const BlogCard = ({
   }, [fetchCommentsList]);
 
   return (
-    <article className="h-full flex flex-col overflow-hidden rounded-xl border border-base-content/15 bg-base-100s shadow-sm transition-shadow duration-300 hover:shadow-lg dark:border-gray-700 lg:min-h-[85vh] min-h-[99vh] relative">
+    <article className="h-full flex flex-col overflow-hidden rounded-xl border border-base-content/15 transition-shadow duration-300 dark:border-gray-700 lg:min-h-[92vh] min-h-[47rem] relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl">
       {/*============================================
       | BLOG IMAGE
       |*=============================================*/}
-      {image && (
-        <img
-          src={imageUrl}
-          alt={title || "Blog post"}
-          className="w-full aspect-video object-cover border-b dark:border-white/10 shadow"
-        />
-      )}
+      <Link to={`/blog-details/${slug}`} className="m-0">
+        {image && (
+          <img
+            src={imageUrl}
+            alt={title || "Blog post"}
+            className="w-full h-52 aspect-video object-cover border-b dark:border-white/10 shadow"
+          />
+        )}
+      </Link>
 
       {/*============================================
       | AUTHOR / PUBLISH DATE RELATED INFO
       |*=============================================*/}
-      <div className="flex flex-1 flex-col p-4 lg:space-y-4 space-y-3">
+      <div className="flex flex-1 flex-col lg:p-6 p-4 lg:space-y-4 space-y-3">
         {(authorInfoModal ||
           showSocialLinks ||
           showAuthorAvatar ||
@@ -200,39 +201,47 @@ const BlogCard = ({
         {/* =========================================
         | CATEGORY / TAG / WORD COUNT  RELATED INFO
         |* =======================================*/}
-
-        {(showCategory || showTags || showWordCount) && (
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
+        {(showCategory || showTags || showWordCount || showReadingTime) && (
+          <div className="flex flex-wrap items-center justify-between gap-1">
+            <div className="flex items-center gap-1">
               <FaList size={14} />{" "}
               {showCategory && category?.name && (
                 <Badge color="blue">
-                  <span className="flex items-center gap-1">
-                    {category.name}
-                  </span>
+                  <span className="flex items-center">{category.name}</span>
                 </Badge>
               )}
             </div>
 
-            <div className="flex items-center gap-2">
-              <FaTags size={14} />
-              {showTags &&
-                visibleTags?.map((tag) => (
-                  <Badge key={tag?._id} color="gray">
-                    <span className="flex items-center gap-1">{tag?.name}</span>
-                  </Badge>
-                ))}
-              {tags?.length > 2 && (
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  ...
-                </span>
-              )}
-            </div>
+            {showTags && visibleTags && (
+              <div className="flex items-center gap-2">
+                <FaTags size={14} />
+                {showTags &&
+                  visibleTags?.map((tag) => (
+                    <Badge key={tag?._id} color="gray">
+                      <span className="flex items-center">{tag?.name}</span>
+                    </Badge>
+                  ))}
+                {tags?.length > 2 && (
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    ...
+                  </span>
+                )}
+              </div>
+            )}
 
             {showWordCount && wordCount && (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center">
                 <FaFileWord size={14} />
                 <Badge color="gray">{wordCount} words</Badge>
+              </div>
+            )}
+
+            {showReadingTime && (
+              <div className="flex items-center">
+                <LucideIcon.Clock3 size={14} />
+                <Badge color="gray">
+                  <BlogReadingTimeCounter content={content} />
+                </Badge>
               </div>
             )}
           </div>
@@ -243,18 +252,17 @@ const BlogCard = ({
         |* ==========================================*/}
         {(showComments || showBookmark) && (
           <div className="flex items-center lg:space-x-4 space-x-2">
-            <span>
-              <FaCommentDots size={18} className="text-xl" />
-            </span>
-            <span className="w-5 h-5 p-1 flex items-center justify-center rounded-full border border-gray-300 dark:border-gray-700 dark:bg-gray-700 bg-gray-200 text-xs shadow font-semibold">
-              {showComments && fetchedComments.length > 0
-                ? fetchedComments.length
-                : 0}
-            </span>
-            {showBookmark && (
-              <span className="">
-                <BookmarkButton blogId={_id} />
-              </span>
+            {showComments && (
+              <div className="flex items-center lg:space-x-2 space-x-2">
+                <span>
+                  <FaCommentDots size={18} className="text-xl" />
+                </span>
+                <span className="w-5 h-5 p-1 flex items-center justify-center rounded-full border border-gray-300 dark:border-gray-700 dark:bg-gray-700 bg-gray-200 text-xs shadow font-semibold">
+                  {showComments && fetchedComments.length > 0
+                    ? fetchedComments.length
+                    : 0}
+                </span>
+              </div>
             )}
           </div>
         )}
@@ -266,22 +274,29 @@ const BlogCard = ({
           {(showTitle || showExcerpt || showContent) && (
             <>
               {/* Title */}
-              <h2 className="text-lg font-bold leading-tight text-gray-800 dark:text-gray-400 line-clamp-3">
-                {showTitle && displayTitle}
-              </h2>
+              <Link to={`/blog-details/${slug}`} className="m-0">
+                <h2 className="lg:text-xl text-lg font-extrabold capitalize text-gray-800 dark:text-gray-400 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-2xl first-letter:text-2xl first-letter:text-extra-bold line-clamp-2">
+                  {showTitle && displayTitle}
+                </h2>
+              </Link>
 
               {/* Excerpt */}
               {showExcerpt && displayExcerpt && (
-                <div className="relative">
-                  <p
-                    dangerouslySetInnerHTML={{
-                      __html: displayExcerpt,
-                    }}
-                    className={`${!showExcerpt && displayExcerpt ? "hidden" : "indent-6 text-left line-clamp-3 text-sms leading-relaxed text-gray-600 dark:text-gray-400 pt-1 italic"}`}
-                  />
-                  <span className="absolute text-gray-600 dark:text-gray-400 top-0 left-0">
-                    <FaQuoteLeft />
-                  </span>
+                <div className="">
+                  <h2 className="text-xs font-bold uppercase mb-2 border w-fit py-0.5 px-1 border-gray-300 dark:border-gray-700 rounded-sm">
+                    Quick Summary ↴
+                  </h2>
+                  <div className="relative">
+                    <p
+                      dangerouslySetInnerHTML={{
+                        __html: displayExcerpt,
+                      }}
+                      className={`${!showExcerpt && displayExcerpt ? "hidden" : "indent-6 text-left line-clamp-3 text-sms leading-relaxed text-gray-600 dark:text-gray-400 pt-1 italic"}`}
+                    />
+                    <span className="absolute text-gray-600 dark:text-gray-400 top-0 left-0">
+                      <FaQuoteLeft />
+                    </span>
+                  </div>
                 </div>
               )}
 
@@ -291,39 +306,35 @@ const BlogCard = ({
                   dangerouslySetInnerHTML={{
                     __html: displayContent,
                   }}
-                  className={`${!showContent && content ? "hidden line-clamp-none" : "line-clamp-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400"}`}
+                  className={`${showContent && content ? "line-clamp-4" : "line-clamp-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400"}`}
                 />
               )}
             </>
           )}
         </div>
 
-        {/* ============================================
+        {/*==============================================
         | FOOTER AREA (Reading timer & Read More Button)
-        |* ==========================================*/}
+        |*============================================*/}
+        {(showBookmark || showReadMore) && (
+          <div className="absolute bottom-6 left-6 right-6">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              {showBookmark && (
+                <div className="">
+                  <BookmarkButton blogId={_id} />
+                </div>
+              )}
 
-        {(showReadingTime || showReadMore) && (
-          <div className="absolute bottom-4 left-4 right-4">
-            <div className="flex flex-wrap lg:justify-between justify-center pt-2 gap-4">
-              <div className="lg:text-[12px] text-sm text-gray-500 font-bold italic border border-gray-700 dark:border-gray-700 dark:text-gray-400 dark:bg-gray-700 rounded-full shadow-sm lg:py-1 py-[4px] lg:px-2.5 px-2 flex items-center justify-center lg:space-x-2 space-x-1 w-content">
-                <span>
-                  <LucideIcon.Clock3 size={14} />
-                </span>
-                <span>Read in:</span>
-                <span className="italic">
-                  <BlogReadingTimeCounter content={content} />
-                </span>
-              </div>
-              <div className="">
-                <Button
-                  href={`/blog-details/${slug}`}
-                  variant="outline"
-                  label="Read More"
-                  size="xs"
-                  icon={<LucideIcon.BookOpen size={14} />}
-                  className="dark:bg-gray-600 dark:border-gray-700 dark:hover:bg-gray-800"
-                />
-              </div>
+              {showReadMore && (
+                <div className="">
+                  <Link
+                    to={`/blog-details/${slug}`}
+                    className="m-0 text-medium text-indigo-500 hover:text-indigo-900 dark:text-slate-400 font-bold hover:link"
+                  >
+                    Read More →
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         )}

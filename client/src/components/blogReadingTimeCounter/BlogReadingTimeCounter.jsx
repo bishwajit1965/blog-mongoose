@@ -4,7 +4,7 @@ const BlogReadingTimeCounter = ({ content }) => {
   const readingTime = useMemo(() => {
     const words = content.trim().split(/\s+/).length;
     const minutes = Math.ceil(words / 200);
-    return `${minutes} minute(s)`;
+    return `${minutes} min(s) Read`;
   }, [content]);
   return <div className="italic">{readingTime}</div>;
 };

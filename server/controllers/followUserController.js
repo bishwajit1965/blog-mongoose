@@ -3,13 +3,9 @@ const User = require("../models/User");
 
 // Follow a user
 const followUser = async (req, res) => {
-  console.log("🚀 📌 Follow user controller method is hit");
   try {
     const followerId = req.user.id; // Mongo _id of logged-in user
     const followeeId = req.params.authorId; // Mongo _id from URL
-
-    console.log("FOLLOWER ID", followerId);
-    console.log("FOLLOWEE ID", followerId);
 
     if (followerId === followeeId) {
       return res

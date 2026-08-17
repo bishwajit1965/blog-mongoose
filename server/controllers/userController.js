@@ -9,9 +9,6 @@ const { generateJWT } = require("../utils/jwt");
 // Used for creating user in MongoDB immediately after Firebase signUp
 const createUser = async (req, res) => {
   try {
-    console.log("✅ Route hit - createUser function triggered!");
-    console.log("📩 Request body data:", req.body);
-
     const { firebaseUid, name, email, password, avatar } = req.body;
     const safeName = typeof name === "string" ? name.trim() : "";
 

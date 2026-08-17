@@ -18,7 +18,7 @@ const RandomBlogPosts = ({ user }) => {
         icon={<FaListOl size={20} />}
       />
       {data && data.length > 0 ? (
-        <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between mt-6">
+        <div className="grid lg:grid-cols-12 grid-cols-1 gap-6 justify-between mt-6">
           {data?.map((blog) => (
             <div key={blog} className="lg:col-span-4 col-span-12">
               <BlogCard
@@ -28,7 +28,7 @@ const RandomBlogPosts = ({ user }) => {
                 authorInfoModal={true}
                 showContent={true}
                 showSocialLinks={true}
-                showComments={true}
+                showComments={false}
                 showBookmark={true}
               />
             </div>

@@ -29,10 +29,6 @@ const assignRolesAndPermissions = async (req, res) => {
         .json({ status: "error", message: "Invalid user ID format" });
     }
 
-    console.log("Roles request for update:", roles);
-    console.log("Permissions request for update:", permissions);
-    console.log("Request body:", req.body);
-
     // Fetch existing roles and permissions in parallel
     const [validRoles, validPermissions] = await Promise.all([
       Role.find({ _id: { $in: roles } }),
@@ -72,7 +68,7 @@ const assignRolesAndPermissions = async (req, res) => {
         roles: updatedRoles,
         permissions: updatedPermissions,
       },
-      { new: true }
+      { new: true },
     )
       .populate("roles", "name")
       .populate("permissions", "name")

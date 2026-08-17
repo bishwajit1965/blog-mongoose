@@ -12,7 +12,7 @@ import { useState } from "react";
 import { FaEnvelope } from "react-icons/fa";
 
 const ComingSoonPost = ({
-  title = "Send Coming Soon Request !",
+  title = "Send Your Request !",
   message = "We are working on something amazing ! Request your topic unhesitatingly & stay tuned for the updates!",
   buttonLabel = "Notify Me!",
   pathName,

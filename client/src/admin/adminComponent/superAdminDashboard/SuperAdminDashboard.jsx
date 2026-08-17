@@ -104,6 +104,7 @@ const SuperAdminDashboard = () => {
         )}
 
         <BlogPostStatisticsCard />
+
         <MessagesStatisticsCard />
       </div>
     </div>

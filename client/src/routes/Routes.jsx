@@ -98,6 +98,7 @@ const router = createBrowserRouter([
       {
         path: "blog-details/:slug",
         element: <BlogDetailsPage />,
+
         loader: async ({ params }) => {
           const response = await fetch(
             `${import.meta.env.VITE_API_BASE_URL}/blogs/${params.slug}`,

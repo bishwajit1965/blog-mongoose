@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-// import HeroImage from "../../assets/Bright cinematic tec.png";
-import HeroImage from "../../assets/Nova_Journal_Hero_Bg.png";
 import useWordTyping from "./useWordsTyping";
 import { Link } from "react-router-dom";
 import {
@@ -12,7 +10,6 @@ import {
 } from "react-icons/fa";
 import {
   LucideCalendar,
-  LucideCheckCircle2,
   LucideList,
   LucideRotateCcw,
   LucideTags,
@@ -20,6 +17,7 @@ import {
 import BlogReadingTimeCounter from "../blogReadingTimeCounter/BlogReadingTimeCounter";
 import useLastSeenFormatter from "../../hooks/useLastSeenFormatter";
 import Button from "../buttons/Button";
+import { LucideIcon } from "../lucideIcon/LucideIcons";
 
 const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -29,21 +27,6 @@ const heroPhrases = [
   "Design Scalable Systems",
   "Engineer for the Future",
 ];
-
-const developerInfo = {
-  title: "About the Developer & Nova Journal Creator",
-  icon: <LucideCheckCircle2 size={16} />,
-  optionTitle: "Developer's Interests",
-  options: [
-    "Developer Diary",
-    "Software Engineering",
-    "Full Stack Development",
-  ],
-  toolsTitle: "Tools Used in Development",
-  toolsUsed: ["Production-ready React", "Node.js", "MongoDB"],
-  fieldsTitle: "Developer's Working Fields",
-  workingFields: ["System Design", "Debugging", "Software Architecture"],
-};
 
 const BlogHero = ({
   data = [],
@@ -55,7 +38,9 @@ const BlogHero = ({
   globalSearchQueryResetHandler,
   onGlobalSearchSubmit,
 }) => {
-  const logo = systemSettings?.branding?.logo?.secureUrl;
+  const logo =
+    systemSettings?.branding?.logo?.secureUrl ||
+    "https://i.ibb.co.com/YFjLMfQv/nova-journal-brand.jpg";
 
   const blogAuthor = data?.slice(0, 1)?.map((blog) => {
     return blog?.author?.lastSeen;
@@ -66,7 +51,7 @@ const BlogHero = ({
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const text =
-    "Practical articles on software engineering, MERN development, debugging, architecture, and the lessons learned while building production-ready applications.";
+    "Practical articles on software engineering, MERN development, debugging, architecture, and the lessons learned while building production-ready web applications.";
 
   const animatedText = useWordTyping(text, 250, 2000);
 
@@ -90,14 +75,12 @@ const BlogHero = ({
 
   return (
     <>
-      <section className="relative w-full min-h-[75vh] flex items-center text-white overflow-hidden rounded-t-xl">
-        {/* BG IMAGE */}
-        <img src={HeroImage} className="absolute w-full h-full object-cover" />
-        <div className="absolute w-full h-full bg-black/45"></div>
+      <section className="relative w-full min-h-[85vh] flex items-center text-white overflow-hidden rounded-t-xl bg-slate-900 dark:bg-slate-800/30">
+        <div className="absolute w-full h-full bg-slate-950"></div>
 
-        <div className="relative w-full flex flex-col md:flex-row items-center justify-between gap-10 lg:p-12 p-">
+        <div className="relative w-full flex flex-col md:flex-row items-center justify-between gap-10 lg:px-28 py-4">
           {/* LEFT CONTENT */}
-          <div className="max-w-4xl p-4 lg:space-y-6 space-y-4">
+          <div className="max-w-4xl p-4 lg:space-y-5 space-y-3">
             <div className="flex items-center lg:gap-4 gap-2">
               <img
                 src={logo}
@@ -114,79 +97,24 @@ const BlogHero = ({
               </h1>
             </div>
 
-            <h1 className="text-gray-300 lg:text-3xl text-lg md:text-3xl font-extrabold leading-tight drop-shadow-lg">
-              <span className="uppercase">Ideas That Help You • </span>
-              <span
-                className={`text-indigo-400 transition-opacity duration-300 ${
-                  fade ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                {heroPhrases[index]}
-              </span>
-            </h1>
+            <div className="space-y-8">
+              <h1 className="text-gray-300 lg:text-2xl text-lg md:text-3xl font-extrabold leading-tight drop-shadow-lg max-w-xl">
+                <span className="uppercase">Ideas That Help • </span>
+                <span
+                  className={`text-indigo-400 transition-opacity duration-300 ${
+                    fade ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  {heroPhrases[index]}
+                </span>
+              </h1>
 
-            {/* Sub-heading */}
-            <div className="lg:max-w-4xl hidden md:block">
-              <div className="space-y-4">
-                <h1 className="lg:text-xl text-medium font-extrabold uppercase text-indigo-300 border border-indigo-300/50 shadow-xl rounded-xl p-2">
-                  {developerInfo?.title}
-                </h1>
-
-                <div className="flex flex-wrap items-center justify-between lg:space-y-0 space-y-8">
-                  <div className="space-y-2">
-                    <h2 className="lg:text-lg text-sm uppercase text-indigo-300 border border-indigo-300/30 shadow-xl rounded-xl px-3 py-1">
-                      {developerInfo?.optionTitle}
-                    </h2>
-                    <div className="space-y-2">
-                      {developerInfo?.options.map((option, index) => (
-                        <p
-                          key={index}
-                          className="text-indigo-300 flex items-center text-medium gap-2"
-                        >
-                          {developerInfo?.icon} {option}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <h2 className="lg:text-lg text-sm uppercase text-indigo-300 border border-indigo-300/30 shadow-xl rounded-xl px-3 py-1">
-                      {developerInfo?.toolsTitle}
-                    </h2>
-                    <div className="space-y-2">
-                      {developerInfo?.toolsUsed.map((option, index) => (
-                        <p
-                          key={index}
-                          className="text-indigo-300 flex items-center text-medium gap-2"
-                        >
-                          {developerInfo?.icon} {option}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <h2 className="lg:text-lg text-sm uppercase text-indigo-300 border border-indigo-300/30 shadow-xl rounded-xl px-3 py-1">
-                      {developerInfo?.fieldsTitle}
-                    </h2>
-                    <div className="space-y-2">
-                      {developerInfo?.workingFields.map((option, index) => (
-                        <p
-                          key={index}
-                          className="text-indigo-300 flex items-center text-medium gap-2"
-                        >
-                          {developerInfo?.icon} {option}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <p className="text-indigo-300 max-w-xl lg:h-20 h-36 lg:text-normal text-normal">
+                {animatedText ||
+                  siteDescription ||
+                  "Practical articles on software engineering, MERN development, debugging, architecture, and the lessons learned while building production-ready applications."}
+              </p>
             </div>
-
-            <p className="text-indigo-300 lg:h-10 h-32 lg:text-[16px] text-medium">
-              {animatedText ||
-                siteDescription ||
-                "Practical articles on software engineering, MERN development, debugging, architecture, and the lessons learned while building production-ready applications."}
-            </p>
 
             {/* Developer Info */}
 
@@ -204,22 +132,22 @@ const BlogHero = ({
                             <img
                               src={blog?.author?.avatar}
                               alt={blog?.author?.name}
-                              className="lg:w-36 lg:h-36 w-28 h-28 rounded-full flex bg-gray-400 p-1 lg:justify-start mx-auto justify-center shadow-md"
+                              className="lg:w-20 lg:h-20 w-16 h-16 rounded-full flex bg-gray-400 p-1 lg:justify-start mx-auto justify-center shadow-md"
                             />
                           </div>
 
                           {/* Author online status */}
-                          <p className="flex items-center lg:justify-start justify-center">
+                          <p className="flex items-center lg:justify-start justify-center text-xs">
                             {blog?.author?.isOnline === true ? (
-                              <span className="text-emerald-400 font-bo1d border-2 animate-pulse border-emerald-400 rounded-full px-1 p-0.5">
+                              <span className="text-emerald-400 font-bo1d border-2 animate-pulse border-emerald-400 rounded-full px-1 py-0.5 text-xs">
                                 🟢 Online Now
                               </span>
                             ) : (
                               <span>
-                                <span className="text-orange-400 border-2 border-orange-400 rounded-full px-2 p-0.5 block mb-[1px]">
-                                  🔴 Offline
+                                <span className="text-orange-400 border-2 border-orange-400 text-xs rounded-full px-1 py-0.5 block mb-[1px]">
+                                  🔴 Offline Now
                                 </span>
-                                <span className="block text-[12px] text-orange-400">
+                                <span className="block text-xs text-orange-400">
                                   Last seen {formattedLastSeen}
                                 </span>
                               </span>
@@ -228,61 +156,54 @@ const BlogHero = ({
                         </div>
                       </div>
 
-                      <div className="lg:space-y-4 space-y-2 lg:text-start text-center">
-                        <p className="lg:text-[22px] text-[18px] font-extrabold text-indigo-300">
+                      <div className="lg:space-y-2 space-y-1 lg:text-start text-center">
+                        <p className="lg:text-xl text-lg font-extrabold text-indigo-300">
                           By {blog?.author?.name || "Anonymous"}
                         </p>
-                        <p className="text-[18px] text-indigo-300">
-                          <span className="font-extrabold text-orange-400">
+                        <p className="text-lg text-indigo-300">
+                          <span className="font-bold text-orange-400">
                             MERN
                           </span>{" "}
                           Full Stack Developer
-                        </p>
-                        <p className="text-[18px] text-indigo-300 max-w-xs hidden md:block">
-                          Writing about software engineering, system
-                          architecture, debugging, and modern web development.
-                        </p>
-                        <p className="text-[18px] text-indigo-300 max-w-xs hidden md:block">
-                          Focused on practical software engineering.
                         </p>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="lg:col-span-5 col-span-12 border p-4 border-indigo-300/40 rounded-xl gap-4 space-y-3">
-                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-1 backdrop-blur-sm">
+              <div className="lg:col-span-5 col-span-12 border p-4 border-indigo-300/40 rounded-xl gap-4 space-y-3 max-w-4xl">
+                <div className="rounded-lg border border-white/10 bg-white/5 px-2 py- backdrop-blur-sm flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 text-indigo-300">
-                    <FaBlogger size={18} />
-                    <span className="text-medium font-bold uppercase tracking-[0.2em]">
+                    <FaBlogger size={14} />
+                    <span className="text-sm font-bold uppercase tracking-[0.2em]">
                       Articles
                     </span>
                   </div>
-                  <p className="mt-2 text-2xl font-bold">
+                  <p className="text-lg font-bold">
                     {data?.length > 0 ? data.length : 0}
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-1 backdrop-blur-sm">
+                <div className="rounded-lg border border-white/10 bg-white/5 px-2 py- backdrop-blur-sm flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 text-indigo-300">
-                    <LucideList size={18} />
-                    <span className="text-medium font-bold uppercase tracking-[0.2em]">
+                    <LucideList size={14} />
+                    <span className="text-sm font-bold uppercase tracking-[0.2em]">
                       Categories
                     </span>
                   </div>
-                  <p className="mt-2 text-2xl font-bold">
+                  <p className="text-lg font-bold">
                     {categories?.length > 0 ? categories.length : 0}
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-1 backdrop-blur-sm">
+                <div className="rounded-lg border border-white/10 bg-white/5 px-2 py- backdrop-blur-sm flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 text-indigo-300">
-                    <LucideTags size={18} />
-                    <span className="text-medium font-bold uppercase tracking-[0.2em]">
+                    <LucideTags size={14} />
+                    <span className="text-sm font-bold uppercase tracking-[0.2em]]">
                       Tags
                     </span>
                   </div>
-                  <p className="mt-2 text-2xl font-bold">
+                  <p className="text-lg font-bold">
                     {tags?.length > 0 ? tags.length : 0}
                   </p>
                 </div>
@@ -337,7 +258,7 @@ const BlogHero = ({
                         icon={<LucideRotateCcw />}
                         variant="success"
                         label="Reset"
-                        className="rounded-md"
+                        className="rounded-md lg:w-24 w-full"
                       />
                     )}
                   </div>
@@ -347,8 +268,8 @@ const BlogHero = ({
           </div>
 
           {/* RIGHT PREMIUM CARDS */}
-          <div className="hidden md:flex flex-col gap-5 p-4">
-            <h1 className="lg:text-xl text-indigo-300 uppercase text-lg font-extrabold border border-indigo-300 rounded-xl justify-center p-2 flex items-center gap-2">
+          <div className="hidden md:flex flex-col gap-6 p-4">
+            <h1 className="lg:text-xl text-indigo-300 uppercase text-lg font-extrabold flex items-center gap-2">
               <FaBloggerB /> Latest Articles
             </h1>
             {data?.slice(0, 2).map((blog) => (
@@ -359,7 +280,7 @@ const BlogHero = ({
               >
                 <div
                   key={blog._id}
-                  className="w-[280px] bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-xl hover:scale-105 transition duration-300 rounded-t-xl"
+                  className="max-w-xs bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-xl hover:scale-105 transition duration-300 rounded-t-xl"
                 >
                   <img
                     src={
@@ -370,18 +291,33 @@ const BlogHero = ({
                     alt={blog?.slug}
                     className="w-full h-32 object-fill rounded-t-xl"
                   />
-                  <div className="p-2 space-y-2 rounded-b-lg">
-                    <h3 className="font-semibold text-white line-clamp-2">
+                  <div className="p-2 space-y-1 rounded-b-xl">
+                    <h3 className="font-semibold text-sm text-white line-clamp-2">
                       {blog.title}
                     </h3>
-                    <p className="flex items-center gap-1">
-                      <span>Read in:</span>
+
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={blog?.author?.avatar}
+                        alt=""
+                        className="w-10 h-10 rounded-full"
+                      />
+                      <p className="text-sm text-white">
+                        {blog?.author?.name || "Anonymous"}
+                      </p>
+                    </div>
+
+                    <p className="flex items-center gap-1 text-xs">
+                      Read in 👉
+                      <span>
+                        <LucideIcon.Clock3 size={14} />
+                      </span>
                       <span className="italic">
                         {<BlogReadingTimeCounter content={blog?.content} />}
                       </span>
                     </p>
-                    <p className="flex items-center gap-1">
-                      {" "}
+                    <p className="flex items-center gap-1 text-xs">
+                      Published 👉
                       <LucideCalendar size={14} />
                       {new Date(blog?.publishAt).toLocaleDateString("en-US", {
                         day: "numeric",
@@ -391,17 +327,6 @@ const BlogHero = ({
                         minute: "2-digit",
                       })}
                     </p>
-
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={blog?.author?.avatar}
-                        alt=""
-                        className="w-12 h-12 rounded-full"
-                      />
-                      <p className="text-sm text-white">
-                        Author : {blog?.author?.name || "Anonymous"}
-                      </p>
-                    </div>
                   </div>
                 </div>
               </Link>

@@ -6,10 +6,6 @@ const reactToPost = async (req, res) => {
   const { slug } = req.params;
   const userId = req.user.id;
   const { type } = req.body;
-  console.log("React to post route is hit");
-  console.log("slug", slug);
-  console.log("User Id", userId);
-  console.log("Type", type);
 
   if (!["like", "dislike"].includes(type)) {
     return res.status(400).json({ message: "Invalid reaction type." });
@@ -19,7 +15,6 @@ const reactToPost = async (req, res) => {
     const blog = await Blog.findOne({ slug });
     if (!blog) return res.status(404).json({ message: "Blog not found!" });
 
-    console.log("Blog found", blog);
     // Check if reactions exist
     const existing = await Reaction.findOne({
       user: userId,

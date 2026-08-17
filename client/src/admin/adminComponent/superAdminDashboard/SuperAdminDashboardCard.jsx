@@ -14,7 +14,7 @@ const SuperAdminDashboardCard = ({ loading, isAuthenticated, adminData }) => {
               <img
                 src={adminData.user.avatar}
                 alt={adminData.user.name}
-                className="w-24 rounded-full shadow-md"
+                className="w-24 h-24 rounded-full shadow-md"
               />
             </div>
             <p className="text-xl font-bold">
@@ -35,7 +35,7 @@ const SuperAdminDashboardCard = ({ loading, isAuthenticated, adminData }) => {
                     <span key={role._id} className="inline-block mx-1">
                       {role.name}
                     </span>
-                  ) : null
+                  ) : null,
                 )
               ) : (
                 <span>No roles</span>

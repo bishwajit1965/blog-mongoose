@@ -3,7 +3,7 @@ const Category = require("../models/Category");
 const createCategory = async (req, res) => {
   try {
     const { name, slug, description, parent } = req.body;
-    console.log("Request Body:", req.body);
+
     const category = new Category({ name, slug, description, parent });
     await category.save();
     res
@@ -62,7 +62,7 @@ const updateCategory = async (req, res) => {
     const updatedCategory = await Category.findByIdAndUpdate(
       id,
       { name, slug, description, parent },
-      { new: true }
+      { new: true },
     );
 
     res

@@ -2,7 +2,6 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 import AdminPagination from "../../admin/adminComponent/adminPagination/AdminPagination";
 import Button from "../buttons/Button";
-import RelatedBlogPostsCard from "./RelatedBlogPostsCard";
 import useGetRelatedPosts from "../../hooks/useGetRelatedPosts";
 import { useEffect, useState } from "react";
 import Loader from "../loader/Loader";
@@ -67,7 +66,7 @@ const RelatedBlogPosts = ({ slug, user }) => {
                     authorInfoModal={true}
                     showContent={true}
                     showExcerpt={true}
-                    showComments={true}
+                    showComments={false}
                     showBookmark={true}
                   />
                 </div>

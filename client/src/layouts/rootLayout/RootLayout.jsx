@@ -10,8 +10,8 @@ const RootLayout = () => {
       <Navbar systemSettings={systemSettings} />
 
       <div className="lg:max-w-full mx-auto">
-        <div className="pt-[4.75rem]">
-          <div className="lg:min-h-[calc(100vh-210px)] lg:py-8 py-4">
+        <div className="pt-[5rem]">
+          <div className="lg:min-h-[calc(100vh-80px)] lg:py-8 py-6 bg-slate-100 dark:bg-gray-900">
             <Outlet />
           </div>
         </div>

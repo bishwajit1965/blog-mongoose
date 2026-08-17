@@ -1,9 +1,7 @@
 const Page = require("../models/Page");
 
 const getPublicPageBySlug = async (req, res) => {
-  console.log("📌 Public get page controller hit");
   const { slug } = req.params;
-  console.log("Slug", slug);
 
   const page = await Page.findOne({
     slug,

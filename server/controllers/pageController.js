@@ -255,7 +255,6 @@ const restorePage = async (req, res) => {
 };
 
 const getSoftDeletedPages = async (req, res) => {
-  console.log("📌 Soft deleted route is reached");
   try {
     const pages = await Page.find({
       deletedAt: { $ne: null },

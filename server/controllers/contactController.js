@@ -76,7 +76,6 @@ export const getAllContacts = async (req, res) => {
  * PATCH /api/contact/:id
  */
 export const updateContactStatus = async (req, res) => {
-  console.log("🚀 Contact update controller is hit");
   try {
     const { status } = req.body;
     const { id } = req.params;

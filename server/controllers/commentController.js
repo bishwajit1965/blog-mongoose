@@ -5,7 +5,6 @@ const addComment = async (req, res) => {
   const { slug } = req.params;
   const { name, email, content, parentId } = req.body;
   const userId = req.user.id;
-  console.log("User Id:", userId);
 
   try {
     const blog = await Blog.findOne({ slug });
@@ -18,7 +17,6 @@ const addComment = async (req, res) => {
           post: blog._id,
           parent: null, // only check for top-level duplicates
         });
-    console.log("Existing comment: ", existingComment);
 
     if (!parentId && existingComment) {
       return res
@@ -28,17 +26,14 @@ const addComment = async (req, res) => {
 
     let level = 0;
     let parent = null;
-    console.log("Parent Comment ID:", parentId);
 
     if (parentId) {
       const parentComment = await Comment.findById(parentId);
       if (!parentComment) {
         return res.status(400).json({ message: "Parent comment not found." });
       }
-      console.log("Parent Comment:", parentComment);
 
       level = parentComment.level + 1;
-      console.log("New Comment Level:", level);
 
       if (level > 2) {
         return res
@@ -87,7 +82,6 @@ const nestComments = (comments, parentId = null, level = 0) => {
 
 // Get all comments for a post in front end
 const getComments = async (req, res) => {
-  console.log("🚀 Get comments method is hit");
   const { slug } = req.params;
   try {
     const blog = await Blog.findOne({ slug });
@@ -101,8 +95,6 @@ const getComments = async (req, res) => {
       .populate("author", "name email avatar")
       .sort({ createdAt: -1 })
       .lean();
-
-    console.log("Fetched comments in frontend", flatComments);
 
     const nestedComments = nestComments(flatComments);
 
@@ -120,10 +112,7 @@ const updateComment = async (req, res) => {
   const { id } = req.params;
   const { content } = req.body;
   const userId = req.user.id;
-  console.log("Edit comment route is hit"); //✅
-  console.log("CommentId:", id);
-  console.log("Comment content:", content);
-  console.log("User Id::", userId);
+
   try {
     const comment = await Comment.findById(id);
 

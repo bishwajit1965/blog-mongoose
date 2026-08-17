@@ -43,7 +43,7 @@ const FeaturedPosts = ({ featuredPosts, isFeaturedLoading, user }) => {
             icon={<FaBloggerB />}
             dataLength={featuredPosts?.length}
           />
-          <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between mt-4">
+          <div className="grid lg:grid-cols-12 grid-cols-1 gap-6 justify-between mt-4">
             {featuredPosts && featuredPosts?.length > 0 ? (
               featuredPosts?.map((blog) => (
                 <div key={blog?._id} className="lg:col-span-4 col-span-12">
@@ -51,7 +51,7 @@ const FeaturedPosts = ({ featuredPosts, isFeaturedLoading, user }) => {
                     post={blog}
                     user={user}
                     blog={blog}
-                    showComments={true}
+                    showComments={false}
                     authorInfoModal={true}
                     showContent={true}
                     showSocialLinks={true}

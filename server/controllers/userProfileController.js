@@ -2,7 +2,6 @@ const User = require("../models/User");
 
 // Fetch all users with firebaseUid
 const getAllUsers = async (req, res) => {
-  console.log("User list route hit");
   try {
     const users = await User.find()
       .populate("roles")
@@ -23,7 +22,7 @@ const updateProfile = async (req, res) => {
     const updatedUser = await User.findOneAndUpdate(
       { firebaseUid },
       updateData,
-      { new: true }
+      { new: true },
     ).select("-password");
 
     res.json(updatedUser);
@@ -40,7 +39,7 @@ const getFollowers = async (req, res) => {
   try {
     const user = await User.findById(userId).populate(
       "followers",
-      "username avatar"
+      "username avatar",
     );
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -60,7 +59,7 @@ const getFollowing = async (req, res) => {
   try {
     const user = await User.findById(userId).populate(
       "following",
-      "username avatar"
+      "username avatar",
     );
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -117,10 +116,10 @@ const unfollowUser = async (req, res) => {
     }
 
     user.following = user.following.filter(
-      (id) => id.toString() !== targetUserId
+      (id) => id.toString() !== targetUserId,
     );
     targetUser.followers = targetUser.followers.filter(
-      (id) => id.toString() !== userId
+      (id) => id.toString() !== userId,
     );
 
     await user.save();

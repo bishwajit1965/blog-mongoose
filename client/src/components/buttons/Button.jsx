@@ -56,6 +56,8 @@ const Button = ({
       "bg-base-100 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700 transition-all duration-300 dark:text-gray-400 shadow focus:ring-slate-400 focus:ring-offset-2",
     active:
       "bg-teal-600 border border-emerald-400 text-gray-100 hover:bg-emerald-700 shadow-sm focus:ring-emerald-400",
+    refresh:
+      "bg-green-500 border border-green-400 text-base-100 hover:bg-green-700 shadow-sm focus:ring-emerald-400",
   };
 
   const buttonClassName = cn(

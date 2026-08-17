@@ -1,6 +1,7 @@
-import CountBadge from "../../admin/ui/CountBadge";
+import { FaBloggerB } from "react-icons/fa";
 import BlogCard from "../../components/canonicalBlogCard/BlogCard";
 import Loader from "../../components/loader/Loader";
+import SectionTitle from "../../components/sectionTitle/SectionTitle";
 
 const BlogGlobalSearchResults = ({
   loading,
@@ -11,24 +12,15 @@ const BlogGlobalSearchResults = ({
   return (
     <div className="lg:my-10 my-5">
       {loading && <Loader />}
-      <div className="lg:grid flex lg:grid-cols-12 grid-cols-1 gap-4 justify-between p-2 mb-4 rounded-t-lg bg-base-300 dark:bg-gray-800">
-        <div className="lg:col-span-6 col-span-12">
-          <h1 className="lg:text-2xl text-medium font-bold">
-            Search on{" "}
-            <span className="lg:text-2xl text:lg capitalize font-extrabold text-emerald-500">
-              {`${globalSearchQuery}`}
-            </span>
-          </h1>
-        </div>
-        <div className="lg:col-span-6 col-span-12 flex flex-wrap items-center gap-2 justify-end lg:text-2xl text-medium font-bold">
-          <CountBadge
-            dataLength={filteredBlogs?.length > 0 ? filteredBlogs?.length : 0}
-          />{" "}
-          Posts
-        </div>
-      </div>
+      <SectionTitle
+        title="Search Result on 👉"
+        decoratedText={`${globalSearchQuery}`}
+        icon={<FaBloggerB />}
+        dataLength={filteredBlogs?.length}
+        dataName="posts"
+      />
 
-      <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between">
+      <div className="grid lg:grid-cols-12 grid-cols-1 gap-6 justify-between">
         {filteredBlogs?.length ? (
           filteredBlogs?.map((blog) => (
             <div key={blog?._id} className="lg:col-span-4 col-span-12">
@@ -37,10 +29,10 @@ const BlogGlobalSearchResults = ({
                 user={user}
                 showExcerpt={true}
                 showContent={true}
-                showComments={true}
+                showComments={false}
                 showBookmark={true}
                 showCategory={true}
-                showTags={true}
+                showTags={false}
                 authorInfoModal={true}
               />
             </div>

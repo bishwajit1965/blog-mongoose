@@ -79,7 +79,7 @@ const BookmarkButton = ({ blogId }) => {
         ) : (
           <FaRegBookmark className="lg:h-3 lg:w-3 w-2.5 h-2.5 dark:text-gray-400 text-xs" />
         )}
-        {isBookmarked ? "Remove Bookmark" : "Add Bookmark"}
+        {isBookmarked ? "Remove" : "Bookmark"}
       </button>
     </div>
   );

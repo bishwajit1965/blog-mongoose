@@ -140,6 +140,9 @@ const createBlog = async (req, res) => {
       seoDescription = seoDescription + " ...";
     }
 
+    // If not normalized it will populate value (true) though Schema defines it false by default
+    const normalizedIsFeatured = isFeatured === true || isFeatured === "true";
+
     const newBlog = new Blog({
       title,
       slug,
@@ -148,7 +151,7 @@ const createBlog = async (req, res) => {
       category,
       tags: formattedTags,
       status,
-      isFeatured: Boolean(isFeatured),
+      isFeatured: normalizedIsFeatured,
       publishAt: validPublishAt,
       author: userId, // Mongo _id
       firebaseUid: user.firebaseUid || null,
@@ -649,7 +652,7 @@ const flagPost = async (req, res) => {
         flaggedReason: reason && reason.length ? reason : ["Other"],
         flaggedAt: [new Date()],
       });
-      console.log("New flagged post:", newFlaggedPost);
+
       await newFlaggedPost.save();
 
       // Update flaggedPosts array in User model
@@ -768,15 +771,34 @@ const getPopularPosts = async (req, res) => {
       {
         $limit: 5,
       },
+
+      // Populate category
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      {
+        $unwind: {
+          path: "$category",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
       {
         $project: {
           title: 1,
           content: 1,
+          excerpt: 1,
           image: 1,
+          category: 1,
           slug: 1,
           featuredImage: 1,
           commentCount: 1,
           createdAt: 1,
+          publishAt: 1,
         },
       },
     ]);
