@@ -21,14 +21,6 @@ const BlogCard = ({
   post,
   user,
 
-  // Optional features
-  authorInfoModal = false,
-  showContent = false,
-  showTags = false,
-  showComments = false,
-  showBookmark = false,
-  showSocialLinks = false,
-
   // Used features
   showCategory = true,
   showAuthor = true,
@@ -39,6 +31,14 @@ const BlogCard = ({
   showReadMore = true,
   showExcerpt = true,
   showWordCount = true,
+
+  // Optional features
+  authorInfoModal = false,
+  showContent = false,
+  showTags = false,
+  showComments = false,
+  showBookmark = false,
+  showSocialLinks = false,
 
   // Optional limits
   titleLimit = 60,
@@ -100,7 +100,7 @@ const BlogCard = ({
   }, [fetchCommentsList]);
 
   return (
-    <article className="h-full flex flex-col overflow-hidden rounded-xl border border-base-content/15 transition-shadow duration-300 dark:border-gray-700 lg:min-h-[92vh] min-h-[47rem] relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl">
+    <article className="h-full flex flex-col overflow-hidden rounded-xl border border-base-content/15 transition-shadow duration-300 dark:border-gray-700 lg:min-h-[79vh] min-h-[40rem] relative bg-white dark:bg-gray-800 shadow-lg dark:shadow-sm">
       {/*============================================
       | BLOG IMAGE
       |*=============================================*/}
@@ -117,7 +117,7 @@ const BlogCard = ({
       {/*============================================
       | AUTHOR / PUBLISH DATE RELATED INFO
       |*=============================================*/}
-      <div className="flex flex-1 flex-col lg:p-6 p-4 lg:space-y-4 space-y-3">
+      <div className="flex flex-1 flex-col lg:p-6 p-4 lg:space-y-4 space-y-2">
         {(authorInfoModal ||
           showSocialLinks ||
           showAuthorAvatar ||
@@ -134,14 +134,14 @@ const BlogCard = ({
               >
                 <div className="space-y-2">
                   <p className="flex items-center gap-1.5 font-bold capitalize">
-                    <LucideIcon.CreditCard size={18} />
+                    <LucideIcon.CreditCard size={14} />
                     {author?.roles?.map((r) => (
                       <span key={r?._id}>{r?.name}</span>
                     ))}
                   </p>
 
                   <p className="flex items-center text-sm gap-1.5">
-                    <LucideIcon.Mail size={18} /> {author?.email}
+                    <LucideIcon.Mail size={14} /> {author?.email}
                   </p>
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-sm">
@@ -169,10 +169,10 @@ const BlogCard = ({
                   <img
                     src={author.avatar}
                     alt={author?.name || "Author"}
-                    className="h-8 w-8 rounded-full object-cover bg-gray-300 p-0.5 shadow"
+                    className="h-10 w-10 rounded-full object-cover bg-gray-300 p-0.5 shadow"
                   />
                 ) : (
-                  <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700" />
+                  <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700" />
                 )}
 
                 {showAuthor && author?.name && (
@@ -202,7 +202,7 @@ const BlogCard = ({
         | CATEGORY / TAG / WORD COUNT  RELATED INFO
         |* =======================================*/}
         {(showCategory || showTags || showWordCount || showReadingTime) && (
-          <div className="flex flex-wrap items-center justify-between gap-1">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-1">
               <FaList size={14} />{" "}
               {showCategory && category?.name && (
@@ -213,7 +213,7 @@ const BlogCard = ({
             </div>
 
             {showTags && visibleTags && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <FaTags size={14} />
                 {showTags &&
                   visibleTags?.map((tag) => (
@@ -230,14 +230,14 @@ const BlogCard = ({
             )}
 
             {showWordCount && wordCount && (
-              <div className="flex items-center">
+              <div className="flex items-center gap-1">
                 <FaFileWord size={14} />
                 <Badge color="gray">{wordCount} words</Badge>
               </div>
             )}
 
             {showReadingTime && (
-              <div className="flex items-center">
+              <div className="flex items-center gap-1">
                 <LucideIcon.Clock3 size={14} />
                 <Badge color="gray">
                   <BlogReadingTimeCounter content={content} />
@@ -274,11 +274,13 @@ const BlogCard = ({
           {(showTitle || showExcerpt || showContent) && (
             <>
               {/* Title */}
-              <Link to={`/blog-details/${slug}`} className="m-0">
-                <h2 className="lg:text-xl text-lg font-extrabold capitalize text-gray-800 dark:text-gray-400 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-2xl first-letter:text-2xl first-letter:text-extra-bold line-clamp-2">
-                  {showTitle && displayTitle}
-                </h2>
-              </Link>
+              {showTitle && displayTitle && (
+                <Link to={`/blog-details/${slug}`} className="m-0">
+                  <h2 className="lg:text-xl text-lg font-extrabold capitalize text-gray-800 dark:text-gray-400 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-2xl first-letter:text-2xl first-letter:text-extra-bold line-clamp-2 m-0 p-0">
+                    {displayTitle}
+                  </h2>
+                </Link>
+              )}
 
               {/* Excerpt */}
               {showExcerpt && displayExcerpt && (

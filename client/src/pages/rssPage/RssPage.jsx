@@ -1,7 +1,5 @@
 import Seo from "../../components/seo/Seo";
-
 import { useEffect, useState } from "react";
-
 import Loader from "../../components/loader/Loader";
 import RssPostCard from "./RssPostCard";
 import { FaRss } from "react-icons/fa";
@@ -38,7 +36,14 @@ const RssPage = () => {
         const xmlDoc = parser.parseFromString(data, "text/xml");
         const items = Array.from(xmlDoc.querySelectorAll("item")).map(
           (item) => ({
+            id: item.querySelector("id")?.textContent.trim(),
             title: item.querySelector("title")?.textContent.trim(),
+            slug: item.querySelector("slug")?.textContent.trim(),
+            category: item.querySelector("category")?.textContent.trim(),
+            roles: item.querySelector("roles").textContent.trim(),
+            content: item.querySelector("content")?.textContent.trim(),
+            author: item.querySelector("author")?.textContent.trim(),
+            avatar: item.querySelector("avatar")?.textContent.trim(),
             link: item.querySelector("link")?.textContent.trim(),
             description: item.querySelector("description").textContent.trim(),
             publishDate: item.querySelector("pubDate")?.textContent.trim(),
@@ -60,7 +65,7 @@ const RssPage = () => {
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="lg:max-w-6xl mx-auto lg:p-0 p-2 mb-10"
+      className="lg:max-w-6xl mx-auto lg:p-0 p-2 mb-"
     >
       <Seo
         title="RSS Feed"
@@ -78,9 +83,21 @@ const RssPage = () => {
         updatedAt={latestRss?.updatedAt || latestRss?.publishDate}
       />
 
-      <div className="grid lg:grid-cols-12 grid-cols-1 gap-4 justify-between">
+      <div className="grid lg:grid-cols-12 grid-cols-1 gap-6 p-4 justify-between">
         {rssPosts?.length > 0 ? (
-          rssPosts.map((post, index) => <RssPostCard key={index} post={post} />)
+          rssPosts?.map((post, index) => (
+            <div
+              key={index}
+              className="lg:col-span-4 col-span-12 shadow-lg rounded-xl"
+            >
+              <RssPostCard
+                post={post}
+                showCategory={true}
+                showPublishDate={true}
+                showBookmark={true}
+              />
+            </div>
+          ))
         ) : (
           <div className="flex w-full col-span-12 justify-center">
             No rss post to display.

@@ -62,7 +62,6 @@ const ContactMe = () => {
         email: user.email,
         message: form.message,
       };
-      console.log("Contact payload", contactPayload);
       await createContact(contactPayload);
       notifySuccess("Message sent successfully!!");
     } catch (error) {
@@ -93,10 +92,11 @@ const ContactMe = () => {
           icon={<LucideIcon.Rocket />}
         />
 
-        <div className="max-w-2xl mx-auto text-base-content dark:text-base-300 border dark:border-gray-700 rounded-xl lg:p-6 p-4 shadow hover:shadow-lg">
+        <div className="max-w-2xl mx-auto text-base-content bg-white dark:text-base-300 border dark:border-gray-700 dark:bg-gray-800 rounded-xl lg:p-6 p-4 shadow-lg hover:shadow-xl">
           <form onSubmit={handleSubmit} className="space-y-4 ">
             <h1 className="lg:text-xl text-sm font-extrabold text-gray-700 dark:text-gray-400 flex items-center gap-2">
-              <LucideIcon.UserCircle /> Contact the Author
+              <LucideIcon.UserCircle />
+              Hi, {user?.displayName} • Contact the Author 24/7
             </h1>
             <Input
               type="text"
@@ -149,14 +149,14 @@ const ContactMe = () => {
               />
 
               <div className="">
-                <h2 className="border-b dark:border-gray-700 dark:text-gray-400 mb-1 text-medium font-bold flex items-center gap-1">
+                <h2 className="border-b border-gray-300 dark:border-gray-600 dark:text-gray-400 mb-1 text-medium font-bold flex items-center gap-1 pb-0.5">
                   <LucideUserCog2 size={16} />
                   Admin Contact Info
                 </h2>
                 <p className="flex items-center">
                   <LucideIcon.Mail
                     size={14}
-                    className="dark:hover:text-blue-500"
+                    className="dark:hover:text-blue-500 text-gray-700 dark:text-gray-400"
                   />
                   <a
                     href="mailto:minu@gmail.com"

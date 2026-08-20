@@ -9,8 +9,6 @@ const FollowButton = ({ authorId, isFollowingInitial, onSuccess }) => {
   const followMutation = useFollowUser();
   const unfollowMutation = useUnfollowUser();
 
-  console.log("FOLLOW BUTTON PROP:", isFollowingInitial);
-  console.log("FOLLOW BUTTON STATE:", isFollowing);
   const handleClick = () => {
     if (isFollowing) {
       unfollowMutation.mutate(authorId, {
@@ -52,6 +50,7 @@ const FollowButton = ({ authorId, isFollowingInitial, onSuccess }) => {
           <LucideIcon.UserPlus size={16} />
         )
       }
+      size="xs"
       label={isFollowing ? "Unfollow" : "Follow"}
       variant={isFollowing ? "outline" : "success"}
     />

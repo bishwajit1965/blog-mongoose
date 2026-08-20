@@ -8,7 +8,7 @@ const skeletonVariants = {
   },
 };
 
-const FeaturedPostsSkeleton = () => {
+const PostsSkeleton = () => {
   return (
     <div className="lg:mb-14 mb-10 rounded-lg pb-4 relative bg-gray-200 dark:bg-gray-900 p-4 animate-pulse mt-8">
       <motion.div
@@ -66,4 +66,4 @@ const FeaturedPostsSkeleton = () => {
   );
 };
 
-export default FeaturedPostsSkeleton;
+export default PostsSkeleton;

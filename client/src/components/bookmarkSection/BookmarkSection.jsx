@@ -1,12 +1,10 @@
+import { Helmet } from "react-helmet-async";
 import AdminLoader from "../../admin/adminComponent/adminLoader/AdminLoader";
-import BlogPostCard from "../blogPosts/BlogPostCard";
 import useAuth from "../../hooks/useAuth";
 import useGetBookmarkedPosts from "../../hooks/useGetBookmarkedPosts";
-import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
-import CustomPageTitle from "../../components/pageTitle/CustomPageTitle";
-
-const BookmarkedPage = () => {
+import BlogPostCard from "../../pages/blogPosts/BlogPostCard";
+const BookmarkSection = () => {
   const { user } = useAuth();
   const { data, isLoading, isError } = useGetBookmarkedPosts();
 
@@ -18,26 +16,18 @@ const BookmarkedPage = () => {
         <p>Failed to load bookmarked posts.</p>
       </div>
     );
-
   return (
-    <div className="max-w-6xl mx-auto">
+    <div>
       <Helmet>
-        <title>Nova Blogging Platform || Bookmarked Page</title>
+        <title>Nova Blogging Platform || Bookmarked Section</title>
       </Helmet>
 
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="rounded-lg lg:space-y-4 space-y-2"
+        className="lg:space-y-6 space-y-4"
       >
-        <div className="">
-          <CustomPageTitle
-            title="My Book Marked Posts"
-            dataLength={data?.bookmarks?.length}
-          />
-        </div>
-
         {!data?.bookmarks || data.bookmarks.length === 0 ? (
           <p className="flex justify-center transform translate-y-60">
             You have not bookmarked any post yet!
@@ -64,4 +54,4 @@ const BookmarkedPage = () => {
   );
 };
 
-export default BookmarkedPage;
+export default BookmarkSection;

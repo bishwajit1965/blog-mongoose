@@ -1,13 +1,11 @@
 import {
-  FaBlog,
   FaBloggerB,
-  FaBookmark,
+  FaRegBookmark,
   FaRegListAlt,
   FaSearch,
 } from "react-icons/fa";
 import { Suspense, lazy } from "react";
 
-import BlogPosts from "../blogPosts/BlogPosts";
 import Button from "../../components/buttons/Button";
 import Categories from "../../components/categories/Categories";
 import ComingSoonPost from "../../components/comingSoonPost/ComingSoonPost";
@@ -66,7 +64,10 @@ const sidebarMotion = {
   },
 };
 
-const BookmarkedPage = lazy(() => import("../bookmarkedPage/BookmarkedPage"));
+const BookmarkedSection = lazy(
+  () => import("../../components/bookmarkSection/BookmarkSection"),
+);
+const BlogPostsSection = lazy(() => import("../blogPosts/BlogPosts"));
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
@@ -243,6 +244,14 @@ const Home = () => {
           isFeaturedLoading={isFeaturedLoading}
         />
 
+        {/**==================================
+        * POPULAR POSTS BEGIN
+        ======================================*/}
+        <PopularPosts user={user} />
+        {/**==================================
+        * POPULAR POSTS END
+        ======================================*/}
+
         {/**===================================
       | BLOG CONTENT AREA LEFT & RIGHT BEGINS
       |**====================================*/}
@@ -265,36 +274,42 @@ const Home = () => {
             variants={sectionMotion}
             className="col-span-12 lg:col-span-8 space-y-4 shadow-sm rounded-lg border-b border-gray-200 dark:border-gray-700  "
           >
-            {/* Bookmarked blog post section begins */}
+            {/* Search & Filter blog post section begins */}
             <div className="bg-white lg:p-6 p-4 rounded-xl mb-6 shadow-lg hover:shadow-xl dark:bg-gray-800">
               {showBlogPosts ? (
                 <SectionTitle
                   title="Blog"
                   decoratedText="Posts"
-                  icon={<FaBlog />}
+                  icon={<FaBloggerB size={20} />}
                   dataLength={data?.length > 0 ? data.length : 0}
                   dataName="articles"
                 />
               ) : (
                 <SectionTitle
-                  title="My Bookmarked Posts"
-                  icon={<FaBookmark />}
+                  title="My Bookmarked"
+                  decoratedText="Posts"
+                  icon={<FaRegBookmark size={20} />}
                   dataLength={
                     bookmarkedPosts?.bookmarks.length > 0
                       ? bookmarkedPosts?.bookmarks.length
                       : 0
                   }
+                  dataName="articles"
                 />
               )}
               <div className="grid lg:grid-cols-12 grid-cols-1 gap-2 items-center justify-between pb-4">
                 <div className="col-span-12 lg:col-span-3">
-                  <Button
+                  <p
                     onClick={() => handleToggle(!showBookmarks)}
-                    label={showBookmarks ? "Blog Posts" : "My Bookmarks"}
-                    icon={showBookmarks ? <FaBlog /> : <FaBookmark />}
-                    variant={showBookmarks ? "gray" : "white"}
-                    className="dark:bg-slate-800 text-slate-400 dark:text-slate-400 dark:border-slate-700 text-sm"
-                  />
+                    className="text-lg font-bold text-indigo-500 hover:link hover:text-indigo-800 dark:text-gray-400 cursor-pointer flex items-center gap-1"
+                  >
+                    {showBookmarks ? (
+                      <FaBloggerB size={20} />
+                    ) : (
+                      <FaRegBookmark size={20} />
+                    )}
+                    {showBookmarks ? "Blog Posts" : "My Bookmarks"} →
+                  </p>
                 </div>
 
                 {/* Category search begins */}
@@ -411,29 +426,35 @@ const Home = () => {
                 </div>
                 {/* Search bar ends */}
               </div>
-
-              {showBookmarks && (
-                <div className="w-full lg:mt-4 mt-2">
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <BookmarkedPage />
-                  </Suspense>
-                </div>
-              )}
             </div>
+            {/* Search & Filter blog post section ends */}
+
+            {/* Bookmarked blog post section begins */}
+            {showBookmarks && (
+              <div className="w-full lg:mt-4 mt-2">
+                <Suspense fallback={<div>Loading...</div>}>
+                  <BookmarkedSection />
+                </Suspense>
+              </div>
+            )}
             {/* Bookmarked blog post section ends */}
 
             {/* Blog posts section begins */}
             <div className="">
               {showBlogPosts && (
-                <BlogPosts
-                  data={data}
-                  isLoading={isLoading}
-                  error={error}
-                  user={user}
-                  searchTerm={searchTerm}
-                  selectedCategory={selectedCategory}
-                  selectedTag={selectedTag}
-                />
+                <div className="">
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <BlogPostsSection
+                      data={data}
+                      isLoading={isLoading}
+                      error={error}
+                      user={user}
+                      searchTerm={searchTerm}
+                      selectedCategory={selectedCategory}
+                      selectedTag={selectedTag}
+                    />
+                  </Suspense>
+                </div>
               )}
             </div>
             {/* Blog posts section ends */}
@@ -444,7 +465,7 @@ const Home = () => {
 
           {/**=======================================
         | RIGHT SIDEBAR BEGINS
-        |**========================================*/}
+        |**=======================================*/}
           <motion.div
             variants={sidebarMotion}
             className="col-span-12 lg:col-span-4 rounded-xl"
@@ -512,10 +533,6 @@ const Home = () => {
                   />
                 </div>
                 {/* Tags section ends */}
-
-                {/* Popular posts section begins */}
-                <PopularPosts />
-                {/* Popular posts section ends */}
               </div>
             </div>
           </motion.div>

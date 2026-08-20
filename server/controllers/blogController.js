@@ -769,7 +769,7 @@ const getPopularPosts = async (req, res) => {
         $sort: { commentCount: -1 },
       },
       {
-        $limit: 5,
+        $limit: 6,
       },
 
       // Populate category
@@ -787,6 +787,32 @@ const getPopularPosts = async (req, res) => {
           preserveNullAndEmptyArrays: true,
         },
       },
+
+      // Populate author
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      {
+        $unwind: {
+          path: "$author",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+
+      // Populate roles
+      {
+        $lookup: {
+          from: "roles",
+          localField: "author.roles",
+          foreignField: "_id",
+          as: "author.roles",
+        },
+      },
       {
         $project: {
           title: 1,
@@ -794,17 +820,31 @@ const getPopularPosts = async (req, res) => {
           excerpt: 1,
           image: 1,
           category: 1,
+          roles: 1,
           slug: 1,
           featuredImage: 1,
           commentCount: 1,
           createdAt: 1,
           publishAt: 1,
+          author: {
+            _id: "$author._id",
+            name: "$author.name",
+            roles: "$author.roles",
+            email: "$author.email",
+            avatar: "$author.avatar",
+            followers: "$author.followers",
+            following: "$author.following",
+            isOnline: "$author.isOnline",
+            lastSeen: "$author.lastSeen",
+          },
+          roles: 1,
         },
       },
     ]);
 
     res.status(200).json({
       success: true,
+      message: "Popular posts fetched successfully.",
       popularPosts,
     });
   } catch (error) {

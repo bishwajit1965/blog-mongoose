@@ -34,10 +34,10 @@ const BlogPostCard = ({
   showReadingTime = true,
   showTitle = true,
   showExcerpt = true,
-  showContent = true,
   showReadMore = true,
 
   // Optional features
+  showContent = false,
   showAuthorInfoModal = false,
   showComments = false,
   showBookmark = false,
@@ -115,7 +115,7 @@ const BlogPostCard = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
-      className="rounded-lg lg:space-y-4 space-y-2 overflow-x-clip lg:p-6 p-4 lg:border-0 border border-base-content/15 bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl"
+      className="rounded-xl lg:space-y-4 space-y-2 overflow-x-clip lg:p-6 p-4 lg:border-0 border border-base-content/15 bg-white dark:bg-gray-800 shadow-lg dark:shadow-sm"
     >
       {/*==============================================================================
        |* BLOG AUTHOR INFO MODAL / SOCIAL LINKS / AUTHOR AVATAR / AUTHOR NAME / PUBLISH DATE / BLOG WORD COUNT / READING TIME / CATEGORY SECTION
@@ -268,7 +268,7 @@ const BlogPostCard = ({
       {/*====================================================
        |* BLOG TITLE / EXCERPT / BLOG IMAGE / CONTENT SECTION
        |*=================================================*/}
-      <div className="grid lg:grid-cols-12 grid-cols-1 lg:gap-4 gap-2 justify-between items-center">
+      <div className="lg:grid flex flex-col-reverse lg:grid-cols-12 grid-cols-1 lg:gap-4 gap-2 justify-between items-center">
         {/* =====> LEFT SIDE BLOG DETAILS COLUMN STARTS (col-span-7) =====> */}
         {(showTitle ||
           showBlogPostImage ||
@@ -289,7 +289,7 @@ const BlogPostCard = ({
 
             {/* Blog excerpt begins */}
             {showExcerpt && (
-              <div className="bg-red-500s">
+              <div className="">
                 <h2 className="text-xs font-bold uppercase mb-2 border w-fit py-0.5 px-1 border-gray-300 dark:border-gray-700 rounded-sm shadow">
                   Quick Summary ↴
                 </h2>
@@ -325,7 +325,7 @@ const BlogPostCard = ({
         {showBlogPostImage && blogPostImage && (
           <div className="col-span-12 lg:col-span-5 flex items-center">
             {blogPostImage && (
-              <Link to={`/blog-details/${slug}`}>
+              <Link to={`/blog-details/${slug}`} className="lg:m-auto m-0">
                 <img
                   src={blogPostImage ? blogPostImage : `${apiURL}${image}`}
                   alt={title?.slice(0, 10)}
@@ -359,7 +359,7 @@ const BlogPostCard = ({
        |*====================================*/}
       {/* Read more button begins */}
       {(showTags || showComments || showBookmark || showReadMore) && (
-        <div className="flex flex-wrap items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between lg:pt-5">
           {/* Tags section begins */}
           {showTags && visibleTags && (
             <div className="flex items-center gap-1">
@@ -424,7 +424,7 @@ const BlogPostCard = ({
       {/*==================================================
        |*  FOOTER & GREETINGS SECTION
        |*===============================================*/}
-      <div className="lg:py-20 py-18 lg:my-14 relative lg:block hidden">
+      <div className="lg:py-8 lg:my-14 relative lg:block hidden">
         <div className="lg:h-[1px] border-b border-base-content/15 dark:border-gray-700 rounded-md absolute flex justify-center left-2 right-2 lg:w-[90%] mx-auto">
           <p className="lg:text-base text-sm pt-1.5 flex gap-2">
             <FaQuoteLeft className="text-gray-400" /> Thanks a lot from

@@ -4,6 +4,7 @@ import BlogPostSkeleton from "./BlogPostSkeleton";
 import { Helmet } from "react-helmet-async";
 import { useEffect } from "react";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 const BlogPosts = ({
   data,
@@ -61,7 +62,13 @@ const BlogPosts = ({
       <Helmet>
         <title>Nova Journal || Home</title>
       </Helmet>
-      <div className="lg:space-y-6 space-y-4">
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="lg:space-y-6 space-y-4"
+      >
         {paginatedData.length === 0 ? (
           <p className="flex justify-center">No blog post is available!</p>
         ) : (
@@ -69,7 +76,6 @@ const BlogPosts = ({
             <BlogPostCard
               key={blog._id}
               blog={blog}
-              shadow-lg
               user={user}
               showAuthorInfoModal={true}
               showSocialLinks={true}
@@ -81,9 +87,10 @@ const BlogPosts = ({
             />
           ))
         )}
-      </div>
-      <div className="lg:pt-12 py-4 bg-base-3000 rounded-lg bg-white dark:bg-gray-800 mt-6 shadow-lg hover:shadow-xl">
-        {/* Pagination */}
+      </motion.div>
+
+      {/* Pagination */}
+      <div className="py-4 bg-base-3000 rounded-xl bg-white dark:bg-gray-800 mt-6 shadow-lg hover:shadow-xl">
         <AdminPagination
           items={isFilteringActive ? filteredData : data}
           onPaginatedDataChange={setPaginatedData}

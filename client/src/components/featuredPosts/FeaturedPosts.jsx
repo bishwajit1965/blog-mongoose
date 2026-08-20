@@ -50,10 +50,8 @@ const FeaturedPosts = ({ featuredPosts, isFeaturedLoading, user }) => {
                   <BlogCard
                     post={blog}
                     user={user}
-                    blog={blog}
                     showComments={false}
                     authorInfoModal={true}
-                    showContent={true}
                     showSocialLinks={true}
                     showBookmark={true}
                   />
