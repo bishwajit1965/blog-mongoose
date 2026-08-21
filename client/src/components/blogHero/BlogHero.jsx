@@ -18,6 +18,7 @@ import BlogReadingTimeCounter from "../blogReadingTimeCounter/BlogReadingTimeCou
 import useLastSeenFormatter from "../../hooks/useLastSeenFormatter";
 import Button from "../buttons/Button";
 import { LucideIcon } from "../lucideIcon/LucideIcons";
+import HeroSkeleton from "./HeroSkeleton";
 
 const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -268,70 +269,75 @@ const BlogHero = ({
           </div>
 
           {/* RIGHT PREMIUM CARDS */}
-          <div className="hidden md:flex flex-col gap-6 p-4">
-            <h1 className="lg:text-xl text-indigo-300 uppercase text-lg font-extrabold flex items-center gap-2">
-              <FaBloggerB /> Latest Articles
-            </h1>
-            {data?.slice(0, 2).map((blog) => (
-              <Link
-                to={`/blog-details/${blog.slug}`}
-                key={blog._id}
-                className="m-0"
-              >
-                <div
-                  key={blog._id}
-                  className="max-w-xs bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-xl hover:scale-105 transition duration-300 rounded-t-xl"
-                >
-                  <img
-                    src={
-                      blog?.image?.url
-                        ? blog?.image.url
-                        : `${apiURL}${blog?.image}`
-                    }
-                    alt={blog?.slug}
-                    className="w-full h-32 object-fill rounded-t-xl"
-                  />
-                  <div className="p-2 space-y-1 rounded-b-xl">
-                    <h3 className="font-semibold text-sm text-white line-clamp-2">
-                      {blog.title}
-                    </h3>
+          {data?.length > 0 ? (
+            <div className="hidden md:flex flex-col gap-6 p-4">
+              <h1 className="lg:text-xl text-indigo-300 uppercase text-lg font-extrabold flex items-center gap-2">
+                <FaBloggerB /> Latest Articles
+              </h1>
 
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={blog?.author?.avatar}
-                        alt=""
-                        className="w-10 h-10 rounded-full"
-                      />
-                      <p className="text-sm text-white">
-                        {blog?.author?.name || "Anonymous"}
+              {data?.slice(0, 2).map((blog) => (
+                <Link
+                  to={`/blog-details/${blog.slug}`}
+                  key={blog._id}
+                  className="m-0"
+                >
+                  <div
+                    key={blog._id}
+                    className="max-w-xs bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-xl hover:scale-105 transition duration-300 rounded-t-xl"
+                  >
+                    <img
+                      src={
+                        blog?.image?.url
+                          ? blog?.image.url
+                          : `${apiURL}${blog?.image}`
+                      }
+                      alt={blog?.slug}
+                      className="w-full h-32 object-fill rounded-t-xl"
+                    />
+                    <div className="p-2 space-y-1 rounded-b-xl">
+                      <h3 className="font-semibold text-sm text-white line-clamp-2">
+                        {blog.title}
+                      </h3>
+
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={blog?.author?.avatar}
+                          alt=""
+                          className="w-10 h-10 rounded-full"
+                        />
+                        <p className="text-sm text-white">
+                          {blog?.author?.name || "Anonymous"}
+                        </p>
+                      </div>
+
+                      <p className="flex items-center gap-1 text-xs">
+                        Read in 👉
+                        <span>
+                          <LucideIcon.Clock3 size={14} />
+                        </span>
+                        <span className="italic">
+                          {<BlogReadingTimeCounter content={blog?.content} />}
+                        </span>
+                      </p>
+                      <p className="flex items-center gap-1 text-xs">
+                        Published 👉
+                        <LucideCalendar size={14} />
+                        {new Date(blog?.publishAt).toLocaleDateString("en-US", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </p>
                     </div>
-
-                    <p className="flex items-center gap-1 text-xs">
-                      Read in 👉
-                      <span>
-                        <LucideIcon.Clock3 size={14} />
-                      </span>
-                      <span className="italic">
-                        {<BlogReadingTimeCounter content={blog?.content} />}
-                      </span>
-                    </p>
-                    <p className="flex items-center gap-1 text-xs">
-                      Published 👉
-                      <LucideCalendar size={14} />
-                      {new Date(blog?.publishAt).toLocaleDateString("en-US", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
                   </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <HeroSkeleton />
+          )}
         </div>
       </section>
     </>

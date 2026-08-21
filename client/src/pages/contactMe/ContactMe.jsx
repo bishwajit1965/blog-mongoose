@@ -92,11 +92,15 @@ const ContactMe = () => {
           icon={<LucideIcon.Rocket />}
         />
 
-        <div className="max-w-2xl mx-auto text-base-content bg-white dark:text-base-300 border dark:border-gray-700 dark:bg-gray-800 rounded-xl lg:p-6 p-4 shadow-lg hover:shadow-xl">
-          <form onSubmit={handleSubmit} className="space-y-4 ">
+        <div className="max-w-2xl mx-auto text-base-content bg-white dark:text-base-300 border dark:border-gray-700 dark:bg-gray-800 rounded-xl lg:p-8 p-4 shadow-lg hover:shadow-xl">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <h1 className="lg:text-xl text-sm font-extrabold text-gray-700 dark:text-gray-400 flex items-center gap-2">
-              <LucideIcon.UserCircle />
-              Hi, {user?.displayName} • Contact the Author 24/7
+              <img
+                src={user?.photoURL}
+                alt={user?.displayName}
+                className="w-10 h-10 rounded-full"
+              />
+              Contact the Author 24/7
             </h1>
             <Input
               type="text"
