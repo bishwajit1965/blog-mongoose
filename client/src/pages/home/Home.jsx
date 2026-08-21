@@ -272,7 +272,7 @@ const Home = () => {
         |**=============================*/}
           <motion.div
             variants={sectionMotion}
-            className="col-span-12 lg:col-span-8 space-y-4 shadow-sm rounded-lg border-b border-gray-200 dark:border-gray-700  "
+            className="col-span-12 lg:col-span-8 space-y-4 shadow-sm rounded-xl"
           >
             {/* Search & Filter blog post section begins */}
             <div className="bg-white lg:p-6 p-4 rounded-xl mb-6 shadow-lg hover:shadow-xl dark:bg-gray-800">

@@ -9,12 +9,11 @@ import { hideErrorElements, hideSuccessElements } from "../../hooks/useHelpers";
 import { useEffect, useRef, useState } from "react";
 
 import { Helmet } from "react-helmet-async";
-import Loader from "../../components/loader/Loader";
 import SocialLogIn from "../../components/socialLogin/SocialLogin";
 import Swal from "sweetalert2";
-import { sendPasswordResetEmail } from "firebase/auth";
 import useAuth from "../../hooks/useAuth";
 import { LucideIcon } from "../../components/lucideIcon/LucideIcons";
+import { Loader } from "lucide-react";
 
 const Login = () => {
   const captchaRef = useRef(null);
@@ -34,7 +33,7 @@ const Login = () => {
     loadCaptchaEnginge(6);
   }, []);
 
-  const { user, auth, loading, signInWithEmailPassword } = useAuth();
+  const { user, loading, signInWithEmailPassword } = useAuth();
 
   const handleLogIn = async (event) => {
     event.preventDefault();
@@ -47,7 +46,6 @@ const Login = () => {
 
     try {
       const userCredential = await signInWithEmailPassword(email, password);
-      console.log("User Credential:", userCredential);
       const loggedInUser = userCredential.user;
       if (loggedInUser.emailVerified === true) {
         setSuccess("User login is successful!");
@@ -78,30 +76,6 @@ const Login = () => {
     }
   };
 
-  // Reset password
-  const handleResetPassword = async () => {
-    console.log(emailRef.current.value);
-    const email = emailRef.current.value;
-    if (!email) {
-      alert("Email field is empty!");
-      return;
-    } else if (
-      !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)
-    ) {
-      alert("Please write a valid email address!");
-      return;
-    } else {
-      try {
-        await sendPasswordResetEmail(auth, email);
-        setSuccess("Password reset email sent successfully!");
-        hideSuccessElements();
-      } catch (error) {
-        setError(error.message);
-        hideErrorElements();
-      }
-    }
-  };
-
   const handleValidateCaptcha = (event) => {
     event.preventDefault();
     const user_captcha_value = captchaRef.current.value;
@@ -122,17 +96,19 @@ const Login = () => {
       <Helmet title="Blog || Login" />
       <div className="h-screen flex items-center dark:bg-gray-800">
         <div className="lg:max-w-xs w-full mx-auto dark:bg-gray-800">
-          {loading && <Loader />}
-          <div className="flex flex-col justify-center border dark:border-gray-700 lg:p-6 p-4 bg-base-200 dark:bg-gray-800 rounded-xs shadow-xl rounded-md">
+          <div className="flex flex-col justify-center border dark:border-gray-700 lg:p-6 p-4 bg-base-200 dark:bg-gray-800 rounded-xs shadow-xl rounded-xl">
             <h1 className="text-lg lg:text-xl font-bold text-indigo-800 dark:text-gray-400 text-center mb-4 flex items-center gap-2">
-              <LucideIcon.LogIn size={25} className="font-bold" /> Blog Mongoose
-              Login
+              <LucideIcon.LogIn size={25} className="font-bold" /> Nova Journal
+              • <span className="font-extrabold">Login</span>
             </h1>
             {user ? (
               <p className="text-center mb-4">User email: {user?.email}</p>
             ) : (
               ""
             )}
+            <div className="flex justify-center mb-2">
+              {loading && <Loader size={16} className="animate-spin" />}
+            </div>
             <form onSubmit={handleLogIn} className="space-y-2">
               <input
                 type="email"
@@ -162,8 +138,8 @@ const Login = () => {
               <div className="mt- space-y-2">
                 <p className="text-xs hover:link">
                   <Link
-                    onClick={handleResetPassword}
-                    className="hover:link dark:hover:text-gray-400 dark:text-gray-400"
+                    to="/forgot-password"
+                    className="hover:link dark:hover:text-gray-400 dark:text-gray-400 m-0"
                   >
                     Forgot password ? {""}
                     <span className="text-xs link-primary dark:text-gray-400">
@@ -172,11 +148,19 @@ const Login = () => {
                   </Link>
                 </p>
                 <p className="text-xs flex items-center gap-1">
-                  <Link to="/register" className="hover:link dark:text-gray-400">
+                  <Link
+                    to="/register"
+                    className="hover:link dark:text-gray-400"
+                  >
                     New to this site ? {""}
-                    <span className="text-xs link-primary dark:text-gray-400">Register here</span>
+                    <span className="text-xs link-primary dark:text-gray-400">
+                      Register here
+                    </span>
                   </Link>{" "}
-                  <Link to="/" className="text-xs link-primary hover:underline dark:text-gray-400">
+                  <Link
+                    to="/"
+                    className="text-xs link-primary hover:underline dark:text-gray-400"
+                  >
                     Home
                   </Link>
                 </p>

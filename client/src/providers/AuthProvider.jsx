@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
@@ -121,6 +122,16 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  // Reset user password
+  const resetPassword = async (auth, email) => {
+    setLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   //Sign in with google popup
   const signInWithGoogle = async () => {
     setLoading(true);
@@ -193,6 +204,7 @@ const AuthProvider = ({ children }) => {
     loading,
     registerUserWithEmailAndPassword,
     signInWithEmailPassword,
+    resetPassword,
     signInWithGoogle,
     signInWithGitHub,
     updateUserProfile,

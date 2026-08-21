@@ -46,6 +46,7 @@ import PublicPage from "../pages/publicPage/PublicPage";
 import ManageAuthorFollowUnfollowProfile from "../admin/adminDataManagement/manageAuthorFollowUnfollowProfile/ManageAuthorFollowUnfollowProfile";
 import AuthorProfile from "../pages/authorProfile/AuthorProfile";
 import SystemSettingsManagement from "../admin/adminDataManagement/manageSystemSettings/SystemSettingsManagement";
+import ForgotPasswordForm from "../components/forgotPasswordForm.jsx/ForgotPasswordForm";
 
 // Common Admin Routes (Super Admin can access all)
 const superAdminRoutes = [
@@ -124,6 +125,10 @@ const router = createBrowserRouter([
       {
         path: "author/:authorId",
         element: <AuthorProfile />,
+      },
+      {
+        path: "forgot-password",
+        element: <ForgotPasswordForm />,
       },
       {
         path: "*",

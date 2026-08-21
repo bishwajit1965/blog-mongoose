@@ -36,7 +36,6 @@ const createUser = async (req, res) => {
       console.log("✅ Password hashed.");
     }
 
-    console.log("🔍 Fetching default role & permissions...");
     const [defaultRole, defaultPermission] = await Promise.all([
       Role.findOne({ name: "user" }),
       Permission.findOne({ name: "read-post" }),
@@ -60,7 +59,6 @@ const createUser = async (req, res) => {
       permissions: [defaultPermission._id],
     });
 
-    console.log("💾 Saving user to MongoDB...");
     const savedUser = await newUser.save();
 
     const token = generateJWT({

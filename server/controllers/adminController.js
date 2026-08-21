@@ -146,10 +146,5 @@ const logoutAdmin = async (req, res) => {
     });
   }
 };
-// const logoutAdmin = (req, res) => {
-//   res.clearCookie("authToken");
-//   res.clearCookie("refreshToken");
-//   res.status(200).json({ message: "Logout successful." });
-// };
 
 module.exports = { loginAdmin, refreshAccessToken, logoutAdmin };
