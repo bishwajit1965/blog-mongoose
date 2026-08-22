@@ -21,7 +21,8 @@ server/.env
 
 # Ignore folders in server
 **/.env
-server/config/
+server/config/*
+!server/config/cloudinary.js
 server/uploads/
 server/mongoose/
 server/.vscode/
