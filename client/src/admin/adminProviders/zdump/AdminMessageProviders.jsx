@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { getMyContacts } from "../../adminServices/contactService";
-import AdminMessageContext from "../notifications/AdminMessageContext";
+import AdminMessageContext from "./AdminMessageContext";
 
 const AdminMessageProviders = ({ children }) => {
   const [messages, setMessages] = useState([]);
