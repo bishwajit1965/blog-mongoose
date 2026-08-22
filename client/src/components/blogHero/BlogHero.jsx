@@ -19,6 +19,7 @@ import useLastSeenFormatter from "../../hooks/useLastSeenFormatter";
 import Button from "../buttons/Button";
 import { LucideIcon } from "../lucideIcon/LucideIcons";
 import HeroSkeleton from "./HeroSkeleton";
+import AuthorInfoSkeleton from "./AuthorInfoSkeleton";
 
 const apiURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -120,58 +121,63 @@ const BlogHero = ({
             {/* Developer Info */}
 
             <div className="grid lg:grid-cols-12 grid-cols-1 items-center gap-2">
-              <div className="lg:col-span-7 col-span-12 border p-4 border-indigo-300/40 rounded-xl">
-                <div className="flex lg:justify-start justify-center items-center gap-4">
-                  {data?.slice(0, 1).map((blog) => (
-                    <div
-                      key={blog?._id}
-                      className="lg:flex grid items-center gap-2"
-                    >
-                      <div className="lg:flex grid lg:justify-start justify-center gap-2">
-                        <div className="space-y-2">
-                          <div className="flex lg:justify-start mx-auto">
-                            <img
-                              src={blog?.author?.avatar}
-                              alt={blog?.author?.name}
-                              className="lg:w-20 lg:h-20 w-16 h-16 rounded-full flex bg-gray-400 p-1 lg:justify-start mx-auto justify-center shadow-md"
-                            />
-                          </div>
+              {data?.length > 0 ? (
+                <div className="lg:col-span-7 col-span-12 border p-4 border-indigo-300/40 rounded-xl">
+                  <div className="flex lg:justify-start justify-center items-center gap-4">
+                    {data?.slice(0, 1).map((blog) => (
+                      <div
+                        key={blog?._id}
+                        className="lg:flex grid items-center gap-2"
+                      >
+                        <div className="lg:flex grid lg:justify-start justify-center gap-2">
+                          <div className="space-y-2">
+                            <div className="flex lg:justify-start mx-auto">
+                              <img
+                                src={blog?.author?.avatar}
+                                alt={blog?.author?.name}
+                                className="lg:w-20 lg:h-20 w-16 h-16 rounded-full flex bg-gray-400 p-1 lg:justify-start mx-auto justify-center shadow-md"
+                              />
+                            </div>
 
-                          {/* Author online status */}
-                          <p className="flex items-center lg:justify-start justify-center text-xs">
-                            {blog?.author?.isOnline === true ? (
-                              <span className="text-emerald-400 font-bo1d border-2 animate-pulse border-emerald-400 rounded-full px-1 py-0.5 text-xs">
-                                🟢 Online Now
-                              </span>
-                            ) : (
-                              <span>
-                                <span className="text-orange-400 border-2 border-orange-400 text-xs rounded-full px-1 py-0.5 block mb-[1px]">
-                                  🔴 Offline Now
+                            {/* Author online status */}
+                            <p className="flex items-center lg:justify-start justify-center text-xs">
+                              {blog?.author?.isOnline === true ? (
+                                <span className="text-emerald-400 font-bo1d border-2 animate-pulse border-emerald-400 rounded-full px-1 py-0.5 text-xs">
+                                  🟢 Online Now
                                 </span>
-                                <span className="block text-xs text-orange-400">
-                                  Last seen {formattedLastSeen}
+                              ) : (
+                                <span>
+                                  <span className="text-orange-400 border-2 border-orange-400 text-xs rounded-full px-1 py-0.5 block mb-[1px]">
+                                    🔴 Offline Now
+                                  </span>
+                                  <span className="block text-xs text-orange-400">
+                                    Last seen {formattedLastSeen}
+                                  </span>
                                 </span>
-                              </span>
-                            )}
+                              )}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="lg:space-y-2 space-y-1 lg:text-start text-center">
+                          <p className="lg:text-xl text-lg font-extrabold text-indigo-300">
+                            By {blog?.author?.name || "Anonymous"}
+                          </p>
+                          <p className="text-lg text-indigo-300">
+                            <span className="font-bold text-orange-400">
+                              MERN
+                            </span>{" "}
+                            Full Stack Developer
                           </p>
                         </div>
                       </div>
-
-                      <div className="lg:space-y-2 space-y-1 lg:text-start text-center">
-                        <p className="lg:text-xl text-lg font-extrabold text-indigo-300">
-                          By {blog?.author?.name || "Anonymous"}
-                        </p>
-                        <p className="text-lg text-indigo-300">
-                          <span className="font-bold text-orange-400">
-                            MERN
-                          </span>{" "}
-                          Full Stack Developer
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <AuthorInfoSkeleton />
+              )}
+
               <div className="lg:col-span-5 col-span-12 border p-4 border-indigo-300/40 rounded-xl gap-4 space-y-3 max-w-4xl">
                 <div className="rounded-lg border border-white/10 bg-white/5 px-2 py- backdrop-blur-sm flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 text-indigo-300">

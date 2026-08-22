@@ -4,6 +4,7 @@ import useAuth from "../../hooks/useAuth";
 import useGetBookmarkedPosts from "../../hooks/useGetBookmarkedPosts";
 import { motion } from "framer-motion";
 import BlogPostCard from "../../pages/blogPosts/BlogPostCard";
+import BlogPostSkeleton from "../../pages/blogPosts/BlogPostSkeleton";
 const BookmarkSection = () => {
   const { user } = useAuth();
   const { data, isLoading, isError } = useGetBookmarkedPosts();
@@ -19,7 +20,7 @@ const BookmarkSection = () => {
   return (
     <div>
       <Helmet>
-        <title>Nova Blogging Platform || Bookmarked Section</title>
+        <title>Nova Journal || Bookmarked Section</title>
       </Helmet>
 
       <motion.div
@@ -32,7 +33,7 @@ const BookmarkSection = () => {
           <p className="flex justify-center transform translate-y-60">
             You have not bookmarked any post yet!
           </p>
-        ) : (
+        ) : data?.bookmarks?.length > 0 ? (
           data?.bookmarks?.map((blog) => (
             <BlogPostCard
               key={blog._id}
@@ -48,6 +49,8 @@ const BookmarkSection = () => {
               showTags={false}
             />
           ))
+        ) : (
+          <BlogPostSkeleton />
         )}
       </motion.div>
     </div>
