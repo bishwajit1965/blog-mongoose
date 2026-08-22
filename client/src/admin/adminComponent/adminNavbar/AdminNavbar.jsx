@@ -7,7 +7,7 @@ import { useContext, useState } from "react";
 // import Logo from "/assets/favicon/webDevProF.png";
 import Logo from "../../../assets/nova-journal-brand copy.svg";
 import ThemeContext from "../../../themeContext/ThemeContext";
-import adminImage from "/assets/bishwajit-1.jpg";
+import adminImage from "../../../assets/bishwajit-1.jpg";
 import useAdminAuth from "../../adminHooks/useAdminAuth";
 import { LogIn, LogOutIcon } from "lucide-react";
 
