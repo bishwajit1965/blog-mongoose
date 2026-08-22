@@ -4,7 +4,8 @@ import { FaBars, FaMoon, FaSun, FaTimes } from "react-icons/fa";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 
-import Logo from "/assets/favicon/webDevProF.png";
+// import Logo from "/assets/favicon/webDevProF.png";
+import Logo from "../../../assets/nova-journal-brand copy.svg";
 import ThemeContext from "../../../themeContext/ThemeContext";
 import adminImage from "/assets/bishwajit-1.jpg";
 import useAdminAuth from "../../adminHooks/useAdminAuth";
