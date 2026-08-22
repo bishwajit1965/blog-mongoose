@@ -8,7 +8,7 @@ import {
 
 import CTAButton from "../../../components/buttons/CTAButton";
 import { jsPDF } from "jspdf";
-import logo from "/assets/favicon/webDevProF.png"; // Import your logo
+import logo from "../../../assets/nova-journal-brand copy.svg";
 
 const NoticeDetailsView = ({ notice, toggler, isHidden, manageNotice }) => {
   const { title, heading, subject, author, content, pdfUrl, publishedAt } =
