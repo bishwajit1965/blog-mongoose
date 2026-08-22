@@ -2,7 +2,7 @@ import { FaRegFilePdf, FaTimes } from "react-icons/fa";
 
 import Button from "../../components/buttons/Button";
 import jsPDF from "jspdf";
-import logo from "/assets/favicon/webDevProF.png"; // Import your logo
+import logo from "/src/assets/nova-journal-brand copy.svg";
 
 // FOR MULTER UPLOAD (iNITIAL USE - NOT NEEDED NOW)
 // const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
