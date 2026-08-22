@@ -23,6 +23,7 @@ server/.env
 **/.env
 server/config/*
 !server/config/cloudinary.js
+!server/config/firebaseAdmin.js
 server/uploads/
 server/mongoose/
 server/.vscode/
