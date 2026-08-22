@@ -2,7 +2,7 @@ import { FaRegFilePdf, FaTimes } from "react-icons/fa";
 
 import Button from "../../components/buttons/Button";
 import jsPDF from "jspdf";
-import logo from "/src/assets/nova-journal-brand copy.svg";
+import logo from "/src/assets/webDevProF.png";
 
 // FOR MULTER UPLOAD (iNITIAL USE - NOT NEEDED NOW)
 // const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
@@ -11,9 +11,6 @@ const NoticeModal = ({ notice, onClose }) => {
   const { title, heading, subject, noticeDate, content, pdfUrl } = notice;
 
   const fileUrl = pdfUrl.url ? pdfUrl?.url : null;
-
-  // FOR MULTER UPLOAD (iNITIAL USE - NOT NEEDED NOW)
-  // const fileUrl = pdfUrl ? `${apiUrl}${pdfUrl?.url}` : null;
 
   const handleGeneratePdf = async () => {
     const doc = new jsPDF({
