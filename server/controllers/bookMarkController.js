@@ -21,7 +21,7 @@ const bookMarkPost = async (req, res) => {
     if (alreadyBookmarked) {
       return res
         .status(400)
-        .json({ success: false, message: "Already bookmarked." });
+        .json({ success: false, message: "Already bookmarked!" });
     }
 
     const newBookmark = new Bookmark({
@@ -37,7 +37,7 @@ const bookMarkPost = async (req, res) => {
 
     res
       .status(200)
-      .json({ success: true, message: "Post bookmarked successfully!" });
+      .json({ success: true, message: "Post is bookmarked successfully!" });
   } catch (error) {
     console.error("Bookmark error:", error);
     res.status(500).json({
