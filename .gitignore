@@ -12,9 +12,6 @@ client/public/
 # Ignore assets folder in client
 client/assets/
 
-# Ignore firebase folder in client
-client/src/firebase/
-
 # Ignore TODO.js file in client
 client/TODO.js/
 
