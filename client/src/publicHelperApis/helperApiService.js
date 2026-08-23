@@ -2,7 +2,7 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
-  withCredentials: true, // ✅ Allows cookies & authentication tokens
+  withCredentials: false, // ✅ Allows cookies & authentication tokens
 });
 
 // Add a request interceptor to set Content-type dynamically

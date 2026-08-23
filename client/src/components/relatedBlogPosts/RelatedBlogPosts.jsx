@@ -64,7 +64,7 @@ const RelatedBlogPosts = ({ slug, user }) => {
                     blog={blog}
                     user={user}
                     authorInfoModal={true}
-                    showContent={true}
+                    showContent={false}
                     showExcerpt={true}
                     showComments={false}
                     showBookmark={true}

@@ -440,10 +440,10 @@ const BlogDetailsPage = () => {
               <img
                 src={image?.url ? image.url : `${apiURL}${image}`}
                 alt={title?.slice(0, 20)}
-                className="rounded-t-md h-28 w-full"
+                className="rounded-t-xl h-40 w-full"
               />
             </div>
-            <div className="lg:min-h-80 min-h-80 relative p-2">
+            <div className="lg:min-h-72 min-h-80 relative p-2">
               <FaQuoteLeft className="absolute top-0 left-4 text-xl font-bold text-gray-500 dark:text-gray-400" />
               <p
                 className="absolute top-2 left-4 right-4 indent-7 lg:text-gray-600 text-gray-500s italic dark:text-gray-400 text-info-content first-letter:font-roboto first-letter:capitalize dark:first-letter:text-info first-letter:font-extrabold lg:first-letter:text-2xl first-letter:text-extra-bold lg:min-h-72 h-80 first-letter:text-gray-800"
@@ -463,7 +463,7 @@ const BlogDetailsPage = () => {
             {/* Blog post title begins */}
             <div className="lg:mb-7">
               <Link to="/" className="m-0">
-                <h1 className="lg:text-3xl text-lg font-extrabold text-gray-900 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-5xl first-letter:text-extra-bold dark:text-gray-300">
+                <h1 className="lg:text-3xl text-lg font-extrabold text-gray-900 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-4xl first-letter:text-extra-bold dark:text-gray-300">
                   {title}
                 </h1>
               </Link>
@@ -958,7 +958,6 @@ const BlogDetailsPage = () => {
                     type="submit"
                     icon={<FaPlusCircle />}
                     variant="primary"
-                    className="btn lg:text-normal text-sm btn-sm transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90"
                   />
                   <CTAButton
                     onClick={handleCommentBoxToggle}
@@ -966,7 +965,6 @@ const BlogDetailsPage = () => {
                     label="Cancel"
                     icon={<FaArrowAltCircleRight />}
                     variant="warning"
-                    className="btn lg:text-normal text-sm btn-sm transition-all duration-200 ease-in-out transform hover:scale-105 hover:brightness-90"
                   />
                 </div>
               </form>
