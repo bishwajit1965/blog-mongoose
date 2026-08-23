@@ -1,5 +1,4 @@
 import { Helmet } from "react-helmet-async";
-import AdminLoader from "../../admin/adminComponent/adminLoader/AdminLoader";
 import useAuth from "../../hooks/useAuth";
 import useGetBookmarkedPosts from "../../hooks/useGetBookmarkedPosts";
 import { motion } from "framer-motion";
@@ -9,7 +8,15 @@ const BookmarkSection = () => {
   const { user } = useAuth();
   const { data, isLoading, isError } = useGetBookmarkedPosts();
 
-  if (isLoading) return <AdminLoader />;
+  if (isLoading) {
+    return (
+      <div className="col-span-12 lg:col-span-8">
+        {[...Array(5)].map((_, index) => (
+          <BlogPostSkeleton key={index} />
+        ))}
+      </div>
+    );
+  }
 
   if (isError)
     return (
@@ -33,7 +40,8 @@ const BookmarkSection = () => {
           <p className="flex justify-center transform translate-y-60">
             You have not bookmarked any post yet!
           </p>
-        ) : data?.bookmarks?.length > 0 ? (
+        ) : (
+          data?.bookmarks?.length > 0 &&
           data?.bookmarks?.map((blog) => (
             <BlogPostCard
               key={blog._id}
@@ -49,8 +57,6 @@ const BookmarkSection = () => {
               showTags={false}
             />
           ))
-        ) : (
-          <BlogPostSkeleton />
         )}
       </motion.div>
     </div>

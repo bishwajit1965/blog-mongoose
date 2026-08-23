@@ -14,7 +14,6 @@ import Badge from "../../admin/ui/Badge";
 import BlogReadingTimeCounter from "../../components/blogReadingTimeCounter/BlogReadingTimeCounter";
 
 const BlogGlobalSearchedCard = ({ blog }) => {
-  console.log("Searched Blogs", blog);
   const {
     title,
     slug,
