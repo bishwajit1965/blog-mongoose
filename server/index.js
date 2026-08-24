@@ -25,7 +25,7 @@ const io = new Server(server, {
     credentials: true,
   },
 });
-console.log("ðŸ”¥ INDEX FILE LOADED");
+console.log("🚀 INDEX FILE LOADED");
 
 const port = process.env.PORT || 3000;
 

@@ -132,11 +132,16 @@ const BlogHero = ({
                         <div className="lg:flex grid lg:justify-start justify-center gap-2">
                           <div className="space-y-2">
                             <div className="flex lg:justify-start mx-auto">
-                              <img
-                                src={blog?.author?.avatar}
-                                alt={blog?.author?.name}
-                                className="lg:w-20 lg:h-20 w-16 h-16 rounded-full flex bg-gray-400 p-1 lg:justify-start mx-auto justify-center shadow-md"
-                              />
+                              <Link
+                                to={`/author/${blog?.author?._id}`}
+                                className="m-0 p-0"
+                              >
+                                <img
+                                  src={blog?.author?.avatar}
+                                  alt={blog?.author?.name}
+                                  className="lg:w-20 lg:h-20 w-16 h-16 rounded-full flex bg-gray-400 p-1 lg:justify-start mx-auto justify-center shadow-md"
+                                />
+                              </Link>
                             </div>
 
                             {/* Author online status */}
@@ -160,9 +165,14 @@ const BlogHero = ({
                         </div>
 
                         <div className="lg:space-y-2 space-y-1 lg:text-start text-center">
-                          <p className="lg:text-xl text-lg font-extrabold text-indigo-300">
-                            By {blog?.author?.name || "Anonymous"}
-                          </p>
+                          <Link
+                            to={`/author/${blog?.author?._id}`}
+                            className="m-0 p-0"
+                          >
+                            <p className="lg:text-xl text-lg font-extrabold text-indigo-300">
+                              By ↬ {blog?.author?.name || "Anonymous"}
+                            </p>
+                          </Link>
                           <p className="text-lg text-indigo-300">
                             <span className="font-bold text-orange-400">
                               MERN

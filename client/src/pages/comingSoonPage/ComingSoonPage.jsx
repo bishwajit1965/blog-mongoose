@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import CustomPageTitle from "../../components/pageTitle/CustomPageTitle";
 const ComingSoonPage = () => {
   const { data, isPending, isError } = useGetComingSoonPost();
-  console.log("DATA", data);
+
   const location = useLocation();
   const pathName = location.pathname.split("/")[1];
 

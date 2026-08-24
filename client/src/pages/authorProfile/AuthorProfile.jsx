@@ -30,7 +30,7 @@ const AuthorProfile = () => {
   const [followersCount, setFollowersCount] = useState({});
   const [authorFollowStatus, setAuthorFollowStatus] = useState({});
   const { user } = useAuth();
-  console.log("Profile", profile);
+
   const refreshFollowers = async () => {
     const response = await getAuthorFollowers(authorId);
 

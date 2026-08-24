@@ -1,9 +1,3 @@
-// This file defines a custom React hook that fetches blog data from an API using Axios and React Query.
-// It uses the `useQuery` hook from React Query to manage the fetching and caching of the data.
-// Date: 20.04.2025 12:00:00
-
-// import api from "../services/api";
-
 import api from "../publicHelperApis/helperApiService";
 import { useQuery } from "@tanstack/react-query";
 
