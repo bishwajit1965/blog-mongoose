@@ -10,12 +10,13 @@ import {
 import { motion } from "framer-motion";
 import PageTitle from "../../components/pageTitle/PageTitle";
 import { Input } from "../../admin/ui/Input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Seo from "../../components/seo/Seo";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { LucideUserCog2 } from "lucide-react";
 import CTAButton from "../../components/buttons/CTAButton";
+import { FaQuestion } from "react-icons/fa";
 
 const quillModules = {
   toolbar: [
@@ -35,6 +36,8 @@ const ContactMe = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
   const { user } = useAuth();
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -95,17 +98,23 @@ const ContactMe = () => {
         <div className="max-w-2xl mx-auto text-base-content bg-white dark:text-base-300 border dark:border-gray-700 dark:bg-gray-800 rounded-xl lg:p-8 p-4 shadow-lg hover:shadow-xl">
           <form onSubmit={handleSubmit} className="space-y-4">
             <h1 className="lg:text-xl text-sm font-extrabold text-gray-700 dark:text-gray-400 flex items-center gap-2">
-              <img
-                src={user?.photoURL}
-                alt={user?.displayName}
-                className="w-10 h-10 rounded-full"
-              />
-              Contact the Author 24/7
+              {user ? (
+                <img
+                  src={user?.photoURL}
+                  alt={user?.displayName}
+                  className="w-10 h-10 rounded-full"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center">
+                  <FaQuestion className="text-base-100" />
+                </div>
+              )}
+              {`${user ? "Contact the Author 24/7" : "Login to contact the author"}`}
             </h1>
             <Input
               type="text"
               name="name"
-              value={user?.displayName || "N/A/GitHubUser"}
+              value={user?.displayName || "Log in to auto fill name. Needed!"}
               readOnly="readOnly"
               onChange={handleChange}
               placeholder="Your Name"
@@ -115,7 +124,7 @@ const ContactMe = () => {
             <Input
               type="email"
               name="email"
-              value={user?.email || "N/A/GithubEmail"}
+              value={user?.email || "Log in to auto fill email. Needed!"}
               readOnly="readOnly"
               onChange={handleChange}
               placeholder="Your Email"
@@ -136,21 +145,44 @@ const ContactMe = () => {
             />
 
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <CTAButton
-                type="submit"
-                variant="primary"
-                size="md"
-                disabled={loading}
-                icon={
-                  loading ? (
-                    <LucideIcon.Loader className="animate-spin" />
-                  ) : (
-                    <LucideIcon.MailPlus size={20} />
-                  )
-                }
-                label={loading ? "Sending Message..." : "Send Message"}
-                className=""
-              />
+              {user ? (
+                <CTAButton
+                  type="submit"
+                  variant="primary"
+                  size="md"
+                  disabled={loading}
+                  icon={
+                    loading ? (
+                      <LucideIcon.Loader className="animate-spin" />
+                    ) : (
+                      <LucideIcon.MailPlus size={20} />
+                    )
+                  }
+                  label={loading ? "Sending Message..." : "Send Message"}
+                  className=""
+                />
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span>
+                    <CTAButton
+                      onClick={() =>
+                        navigate("/login", {
+                          state: {
+                            from: {
+                              pathname: "/contact-me",
+                            },
+                          },
+                        })
+                      }
+                      variant="primary"
+                      size="md"
+                      label="Log In"
+                      icon={<LucideIcon.LogIn size={16} />}
+                    />
+                  </span>
+                  <span className="text-sm">Not Logged In !</span>
+                </div>
+              )}
 
               <div className="">
                 <h2 className="border-b border-gray-300 dark:border-gray-600 dark:text-gray-400 mb-1 text-medium font-bold flex items-center gap-1 pb-0.5">
