@@ -60,4 +60,4 @@ Test the application locally and confirm that:
 
 ```bash
 git add .
-git commit -m "describe the change"
+git commit -m "Deployment related details are documented for future reference"
