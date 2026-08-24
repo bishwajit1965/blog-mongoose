@@ -7,7 +7,7 @@ client/.vscode/
 
 
 # Ignore public folder in client
-client/public/
+# client/public/
 
 # Ignore assets folder in client
 client/assets/
