@@ -84,6 +84,7 @@ const BlogPosts = ({
               showPublishDate={true}
               showCategory={true}
               showTags={false}
+              isLoading={isLoading}
             />
           ))
         )}
