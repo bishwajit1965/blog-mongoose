@@ -139,7 +139,7 @@ const BlogHero = ({
                                 <img
                                   src={blog?.author?.avatar}
                                   alt={blog?.author?.name}
-                                  className="lg:w-20 lg:h-20 w-16 h-16 rounded-full flex bg-gray-400 p-1 lg:justify-start mx-auto justify-center shadow-md"
+                                  className="lg:w-20 lg:h-20 w-16 h-16 rounded-full flex bg-indigo-400 p-0.5 lg:justify-start mx-auto justify-center shadow-md"
                                 />
                               </Link>
                             </div>
