@@ -434,14 +434,16 @@ const BlogDetailsPage = () => {
           <motion.div
             ref={leftColumnRef}
             animate={controls}
-            className="w-[17rem] absolute bg-gray-50 dark:bg-gray-800 left-20 rounded-md invisible lg:visible shadow-md space-y-4 border border-gray-100 dark:border-gray-700"
+            className="w-[17rem] absolute bg-white dark:bg-gray-800 left-20 rounded-xl invisible lg:visible shadow-md space-y-4 border border-gray-100 dark:border-gray-700"
           >
-            <div className="w-full">
-              <img
-                src={image?.url ? image.url : `${apiURL}${image}`}
-                alt={title?.slice(0, 20)}
-                className="rounded-t-xl h-40 w-full"
-              />
+            <div className="w-full" title="Go Home">
+              <Link to="/" className="m-0">
+                <img
+                  src={image?.url ? image.url : `${apiURL}${image}`}
+                  alt={title?.slice(0, 20)}
+                  className="rounded-t-xl h-40 w-full"
+                />
+              </Link>
             </div>
             <div className="lg:min-h-72 min-h-80 relative p-2">
               <FaQuoteLeft className="absolute top-0 left-4 text-xl font-bold text-gray-500 dark:text-gray-400" />
@@ -451,6 +453,14 @@ const BlogDetailsPage = () => {
                   __html: blog?.excerpt ? blog.excerpt : "N/A",
                 }}
               />
+            </div>
+            <div className="flex items-center justify-center p-4 cursor-pointer">
+              <Link
+                to="/"
+                className="m-0 text-indigo-500 hover:text-indigo-700 flex items-center gap-1 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                Go Home →
+              </Link>
             </div>
           </motion.div>
         </div>
