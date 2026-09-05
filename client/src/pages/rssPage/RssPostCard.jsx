@@ -44,7 +44,6 @@ const RssPostCard = ({
     image,
   } = post;
 
-  console.log("Post", post);
   /**================================
    * HELPERS
   ===================================*/
@@ -92,11 +91,11 @@ const RssPostCard = ({
                       <img
                         src={avatar}
                         alt={post?.title?.slice(0, 15)}
-                        className="w-10 h-10 rounded-full bg-gray-400 p-0.5 cursor-pointer"
+                        className="w-9 h-9 rounded-full bg-gray-400 p-0.5 cursor-pointer"
                       />
                     </div>
                     {showAuthor && (
-                      <p className="font-bold text-gray-700 dark:text-gray-400">
+                      <p className="text-xs font-bold text-gray-700 dark:text-gray-400">
                         {author}
                       </p>
                     )}
