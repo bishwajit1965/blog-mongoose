@@ -17,6 +17,13 @@ const Seo = ({
   modifiedDate,
   schemaType,
 }) => {
+  const resolveUrl = (value = "") => {
+    if (!value) return siteUrl;
+    if (/^https?:\/\//i.test(value)) return value;
+
+    return `${siteUrl.replace(/\/+$/, "")}/${value.replace(/^\/+/, "")}`;
+  };
+
   /* ============================================================
    * Fetch SITE SETTINGS AND USE IT IN SEO GLOBALLY
    * ============================================================ */
@@ -34,8 +41,12 @@ const Seo = ({
 
   const publisherLogo = settings?.branding?.logo?.secureUrl || "";
 
-  const defaultOgImage =
-    settings?.seo?.ogImage?.secureUrl || `${siteUrl}${seoConfig?.defaultImage}`;
+  const defaultOgImage = resolveUrl(
+    settings?.seo?.ogImage?.secureUrl || seoConfig?.defaultImage,
+  );
+
+  // const defaultOgImage =
+  //   settings?.seo?.ogImage?.secureUrl || `${siteUrl}${seoConfig?.defaultImage}`;
 
   const defaultKeywords = settings?.seo?.keywords || [];
 
@@ -64,18 +75,18 @@ const Seo = ({
     metaDescription || description || defaultDescription,
   );
 
-  const seoImage = image || `${seoConfig.siteUrl}${defaultOgImage}`;
+  const seoImage = resolveUrl(image || defaultOgImage);
+  // const seoImage = image || `${seoConfig.siteUrl}${defaultOgImage}`;
 
-  const seoUrl = url
-    ? `${seoConfig.siteUrl}/${url.replace(/^\/+/, "")}`
-    : siteUrl;
+  const seoUrl = url ? resolveUrl(url) : siteUrl;
+  // const seoUrl = url
+  //   ? `${seoConfig.siteUrl}/${url.replace(/^\/+/, "")}`
+  //   : siteUrl;
 
   const seoAuthor = author || seoConfig.author;
 
   const seoCategory = category || "";
 
-  // const seoTags =
-  //   metaKeywords?.length > 0 ? metaKeywords : tags?.length > 0 ? tags : [];
   const seoTags =
     metaKeywords?.length > 0
       ? metaKeywords
