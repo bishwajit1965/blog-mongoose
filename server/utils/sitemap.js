@@ -2,7 +2,8 @@ const { SitemapStream, streamToPromise } = require("sitemap");
 const path = require("path");
 const fs = require("fs"); // Add the fs import
 const Blog = require("../models/Blog"); // Adjust the path to your Blog model
-const SITE_URL = process.env.SITE_URL || "http://localhost:5173";
+const SITE_URL =
+  process.env.SITE_URL || "https://nova-journal-api.onrender.com";
 
 const generateSitemap = async () => {
   // Ensure the public directory exists

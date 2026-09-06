@@ -13,9 +13,12 @@ const morgan = require("morgan");
 const onlineUsers = new Set();
 const createBackup = require("./backupService");
 const app = express();
+const generateSitemap = require("./utils/sitemap");
 
 // Initializing database connection
-connectDB();
+connectDB().then(() => {
+  generateSitemap();
+});
 
 const server = http.createServer(app); // HTTP server creation
 
