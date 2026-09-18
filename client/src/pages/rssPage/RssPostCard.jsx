@@ -80,7 +80,7 @@ const RssPostCard = ({
           </Link>
         )}
 
-        <div className="lg:p-6 p-4 lg:space-y-4 space-y-2 relative lg:min-h-[25rem] min-h-[45rem]">
+        <div className="lg:p-6 p-4 lg:space-y-4 space-y-2 relative lg:min-h-[25rem] min-h-[31rem]">
           {/* SHOW AUTHOR AVATAR / AUTHOR / PUB DATE BEGINS */}
           {(showAuthorAvatar || showAuthor || showPublishDate) && (
             <div className="lg:flex grid items-center justify-between lg:gap-4 gap-2">

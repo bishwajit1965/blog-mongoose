@@ -83,7 +83,7 @@ const RssPage = () => {
         updatedAt={latestRss?.updatedAt || latestRss?.publishDate}
       />
 
-      <div className="grid lg:grid-cols-12 grid-cols-1 gap-6 p-4 justify-between">
+      <div className="grid lg:grid-cols-12 grid-cols-1 gap-6 p-2 justify-between">
         {rssPosts?.length > 0 ? (
           rssPosts?.map((post, index) => (
             <div
