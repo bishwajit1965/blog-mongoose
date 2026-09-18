@@ -205,7 +205,7 @@ const ContactMe = () => {
                 <Link
                   target="__blank"
                   to="https://portfolio-h5k5.vercel.app"
-                  className="hover:link dark:hover:text-blue-500 text-sm m-0 flex items-center dark:text-gray-400 justify-start gap-2"
+                  className="link text-indigo-500 dark:hover:text-blue-500 text-sm m-0 flex items-center dark:text-gray-400 justify-start gap-2"
                 >
                   <LucideIcon.Briefcase
                     size={14}

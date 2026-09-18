@@ -44,7 +44,6 @@ const RssPostCard = ({
     image,
   } = post;
 
-  console.log("RSS BLOG POSTS IN RSS PAGE", post);
   /**================================
    * HELPERS
   ===================================*/
