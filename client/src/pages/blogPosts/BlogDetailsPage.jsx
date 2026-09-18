@@ -688,6 +688,7 @@ const BlogDetailsPage = () => {
               </Link>
             </div>
             {/* Blog image section ends */}
+
             {/* Blog post content section begins */}
             <div className="lg:pt-6 pt-4">
               {blog?.content ? (
@@ -702,20 +703,12 @@ const BlogDetailsPage = () => {
                 <p>No blog post content is available</p>
               )}
             </div>
-            <div className="flex items-center lg:justify-center justify-center lg:space-x-40 space-x-2 lg:py-8 py-4">
-              <p className="text-gray-500 border rounded-full px-4 py-0.25 dark:border-slate-600 shadow">
-                <span className="lg:text-xl text-sm font-bold text-gray-500">
-                  🧮 Words count:
-                </span>{" "}
-                <span className="italic lg:text-xl text-sm font-bold text-gray-500">
-                  {wordCount}
-                </span>{" "}
+            <div className="lg:flex grid gap-4 items-center lg:justify-between justify-center lg:py-8 py-4">
+              <p className="h-8 border rounded-full flex items-center justify-center lg:px-4 px-2 py-2 dark:border-slate-600 shadow hover:bg-gray-600 hover:text-gray-100 text-gray-600 dark:text-gray-400 lg:text-xl text-sm font-bold italic">
+                <span className="">🧮 Words count:</span> {wordCount}
               </p>
-              <div className="h-8 border border-gray-300 dark:border-gray-700 rounded-full shadow-sm flex items-center lg:space-x-2 lg:px-4 px-2 py-2 hover:bg-gray-600 hover:text-base-200 text-gray-600 dark:text-gray-400">
-                <span>📖 Read in:</span>
-                <span className="italic">
-                  {<BlogReadingTimeCounter content={content} />}
-                </span>
+              <div className="h-8 border border-gray-300 dark:border-gray-700 rounded-full shadow flex items-center lg:space-x-2 lg:px-4 px-2 py-2 justify-center hover:bg-gray-600 hover:text-gray-100 text-gray-600 dark:text-gray-400 lg:text-xl text-sm font-bold italic">
+                <BlogReadingTimeCounter content={content} />
               </div>
             </div>
             {/* Blog post content section ends */}
