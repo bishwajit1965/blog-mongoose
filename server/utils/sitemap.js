@@ -2,8 +2,7 @@ const { SitemapStream, streamToPromise } = require("sitemap");
 const path = require("path");
 const fs = require("fs"); // Add the fs import
 const Blog = require("../models/Blog"); // Adjust the path to your Blog model
-const SITE_URL =
-  process.env.SITE_URL || "https://nova-journal-api.onrender.com";
+const SITE_URL = process.env.SITE_URL || "https://blog-mongoose-one.vercel.app";
 
 const generateSitemap = async () => {
   // Ensure the public directory exists
