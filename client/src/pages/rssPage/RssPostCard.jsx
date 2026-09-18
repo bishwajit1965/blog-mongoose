@@ -32,9 +32,9 @@ const RssPostCard = ({
   contentLimit = 130,
 }) => {
   const {
-    link,
     id,
     title,
+    slug,
     author,
     content,
     avatar,
@@ -44,6 +44,7 @@ const RssPostCard = ({
     image,
   } = post;
 
+  console.log("RSS BLOG POSTS IN RSS PAGE", post);
   /**================================
    * HELPERS
   ===================================*/
@@ -69,7 +70,7 @@ const RssPostCard = ({
       <div className="text-gray-700 dark:text-gray-400 bg-white shadow-lg dark:shadow-sm dark:bg-gray-800 rounded-xl">
         {/* Show blog image */}
         {showBlogPostImage && image && (
-          <Link to={`${link}`} className="m-0">
+          <Link to={`/blog-details/${slug}`} className="m-0">
             <div className="">
               <img
                 src={image}
@@ -85,7 +86,7 @@ const RssPostCard = ({
           {(showAuthorAvatar || showAuthor || showPublishDate) && (
             <div className="lg:flex grid items-center justify-between lg:gap-4 gap-2">
               {showAuthorAvatar && (
-                <Link to={`${link}`} className="m-0">
+                <Link to={`/blog-details/${slug}`} className="m-0">
                   <div className="flex items-center gap-1">
                     <div className="flex items-center gap-1">
                       <img
@@ -150,7 +151,7 @@ const RssPostCard = ({
               {/* Title */}
               {showTitle && displayTitle && (
                 <div className="">
-                  <Link to={`${link}`} className="m-0">
+                  <Link to={`/blog-details/${slug}`} className="m-0">
                     <h1 className="lg:text-xl text-lg font-extrabold capitalize text-gray-800 dark:text-gray-400 first-letter:font-roboto first-letter:capitalize first-letter:text-amber-600 first-letter:font-extrabold lg:first-letter:text-2xl first-letter:text-2xl first-letter:text-extra-bold line-clamp-2">
                       {displayTitle}
                     </h1>
@@ -207,7 +208,7 @@ const RssPostCard = ({
                 {/* Read more button */}
                 {showReadMore && (
                   <Link
-                    to={`${link}`}
+                    to={`/blog-details/${slug}`}
                     className="m-0 text-medium text-indigo-500 hover:text-indigo-900 dark:text-slate-400 font-bold hover:link"
                   >
                     Read More →
